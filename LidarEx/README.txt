@@ -25,3 +25,41 @@ float32 range_max # maximum range value [m]
 float32[] ranges # range data [m] (Note: values < range_min or > range_max should be discarded)
 float32[] intensities # intensity data [device-specific units]. If your
 # device does not provide intensities, please leave the array empty.
+
+
+Terminal commands to use Lidar:
+
+#dependencies and driver
+rosdep install hokuyo_node rviz
+rosmake hokuyo_node rviz
+
+# Hokuyo permissions check
+ls -l /dev/ttyACM0
+
+# Set lidar to read//write
+sudo chmod a+rw /dev/ttyACM0
+
+# Start roscore in new terminal
+roscore
+
+# Enable calibration
+rosparam set hokuyo_node/calibrate_time true
+
+# Disable calibration
+rosparam set hokuyo_node/calibrate_time false
+
+# Assign the hokuyo_node lidar hardware
+rosparam set hokuyo_node/port /dev/ttyACM0 
+
+# Connect to lidar in new terminal
+rosrun hokuyo_node hokuyo_node
+
+# View data in rviz
+rosrun rviz rviz -d `rospack find hokuyo_node`/hokuyo_test.vcg
+
+# Raw data from Lidar
+rostopic /scan
+
+# Special flags for rostopic
+# -p : friendly data mode
+
