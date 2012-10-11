@@ -177,6 +177,9 @@ public class GUIMain extends JFrame {
 				bob.x = field.x + field.w - bob.w;
 			if (bob.y > field.y + field.h - bob.h)
 				bob.y = field.y + field.h - bob.h;
+			if(client!=null){
+				client.send("2");
+			}
 		}
 		// If moving forward
 		if (keyboard.keyDown(KeyEvent.VK_UP)) {
@@ -195,6 +198,9 @@ public class GUIMain extends JFrame {
 				bob.x = field.x + field.w;
 			if (bob.y > field.y + field.h)
 				bob.y = field.y + field.h;
+			if(client!=null){
+				client.send("1");
+			}
 		}
 		// If Rotate left
 		if (keyboard.keyDown(KeyEvent.VK_LEFT)) {
@@ -212,6 +218,9 @@ public class GUIMain extends JFrame {
 				bob.x = field.x + field.w - bob.w;
 			if (bob.y > field.y + field.h - bob.h)
 				bob.y = field.y + field.h - bob.h;
+			if(client!=null){
+				client.send("3");
+			}
 		}
 		// If rotate right
 		if (keyboard.keyDown(KeyEvent.VK_RIGHT)) {
@@ -229,6 +238,9 @@ public class GUIMain extends JFrame {
 				bob.x = field.x + field.w - bob.w;
 			if (bob.y > field.y + field.h - bob.h)
 				bob.y = field.y + field.h - bob.h;
+			if(client!=null){
+				client.send("4");
+			}
 		}
 		if (keyboard.keyDown(KeyEvent.VK_W)) {
 			if (bob.dx >= 2.5 && bob.dy >= 2.5) {
