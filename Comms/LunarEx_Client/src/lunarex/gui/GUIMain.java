@@ -1,3 +1,5 @@
+package lunarex.gui;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Line2D;
@@ -6,8 +8,11 @@ import java.util.*;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-public class LunarEXGUIWORKINGVERSION extends JFrame {
+import lunarex.input.*;
 
+public class GUIMain extends JFrame {
+	
+	private static final long serialVersionUID = 1190876640530075607L;
 	static final int WIDTH = 1080;
 	static final int HEIGHT = (int) (9 / 16.0 * WIDTH);
 
@@ -31,7 +36,7 @@ public class LunarEXGUIWORKINGVERSION extends JFrame {
 	Random rand = new Random();// Used for random circle locations
 	Boolean manualOverride;
 
-	public LunarEXGUIWORKINGVERSION() {
+	public GUIMain() {
 
 		setIgnoreRepaint(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -256,7 +261,7 @@ public class LunarEXGUIWORKINGVERSION extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		LunarEXGUIWORKINGVERSION app = new LunarEXGUIWORKINGVERSION();
+		GUIMain app = new GUIMain();
 		app.setTitle("Simple Keyboard Input");
 		app.setVisible(true);
 		app.run();
