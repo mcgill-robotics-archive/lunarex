@@ -8,9 +8,13 @@ import java.util.*;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+
 import lunarex.input.*;
+import lunarex.network.*;
 
 public class GUIMain extends JFrame {
+	
+	Client client = null;
 	
 	private static final long serialVersionUID = 1190876640530075607L;
 	static final int WIDTH = 1080;
@@ -250,6 +254,9 @@ public class GUIMain extends JFrame {
 					.showInputDialog("Please enter an IP Adress to connect to");
 			portNumberString = JOptionPane
 					.showInputDialog("Pleane enter a port number to connect to");
+			
+			client = new Client(ipAdressString, Integer.parseInt(portNumberString));
+			client.start();
 		}
 		// Clear circles if they press C
 		if (keyboard.keyDownOnce(KeyEvent.VK_C)) {
