@@ -10,6 +10,7 @@ public class Client extends Thread {
 	public LinkedList<String> list;
 	public boolean closeConnection;
 	public String listData;
+	public String receivedData;
 
 	public Client(String ip_address, int in_port) {
 		this.IP = ip_address;
@@ -17,13 +18,17 @@ public class Client extends Thread {
 		this.list = new LinkedList<String>();
 		this.closeConnection = false;
 	}
-	
-	public void send(String data){
-		list.add(data);
+
+	public void send(String data) {
+		list.push(data);
 	}
-	
-	public void close(){
-		closeConnection=true;
+
+	public String receive() {
+		return receivedData;
+	}
+
+	public void close() {
+		closeConnection = true;
 	}
 
 	public void run() {
@@ -37,20 +42,25 @@ public class Client extends Thread {
 														// Server.
 			while (true) {
 				try {
-					PrintWriter out = new PrintWriter(client.getOutputStream(), true);
-		            BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-					
-					if(list.size()>0){
-						listData=list.remove();
-						out.print(listData);
-						System.out.print(listData);
+					// PrintWriter out = new
+					// PrintWriter(client.getOutputStream(),
+					// true);
+					OutputStream outToServer = client.getOutputStream();
+					DataOutputStream out = new DataOutputStream(outToServer);
+					// BufferedReader in = new BufferedReader(new
+					// InputStreamReader(client.getInputStream()));
+
+					while (list.size() > 0) {
+						listData = list.pop();
+						out.writeUTF(listData);
+						System.out.println(listData);
 					}
-					if(closeConnection){
+					if (closeConnection) {
 						break;
 					}
-					
+
 				} catch (Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 			client.close();
