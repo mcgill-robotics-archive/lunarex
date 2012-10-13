@@ -42,17 +42,12 @@ public class Client extends Thread {
 														// Server.
 			while (true) {
 				try {
-					// PrintWriter out = new
-					// PrintWriter(client.getOutputStream(),
-					// true);
-					OutputStream outToServer = client.getOutputStream();
-					DataOutputStream out = new DataOutputStream(outToServer);
-					// BufferedReader in = new BufferedReader(new
-					// InputStreamReader(client.getInputStream()));
+					PrintWriter out = new PrintWriter(client.getOutputStream(), true);//For python Server
+					//DataOutputStream out = new DataOutputStream(client.getOutputStream());//For Java Server
 
 					while (list.size() > 0) {
 						listData = list.pop();
-						out.writeUTF(listData);
+						out.println(listData);
 						System.out.println(listData);
 					}
 					if (closeConnection) {
@@ -60,7 +55,7 @@ public class Client extends Thread {
 					}
 
 				} catch (Exception e) {
-					//e.printStackTrace();
+					//Do nothing here. Exceptions are redundant.
 				}
 			}
 			client.close();

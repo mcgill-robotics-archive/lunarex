@@ -25,29 +25,32 @@ public class Server extends Thread
                   + server.getRemoteSocketAddress());
             while(true)
             {
-                ObjectInputStream in =
-                  new ObjectInputStream(server.getInputStream());
-                ObjectOutputStream out =
-                  new ObjectOutputStream(server.getOutputStream());
-                short a; //Acceleration. Received from client in the Operations.
-            	System.out.println("Waiting for commands from Client...");
+                DataInputStream in =
+                  new DataInputStream(server.getInputStream());
+                //ObjectOutputStream out =
+                  //new ObjectOutputStream(server.getOutputStream());
+                //short a; //Acceleration. Received from client in the Operations.
+            	//System.out.println("Waiting for commands from Client...");
             	try{
-            		DataOperaion operation = null;//Status of the robot, sent from server to client
-                    operation = (DataOperaion)in.readObject();//receive operation commands from the client.
-            		if(operation.quit()) break; //Tell whether to close the socket.
-                    System.out.println("Received command to " + operation.OperationDescription()); //Command receit confirmation
-            		for(int i = 0; i < operation.getCycle(); i++) //For-loop is retained to realize the function of printing the process of accelerating later on.
-            		{
-            			if(operation.status()) a = operation.getAcceleration();
-            			else a = (short)(0 - operation.getAcceleration());
-            			stream.setRpm1((short)(stream.getRpm1() + a));
-            			stream.setRpm2((short)(stream.getRpm2() + a));
-            			stream.setRpm3((short)(stream.getRpm3() + a));
-            			stream.setRpm4((short)(stream.getRpm4() + a));
+            		String temp = in.readUTF();
+                    if(!temp.equals(null))
+                    {System.out.println(in.readUTF());}
+                    //DataOperaion operation = null;//Status of the robot, sent from server to client
+                    //operation = (DataOperaion)in.readObject();//receive operation commands from the client.
+            		//if(operation.quit()) break; //Tell whether to close the socket.
+                    //System.out.println("Received command to " + operation.OperationDescription()); //Command receit confirmation
+            		//for(int i = 0; i < operation.getCycle(); i++) //For-loop is retained to realize the function of printing the process of accelerating later on.
+            		//{
+            			//if(operation.status()) a = operation.getAcceleration();
+            			//else a = (short)(0 - operation.getAcceleration());
+            			//stream.setRpm1((short)(stream.getRpm1() + a));
+            			//stream.setRpm2((short)(stream.getRpm2() + a));
+            			//stream.setRpm3((short)(stream.getRpm3() + a));
+            			//stream.setRpm4((short)(stream.getRpm4() + a));
             			//out.writeObject(stream);
-            		}
-            	out.writeObject(stream); // Send the status of the robot to Client.
-                out.flush();
+            		//}
+            	//out.writeObject(stream); // Send the status of the robot to Client.
+                //out.flush();
             	}catch(Exception e)
             	{
             		System.out.println(e);
@@ -64,7 +67,7 @@ public class Server extends Thread
          }catch(IOException e)
          {
             e.printStackTrace();
-            break;
+            continue;
          }
       }
    }
