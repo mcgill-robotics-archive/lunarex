@@ -3,6 +3,8 @@ package lunarex.network;
 import java.net.*;
 import java.util.*;
 import java.io.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public class Client extends Thread {
 	public String IP;
