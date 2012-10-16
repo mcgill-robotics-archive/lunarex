@@ -2,6 +2,7 @@ import SocketServer
 import sys
 import serial
 import json
+import time
 from threading import Thread
 
 HOST=''
@@ -33,6 +34,7 @@ class Handler(SocketServer.BaseRequestHandler):
                 pass
 
             self.request.send(json.dumps(vars(self.currentState),sort_keys=True,indent=4))
+            time.sleep(1)
 
 class Server(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     # Ctrl-C will cleanly kill all spawned threads

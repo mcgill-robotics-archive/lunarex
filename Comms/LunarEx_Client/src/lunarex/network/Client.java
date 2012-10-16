@@ -43,12 +43,18 @@ public class Client extends Thread {
 			while (true) {
 				try {
 					PrintWriter out = new PrintWriter(client.getOutputStream(), true);//For python Server
+					BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 					//DataOutputStream out = new DataOutputStream(client.getOutputStream());//For Java Server
+					char[] buffer = new char[1024];
 
 					while (list.size() > 0) {
 						listData = list.pop();
 						out.println(listData);
 						System.out.println(listData);
+					}
+					if(in.ready()){
+						in.read(buffer);
+						System.out.println(buffer);
 					}
 					if (closeConnection) {
 						break;
