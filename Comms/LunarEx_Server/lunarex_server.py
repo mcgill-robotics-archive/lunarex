@@ -19,6 +19,8 @@ class Handler(SocketServer.BaseRequestHandler):
 
     def setup(self):
         self.currentState = Data(0.0,0.0,0.0)
+        self.initialTime = int(time.time()*1000.0)
+        self.currentTime = int(time.time()*1000.0)
         self.request.setblocking(0)
 
     def handle(self):
@@ -27,14 +29,20 @@ class Handler(SocketServer.BaseRequestHandler):
             try:
                 data = self.request.recv(1024)
                 print data
-                if(data=='quit'):
-                    self.request.close()
-                    break
+                if(data=='bye'):
+                    return
+
+                self.currentTime = int(time.time()*1000.0)
+                if(self.currentTime-self.initialTime > 500):
+                    dataPacket = json.dumps(vars(self.currentState),sort_keys=True,indent=4)
+                    self.request.send(dataPacket)
+                    self.initialTime = int(time.time()*1000.0)
+
             except:
                 pass
 
-            self.request.send(json.dumps(vars(self.currentState),sort_keys=True,indent=4))
-            time.sleep(1)
+    def finish(self):
+        self.request.close()
 
 class Server(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     # Ctrl-C will cleanly kill all spawned threads
