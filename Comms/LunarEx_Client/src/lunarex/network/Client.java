@@ -33,25 +33,21 @@ public class Client extends Thread {
 	public void close() {
 		closeConnection = true;
 	}
-	
-	public JSONObject getReceivedData()
-	{
+
+	public JSONObject getReceivedData() {
 		return this.DataStream;
 	}
-	
-	public double getX()
-	{
-		return (double)this.getReceivedData().get("X");
+
+	public double getX() {
+		return (double) this.getReceivedData().get("X");
 	}
-	
-	public double getY()
-	{
-		return (double)this.getReceivedData().get("Y");
+
+	public double getY() {
+		return (double) this.getReceivedData().get("Y");
 	}
-	
-	public double getTheta()
-	{
-		return (double)this.getReceivedData().get("Theta");
+
+	public double getTheta() {
+		return (double) this.getReceivedData().get("Theta");
 	}
 
 	public void run() {
@@ -65,26 +61,37 @@ public class Client extends Thread {
 														// Server.
 			while (true) {
 				try {
-					PrintWriter out = new PrintWriter(client.getOutputStream(), true);//For python Server
-					BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-					//DataOutputStream out = new DataOutputStream(client.getOutputStream());//For Java Server
+					PrintWriter out = new PrintWriter(client.getOutputStream(),
+							true);// For python Server
+					// BufferedReader in = new BufferedReader(new
+					// InputStreamReader(client.getInputStream()));
+					// DataOutputStream out = new
+					// DataOutputStream(client.getOutputStream());//For Java
+					// Server
+					ObjectInputStream in = new ObjectInputStream(
+							client.getInputStream());
 					char[] buffer = new char[1024];
 
 					while (list.size() > 0) {
 						listData = list.pop();
 						out.println(listData);
 						System.out.println(listData);
-					}
-					if(in.ready()){
-						in.read(buffer);
-						System.out.println(buffer);
-					}
+					} // The while above is for Keyboard inputs.
+
+					this.DataStream = (JSONObject) in.readObject();
+					System.out.println("Current Status: " + "\n" + "X: "
+							+ this.getX() + "\n" + "Y: " + this.getY() + "\n"
+							+ "Theta: " + this.getTheta()); // Codes above
+															// receives the json
+															// object and print
+															// it out.
+
 					if (closeConnection) {
 						break;
 					}
 
 				} catch (Exception e) {
-					//Do nothing here. Exceptions are redundant.
+					// Do nothing here. Exceptions are redundant.
 				}
 			}
 			client.close();
