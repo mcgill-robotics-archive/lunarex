@@ -13,6 +13,7 @@ public class Client extends Thread {
 	public boolean closeConnection;
 	public String listData;
 	public String receivedData;
+	public JSONObject DataStream;// Transfer message by JSON
 
 	public Client(String ip_address, int in_port) {
 		this.IP = ip_address;
@@ -31,6 +32,26 @@ public class Client extends Thread {
 
 	public void close() {
 		closeConnection = true;
+	}
+	
+	public JSONObject getReceivedData()
+	{
+		return this.DataStream;
+	}
+	
+	public double getX()
+	{
+		return (double)this.getReceivedData().get("X");
+	}
+	
+	public double getY()
+	{
+		return (double)this.getReceivedData().get("Y");
+	}
+	
+	public double getTheta()
+	{
+		return (double)this.getReceivedData().get("Theta");
 	}
 
 	public void run() {
