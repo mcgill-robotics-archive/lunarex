@@ -27,7 +27,7 @@ public class GUIMain extends JFrame {
 		float x, y, w, h, velocity;
 		int angle, containerAngle;
 		float massInContainer, totalMass;
-		int batteryLevel=50;
+		int batteryLevel = 50;
 		float rpm1, rpm2, rpm3, rpm4;
 		boolean doorOpen;
 		int elevationWheel1, elevationWheel2, elevationWheel3, elevationWheel4;
@@ -46,8 +46,6 @@ public class GUIMain extends JFrame {
 	Random rand = new Random();// Used for random circle locations
 	boolean manualOverride;
 	byte[] outByte = new byte[1];
-	
-	
 
 	public GUIMain() {
 
@@ -71,12 +69,7 @@ public class GUIMain extends JFrame {
 		bob.x = (float) field.x;
 		bob.y = (float) field.y;
 		manualOverride = false;
-		if (outByte[1] != 0) {
-//			client.send(outByte[1]);
-			for (int i = 0; i < outByte.length; i++) {
-				outByte[i] = 0;
-			}
-		}
+
 	}
 
 	public void updateData(JSONObject obj) {
@@ -102,6 +95,13 @@ public class GUIMain extends JFrame {
 
 		while (true) {
 			try {
+				System.out.println(outByte[0]);
+				if (outByte[0] != 0) {
+					client.send(outByte);
+					for (int i = 0; i < outByte.length; i++) {
+						outByte[i] = 0;
+					}
+				}
 
 				// Poll the keyboard
 				keyboard.poll();
@@ -145,16 +145,15 @@ public class GUIMain extends JFrame {
 				g2d.setColor(Color.cyan);
 				g2d.drawRect((int) (field.x), (int) (field.y), (int) field.w,
 						(int) field.h);
-				
+
 				g2d.setColor(Color.WHITE);
 				g2d.drawRect(800, 50, 100, 33);
-				g2d.drawRect(900,61,5,10);
-				Color DARKGREEN = new Color(0,220,10);
+				g2d.drawRect(900, 61, 5, 10);
+				Color DARKGREEN = new Color(0, 220, 10);
 				g2d.setColor(DARKGREEN);
 				g2d.fillRect(801, 51, bob.batteryLevel, 32);
 				g2d.setColor(Color.WHITE);
-				g2d.drawString(""+bob.batteryLevel+"%", 840, 70);
-				
+				g2d.drawString("" + bob.batteryLevel + "%", 840, 70);
 
 				// Draw bob
 				g2d.setColor(Color.RED);
@@ -196,46 +195,19 @@ public class GUIMain extends JFrame {
 		if (manualOverride) {
 			// If moving backward
 			if (keyboard.keyDown(KeyEvent.VK_DOWN)) {
-				if (client != null) {
-					client.send("2");
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-					}
-				}
+				outByte[0] |= 1 << 1;
 			}
 			// If moving forward
 			if (keyboard.keyDown(KeyEvent.VK_UP)) {
-
-				if (client != null) {
-					client.send("1");
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-					}
-				}
+				outByte[0] |= 1 << 0;
 			}
 			// If Rotate left
 			if (keyboard.keyDown(KeyEvent.VK_LEFT)) {
-
-				if (client != null) {
-					client.send("3");
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-					}
-				}
+				outByte[0] |= 1 << 2;
 			}
 			// If rotate right
 			if (keyboard.keyDown(KeyEvent.VK_RIGHT)) {
-
-				if (client != null) {
-					client.send("4");
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-					}
-				}
+				outByte[0] |= 1 << 3;
 			}
 		}
 		// IP ADDRESS BOX
