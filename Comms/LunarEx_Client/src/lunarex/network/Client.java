@@ -13,7 +13,6 @@ public class Client extends Thread {
 	public boolean closeConnection;
 	public String listData;
 	public String receivedData;
-	public JSONObject DataStream;// Transfer message by JSON
 
 	public Client(String ip_address, int in_port) {
 		this.IP = ip_address;
@@ -22,8 +21,8 @@ public class Client extends Thread {
 		this.closeConnection = false;
 	}
 
-	public void send(String data) {
-		list.push(data);
+	public void send(byte[] data) {
+		//nothing temporarily
 	}
 
 	public String receive() {
@@ -34,20 +33,25 @@ public class Client extends Thread {
 		closeConnection = true;
 	}
 
-	public JSONObject getReceivedData() {
-		return this.DataStream;
+	public float getX() {
+		int startingIndex = receivedData.indexOf('x') + 4;
+		int endingIndex = receivedData.indexOf(',', startingIndex);
+		String xString = receivedData.substring(startingIndex, endingIndex);
+		return Float.parseFloat(xString);
 	}
 
-	public double getX() {
-		return (double) this.getReceivedData().get("X");
+	public float getY() {
+		int startingIndex = receivedData.indexOf('y') + 4;
+		int endingIndex = receivedData.indexOf('\n', startingIndex);
+		String yString = receivedData.substring(startingIndex, endingIndex);
+		return Float.parseFloat(yString);
 	}
 
-	public double getY() {
-		return (double) this.getReceivedData().get("Y");
-	}
-
-	public double getTheta() {
-		return (double) this.getReceivedData().get("Theta");
+	public float getTheta() {
+		int startingIndex = receivedData.indexOf("theta") + 8;
+		int endingIndex = receivedData.indexOf(',', startingIndex);
+		String thetaString = receivedData.substring(startingIndex, endingIndex);
+		return Float.parseFloat(thetaString);		
 	}
 
 	public void run() {
@@ -63,22 +67,21 @@ public class Client extends Thread {
 				try {
 					PrintWriter out = new PrintWriter(client.getOutputStream(),
 							true);// For python Server
-					// BufferedReader in = new BufferedReader(new
-					// InputStreamReader(client.getInputStream()));
+					 BufferedReader in = new BufferedReader(new
+					 InputStreamReader(client.getInputStream()));// Reading String from python server.
 					// DataOutputStream out = new
 					// DataOutputStream(client.getOutputStream());//For Java
 					// Server
-					ObjectInputStream in = new ObjectInputStream(
-							client.getInputStream());
 					char[] buffer = new char[1024];
 
-					while (list.size() > 0) {
+					/*while (list.size() > 0) {
 						listData = list.pop();
 						out.println(listData);
 						System.out.println(listData);
-					} // The while above is for Keyboard inputs.
+					} */// The while above is for Keyboard inputs.
 
-					this.DataStream = (JSONObject) in.readObject();
+					in.read(buffer);
+					this.receivedData = new String(buffer);
 					System.out.println("Current Status: " + "\n" + "X: "
 							+ this.getX() + "\n" + "Y: " + this.getY() + "\n"
 							+ "Theta: " + this.getTheta()); // Codes above

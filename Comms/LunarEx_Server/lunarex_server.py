@@ -27,16 +27,19 @@ class Handler(SocketServer.BaseRequestHandler):
         while(True):
             # self.request is the client connection
             try:
+                '''
                 data = self.request.recv(1024)
                 print data
                 if(data=='bye'):
                     return
-
+                '''
+                
                 self.currentTime = int(time.time()*1000.0)
-                if(self.currentTime-self.initialTime > 500):
+                if((self.currentTime-self.initialTime) > 500):
                     dataPacket = json.dumps(vars(self.currentState),sort_keys=True,indent=4)
                     self.request.send(dataPacket)
                     self.initialTime = int(time.time()*1000.0)
+                    print dataPacket
 
             except:
                 pass
