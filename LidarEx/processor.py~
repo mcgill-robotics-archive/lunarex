@@ -25,10 +25,10 @@ class Point(object):
 		self.y = math.sin(math.degrees(self.theta))*self.r
 		
 	def __str__(self):
-		return "Point twih angle: "+str(self.theta)+"and distance: "+str(self.r)
+		return "Point with angle: "+str(self.theta)+"and distance: "+str(self.r)
 	
 		
-class Scan(object):degrees
+class Scan(object):
 	def __init__(self, scanData, params):
 		self.scanData = scanData
 		self.params = params
