@@ -21,11 +21,11 @@ class Point(object):
 	def __init__(self, theta, r):
 		self.theta = float(theta)
 		self.r = float(r)
-		self.x = math.cos(math.degrees(self.theta))*self.r
-		self.y = math.sin(math.degrees(self.theta))*self.r
+		self.x = math.cos(math.radians(self.theta))*self.r
+		self.y = math.sin(math.radians(self.theta))*self.r
 		
 	def __str__(self):
-		return "Point with angle: "+str(self.theta)+" and distance: "+str(self.r)
+		return "Point with angle: "+str(self.theta)+" and distance: "+str(self.r) + "\n X coord: "+str(self.x)+" and Y coord: "+str(self.y)
 	
 		
 class Scan(object):#degrees
@@ -92,6 +92,7 @@ for scan in scans:
 	timehash[scanData[0]] = j
 	
 for i in range(0, len(scans[4].points)):
+	if(i%5 == 0): #print every 5 variables
 		print(scans[4].points[i])
 
 scans[4].computeDistances()
