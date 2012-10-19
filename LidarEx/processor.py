@@ -25,7 +25,7 @@ class Point(object):
 		self.y = math.sin(math.degrees(self.theta))*self.r
 		
 	def __str__(self):
-		return "Point twih angle: "+str(self.theta)+"and distance: "+str(self.r)
+		return "Point with angle: "+str(self.theta)+" and distance: "+str(self.r)
 	
 		
 class Scan(object):#degrees
@@ -33,9 +33,12 @@ class Scan(object):#degrees
 		self.scanData = scanData
 		self.params = params
 		self.points = []
-		self.minAngle = math.degrees(minAngleDefault)
-		self.maxAngle = math.degrees(maxAngleDefault)
-		self.angleInc = math.degrees(angleIncDefault)
+		self.minAngleRad = float(minAngleDefault)
+		self.maxAngleRad = float(maxAngleDefault)
+		self.angleIncRad = float(angleIncDefault)
+		self.minAngleDeg = math.degrees(minAngleDefault)
+		self.maxAngleDeg = math.degrees(maxAngleDefault)
+		self.angleIncDeg = math.degrees(angleIncDefault)
 		
 		for i in range (len(scanData)):
 			if(scanData[i]=="laser"):
@@ -44,14 +47,17 @@ class Scan(object):#degrees
 			if params[i] == "%time":
 				self.time = scanData[i]
 			elif params[i] == "field.angle_min":
-				self.minAngle = math.degrees(float(scanData[i]))
+				self.minAngleDeg = math.degrees(float(scanData[i]))
+				self.minAngleRad = float(scanData[i])
 			elif params[i] == "field.angle_max":
-				self.maxAngle = math.degrees(float(scanData[i]))
+				self.maxAngleDeg = math.degrees(float(scanData[i]))
+				self.maxAngleRad = float(scanData[i])
 			elif params[i] == "field.angle_increment":
-				self.angleInc = math.degrees(float(scanData[i]))
+				self.angleIncDeg = math.degrees(float(scanData[i]))
+				self.angleIncRad = float(scanData[i])
 			elif "field.ranges" in params[i]:
 				pointNumber = int(params[i][len("field.ranges"):])
-				pointAngle = self.minAngle + pointNumber*self.angleInc
+				pointAngle = self.minAngleDeg + pointNumber*self.angleIncDeg
 				self.points.append(Point(pointAngle, scanData[i]))		
 
 	def computeDistances(self):
@@ -85,7 +91,7 @@ for scan in scans:
 	scans[j]= Scan(scanData, params)
 	timehash[scanData[0]] = j
 	
-for i in range(0, len(scans)):
+for i in range(0, len(scans[4].points)):
 		print(scans[4].points[i])
 
 scans[4].computeDistances()
