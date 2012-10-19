@@ -28,7 +28,7 @@ class Point(object):
 		return "Point twih angle: "+str(self.theta)+"and distance: "+str(self.r)
 	
 		
-class Scan(object):degrees
+class Scan(object):#degrees
 	def __init__(self, scanData, params):
 		self.scanData = scanData
 		self.params = params
@@ -85,8 +85,7 @@ for scan in scans:
 	scans[j]= Scan(scanData, params)
 	timehash[scanData[0]] = j
 	
-#for i in range(0, 720):
-	#if i%5 == 0:
-		#print(scans[4].points[i])
+for i in range(0, len(scans)):
+		print(scans[4].points[i])
 
 scans[4].computeDistances()
