@@ -57,16 +57,17 @@ class Scan(object):#degrees
 				self.angleIncRad = float(scanData[i])
 			elif "field.ranges" in params[i]:
 				pointNumber = int(params[i][len("field.ranges"):])
-				pointAngle = self.minAngleDeg + pointNumber*self.angleIncDeg
-				self.points.append(Point(pointAngle, scanData[i]))		
+				pointAngleDeg = self.minAngleDeg + pointNumber*self.angleIncDeg #point angle in degrees
+				pointAngleRad = self.minAngleRad + pointNumber*self.angleIncRad #point angle in radians
+				self.points.append(Point(pointAngleDeg, scanData[i]))		
 
 	def computeDistances(self):
-		count = 0.0
+		count = 0
 		average = 0.0
 		for i in range(len(self.points)):
 			for j in range(len(self.points)):
-				count = count + 1.0
-				distance = math.sqrt(math.pow(self.points[i].x - self.points[j].x, 2) + math.pow(self.points[i].x - self.points[j].x, 2))
+				count += 1
+				distance = math.hypot(self.points[i].x - self.points[j].x, self.points[i].x - self.points[j].x)
 				average = average + distance/count
 		print(average/count)
 			
