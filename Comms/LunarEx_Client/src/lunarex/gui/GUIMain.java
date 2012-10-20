@@ -95,9 +95,13 @@ public class GUIMain extends JFrame {
 
 		while (true) {
 			try {
-				System.out.println(outByte[0]);
+				//System.out.println(outByte[0]);
 				if (outByte[0] != 0) {
-					client.send(outByte);
+					if(client != null)
+					{
+						client.send(outByte);
+						//System.out.println(outByte[0]);
+					}
 					for (int i = 0; i < outByte.length; i++) {
 						outByte[i] = 0;
 					}
