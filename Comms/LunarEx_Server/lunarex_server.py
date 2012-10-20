@@ -6,7 +6,7 @@ import time
 from threading import Thread
 
 HOST=''
-PORT=31092
+PORT=5902
 BUFFERSIZE=4096
 
 class Data:
@@ -21,25 +21,27 @@ class Handler(SocketServer.BaseRequestHandler):
         self.currentState = Data(0.0,0.0,0.0)
         self.initialTime = int(time.time()*1000.0)
         self.currentTime = int(time.time()*1000.0)
-        self.request.setblocking(0)
+        print "Someone connected"
 
     def handle(self):
         while(True):
             # self.request is the client connection
             try:
+                print "Reading"
+                try:
+                    data = self.request.recv(1024)
+                    print int(data)
+                except:
+                    pass
+
                 '''
-                data = self.request.recv(1024)
-                print data
-                if(data=='bye'):
-                    return
-                '''
-                
                 self.currentTime = int(time.time()*1000.0)
                 if((self.currentTime-self.initialTime) > 500):
                     dataPacket = json.dumps(vars(self.currentState),sort_keys=True,indent=4)
                     self.request.send(dataPacket)
                     self.initialTime = int(time.time()*1000.0)
                     print dataPacket
+                '''
 
             except:
                 pass
