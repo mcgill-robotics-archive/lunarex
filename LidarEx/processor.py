@@ -45,16 +45,16 @@ class Scan(object):#degrees
 				continue
 			#print(scanData[i])
 			if params[i] == "%time":
-				self.time = scanData[i]
+				self.time = scanData[i]											#time in seconds since Unix epoch
 			elif params[i] == "field.angle_min":
-				self.minAngleDeg = math.degrees(float(scanData[i]))
-				self.minAngleRad = float(scanData[i])
+				self.minAngleDeg = math.degrees(float(scanData[i]))				#min angle in radians
+				self.minAngleRad = float(scanData[i])							#min angle in radians
 			elif params[i] == "field.angle_max":
-				self.maxAngleDeg = math.degrees(float(scanData[i]))
-				self.maxAngleRad = float(scanData[i])
+				self.maxAngleDeg = math.degrees(float(scanData[i]))				#max degrees in radians
+				self.maxAngleRad = float(scanData[i])							#max angle in radians
 			elif params[i] == "field.angle_increment":
-				self.angleIncDeg = math.degrees(float(scanData[i]))
-				self.angleIncRad = float(scanData[i])
+				self.angleIncDeg = math.degrees(float(scanData[i]))				#angle increment in degrees
+				self.angleIncRad = float(scanData[i])							#angle increment in radians
 			elif "field.ranges" in params[i]:
 				pointNumber = int(params[i][len("field.ranges"):])
 				pointAngleDeg = self.minAngleDeg + pointNumber*self.angleIncDeg #point angle in degrees
@@ -67,7 +67,7 @@ class Scan(object):#degrees
 		for i in range(len(self.points)):
 			for j in range(len(self.points)):
 				count += 1
-				#distance between points using  Distance formualt
+				#distance between points using  Distance formula
 				distanceCart = math.hypot(self.points[i].x - self.points[j].x, self.points[i].y - self.points[j].y)
 				#distance between points using Law of Cosines
 				distancePolar = math.sqrt(self.points[i].r*self.points[i].r + self.points[j].r*self.points[j].r - 2*self.points[i].r*self.points[j].r*math.cos(self.angleIncRad*(j-i)))
@@ -76,9 +76,7 @@ class Scan(object):#degrees
 			#print("Cartesian: " + str(distanceCart))
 			#print("Polar:     " + str(distancePolar))
 		print(average/count)
-
 			
-				
 if(len(sys.argv)<2):
 	print(usage)
 	sys.exit()
