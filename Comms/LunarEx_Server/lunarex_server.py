@@ -21,18 +21,21 @@ class Handler(SocketServer.BaseRequestHandler):
         self.currentState = Data(0.0,0.0,0.0)
         self.initialTime = int(time.time()*1000.0)
         self.currentTime = int(time.time()*1000.0)
-        print "Someone connected"
+        self.request.setblocking(1)
+        print str(self.request.getpeername())+" connected"
+
 
     def handle(self):
         while(True):
             # self.request is the client connection
             try:
-                print "Reading"
                 try:
                     data = self.request.recv(1024)
-                    print int(data)
                 except:
                     pass
+
+                if data:
+                    print 'Received: ' + str(ord(data))
 
                 '''
                 self.currentTime = int(time.time()*1000.0)
