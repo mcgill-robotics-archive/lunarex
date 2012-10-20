@@ -67,14 +67,16 @@ class Scan(object):#degrees
 		for i in range(len(self.points)):
 			for j in range(len(self.points)):
 				count += 1
-				distanceCart = math.hypot(self.points[i].x - self.points[j].x, self.points[i].x - self.points[j].x)
-				#distance using Cosine law
-				distancePolar = math.sqrt(self.points[i].r*self.points[i].r + self.points[j].r*self.points[j].r - 2*self.points[i].r*self.points[j].r*math.cos(self.angleIncRad*(math.fabs(i-j)))) # angle calculation needs to wrap around unit circle... 
+				#distance between points using  Distance formualt
+				distanceCart = math.hypot(self.points[i].x - self.points[j].x, self.points[i].y - self.points[j].y)
+				#distance between points using Law of Cosines
+				distancePolar = math.sqrt(self.points[i].r*self.points[i].r + self.points[j].r*self.points[j].r - 2*self.points[i].r*self.points[j].r*math.cos(self.angleIncRad*(j-i)))
 				average = average + distanceCart/count
-		print(average/count)
 			#Print distance in Cartesian and Polar
 			#print("Cartesian: " + str(distanceCart))
-			#print("Polar: " + str(distancePolar))
+			#print("Polar:     " + str(distancePolar))
+		print(average/count)
+
 			
 				
 if(len(sys.argv)<2):
