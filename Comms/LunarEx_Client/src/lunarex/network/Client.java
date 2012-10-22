@@ -11,7 +11,7 @@ public class Client extends Thread {
 	public int port;
 	public boolean closeConnection;
 	public String receivedData;
-	public byte commands;
+	public byte[] commands;
 	public boolean isManualOverride;
 
 	public Client(String ip_address, int in_port) {
@@ -23,11 +23,10 @@ public class Client extends Thread {
 
 	public void send(byte[] data) {
 		this.isManualOverride = true;
-		this.commands = data[0];
+		this.commands = (byte[]) data.clone();
 	}
-	
-	public void resetCommands()
-	{
+
+	public void resetCommands() {
 		this.isManualOverride = false;
 	}
 
@@ -66,33 +65,39 @@ public class Client extends Thread {
 					+ this.port);
 			Socket client = new Socket(this.IP, this.port);
 			System.out.println("Connected to "
-					+ client.getRemoteSocketAddress()); // All above is used to make a connection to Server.
+					+ client.getRemoteSocketAddress()); // All above is used to
+														// make a connection to
+														// Server.
 			PrintWriter output = null;
 			BufferedReader input = null;
 			DataOutputStream out = null;
 			while (true) {
 				try {
-					output = new PrintWriter(client.getOutputStream(),
-							true);// For python Server
-					input = new BufferedReader(
-							new InputStreamReader(client.getInputStream()));// Reading String from python server.
+					output = new PrintWriter(client.getOutputStream(), true);// For
+																				// python
+																				// Server
+					input = new BufferedReader(new InputStreamReader(
+							client.getInputStream()));// Reading String from
+														// python server.
 					out = new DataOutputStream(client.getOutputStream());
 					char[] buffer = new char[1024];
 
 					if (this.isManualOverride) {
-						out.write(Character.toChars((int)commands)[0]);
-						System.out.println((int)commands);
+						// out.write(Character.toChars((int)commands)[0]);
+						for (int i = 0; i < commands.length; i++) {
+							out.write((int) commands[i]);
+							System.out.println((int) commands[i]);
+						}
 						this.resetCommands();
 					}
 
-					/*input.read(buffer);
-					this.receivedData = new String(buffer);
-					System.out.println("Current Status: " + "\n" + "X: "
-							+ this.getX() + "\n" + "Y: " + this.getY() + "\n"
-							+ "Theta: " + this.getTheta()); // Codes above
-															// receives the json
-															// object and print
-															// it out.*/
+					/*
+					 * input.read(buffer); this.receivedData = new
+					 * String(buffer); System.out.println("Current Status: " +
+					 * "\n" + "X: " + this.getX() + "\n" + "Y: " + this.getY() +
+					 * "\n" + "Theta: " + this.getTheta()); // Codes above //
+					 * receives the json // object and print // it out.
+					 */
 
 					if (closeConnection) {
 						break;
