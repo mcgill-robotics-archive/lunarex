@@ -7,15 +7,15 @@ import java.awt.image.*;
 import java.util.*;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
+import org.json.simple.*;
 
 import lunarex.input.*;
 import lunarex.network.*;
 
 public class GUIMain extends JFrame {
-	
+
 	Client client = null;
-	
+
 	private static final long serialVersionUID = 1190876640530075607L;
 	static final int WIDTH = 1080;
 	static final int HEIGHT = (int) (9 / 16.0 * WIDTH);
@@ -24,8 +24,14 @@ public class GUIMain extends JFrame {
 	String portNumberString = "";
 
 	class Bob {
-		double x, y, w, h, dx, dy;
-		double angle, dangle;
+		float x, y, w, h, velocity;
+		int angle, containerAngle;
+		float massInContainer, totalMass;
+		int batteryLevel = 50;
+		float rpm1, rpm2, rpm3, rpm4;
+		boolean doorOpen;
+		int elevationWheel1, elevationWheel2, elevationWheel3, elevationWheel4;
+
 	}
 
 	class Rect {
@@ -38,7 +44,8 @@ public class GUIMain extends JFrame {
 	Bob bob = new Bob(); // Our rectangle
 	Rect field = new Rect();
 	Random rand = new Random();// Used for random circle locations
-	Boolean manualOverride;
+	boolean manualOverride;
+	byte[] outByte = new byte[1];
 
 	public GUIMain() {
 
@@ -54,16 +61,22 @@ public class GUIMain extends JFrame {
 		addKeyListener(keyboard);
 		canvas.addKeyListener(keyboard);
 
-		bob.dx = bob.dy = 1 / 1;
 		bob.w = bob.h = 25;
-		bob.dangle = Math.PI / 90;
 		field.w = 738 * 1;
 		field.h = 388 * 1;
 		field.x = WIDTH - field.w - 20;
 		field.y = HEIGHT - field.h - 20;
-		bob.x = field.x;
-		bob.y = field.y;
+		bob.x = (float) field.x;
+		bob.y = (float) field.y;
 		manualOverride = false;
+
+	}
+
+	public void updateData(JSONObject obj) {
+		bob.x = (float) obj.get("X");
+		bob.y = (float) obj.get("Y");
+		bob.angle = (int) obj.get("Theta");
+
 	}
 
 	public void run() {
@@ -78,10 +91,21 @@ public class GUIMain extends JFrame {
 
 		Graphics graphics = null;
 		Graphics2D g2d = null;
-		Color background = Color.LIGHT_GRAY;
+		Color background = Color.BLACK;
 
 		while (true) {
 			try {
+				//System.out.println(outByte[0]);
+				if (outByte[0] != 0) {
+					if(client != null)
+					{
+						client.send(outByte);
+						//System.out.println(outByte[0]);
+					}
+					for (int i = 0; i < outByte.length; i++) {
+						outByte[i] = 0;
+					}
+				}
 
 				// Poll the keyboard
 				keyboard.poll();
@@ -95,7 +119,7 @@ public class GUIMain extends JFrame {
 				g2d.fillRect(0, 0, WIDTH, HEIGHT);
 
 				// Draw help
-				g2d.setColor(Color.BLACK);
+				g2d.setColor(Color.WHITE);
 				g2d.drawString("Use arrow keys to move rect", 20, 20);
 				g2d.drawString("Press SPACE to add IP ADDRESS", 20, 32);
 				// g2d.drawString("Press C to clear circles", 20, 44);
@@ -107,6 +131,8 @@ public class GUIMain extends JFrame {
 				// g2d.drawString("Speed: ");
 				g2d.drawString("Angle: "
 						+ (int) (360 * bob.angle / (2 * Math.PI)), 20, 104);
+				g2d.drawString("Manual Override: " + manualOverride, 20, 116);
+
 				g2d.drawString("(0,0)", (int) (field.x - 25),
 						(int) (field.y - 2));
 
@@ -120,8 +146,18 @@ public class GUIMain extends JFrame {
 				}
 
 				// Draw Rectangular Field
+				g2d.setColor(Color.cyan);
 				g2d.drawRect((int) (field.x), (int) (field.y), (int) field.w,
 						(int) field.h);
+
+				g2d.setColor(Color.WHITE);
+				g2d.drawRect(800, 50, 100, 33);
+				g2d.drawRect(900, 61, 5, 10);
+				Color DARKGREEN = new Color(0, 220, 10);
+				g2d.setColor(DARKGREEN);
+				g2d.fillRect(801, 51, bob.batteryLevel, 32);
+				g2d.setColor(Color.WHITE);
+				g2d.drawString("" + bob.batteryLevel + "%", 840, 70);
 
 				// Draw bob
 				g2d.setColor(Color.RED);
@@ -160,104 +196,22 @@ public class GUIMain extends JFrame {
 
 	// keyboard input
 	protected void processInput() {
-		// If moving backward
-		if (keyboard.keyDown(KeyEvent.VK_DOWN)) {
-			bob.x -= bob.dx * Math.cos(bob.angle);
-			bob.y -= bob.dy * Math.sin(bob.angle);
-			// Check collision with bottom
-			if (bob.x < field.x)
-				bob.x = field.x;
-			if (bob.y < field.y)
-				bob.y = field.y;
-			if (bob.x > field.x + field.w)
-				bob.x = field.x + field.w;
-			if (bob.y > field.y + field.h)
-				bob.y = field.y + field.h;
-			if (bob.x > field.x + field.w - bob.w)
-				bob.x = field.x + field.w - bob.w;
-			if (bob.y > field.y + field.h - bob.h)
-				bob.y = field.y + field.h - bob.h;
-			if(client!=null){
-				client.send("2");
+		if (manualOverride) {
+			// If moving backward
+			if (keyboard.keyDown(KeyEvent.VK_DOWN)) {
+				outByte[0] |= 1 << 1;
 			}
-		}
-		// If moving forward
-		if (keyboard.keyDown(KeyEvent.VK_UP)) {
-			bob.x += bob.dx * Math.cos(bob.angle);
-			bob.y += bob.dy * Math.sin(bob.angle);
-			// Check collision with top
-			if (bob.x < field.x)
-				bob.x = field.x;
-			if (bob.y < field.y)
-				bob.y = field.y;
-			if (bob.x > field.x + field.w - bob.w)
-				bob.x = field.x + field.w - bob.w;
-			if (bob.y > field.y + field.h - bob.h)
-				bob.y = field.y + field.h - bob.h;
-			if (bob.x > field.x + field.w)
-				bob.x = field.x + field.w;
-			if (bob.y > field.y + field.h)
-				bob.y = field.y + field.h;
-			if(client!=null){
-				client.send("1");
+			// If moving forward
+			if (keyboard.keyDown(KeyEvent.VK_UP)) {
+				outByte[0] |= 1 << 0;
 			}
-		}
-		// If Rotate left
-		if (keyboard.keyDown(KeyEvent.VK_LEFT)) {
-			bob.angle -= bob.dangle;
-			bob.x += (bob.dx * Math.cos(bob.angle)) / 2;
-			bob.y += (bob.dy * Math.sin(bob.angle)) / 2;
-			// Check collision with left
-			if (Math.abs(bob.angle) > 2 * Math.PI)
-				bob.angle = 0;
-			if (bob.x < field.x)
-				bob.x = field.x;
-			if (bob.y < field.y)
-				bob.y = field.y;
-			if (bob.x > field.x + field.w - bob.w)
-				bob.x = field.x + field.w - bob.w;
-			if (bob.y > field.y + field.h - bob.h)
-				bob.y = field.y + field.h - bob.h;
-			if(client!=null){
-				client.send("3");
+			// If Rotate left
+			if (keyboard.keyDown(KeyEvent.VK_LEFT)) {
+				outByte[0] |= 1 << 2;
 			}
-		}
-		// If rotate right
-		if (keyboard.keyDown(KeyEvent.VK_RIGHT)) {
-			bob.angle += bob.dangle;
-			bob.x += (bob.dx * Math.cos(bob.angle)) / 2;
-			bob.y += (bob.dy * Math.sin(bob.angle)) / 2;
-			// Check collision with left
-			if (Math.abs(bob.angle) > 2 * Math.PI)
-				bob.angle = 0;
-			if (bob.x < field.x)
-				bob.x = field.x;
-			if (bob.y < field.y)
-				bob.y = field.y;
-			if (bob.x > field.x + field.w - bob.w)
-				bob.x = field.x + field.w - bob.w;
-			if (bob.y > field.y + field.h - bob.h)
-				bob.y = field.y + field.h - bob.h;
-			if(client!=null){
-				client.send("4");
-			}
-		}
-		if (keyboard.keyDown(KeyEvent.VK_W)) {
-			if (bob.dx >= 2.5 && bob.dy >= 2.5) {
-				bob.dx = bob.dx;
-				bob.dx = bob.dy;
-			} else {
-				bob.dx += bob.dx * 0.1;
-				bob.dy += bob.dy * 0.1;
-			}
-		}
-		if (keyboard.keyDown(KeyEvent.VK_S)) {
-			if (bob.dx == 0 && bob.dy == 0) {
-				bob.dx = bob.dx;
-				bob.dx = bob.dy;
-			} else {
-				bob.dx -= bob.dx * 0.1;
-				bob.dy -= bob.dy * 0.1;
+			// If rotate right
+			if (keyboard.keyDown(KeyEvent.VK_RIGHT)) {
+				outByte[0] |= 1 << 3;
 			}
 		}
 		// IP ADDRESS BOX
@@ -266,8 +220,9 @@ public class GUIMain extends JFrame {
 					.showInputDialog("Please enter an IP Adress to connect to");
 			portNumberString = JOptionPane
 					.showInputDialog("Pleane enter a port number to connect to");
-			
-			client = new Client(ipAdressString, Integer.parseInt(portNumberString));
+
+			client = new Client(ipAdressString,
+					Integer.parseInt(portNumberString));
 			client.start();
 		}
 		// Clear circles if they press C
@@ -275,7 +230,12 @@ public class GUIMain extends JFrame {
 			circles.clear();
 		}
 		if (keyboard.keyDownOnce(KeyEvent.VK_O)) {
-
+			int reply = JOptionPane.showConfirmDialog(null,
+					"Dude, do you really want to take over manual control?",
+					"Man Override", JOptionPane.YES_NO_OPTION);
+			if (reply == JOptionPane.YES_OPTION) {
+				manualOverride = true;
+			}
 		}
 	}
 
