@@ -7,7 +7,6 @@ import java.awt.image.*;
 import java.util.*;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import org.json.simple.*;
 
 import lunarex.input.*;
 import lunarex.network.*;
@@ -71,14 +70,14 @@ public class GUIMain extends JFrame {
 		manualOverride = false;
 
 	}
-
+/*
 	public void updateData(JSONObject obj) {
 		bob.x = (float) obj.get("X");
 		bob.y = (float) obj.get("Y");
 		bob.angle = (int) obj.get("Theta");
 
 	}
-
+*/
 	public void run() {
 
 		canvas.createBufferStrategy(2);
@@ -212,6 +211,10 @@ public class GUIMain extends JFrame {
 			// If rotate right
 			if (keyboard.keyDown(KeyEvent.VK_RIGHT)) {
 				outByte[0] |= 1 << 3;
+			}
+			if(keyboard.keyDown(KeyEvent.VK_CONTROL))
+			{
+				outByte[0] |= 1 << 4;
 			}
 		}
 		// IP ADDRESS BOX
