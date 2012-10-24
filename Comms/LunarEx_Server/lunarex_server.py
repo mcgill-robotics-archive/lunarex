@@ -26,7 +26,7 @@ class Handler(SocketServer.BaseRequestHandler):
         self.initialTime = int(time.time()*1000.0)
         self.currentTime = int(time.time()*1000.0)
         self.request.setblocking(1)
-        #self.ser=serial.Serial(COM,BAUD,timeout=1)
+        self.ser=serial.Serial(COM,BAUD,timeout=1)
         self.count=0
         print str(self.request.getpeername())+" connected"
 
@@ -34,17 +34,11 @@ class Handler(SocketServer.BaseRequestHandler):
     def handle(self):
         while(True):
             # self.request is the client connection
-            try:
-                try:
-                    data = self.request.recv(1024)
-                    if data:
-                        print 'Recv: ' + str(ord(data)) + '; Count: ' + str(self.count)
-                        #self.ser.write(str(ord(data)))
-                        self.count+=1
-
-                except:
-                    print 'Something went wrong in try to receive data'
-                    pass
+	    data = self.request.recv(1024)
+	    if(len(data)==1):
+		print 'Recv: ' + str(ord(data)) + '; Count: ' + str(self.count)
+		self.ser.write(str(ord(data)))
+		self.count+=1
 
                 '''
                 self.currentTime = int(time.time()*1000.0)
@@ -54,10 +48,6 @@ class Handler(SocketServer.BaseRequestHandler):
                     self.initialTime = int(time.time()*1000.0)
                     print dataPacket
                 '''
-
-            except:
-                print "Error in outer try"
-                pass
 
     def finish(self):
         self.request.close()
