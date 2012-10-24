@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import SocketServer
 import sys
 import serial
@@ -6,8 +7,11 @@ import time
 from threading import Thread
 
 HOST=''
-PORT=31092
+PORT=5902
 BUFFERSIZE=4096
+
+COM='/dev/ttyACM0'
+BAUD=9600
 
 class Data:
     def __init__(self,x,y,theta):
@@ -21,28 +25,29 @@ class Handler(SocketServer.BaseRequestHandler):
         self.currentState = Data(0.0,0.0,0.0)
         self.initialTime = int(time.time()*1000.0)
         self.currentTime = int(time.time()*1000.0)
-        self.request.setblocking(0)
+        self.request.setblocking(1)
+        self.ser=serial.Serial(COM,BAUD,timeout=1)
+        self.count=0
+        print str(self.request.getpeername())+" connected"
+
 
     def handle(self):
         while(True):
             # self.request is the client connection
-            try:
+	    data = self.request.recv(1024)
+	    if(len(data)==1):
+		print 'Recv: ' + str(ord(data)) + '; Count: ' + str(self.count)
+		self.ser.write(str(ord(data)))
+		self.count+=1
+
                 '''
-                data = self.request.recv(1024)
-                print data
-                if(data=='bye'):
-                    return
-                '''
-                
                 self.currentTime = int(time.time()*1000.0)
                 if((self.currentTime-self.initialTime) > 500):
                     dataPacket = json.dumps(vars(self.currentState),sort_keys=True,indent=4)
                     self.request.send(dataPacket)
                     self.initialTime = int(time.time()*1000.0)
                     print dataPacket
-
-            except:
-                pass
+                '''
 
     def finish(self):
         self.request.close()

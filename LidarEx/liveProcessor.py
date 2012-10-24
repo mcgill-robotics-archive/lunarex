@@ -6,10 +6,8 @@ usage = "Usage: arg1 is the input file, it is compulsory\n"
 import sys
 import pprint
 import math
-#import numpy as np
-#import scipy as sp
-#import matplotlib as mpl
-#import matplotlib.pyplot as plt
+
+import fileinput
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -25,7 +23,7 @@ class Point(object):
 		self.y = math.sin(math.radians(self.theta))*self.r
 		
 	def __str__(self):
-		return "Point twih angle: "+str(self.theta)+"and distance: "+str(self.r)
+		return "Point with angle: "+str(self.theta)+"and distance: "+str(self.r)
 	
 		
 class Scan(object):
@@ -40,7 +38,6 @@ class Scan(object):
 		for i in range (len(scanData)):
 			if(scanData[i]=="laser"):
 				continue
-			#print(scanData[i])
 			if params[i] == "%time":
 				self.time = scanData[i]
 			elif params[i] == "field.angle_min":
@@ -63,27 +60,22 @@ class Scan(object):
 				distance = math.sqrt(math.pow(self.points[i].x - self.points[j].x, 2) + math.pow(self.points[i].x - self.points[j].x, 2))
 				average = average + distance/count
 		print(average/count)
-			
 				
-if(len(sys.argv)<2):
-	print(usage)
-	sys.exit()
-	
-inputFile = open(sys.argv[1], 'r') 
-inputString = inputFile.read()
-scans = inputString.splitlines()
+scans=[]
+timehash={}
 
-params = scans[0].split(",")
-	
-j=-1
-timehash = {}
-for scan in scans:
-	j+=1
-	if j==0:
+i=-1
+for line in fileinput.input():
+	i+=1
+	if i>200:
+		break
+	if i==0:
+		params = line.split(",")
 		continue
-	scanData = scan.split(",")
-	scans[j]= Scan(scanData, params)
-	timehash[scanData[0]] = j
+	scanData = line.split(",")
+	scans.append(Scan(scanData, params))
+	print("Scan: "+str(i)+"at time: "+scanData[0]+" just created.")
+	timehash[scanData[0]] = i
 	
 for i in range(0, len(scans[4].points)):
 	print(scans[4].points[i])

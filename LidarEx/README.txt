@@ -37,7 +37,7 @@ rosmake hokuyo_node rviz
 ls -l /dev/ttyACM0
 
 # Set lidar to read//write
-sudo chmod a+rw /dev/ttyACM0
+sudo chmod a+rw /dev/ttyACM0	
 
 # Start roscore in new terminal
 roscore
@@ -48,7 +48,16 @@ rosparam set hokuyo_node/calibrate_time true
 # Disable calibration
 rosparam set hokuyo_node/calibrate_time false
 
-# Assign the hokuyo_node lidar hardware
+# Assign the hokuyo	rostopic echo	print messages to screen
+	rostopic find	find topics by type
+	rostopic hz	display publishing rate of topic    
+	rostopic info	print information about active topic
+	rostopic list	list active topics
+	rostopic pub	publish data to topic
+	rostopic type	print topic type
+
+Type rostopic <command> -h for more detailed usage, e.g. 'rostopic echo -h'
+_node lidar hardware
 rosparam set hokuyo_node/port /dev/ttyACM0 
 
 # Connect to lidar in new terminal
@@ -62,4 +71,51 @@ rostopic /scan
 
 # Special flags for rostopic
 # -p : friendly data mode
+
+To output friendly data to command line
+rostopic echo -p /scan
+
+-----------------------------
+Ernest's additional notes:
+
+run this to dl hokuyo_node
+sudo apt-get install ros-fuerte-laser-drivers
+
+$ rospack find [package_name]
+$ rosstack find [stack_name]
+
+Important - Environment setup
+
+echo "source /opt/ros/fuerte/setup.bash" >> ~/.bashrc
+. ~/.bashrc
+
+OR
+
+source /opt/ros/fuerte/setup.bash
+
+
+------------------
+Live stream readme
+
+Term 1
+Run roscore
+
+Term 2
+give yourself permission on the port: 
+sudo chmod a+rw /dev/ttyACM0
+
+start stream
+rosrun hokuyo_node hokuyo_node
+
+Term 3
+Echo the stream & pipe it to the liveProcessor:
+rostopic echo -p /scan | ./liveProcessor.py
+
+Note: in this case liveProcessor.py was made executable by writing this at the top of the file
+#!/usr/bin/env python
+and running this
+chmod +x liveProcessor.py
+
+
+
 
