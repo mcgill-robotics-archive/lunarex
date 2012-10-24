@@ -23,6 +23,7 @@ class Point(object):
 		self.r = float(r)
 		self.x = math.cos(math.radians(self.theta))*self.r
 		self.y = math.sin(math.radians(self.theta))*self.r
+
 		
 	def __str__(self):
 		return "Point with angle: "+str(self.theta)+" and distance: "+str(self.r) + "\n X coord: "+str(self.x)+" and Y coord: "+str(self.y)
@@ -76,6 +77,29 @@ class Scan(object):#degrees
 			#print("Cartesian: " + str(distanceCart))
 			#print("Polar:     " + str(distancePolar))
 		print(average/count)
+		
+	def houghTransform(self):
+		maxR = 10
+		minTheta = 0
+		maxTheta = 90
+		thetaIncr = 1
+		#H=[]
+		#for i in range(1000): #in cm
+		#	for j in range(720):
+		#		H[i][j]=-1
+		
+		H = [[-1 for r in xrange(100000)] for theta in xrange(720)] 
+	
+		for point in self.points:
+			if(point.r > maxR):
+				continue #ignore this point
+			k=minTheta
+			while(k<=maxTheta):
+				print point.r, k
+				lineR = point.x*math.cos(math.radians(k)) + point.y*math.sin(math.radians(k))
+				H[int(lineR*100)][int(k)]+=1 #optionally add point object to entry
+				k+=thetaIncr
+		return H
 			
 if(len(sys.argv)<2):
 	print(usage)
@@ -101,4 +125,4 @@ for i in range(0, len(scans[4].points)):
 	if(i%5 == 0): #print every 5 variables
 		print(scans[4].points[i])
 
-scans[4].computeDistances()
+print scans[4].houghTransform()

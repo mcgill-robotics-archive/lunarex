@@ -25,58 +25,46 @@ class Point(object):
 		self.y = math.sin(math.radians(self.theta))*self.r
 		
 	def __str__(self):
-		return "Point with angle: "+str(self.theta)+" and distance: "+str(self.r) + "\n X coord: "+str(self.x)+" and Y coord: "+str(self.y)
+		return "Point twih angle: "+str(self.theta)+"and distance: "+str(self.r)
 	
 		
-class Scan(object):#degrees
+class Scan(object):
 	def __init__(self, scanData, params):
 		self.scanData = scanData
 		self.params = params
 		self.points = []
-		self.minAngleRad = float(minAngleDefault)
-		self.maxAngleRad = float(maxAngleDefault)
-		self.angleIncRad = float(angleIncDefault)
-		self.minAngleDeg = math.degrees(minAngleDefault)
-		self.maxAngleDeg = math.degrees(maxAngleDefault)
-		self.angleIncDeg = math.degrees(angleIncDefault)
+		self.minAngle = math.degrees(minAngleDefault)
+		self.maxAngle = math.degrees(maxAngleDefault)
+		self.angleInc = math.degrees(angleIncDefault)
 		
 		for i in range (len(scanData)):
 			if(scanData[i]=="laser"):
 				continue
 			#print(scanData[i])
 			if params[i] == "%time":
-				self.time = scanData[i]											#time in seconds since Unix epoch
+				self.time = scanData[i]
 			elif params[i] == "field.angle_min":
-				self.minAngleDeg = math.degrees(float(scanData[i]))				#min angle in radians
-				self.minAngleRad = float(scanData[i])							#min angle in radians
+				self.minAngle = math.degrees(float(scanData[i]))
 			elif params[i] == "field.angle_max":
-				self.maxAngleDeg = math.degrees(float(scanData[i]))				#max degrees in radians
-				self.maxAngleRad = float(scanData[i])							#max angle in radians
+				self.maxAngle = math.degrees(float(scanData[i]))
 			elif params[i] == "field.angle_increment":
-				self.angleIncDeg = math.degrees(float(scanData[i]))				#angle increment in degrees
-				self.angleIncRad = float(scanData[i])							#angle increment in radians
+				self.angleInc = math.degrees(float(scanData[i]))
 			elif "field.ranges" in params[i]:
 				pointNumber = int(params[i][len("field.ranges"):])
-				pointAngleDeg = self.minAngleDeg + pointNumber*self.angleIncDeg #point angle in degrees
-				pointAngleRad = self.minAngleRad + pointNumber*self.angleIncRad #point angle in radians
-				self.points.append(Point(pointAngleDeg, scanData[i]))		
+				pointAngle = self.minAngle + pointNumber*self.angleInc
+				self.points.append(Point(pointAngle, scanData[i]))		
 
 	def computeDistances(self):
-		count = 0
+		count = 0.0
 		average = 0.0
 		for i in range(len(self.points)):
 			for j in range(len(self.points)):
-				count += 1
-				#distance between points using  Distance formula
-				distanceCart = math.hypot(self.points[i].x - self.points[j].x, self.points[i].y - self.points[j].y)
-				#distance between points using Law of Cosines
-				distancePolar = math.sqrt(self.points[i].r*self.points[i].r + self.points[j].r*self.points[j].r - 2*self.points[i].r*self.points[j].r*math.cos(self.angleIncRad*(j-i)))
-				average = average + distanceCart/count
-			#Print distance in Cartesian and Polar
-			#print("Cartesian: " + str(distanceCart))
-			#print("Polar:     " + str(distancePolar))
+				count = count + 1.0
+				distance = math.sqrt(math.pow(self.points[i].x - self.points[j].x, 2) + math.pow(self.points[i].x - self.points[j].x, 2))
+				average = average + distance/count
 		print(average/count)
 			
+				
 if(len(sys.argv)<2):
 	print(usage)
 	sys.exit()
@@ -98,7 +86,8 @@ for scan in scans:
 	timehash[scanData[0]] = j
 	
 for i in range(0, len(scans[4].points)):
-	if(i%5 == 0): #print every 5 variables
-		print(scans[4].points[i])
+	print(scans[4].points[i])
 
-scans[4].computeDistances()
+print(len(scans[4].points))
+	
+#scans[4].computeDistances()
