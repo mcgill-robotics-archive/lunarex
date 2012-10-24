@@ -97,7 +97,7 @@ public class GUIMain extends JFrame {
 			try {
 				System.out.println(outByte[0]);
 				if (outByte[0] != 0) {
-					client.send(outByte);
+					//client.send(outByte);
 					for (int i = 0; i < outByte.length; i++) {
 						outByte[i] = 0;
 					}
