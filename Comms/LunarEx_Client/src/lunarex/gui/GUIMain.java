@@ -13,16 +13,22 @@ import lunarex.network.*;
 
 public class GUIMain extends JFrame {
 
-	Client client = null;
+	
 
 	private static final long serialVersionUID = 1190876640530075607L;
 	static final int WIDTH = 1080;
 	static final int HEIGHT = (int) (9 / 16.0 * WIDTH);
 
-	String ipAdressString = "";
-	String portNumberString = "";
+	String ipAdressString = "127.0.0.1";
+	String portNumberString = "5902";
+	
+	Client client = null;
+	boolean connected = false;
+	
+	
 
 	class Bob {
+		
 		float x, y, w, h, velocity;
 		int angle, containerAngle;
 		float massInContainer, totalMass;
@@ -55,6 +61,7 @@ public class GUIMain extends JFrame {
 		canvas.setSize(WIDTH, HEIGHT);
 		add(canvas);
 		pack();
+		
 
 		// Hookup keyboard polling
 		addKeyListener(keyboard);
@@ -67,7 +74,7 @@ public class GUIMain extends JFrame {
 		field.y = HEIGHT - field.h - 20;
 		bob.x = (float) field.x;
 		bob.y = (float) field.y;
-		manualOverride = false;
+		manualOverride = true;
 
 	}
 /*
@@ -131,6 +138,7 @@ public class GUIMain extends JFrame {
 				g2d.drawString("Angle: "
 						+ (int) (360 * bob.angle / (2 * Math.PI)), 20, 104);
 				g2d.drawString("Manual Override: " + manualOverride, 20, 116);
+				g2d.drawString("Connected to server: "+connected, 20, 128);
 
 				g2d.drawString("(0,0)", (int) (field.x - 25),
 						(int) (field.y - 2));
@@ -218,15 +226,10 @@ public class GUIMain extends JFrame {
 			}
 		}
 		// IP ADDRESS BOX
-		if (keyboard.keyDownOnce(KeyEvent.VK_SPACE)) {
-			ipAdressString = JOptionPane
-					.showInputDialog("Please enter an IP Adress to connect to");
-			portNumberString = JOptionPane
-					.showInputDialog("Pleane enter a port number to connect to");
-
-			client = new Client(ipAdressString,
-					Integer.parseInt(portNumberString));
+		if (keyboard.keyDownOnce(KeyEvent.VK_SPACE)&&!connected) {
+			client = new Client(ipAdressString,Integer.parseInt(portNumberString));
 			client.start();
+			connected = true;
 		}
 		// Clear circles if they press C
 		if (keyboard.keyDownOnce(KeyEvent.VK_C)) {
@@ -237,7 +240,7 @@ public class GUIMain extends JFrame {
 					"Dude, do you really want to take over manual control?",
 					"Man Override", JOptionPane.YES_NO_OPTION);
 			if (reply == JOptionPane.YES_OPTION) {
-				manualOverride = true;
+				manualOverride = !manualOverride;
 			}
 		}
 	}
