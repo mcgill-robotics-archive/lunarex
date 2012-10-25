@@ -26,6 +26,7 @@ class Handler(SocketServer.BaseRequestHandler):
         self.initialTime = int(time.time()*1000.0)
         self.currentTime = int(time.time()*1000.0)
         self.request.setblocking(1)
+        self.datalist = []
         #self.ser=serial.Serial(COM,BAUD,timeout=1)
         self.count=0
         print str(self.request.getpeername())+" connected"
@@ -35,10 +36,13 @@ class Handler(SocketServer.BaseRequestHandler):
         while(True):
             # self.request is the client connection
             data = self.request.recv(1024)
+            self.datalist.append(data)
             #if(len(data)==1):
-            print 'Recv: ' + str(ord(data)) + '; Count: ' + str(self.count)
-            #self.ser.write(str(ord(data)))
-            self.count+=1
+            while len(self.datalist) > 0:
+                data_out = datalist.pop()
+                print 'Recv: ' + str(ord(data_out)) + '; Count: ' + str(self.count)
+                #self.ser.write(str(ord(data)))
+                self.count+=1
 
             '''
             self.currentTime = int(time.time()*1000.0)
