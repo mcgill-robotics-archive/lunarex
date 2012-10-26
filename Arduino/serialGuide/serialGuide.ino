@@ -19,11 +19,10 @@ Servo scoopServo;
 void setup()
 {
   // start serial port at 9600 bps:
-  Serial.begin(9600);
+  Serial.begin(115200);
   leftWheel.attach(11);
   rightWheel.attach(3);
   scoopServo.attach(6); //is this the right pin?
-  establishContact();  // send a byte to establish contact until receiver responds
   go(leftSpeed, rightSpeed); 
 }
 
@@ -33,7 +32,6 @@ void loop()
   if (Serial.available() > 0) {
     // get incoming byte:
     inByte = Serial.read();
-    
     switch (inByte) {
       case '1':
         //forward
@@ -66,40 +64,28 @@ void loop()
         break;  
       
     } //end switch
-    
-  Serial.print("Left Speed: ");
-  Serial.print(leftSpeed);
-  Serial.print('\n');
-  Serial.print("Right Speed: ");
-  Serial.print(rightSpeed);  
-  Serial.print("\n \n");  
   go(leftSpeed, rightSpeed);  
   }//end if serial available
   
 }//end void loop
 
-void establishContact() {
-  Serial.print("Waiting for input")
-  while (Serial.available() <= 0) {
-    //Serial.print('.');   // send a capital A
-    delay(300);
-  }
-  //Serial.print("\n Contact Established! \n\n")
-}
-
 void go(int leftSpeed, int rightSpeed) {
- leftWheel.write(90 -leftSpeed);  //left wheel is installed backwards
- rightWheel.write(rightSpeed + 90);
+  if(leftSpeed>90) leftSpeed=90;
+  if(rightSpeed>90) leftSpeed=90;
+  if(leftSpeed<0) leftSpeed=0;
+  if(rightSpeed<0) leftSpeed=0;
+  leftWheel.write(90 - leftSpeed);  //left wheel is installed backwards
+  rightWheel.write(rightSpeed + 90);
 }
 
 void toggleScoop(boolean scoopOpen){
   if (scoopOpen)
   {
-     scoopServo.write(0)  //calibrate numbers needed, should be closed position here
+     scoopServo.write(0);  //calibrate numbers needed, should be closed position here
   }
   else
   {
-    scoopServo.write(60)  //calibrate numbers needed, should be opened position here
+    scoopServo.write(60);  //calibrate numbers needed, should be opened position here
   }
 }
 

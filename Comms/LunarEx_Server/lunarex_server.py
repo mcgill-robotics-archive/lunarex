@@ -11,7 +11,7 @@ PORT=5902
 BUFFERSIZE=4096
 
 COM='/dev/ttyACM0'
-BAUD=9600
+BAUD=115200
 
 class Data:
     def __init__(self,x,y,theta):
@@ -27,7 +27,7 @@ class Handler(SocketServer.BaseRequestHandler):
         self.currentTime = int(time.time()*1000.0)
         self.request.setblocking(1)
         self.datalist = []
-        #self.ser=serial.Serial(COM,BAUD,timeout=1)
+        self.ser=serial.Serial(COM,BAUD,timeout=1)
         self.count=0
         print str(self.request.getpeername())+" connected"
 
@@ -35,13 +35,13 @@ class Handler(SocketServer.BaseRequestHandler):
     def handle(self):
         while(True):
             # self.request is the client connection
-            data = self.request.recv(1024)
+            data = self.request.recv(1)
             self.datalist.append(data)
             #if(len(data)==1):
             while len(self.datalist) > 0:
-                data_out = datalist.pop()
-                print 'Recv: ' + str(ord(data_out)) + '; Count: ' + str(self.count)
-                #self.ser.write(str(ord(data)))
+                data_in = self.datalist.pop()
+                print 'Recv: ' + str(ord(data_in)) + '; Count: ' + str(self.count)
+                self.ser.write(str(ord(data_in)))
                 self.count+=1
 
             '''
