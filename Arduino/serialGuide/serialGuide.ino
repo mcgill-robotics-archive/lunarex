@@ -70,12 +70,23 @@ void loop()
 }//end void loop
 
 void go(int leftSpeed, int rightSpeed) {
-  if(leftSpeed>90) leftSpeed=90;
-  if(rightSpeed>90) leftSpeed=90;
-  if(leftSpeed<0) leftSpeed=0;
-  if(rightSpeed<0) leftSpeed=0;
-  leftWheel.write(90 - leftSpeed);  //left wheel is installed backwards
-  rightWheel.write(rightSpeed + 90);
+  int maxRange = 10;  //max speed in either direction
+  
+  //reject bad outputs
+  if(leftSpeed>maxRange) leftSpeed=maxRange;
+  if(rightSpeed>maxRange) rightSpeed=maxRange;
+  if(leftSpeed<-maxRange) leftSpeed= -minRange;
+  if(rightSpeed<-maxRange) rightSpeed= -minRange;
+  
+  
+  //transform to servo values
+  leftOutput = 90-leftSpeed; //left wheel is installed backwards
+  rightOutput = 90 + rightSpeed;
+
+  
+  //write to servos
+  leftWheel.write(leftOutput);  
+  rightWheel.write(rightOutput);
 }
 
 void toggleScoop(boolean scoopOpen){
