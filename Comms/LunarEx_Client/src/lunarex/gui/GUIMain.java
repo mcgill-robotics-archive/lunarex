@@ -16,7 +16,7 @@ public class GUIMain extends JFrame {
 	
 
 	private static final long serialVersionUID = 1190876640530075607L;
-	static final int WIDTH = 1080;
+	static final int WIDTH = 1280;
 	static final int HEIGHT = (int) (9 / 16.0 * WIDTH);
 
 	String ipAdressString = "127.0.0.1";
@@ -45,7 +45,6 @@ public class GUIMain extends JFrame {
 
 	KeyboardInput keyboard = new KeyboardInput(); // Keyboard polling
 	Canvas canvas; // Our drawing component
-	Vector<Point> circles = new Vector<Point>(); // Circles
 	Bob bob = new Bob(); // Our rectangle
 	Rect field = new Rect();
 	Random rand = new Random();// Used for random circle locations
@@ -77,14 +76,28 @@ public class GUIMain extends JFrame {
 		manualOverride = true;
 
 	}
-/*
-	public void updateData(JSONObject obj) {
-		bob.x = (float) obj.get("X");
-		bob.y = (float) obj.get("Y");
-		bob.angle = (int) obj.get("Theta");
-
+	public void updateData(){
+		bob.x = (float) field.x + client.getX();
+		bob.y = (float) field.y + client.getY();
+		bob.angle = (int) client.getTheta();
+		
+		/*
+		 * bob.velocity = client.getVelocity();
+		
+			bob.containerAngle = client.getContainerAngle();
+			bob.massInContainer = client.getMassInContainer();
+		
+			bob.batteryLevel = client.getBatteryLevel();
+			bob.doorOpen = client.getDoorOpen();
+			bob.rpm1 = client.getRpm1();
+			bob.rpm2 = client.getRpm2();
+			bob.rpm3 = client.getRpm3();
+			bob.rpm4 = client.getRpm4();
+		 * 
+		 */
+		
 	}
-*/
+	
 	public void run() {
 
 		canvas.createBufferStrategy(2);
@@ -124,47 +137,38 @@ public class GUIMain extends JFrame {
 				g2d.setColor(background);
 				g2d.fillRect(0, 0, WIDTH, HEIGHT);
 
-				// Draw help
+				// Draw info text
 				g2d.setColor(Color.WHITE);
-				g2d.drawString("Use arrow keys to move rect", 20, 20);
-				g2d.drawString("Press SPACE to add IP ADDRESS", 20, 32);
-				// g2d.drawString("Press C to clear circles", 20, 44);
-				g2d.drawString("Press ESC to exit", 20, 44);
 				g2d.drawString("X: " + ((double) (int) ((bob.x - field.x) / 1))
-						/ 100 + " m", 20, 68);
+						/ 100 + " m", 20, 40);
 				g2d.drawString("Y: " + ((double) (int) ((bob.y - field.y) / 1))
-						/ 100 + " m", 20, 80);
+						/ 100 + " m", 20, 52);
 				// g2d.drawString("Speed: ");
 				g2d.drawString("Angle: "
-						+ (int) (360 * bob.angle / (2 * Math.PI)), 20, 104);
-				g2d.drawString("Manual Override: " + manualOverride, 20, 116);
-				g2d.drawString("Connected to server: "+connected, 20, 128);
+						+ (int) (360 * bob.angle / (2 * Math.PI)), 20, 64);
+				g2d.drawString("Manual Override: " + manualOverride, 20, 88);
+				g2d.drawString("Connected to server: "+connected, 20, 100);
 
 				g2d.drawString("(0,0)", (int) (field.x - 25),
 						(int) (field.y - 2));
 
-				// Move bob and add circles
+				// Move bob
 				processInput();
-
-				// Draw random circles
-				g2d.setColor(Color.BLUE);
-				for (Point p : circles) {
-					g2d.drawOval(p.x, p.y, 25, 25);
-				}
-
+				
 				// Draw Rectangular Field
 				g2d.setColor(Color.cyan);
 				g2d.drawRect((int) (field.x), (int) (field.y), (int) field.w,
 						(int) field.h);
-
+				
+				//Draw battery
 				g2d.setColor(Color.WHITE);
-				g2d.drawRect(800, 50, 100, 33);
-				g2d.drawRect(900, 61, 5, 10);
+				g2d.drawRect(1000, 50, 100, 33);
+				g2d.drawRect(1100, 61, 5, 10);
 				Color DARKGREEN = new Color(0, 220, 10);
 				g2d.setColor(DARKGREEN);
-				g2d.fillRect(801, 51, bob.batteryLevel, 32);
+				g2d.fillRect(1001, 51, bob.batteryLevel, 32);
 				g2d.setColor(Color.WHITE);
-				g2d.drawString("" + bob.batteryLevel + "%", 840, 70);
+				g2d.drawString("" + bob.batteryLevel + "%", 1040, 70);
 
 				// Draw bob
 				g2d.setColor(Color.RED);
@@ -233,7 +237,7 @@ public class GUIMain extends JFrame {
 		}
 		// Clear circles if they press C
 		if (keyboard.keyDownOnce(KeyEvent.VK_C)) {
-			circles.clear();
+			
 		}
 		if (keyboard.keyDownOnce(KeyEvent.VK_O)) {
 			int reply = JOptionPane.showConfirmDialog(null,
