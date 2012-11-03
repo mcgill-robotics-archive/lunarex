@@ -26,7 +26,6 @@ def hough(im, ntx=460, mry=360):
                 phim[jtx, iry] -= 1
     return him
  
- 
 def test():
     "Test Hough transform with pentagon."
     im = Image.open("pentagon.png").convert("L")
