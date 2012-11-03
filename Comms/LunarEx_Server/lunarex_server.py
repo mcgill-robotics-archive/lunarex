@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import SocketServer
 import sys
 import serial
@@ -8,6 +9,9 @@ from threading import Thread
 HOST=''
 PORT=5902
 BUFFERSIZE=4096
+
+COM='/dev/ttyACM0'
+BAUD=115200
 
 class Data:
     def __init__(self,x,y,theta):
@@ -22,32 +26,32 @@ class Handler(SocketServer.BaseRequestHandler):
         self.initialTime = int(time.time()*1000.0)
         self.currentTime = int(time.time()*1000.0)
         self.request.setblocking(1)
+        self.datalist = []
+        self.ser=serial.Serial(COM,BAUD,timeout=1)
+        self.count=0
         print str(self.request.getpeername())+" connected"
 
 
     def handle(self):
         while(True):
             # self.request is the client connection
-            try:
-                try:
-                    data = self.request.recv(1024)
-                except:
-                    pass
+            data = self.request.recv(1)
+            self.datalist.append(data)
+            #if(len(data)==1):
+            while len(self.datalist) > 0:
+                data_in = self.datalist.pop()
+                print 'Recv: ' + str(ord(data_in)) + '; Count: ' + str(self.count)
+                self.ser.write(str(ord(data_in)))
+                self.count+=1
 
-                if data:
-                    print 'Received: ' + str(ord(data))
-
-                '''
-                self.currentTime = int(time.time()*1000.0)
-                if((self.currentTime-self.initialTime) > 500):
-                    dataPacket = json.dumps(vars(self.currentState),sort_keys=True,indent=4)
-                    self.request.send(dataPacket)
-                    self.initialTime = int(time.time()*1000.0)
-                    print dataPacket
-                '''
-
-            except:
-                pass
+            '''
+            self.currentTime = int(time.time()*1000.0)
+            if((self.currentTime-self.initialTime) > 500):
+                dataPacket = json.dumps(vars(self.currentState),sort_keys=True,indent=4)
+                self.request.send(dataPacket)
+                self.initialTime = int(time.time()*1000.0)
+                print dataPacket
+            '''
 
     def finish(self):
         self.request.close()

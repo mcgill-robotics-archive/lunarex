@@ -90,6 +90,8 @@ public class Client extends Thread {
 						}
 						this.resetCommands();
 					}
+					sleep(100); // Let client take a break and spare some time
+								// for server to interpret the data!
 
 					/*
 					 * input.read(buffer); this.receivedData = new
