@@ -79,7 +79,7 @@ class Scan(object):#degrees
 		print(average/count)
 		
 	def houghTransform(self):
-		maxR = 10
+		maxLineR = 10
 		minTheta = 0
 		maxTheta = 90
 		thetaIncr = 1
@@ -88,16 +88,15 @@ class Scan(object):#degrees
 		#	for j in range(720):
 		#		H[i][j]=-1
 		
-		H = [[-1 for r in xrange(100000)] for theta in xrange(720)] 
+		H = [[-1 for theta in xrange(180)] for r in xrange(1000)] 
 	
 		for point in self.points:
-			if(point.r > maxR):
-				continue #ignore this point
 			k=minTheta
+			print point.r, k
 			while(k<=maxTheta):
-				print point.r, k
 				lineR = point.x*math.cos(math.radians(k)) + point.y*math.sin(math.radians(k))
-				H[int(lineR*100)][int(k)]+=1 #optionally add point object to entry
+				if(lineR<1000 or k<180):
+					H[int(lineR*100)][int(k)]+=1 #optionally add point object to entry
 				k+=thetaIncr
 		return H
 			
@@ -125,4 +124,8 @@ for i in range(0, len(scans[4].points)):
 	if(i%5 == 0): #print every 5 variables
 		print(scans[4].points[i])
 
-print scans[4].houghTransform()
+i=0.0
+for row in scans[4].houghTransform():
+	print("r = "+str(i)+"\t" + str(row))
+	i+=0.01
+	

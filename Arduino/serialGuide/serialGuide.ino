@@ -43,17 +43,17 @@ void loop()
         leftSpeed--;
         rightSpeed--;
         break;
-      case '3':
+      case '4':
         //left
         leftSpeed--;
         rightSpeed++;
         break;
-      case '4':
+      case '8':
         //right
         leftSpeed++;
         rightSpeed--;
         break;
-      case '5':
+      case '16':
         //toggle scoop
         scoopOpen = !scoopOpen;
         toggleScoop(scoopOpen);
@@ -70,13 +70,15 @@ void loop()
 }//end void loop
 
 void go(int leftSpeed, int rightSpeed) {
-  int maxRange = 10;  //max speed in either direction
+  int maxRange = 30;  //max speed in either direction
+  int rightOutput;
+  int leftOutput;
   
   //reject bad outputs
   if(leftSpeed>maxRange) leftSpeed=maxRange;
   if(rightSpeed>maxRange) rightSpeed=maxRange;
-  if(leftSpeed<-maxRange) leftSpeed= -minRange;
-  if(rightSpeed<-maxRange) rightSpeed= -minRange;
+  if(leftSpeed<(-1*maxRange)) leftSpeed= -1*maxRange;
+  if(rightSpeed<(-1*maxRange)) rightSpeed= -1*maxRange;
   
   
   //transform to servo values
