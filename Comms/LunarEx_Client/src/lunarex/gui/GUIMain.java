@@ -19,7 +19,7 @@ public class GUIMain extends JFrame {
 	static final int WIDTH = 1280;
 	static final int HEIGHT = (int) (9 / 16.0 * WIDTH);
 
-	String ipAdressString = "127.0.0.1";
+	String ipAdressString = "142.157.46.237";
 	String portNumberString = "5902";
 	
 	Client client = null;
