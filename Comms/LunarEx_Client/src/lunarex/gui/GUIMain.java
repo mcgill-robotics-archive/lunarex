@@ -68,7 +68,8 @@ public class GUIMain extends JFrame {
 		addKeyListener(keyboard);
 		canvas.addKeyListener(keyboard);
 
-		bob.w = bob.h = 25;
+		bob.w = 75
+		bob.h = 100;
 		field.w = 738 * 1;
 		field.h = 388 * 1;
 		field.x = WIDTH - field.w - 20;
