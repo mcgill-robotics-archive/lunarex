@@ -40,7 +40,21 @@ public class GUIMain extends JFrame {
 		int elevationWheel1, elevationWheel2, elevationWheel3, elevationWheel4;
 
 	}
-
+	class Crater{
+		double x,y,rA,rB;
+	}
+	class Boulder{
+		double x,y,rA,rB;
+	}
+	
+	class MiningArea{
+		double w;
+	}
+	class ObstacleArea{
+		Boulder rockA, rockB;
+		Crater craterA, craterB;
+		double w;
+	}
 	class Rect {
 		double x, y, w, h;
 	}
@@ -52,6 +66,14 @@ public class GUIMain extends JFrame {
 	Random rand = new Random();// Used for random circle locations
 	boolean manualOverride;
 	byte[] outByte = new byte[1];
+	Boulder rockNo1 = new Boulder();
+	Boulder rockNo2 = new Boulder();
+	Crater craterOne = new Crater();
+	Crater craterTwo = new Crater();
+	ObstacleArea obstacleArea1 = new ObstacleArea();
+	MiningArea miningArea = new MiningArea();
+	
+	
 
 	public GUIMain() {
 
