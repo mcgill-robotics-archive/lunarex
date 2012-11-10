@@ -45,6 +45,7 @@ class Handler(SocketServer.BaseRequestHandler):
             try:
                 data = self.request.recv(1)
                 self.datalist.append(data)
+
                 while(len(self.datalist) > 0):
                     data_in = self.datalist.pop()
 
