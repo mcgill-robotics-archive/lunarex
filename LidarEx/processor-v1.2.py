@@ -8,8 +8,8 @@ import pprint
 import math
 #import numpy as np
 #import scipy as sp
-#import matplotlib as mpl
-#import matplotlib.pyplot as plt
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -18,17 +18,43 @@ maxAngleDefault = 1.56643295288
 angleIncDefault = 0.00436332309619
 
 class Point(object):
-	def __init__(id, self, theta, r):
-		self.id = id
+	def __init__(self, theta, r):
 		self.theta = float(theta)
 		self.r = float(r)
 		self.x = math.cos(math.radians(self.theta))*self.r
 		self.y = math.sin(math.radians(self.theta))*self.r
-
 		
 	def __str__(self):
 		return "Point with angle: "+str(self.theta)+" and distance: "+str(self.r) + "\n X coord: "+str(self.x)+" and Y coord: "+str(self.y)
 	
+class Line(object):
+	
+	def __init__(self, r, theta):
+		self.theta = float(theta)
+		self.r = float(r) 				# negative line R <---------- 0 -------------> positive lineR, along x axis
+		self.points = []
+		self.pointCount = 0
+		
+	def addPoint(self, p):
+		self.points.append(p)
+		self.pointCount +=1
+		
+	def getClosestPoint(self, cloudSize):
+		pts = sorted(self.points, key = lambda p: p.r, reverse = False)
+		if(cloudSize>=len(self.points)):
+			return pts[0]			
+		return pts[cloudSize/2] #median
+		
+	def getFurthestPoint(self, cloudSize):
+		pts = sorted(self.points, key = lambda p: p.r, reverse = True)
+		if(cloudSize>=len(self.points)):
+			return pts[0]			
+		return pts[cloudSize/2] #median
+
+	def __str__(self):
+		s = "Line has "+str(self.pointCount)+" points at distance r= "+str(self.r)+" with angle theta = "+str(self.theta)
+		#s += "\n the points are: "+self.points
+		return s
 		
 class Scan(object):#degrees
 	def __init__(self, scanData, params):
@@ -61,45 +87,45 @@ class Scan(object):#degrees
 				pointNumber = int(params[i][len("field.ranges"):])
 				pointAngleDeg = self.minAngleDeg + pointNumber*self.angleIncDeg #point angle in degrees
 				pointAngleRad = self.minAngleRad + pointNumber*self.angleIncRad #point angle in radians
-				self.points.append(Point(pointAngleDeg, scanData[i], i))		
-
-	def computeDistances(self):
-		count = 0
-		average = 0.0
-		for i in range(len(self.points)):
-			for j in range(len(self.points)):
-				count += 1
-				#distance between points using  Distance formula
-				distanceCart = math.hypot(self.points[i].x - self.points[j].x, self.points[i].y - self.points[j].y)
-				#distance between points using Law of Cosines
-				distancePolar = math.sqrt(self.points[i].r*self.points[i].r + self.points[j].r*self.points[j].r - 2*self.points[i].r*self.points[j].r*math.cos(self.angleIncRad*(j-i)))
-				average = average + distanceCart/count
-			#Print distance in Cartesian and Polar
-			#print("Cartesian: " + str(distanceCart))
-			#print("Polar:     " + str(distancePolar))
-		print(average/count)
+				self.points.append(Point(pointAngleDeg, scanData[i]))		
+			
+class HoughMatrix(object):
+	def __init__(self, points, maxLineR, RIncr, minTheta, maxTheta, thetaIncr):
+		self.points = points
+		self.maxLineR = maxLineR # in metres
+		self.RIncr = RIncr
+		self.minTheta = minTheta
+		self.maxTheta = maxTheta
+		self.thetaIncr = thetaIncr
+		self.lines = []
 		
-	def houghTransform(self):
-		maxLineR = 10
-		minTheta = 0
-		maxTheta = 90
-		thetaIncr = 1
-		#H=[]
-		#for i in range(1000): #in cm
-		#	for j in range(720):
-		#		H[i][j]=-1
+		self.H = [[Line(0,0) for theta in xrange(int(math.fabs(minTheta) + math.fabs(maxTheta)))] for r in xrange(int(maxLineR/RIncr))] 
 		
-		H = [[-1 for theta in xrange(180)] for r in xrange(1000)] 
-	
 		for point in self.points:
-			k=minTheta
-			print point.r, k
-			while(k<=maxTheta):
+			k=self.minTheta
+			#print point.r, k
+			while(k<=self.maxTheta):
 				lineR = point.x*math.cos(math.radians(k)) + point.y*math.sin(math.radians(k))
-				if(lineR<1000 or k<180):
-					H[int(lineR*100)][int(k)]+=1 #optionally add point object to entry
+				if(lineR<maxLineR/RIncr and k<math.fabs(minTheta) + math.fabs(maxTheta)):
+					if(self.H[int(lineR*100)][int(k)].r==0): #line not created
+						self.H[int(lineR*100)][int(k)]=Line(lineR, k) #r, theta in line constructor
+						#print("creating line with r: "+str(lineR) +" and theta: "+str(k))
+					self.H[int(lineR*100)][int(k)].addPoint(point) #add point, increments line counter
 				k+=thetaIncr
-		return H
+				
+		for r in xrange(int(maxLineR/RIncr)):
+			for theta in xrange(int(math.fabs(minTheta) + math.fabs(maxTheta))):
+				if(self.H[r][theta].r!=0):
+					self.lines.append(self.H[r][theta])
+	
+	def getNMostPopulatedLines(self, N):
+		return self.getSortedLines()[:N]
+	
+	def getSortedLines(self):
+		return sorted(self.lines, key = lambda l: l.pointCount, reverse = True)
+		
+	#def __str__(self):
+		#return str(self.lines)
 			
 if(len(sys.argv)<2):
 	print(usage)
@@ -121,12 +147,14 @@ for scan in scans:
 	scans[j]= Scan(scanData, params)
 	timehash[scanData[0]] = j
 	
-for i in range(0, len(scans[4].points)):
-	if(i%5 == 0): #print every 5 variables
-		print(scans[4].points[i])
+maxLineR = 10
+minTheta = 0
+maxTheta = 90
+thetaIncr = 1
 
-i=0.0
-for row in scans[4].houghTransform():
-	print("r = "+str(i)+"\t" + str(row))
-	i+=0.01
-	
+#	def __init__(self, points, maxLineR, RIncr, minTheta, maxTheta, thetaIncr):
+for l in HoughMatrix(scans[4].points, 10, 0.01, 0, 90, 1).getNMostPopulatedLines(6):
+	print(l)
+	a=l.getClosestPoint(5)
+	b=l.getFurthestPoint(5)
+	print("------------")
