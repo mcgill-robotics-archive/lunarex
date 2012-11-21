@@ -100,7 +100,8 @@ class HoughMatrix(object):
 		self.lines = []
 		
 		self.H = [[Line(0,0) for theta in xrange(int(math.fabs(minTheta) + math.fabs(maxTheta)))] for r in xrange(int(maxLineR/RIncr))] 
-		
+		#the range of thetas should be int((math.fabs(minTheta) + math.fabs(maxTheta))/thetaIncr)		
+
 		for point in self.points:
 			k=self.minTheta
 			#print point.r, k
@@ -154,6 +155,7 @@ thetaIncr = 1
 
 #	def __init__(self, points, maxLineR, RIncr, minTheta, maxTheta, thetaIncr):
 for l in HoughMatrix(scans[4].points, 10, 0.01, 0, 90, 1).getNMostPopulatedLines(6):
+# minTheta = 0 & maxTheta = 360 in standard Hough Transform! Not to be mistaken for Lidar's angles of operation
 	print(l)
 	a=l.getClosestPoint(5)
 	b=l.getFurthestPoint(5)
