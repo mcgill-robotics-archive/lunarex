@@ -13,6 +13,7 @@ public class Client extends Thread {
 	public String receivedData;
 	public byte[] commands;
 	public boolean isManualOverride;
+	public boolean sended = false;
 
 	public Client(String ip_address, int in_port) {
 		this.IP = ip_address;
@@ -22,12 +23,13 @@ public class Client extends Thread {
 	}
 
 	public void send(byte[] data) {
-		this.isManualOverride = true;
-		this.commands = (byte[]) data.clone();
+		// this.isManualOverride = true;
+		this.sended = true;
+		this.commands = data.clone();
 	}
 
 	public void resetCommands() {
-		this.isManualOverride = false;
+		this.sended = false;
 	}
 
 	public String receive() {
@@ -82,22 +84,24 @@ public class Client extends Thread {
 					out = new DataOutputStream(client.getOutputStream());
 					char[] buffer = new char[1024];
 
-					if (this.isManualOverride) {
+					if (this.sended) {
 						// out.write(Character.toChars((int)commands)[0]);
-						for (int i = 0; i < commands.length; i++) {
-							out.write((int) commands[i]);
-							System.out.println((int) commands[i]);
+						if (commands != null) {
+							for (int i = 0; i < commands.length; i++) {
+								out.write((int) commands[i]);
+								System.out.println((int) commands[i]);
+							}
 						}
 						this.resetCommands();
 					}
 
-					/*
-					 * input.read(buffer); this.receivedData = new
-					 * String(buffer); System.out.println("Current Status: " +
-					 * "\n" + "X: " + this.getX() + "\n" + "Y: " + this.getY() +
-					 * "\n" + "Theta: " + this.getTheta()); // Codes above //
-					 * receives the json // object and print // it out.
-					 */
+					if (input.ready()) {
+						input.read(buffer);
+						this.receivedData = new String(buffer);
+						System.out.println("Current Status: " + "\n" + "X: "
+								+ this.getX() + "\n" + "Y: " + this.getY()
+								+ "\n" + "Theta: " + this.getTheta());
+					}
 
 					if (closeConnection) {
 						break;
