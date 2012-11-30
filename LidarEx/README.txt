@@ -66,8 +66,8 @@ rosrun hokuyo_node hokuyo_node
 # View data in rviz
 rosrun rviz rviz -d `rospack find hokuyo_node`/hokuyo_test.vcg
 
-# Raw data from Lidar
-rostopic /scan
+# display Raw data from Lidar
+rostopic echo /scan
 
 # Special flags for rostopic
 # -p : friendly data mode
