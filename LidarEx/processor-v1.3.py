@@ -116,12 +116,12 @@ class HoughMatrix(object):
 			#theta policy: http://docs.opencv.org/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.html
 			while(k<=self.maxTheta):
 				lineR = point.x*math.cos(math.radians(k)) + point.y*math.sin(math.radians(k))
-				if(lineR<self.rowRank and k<self.columnRank):
+				if(lineR<self.rowRank and k<self.columnRank): #THE PROBLEM IS HERE! Column Rank is the number of indices, which only goes up to 90 (for minAngle=0 and maxangle=180 since angleIncr is 2). We need some functions to convert between actual thetas/Rs and hough matrix indices (hash map is a way to do this. See scans timestamp example)
 					if(self.H[int(lineR/RIncr)][k].r==0): #line not created
 						self.H[int(lineR/RIncr)][k]=Line(lineR, k) #r, theta in line constructor
 					self.H[int(lineR/RIncr)][k].addPoint(point) #add point, increments line counter
 					self.Hlight[int(lineR/RIncr)][k]+=1
-				k+=thetaIncr
+				k+=self.thetaIncr
 
 		#TODO: put R, theta -> Hough indices into functions for clarity
 				
