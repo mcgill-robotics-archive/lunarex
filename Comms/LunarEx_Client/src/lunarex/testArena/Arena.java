@@ -34,15 +34,16 @@ public class Arena extends JFrame{
 	}
 
 	class Crater {
-		double x, y, rA = 30*PIXELRATIO;
+		double x, y;
+		double r = 30*PIXELRATIO;
 	}
 
 	class Boulder {
-		double x, y, rA, rB;
+		double x, y, r;
 	}
 
 	class MiningArea {
-		double w = 294*PIXELRATIO;
+		double x = 294*PIXELRATIO;
 	}
 
 	class ObstacleArea {
@@ -61,13 +62,15 @@ public class Arena extends JFrame{
 	Rect field = new Rect();
 	Random rand = new Random();// Used for random circle locations
 	
-	Boulder rockNo1 = new Boulder();
-	Boulder rockNo2 = new Boulder();
-	Boulder rockNo3 = new Boulder();
-	Crater craterOne = new Crater();
-	Crater craterTwo = new Crater();
-	ObstacleArea obstacleArea1 = new ObstacleArea();
+	Boulder rock1 = new Boulder();
+	Boulder rock2 = new Boulder();
+	Boulder rock3 = new Boulder();
+	Crater crater1 = new Crater();
+	Crater crater2 = new Crater();
+	ObstacleArea obstacleArea = new ObstacleArea();
 	MiningArea miningArea = new MiningArea();
+	
+	
 	
 	public Arena() {
 
@@ -93,7 +96,25 @@ public class Arena extends JFrame{
 		bob.x = (float) field.x;
 		bob.y = (float) field.y;
 		//manualOverride = true;
-
+		
+		rock1.r = 30*PIXELRATIO;
+		rock1.x = field.x+(Math.random()*(miningArea.x-rock1.r)+rock1.r/2)+obstacleArea.x;
+		rock1.y = field.y+(rock1.r/2+Math.random()*(field.h-rock1.r));
+		
+		rock2.r = 30*PIXELRATIO;
+		rock2.x = field.x+(Math.random()*(miningArea.x-rock2.r)+rock2.r/2)+obstacleArea.x;
+		rock2.y = field.y+(rock2.r/2+Math.random()*(field.h-rock2.r));
+		
+		rock3.r = 30*PIXELRATIO;
+		rock3.x = field.x+(Math.random()*(miningArea.x-rock3.r)+rock3.r/2)+obstacleArea.x;
+		rock3.y = field.y+(rock3.r/2+Math.random()*(field.h-rock3.r));
+		
+		crater1.x = field.x+(Math.random()*(miningArea.x-crater1.r)+crater1.r/2)+obstacleArea.x;
+		crater1.y = field.y+(crater1.r/2+Math.random()*(field.h-crater1.r));
+		
+		crater2.x = field.x+(Math.random()*(miningArea.x-crater2.r)+crater2.r/2)+obstacleArea.x;
+		crater2.y = field.y+(crater2.r/2+Math.random()*(field.h-crater2.r));
+		
 	}
 
 //	public void updateData() {
@@ -180,15 +201,15 @@ public class Arena extends JFrame{
 						(int) field.h);
 				
 				// Draw MiningArea on Field
-				g2d.setColor(Color.white);
-				g2d.draw(new Line2D.Double(field.x + field.w - miningArea.w,
-						field.y, field.x + field.w - miningArea.w, field.y
+				g2d.setColor(Color.cyan);
+				g2d.draw(new Line2D.Double(field.x + field.w - miningArea.x,
+						field.y, field.x + field.w - miningArea.x, field.y
 								+ field.h));
 
 				// Draw ObstacleArea on Field
-				g2d.setColor(Color.pink);
-				g2d.draw(new Line2D.Double(field.x + obstacleArea1.x, field.y,
-						field.x + obstacleArea1.x, field.y + field.h));
+				g2d.setColor(Color.cyan);
+				g2d.draw(new Line2D.Double(field.x + obstacleArea.x, field.y,
+						field.x + obstacleArea.x, field.y + field.h));
 	
 				// Draw battery
 				g2d.setColor(Color.WHITE);
@@ -212,6 +233,17 @@ public class Arena extends JFrame{
 						bob.y + bob.h / 2, (bob.x + 3 * bob.w / 2),
 						(bob.y + bob.h / 2)));
 				g2d.rotate(-bob.angle, bob.x, bob.y);
+				
+				//draw the obstacles
+				g2d.setColor(Color.GRAY);
+				g2d.fillOval((int)rock1.x, (int) rock1.y, (int) rock1.r,(int) rock1.r);
+				g2d.fillOval((int)rock2.x, (int) rock2.y, (int) rock2.r,(int) rock2.r);
+				g2d.fillOval((int)rock3.x, (int) rock3.y, (int) rock3.r,(int) rock3.r);
+				
+				g2d.setColor(Color.DARK_GRAY);
+				g2d.fillOval((int)crater1.x, (int) crater1.y, (int) crater1.r,(int) crater1.r);
+				g2d.fillOval((int)crater2.x, (int) crater2.y, (int) crater2.r,(int) crater2.r);
+				
 
 				// Blit image and flip...
 				graphics = buffer.getDrawGraphics();
@@ -249,6 +281,25 @@ public class Arena extends JFrame{
 	public void moveBackward(Bob b, int dx){
 		b.x -= dx * Math.cos(b.angle * 2 * Math.PI / 360);
 		b.y -= dx * Math.sin(b.angle * 2 * Math.PI / 360);
+	}
+	
+	public void turn(Bob b, int dAngle){
+		b.angle +=dAngle;
+	}
+	
+	// this method returns a value depending on where bob is. 
+	// -1 is in the starting/dumping area, 0 is in the obstacle area and 1 is in the mining area
+	public int whatArea()
+	{
+		if (bob.x-field.x<obstacleArea.x)
+		{
+			return -1;
+		}
+		if (bob.x-field.x<miningArea.x)
+		{
+			return 0;
+		}
+		return 1;
 	}
 
 	public static void main(String[] args) {
