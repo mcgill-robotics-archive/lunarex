@@ -40,14 +40,15 @@ class Handler(SocketServer.BaseRequestHandler):
         self.count=0
 
         print str(self.request.getpeername())+" connected"
-
+        
+    def node_init(self):
+        self.pub = rospy.Publisher("commands", std_msgs.msg.String)
+        rospy.init_node(NODE_NAME)
 
     def handle(self):
-        pub = rospy.Publisher("commands", std_msgs.msg.String)
-        rospy.init_node(NODE_NAME)
         while(True):
             self.currentTime = int(time.time()*1000.0)
-
+            self.node_init()
             # self.request is the client connection
             try:
                 data = self.request.recv(1)
@@ -69,7 +70,7 @@ class Handler(SocketServer.BaseRequestHandler):
                     if(not rospy.is_shutdown()):
                         try:
                             rospy.loginfo(ord(data_in))
-                            pub.publish(ord(data_in))
+                            self.pub.publish(ord(data_in))
                         except rospy.ROSInterruptException:
                             print 'Error in ROS node'
             except IOError:
