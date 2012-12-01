@@ -8,8 +8,8 @@ import pprint
 import math
 import numpy as np
 #import scipy as sp
-import matplotlib as mpl
-import matplotlib.pyplot as plt
+#import matplotlib as mpl
+#import matplotlib.pyplot as plt
 
 from numpy import *
 
@@ -116,7 +116,9 @@ class HoughMatrix(object):
 			#theta policy: http://docs.opencv.org/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.html
 			while(k<=self.maxTheta):
 				lineR = point.x*math.cos(math.radians(k)) + point.y*math.sin(math.radians(k))
-				if(lineR<self.rowRank and k<self.columnRank): #THE PROBLEM IS HERE! Column Rank is the number of indices, which only goes up to 90 (for minAngle=0 and maxangle=180 since angleIncr is 2). We need some functions to convert between actual thetas/Rs and hough matrix indices (hash map is a way to do this. See scans timestamp example)
+				if(lineR<self.rowRank and k<(self.columnRank*self.thetaIncr)): #THE PROBLEM IS HERE! 
+				#Column Rank is the number of indices, which only goes up to 90 (for minAngle=0 and maxangle=180 since angleIncr is 2). 
+				#We need some functions to convert between actual thetas/Rs and hough matrix indices (hash map is a way to do this. See scans timestamp example)
 					if(self.H[int(lineR/RIncr)][k].r==0): #line not created
 						self.H[int(lineR/RIncr)][k]=Line(lineR, k) #r, theta in line constructor
 					self.H[int(lineR/RIncr)][k].addPoint(point) #add point, increments line counter
@@ -168,7 +170,8 @@ for scan in scans:
 	timehash[scanData[0]] = j
 	
 #	def __init__(self, points, maxLineR, RIncr, minTheta, maxTheta, thetaIncr):
-h1 = HoughMatrix(scans[4].points, 10, 0.1, 0, 180, 2)
+h1 = HoughMatrix(scans[4].points, 10, 0.1, 0, 180, 1)
+#h1 = HoughMatrix(scans[4].points, 10, 0.1, 0, 180, 2)
 
 #for l in h1.getNMostPopulatedLines(8):
 # minTheta = 0 & maxTheta = 360 in standard Hough Transform! Not to be mistaken for Lidar's angles of operation
@@ -191,7 +194,7 @@ print("hough matrix has "+str(h1.rowRank)+"rows")
 
 print(h1)
 
-for l in h1.getNMostPopulatedLines(50):
+for l in h1.getNMostPopulatedLines(100):
 	print l
 	
 for p in h1.points:	
