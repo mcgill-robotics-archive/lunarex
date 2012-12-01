@@ -85,7 +85,6 @@ public class Client extends Thread {
 					char[] buffer = new char[1024];
 
 					if (this.sended) {
-						// out.write(Character.toChars((int)commands)[0]);
 						if (commands != null) {
 							for (int i = 0; i < commands.length; i++) {
 								out.write((int) commands[i]);
