@@ -7,8 +7,8 @@ import time
 import select
 from threading import Thread
 
-NODE_NAME = 'Lunarex_server'
-import roslib; roslib.load_manifest(NODE_NAME)
+NODE_NAME = 'ros_lunarex_server'
+import roslib; roslib.load_manifest('server')
 import rospy
 from std_msgs.msg import *
 
@@ -43,7 +43,7 @@ class Handler(SocketServer.BaseRequestHandler):
 
 
     def handle(self):
-        pub = rospy.Publisher("/commands", std_msgs.msg.String)
+        pub = rospy.Publisher("commands", std_msgs.msg.String)
         rospy.init_node(NODE_NAME)
         while(True):
             self.currentTime = int(time.time()*1000.0)
