@@ -12,6 +12,7 @@ import numpy as np
 # import matplotlib.pyplot as plt
 
 from numpy import *
+from pylab import *
 
 minAngleDefault = -1.57079637051
 maxAngleDefault = 1.56643295288
@@ -236,13 +237,15 @@ print("hough matrix has " + str(h1.rowRank) + "rows")
 
 print(h1)
 
-# Get getLocation takes heading in degrees
-# 0 degrees is towards back wall; -/+ 90 to face left/right walls respectively
-h1.getLocation(0)
+xval = []
+yval = []
+for l in h1.getNMostPopulatedLines(3):
+    for p in l.points:
+        xval.append(p.x)
+        yval.append(p.y)    
+area = pi*(2)**2 # radius of dots
+scatter(xval,yval,s=area, marker='.', c='b')
 
-for l in h1.getNMostPopulatedLines(100):
-	print l
-	
-for p in h1.points:	
-	print p
-	
+show()
+
+
