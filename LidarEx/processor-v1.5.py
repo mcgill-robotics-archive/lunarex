@@ -27,7 +27,7 @@ class Point(object):
 		self.x = math.sin(math.radians(self.theta)) * self.r
 		self.y = math.cos(math.radians(self.theta)) * self.r
 		# v1.5 added point weight score to use in line selection
-		self.weight = abs(self.r)**(1.5)
+		self.weight = abs(self.r)**(1.5)	
 		
 	def __str__(self):
 		return "Point with angle: " + str(self.theta) + " and distance: " + str(self.r) + "\n X coord: " + str(self.x) + " and Y coord: " + str(self.y)
@@ -111,6 +111,10 @@ class HoughMatrix(object):
 		self.thetaIncr = thetaIncr
 		self.lines = []
 		
+		self.arenaWidth = 0.896  # 0.913m - measured, tweaked based on lidar data
+		self.arenaLength = 1.11  # 1.22m - measured, tweaked based on lidar data
+
+		
 		self.columnRank = int((math.fabs(minTheta) + math.fabs(maxTheta)) / thetaIncr) 
 		self.rowRank = int(maxLineR / RIncr)
 
@@ -176,14 +180,14 @@ class HoughMatrix(object):
 	# Works on points A,B and D
 	# Will need better than "most populated" lines to work with point C
 	def getLocation(self, heading):
-		arenaWidth = 0.896  # 0.913m - measured, tweaked based on lidar data
-		arenaLength = 1.11  # 1.22m - measured, tweaked based on lidar data
 		arenaX = []
 		arenaY = []
+		arenaWidth = self.arenaWidth
 		# origin is in lower left corner
 		
 		# Use N most populated lines to calculate location
 		for l in self.getSortedLines()[:30]:
+		#for l in self.getWeightSortedLines()[:30]:
 			
 			# Align lidar with map using heading so readings point towards backpanel
 			mapAngle = l.theta + heading
@@ -202,7 +206,9 @@ class HoughMatrix(object):
 					arenaWidth = 0	
 						
 		xPosition = arenaWidth - mean(arenaX)
-		yPosition = arenaLength - mean(arenaY)
+		yPosition = self.arenaLength - mean(arenaY)
+		if(yPosition < 0):
+			yPosition = 0
 		print arenaY
 		print mean(arenaY)
 					
@@ -210,6 +216,11 @@ class HoughMatrix(object):
 		print xPosition , yPosition
 		#print len(self.lines)
 		print "\n"
+		
+		p = Point(0,0)
+		p.x = xPosition
+		p.y = yPosition
+		return p
 	
 	def getSortedLines(self):
 		return sorted(self.lines, key=lambda l: l.pointCount, reverse=True)
@@ -254,30 +265,15 @@ for scan in scans:
 	
 # 	def __init__(self, points, maxLineR, RIncr, minTheta, maxTheta, thetaIncr):
 h1 = HoughMatrix(scans[4].points, 2, 0.1, 0, 360, 5)
-# h1 = HoughMatrix(scans[4].points, 10, 0.1, 0, 180, 2)
 
-# for l in h1.getNMostPopulatedLines(8):
-# minTheta = 0 & maxTheta = 360 in standard Hough Transform! Not to be mistaken for Lidar's angles of operation
-	# print(l)
-	# a=l.getClosestPoint(5)
-	# b=l.getFurthestPoint(5)
-	# print("------------")
+pos = h1.getLocation(0);
 
 print("hough matrix has " + str(h1.columnRank) + "columns")
 print("hough matrix has " + str(h1.rowRank) + "rows")
 
-# pp = pprint.PrettyPrinter(indent=4, depth=h1.columnNumber, width=h1.rowNumber)
-
-# np.set_printoptions(threshold='nan')
-# a = np.array(h1.Hlight)
-# a.reshape(h1.rowNumber, h1.columnNumber)
-# pp.pprint(a)
-# a.tofile("pointAHough.txt", sep="\t", format="%s")
-# print(a)
-
 print(h1)
 
-gs = gridspec.GridSpec(1, 2, width_ratios=[1,1], height_ratios=[1,1])
+gs = gridspec.GridSpec(2, 2, width_ratios=[1,1], height_ratios=[1,1])
 
 xval = []
 yval = []
@@ -312,6 +308,41 @@ xlabel('meters',fontdict={'fontsize':20})
 
 grid(True)
 scatter(xweight,yweight,s=area, marker='.', c='r', edgecolors ='none')
+
+xPos = []
+yPos = []
+subplot(gs[2])    
+axis([0, h1.arenaWidth, 0, h1.arenaLength])
+areaPos = pi*(10)**2 # radius of dots
+xlabel('meters',fontdict={'fontsize':20})
+#ylabel('meters',fontdict={'fontsize':20})
+xPos.append(pos.x)
+yPos.append(pos.y)
+
+grid(True)
+scatter(xPos,yPos,s=areaPos, marker='.', c='g', edgecolors ='none')
+
+xTotal = []
+yTotal = []
+for l in h1.getNMostWeightedLines(3):
+    for p in l.points:
+        xTotal.append(p.x)
+        yTotal.append(p.y)
+
+for l in h1.getNMostPopulatedLines(3):
+    for p in l.points:
+        xTotal.append(p.x)
+        yTotal.append(p.y)
+  
+subplot(gs[3])    
+area = pi*(2.5)**2 # radius of dots
+axis([-1.5, 1.5, -1.5, 1.5])
+xlabel('meters',fontdict={'fontsize':20})
+#ylabel('meters',fontdict={'fontsize':20})
+
+
+grid(True)
+scatter(xTotal,yTotal,s=area, marker='.', c='r', edgecolors ='none')
 
 show()
 
