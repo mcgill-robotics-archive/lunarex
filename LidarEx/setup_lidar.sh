@@ -5,7 +5,7 @@ echo "Permissions granted. \n"
 
 # Start roscore in new terminal
 echo "Initializing ROScore... \n"
-gnome-terminal -e roscore
+#gnome-terminal -e roscore
 echo "ROScore enabled. \n"
 
 # Enable calibration
@@ -15,6 +15,6 @@ rosparam set hokuyo_node/port /dev/ttyACM0
 
 # Connect to lidar in new terminal
 echo "Run the hokuyo_node. \n"
-gnome-terminal -e rosrun hokuyo_node hokuyo_node
+eterm -e rosrun hokuyo_node hokuyo_node
 
 echo "LiDAR ready. \n"

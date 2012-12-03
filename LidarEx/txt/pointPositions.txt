@@ -20,6 +20,20 @@ Point D
 facing +45 degrees (increasing clockwise, positive y axis being 0)
 
 
+Point E
+64 from right wall
+60 from y=0
+facing 0 degrees
 
+POint F
+same as E facing left wall (-90)
+
+Point G
+45% at -width/2 , 0
+
+
+POint H
+28.5 from right wall
+28.5 from back wall
 
 

@@ -7,9 +7,6 @@ import sys
 import pprint
 import math
 import numpy as np
-# import scipy as sp
-# import matplotlib as mpl
-# import matplotlib.pyplot as plt
 
 from numpy import *
 from pylab import *
@@ -304,7 +301,6 @@ area = pi*(2.5)**2 # radius of dots
 axis([-1.5, 1.5, -1.5, 1.5])
 xlabel('meters',fontdict={'fontsize':20})
 #ylabel('meters',fontdict={'fontsize':20})
-
 
 grid(True)
 scatter(xweight,yweight,s=area, marker='.', c='r', edgecolors ='none')
