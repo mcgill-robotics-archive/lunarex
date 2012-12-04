@@ -15,6 +15,8 @@ import matplotlib.gridspec as gridspec
 minAngleDefault = -1.57079637051
 maxAngleDefault = 1.56643295288
 angleIncDefault = 0.00436332309619
+arenaWidth = 0.896  # 0.913m - measured, tweaked based on lidar data
+arenaLength = 1.11  # 1.22m - measured, tweaked based on lidar data
 
 class Point(object):
 	def __init__(self, theta, r):
@@ -107,9 +109,9 @@ class HoughMatrix(object):
 		self.maxTheta = maxTheta #cannot be negative
 		self.thetaIncr = thetaIncr
 		self.lines = []
-		
 		self.arenaWidth = 0.896  # 0.913m - measured, tweaked based on lidar data
 		self.arenaLength = 1.11  # 1.22m - measured, tweaked based on lidar data
+		
 
 		
 		self.columnRank = int((math.fabs(minTheta) + math.fabs(maxTheta)) / thetaIncr) 
@@ -183,7 +185,7 @@ class HoughMatrix(object):
 		# origin is in lower left corner
 		
 		# Use N most populated lines to calculate location
-		for l in self.getSortedLines()[:30]:
+		for l in self.getSortedLines()[:50]:
 		#for l in self.getWeightSortedLines()[:30]:
 			
 			# Align lidar with map using heading so readings point towards backpanel
@@ -202,12 +204,58 @@ class HoughMatrix(object):
 					arenaX.append(-abs(l.r))
 					arenaWidth = 0	
 						
-		xPosition = arenaWidth - mean(arenaX)
-		yPosition = self.arenaLength - mean(arenaY)
+		xPosition = arenaWidth - median(arenaX)
+		yPosition = self.arenaLength - median(arenaY)
 		if(yPosition < 0):
 			yPosition = 0
 		print arenaY
-		print mean(arenaY)
+		print median(arenaY)
+		
+		if(xPosition < 0):
+			xPosition = 0
+		
+		print arenaX
+		print median(arenaX)
+					
+		print "Lidar is at: "
+		print xPosition , yPosition
+		#print len(self.lines)
+		print "\n"
+		
+		p = Point(0,0)
+		p.x = xPosition
+		p.y = yPosition
+		return p
+		
+	def getLocation2(self, heading):
+		arenaX = []
+		arenaY = []
+		arenaWidth = self.arenaWidth
+		# origin is in lower left corner
+		
+		line = self.getMostPopulatedLineInThetaRange((85+heading), (95+heading))
+		print(line)
+			
+		# Filter X/Y data based on angle to walls
+		arenaY.append(abs(self.getMostPopulatedLineInThetaRange((85+heading), (95+heading)).r))		
+		if (heading <= 0):
+			arenaX.append(abs(self.getMostPopulatedLineInThetaRange((0+heading), (10+heading)).r))				
+		else:
+			arenaX.append(-abs(self.getMostPopulatedLineInThetaRange((170+heading), (180+heading)).r))				
+			arenaWidth = 0	
+						
+		xPosition = arenaWidth - median(arenaX)
+		yPosition = self.arenaLength - median(arenaY)
+		if(yPosition < 0):
+			yPosition = 0
+		print arenaY
+		print median(arenaY)
+		
+		if(xPosition < 0):
+			xPosition = 0
+		
+		print arenaX
+		print median(arenaX)
 					
 		print "Lidar is at: "
 		print xPosition , yPosition
@@ -263,7 +311,7 @@ for scan in scans:
 # 	def __init__(self, points, maxLineR, RIncr, minTheta, maxTheta, thetaIncr):
 h1 = HoughMatrix(scans[4].points, 2, 0.1, 0, 360, 5)
 
-pos = h1.getLocation(0);
+pos = h1.getLocation2(85);
 
 print("hough matrix has " + str(h1.columnRank) + "columns")
 print("hough matrix has " + str(h1.rowRank) + "rows")
@@ -274,15 +322,23 @@ gs = gridspec.GridSpec(2, 2, width_ratios=[1,1], height_ratios=[1,1])
 
 xval = []
 yval = []
+xMeasured = []
+yMeasured = []
+xMeasured.append(arenaWidth-0.64)
+yMeasured.append(0.60)
+
 for l in h1.getNMostPopulatedLines(3):
     for p in l.points:
         xval.append(p.x)
         yval.append(p.y)    
+        
+        
 #xlabel('meters',fontdict={'fontsize':20})
 #axis([xmin,xmax,ymin,ymax])
 subplot(gs[0])
 area = pi*(2.5)**2 # radius of dots
-ylabel('meters',fontdict={'fontsize':20})
+ylabel('y (meters)',fontdict={'fontsize':15})
+title('Most populated lines',fontdict={'fontsize':20})
 #autoscale(enable=True, axis='both', tight=None)
 grid(True)
 axis([-1.5, 1.5, -1.5, 1.5])
@@ -299,7 +355,8 @@ subplot(gs[1])
 area = pi*(2.5)**2 # radius of dots
 #autoscale(enable=True, axis='both', tight=None)
 axis([-1.5, 1.5, -1.5, 1.5])
-xlabel('meters',fontdict={'fontsize':20})
+xlabel('',fontdict={'fontsize':15})
+title('Weight-adjusted lines',fontdict={'fontsize':20})
 #ylabel('meters',fontdict={'fontsize':20})
 
 grid(True)
@@ -308,15 +365,17 @@ scatter(xweight,yweight,s=area, marker='.', c='r', edgecolors ='none')
 xPos = []
 yPos = []
 subplot(gs[2])    
-axis([0, h1.arenaWidth, 0, h1.arenaLength])
+axis([-.05, h1.arenaWidth, -.05, h1.arenaLength])
 areaPos = pi*(10)**2 # radius of dots
-xlabel('meters',fontdict={'fontsize':20})
+title('View of the arena',fontdict={'fontsize':20})
+xlabel('x (meters)',fontdict={'fontsize':15})
 #ylabel('meters',fontdict={'fontsize':20})
 xPos.append(pos.x)
 yPos.append(pos.y)
 
 grid(True)
 scatter(xPos,yPos,s=areaPos, marker='.', c='g', edgecolors ='none')
+scatter(xMeasured,yMeasured,s=areaPos, marker='.', c='y', edgecolors = 'none')
 
 xTotal = []
 yTotal = []
@@ -333,7 +392,8 @@ for l in h1.getNMostPopulatedLines(3):
 subplot(gs[3])    
 area = pi*(2.5)**2 # radius of dots
 axis([-1.5, 1.5, -1.5, 1.5])
-xlabel('meters',fontdict={'fontsize':20})
+xlabel('',fontdict={'fontsize':20})
+title('Combined lines',fontdict={'fontsize':20})
 #ylabel('meters',fontdict={'fontsize':20})
 
 
