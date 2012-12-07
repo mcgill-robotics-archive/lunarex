@@ -37,5 +37,35 @@ sudo apt-get install ros-fuerte=rosserial
 /opt/ros/fuerte/stacks/
 
 
+---------TUTORIALS --------------- http://www.ros.org/wiki/rosserial_arduino/Tutorials
 
+#Tutorial 1 - Simple publisher node on the arduino
+
+#fixing bug: WProgram.h: No such file or directory
+#from this page: http://nootropicdesign.com/forum/viewtopic.php?t=2434
+#go to this file
+/usr/share/arduino/libraries/ros_lib$ sudo vim ArduinoHardware.h
+	**change:**
+	
+	#include "WProgram.h"
+	#include <pins_arduino.h>
+
+	**to this**
+	#if defined(ARDUINO) && ARDUINO >= 100
+	  #include "Arduino.h"
+	#else
+	  #include "WProgram.h"
+	  #include <pins_arduino.h>
+	#endif
+
+#to run rosserial client application that fwds arduino messages, use
+rosrun rosserial_python serial_node.py /dev/ttyUSB0
+with the right port! can be found as shown above (dmesg). For me, that was:
+rosrun rosserial_python serial_node.py /dev/ttyACM0
+
+(note: all ports can be checked by going to /dev/ directory)
+
+#Tutorial 2 
+
+same thing with the port, everything else worked fine.
 
