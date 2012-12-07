@@ -1,0 +1,8 @@
+installed open ssh, runs ssh server on boot
+automatically goes onto 142.157.37.110, see /etc/network/interfaces
+if not, run ifconfig locally
+
+
+put ubuntu server on there
+make sure ROS runs properly on it
+

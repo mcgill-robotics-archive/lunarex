@@ -1,0 +1,41 @@
+README for Arduino + ROS stuff
+
+This is the mega arduino we have, that will be onboard for motor control etc: http://arduino.cc/en/Main/ArduinoBoardMega2560
+
+--------------- Arduino IDE install on ubuntu 12.04 -------------
+
+#get software
+sudo apt-get install arduino
+
+#The arduino's working dir will be
+/usr/share/arduino
+
+#say which board you have
+Tools>Board>"Arduino Mega 2560"
+
+#Find port it's connected to
+dmesg | grep tty
+
+#Assign arduino to port 
+Tools>SerialPort> /dev/tty/ACM0  
+
+------------- ROS STUFF --------
+
+We are using this package for serial communication: http://www.ros.org/wiki/rosserial
+it contains an arduino-specific package: http://www.ros.org/wiki/rosserial_arduino?distro=fuerte
+
+#Tutorial: Installing ros_lib for arduino ide: 
+http://www.ros.org/wiki/rosserial_arduino/Tutorials/Arduino%20IDE%20Setup
+
+#Do not install from source, instead run:
+sudo apt-get install ros-fuerte=rosserial
+
+#note the arduino's "sketchbook" path is:
+/usr/share/arduino/libraries
+
+#remember, for reference, that all ROS packages are here:
+/opt/ros/fuerte/stacks/
+
+
+
+
