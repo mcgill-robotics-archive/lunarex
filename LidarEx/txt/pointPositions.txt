@@ -1,0 +1,39 @@
+arena
+
+width = 91.3cm
+length = 122cm
+
+Point A
+0, 0 (middle of width = 45.75cm & y = lidar width / 2)\
+facing positive y axis
+
+Point B
+0, length/2
+facing positive y axis
+
+Point C
+-width/2, 0
+facing positive y axis
+
+Point D
+0, length/2
+facing +45 degrees (increasing clockwise, positive y axis being 0)
+
+
+Point E
+64 from right wall
+60 from y=0
+facing 0 degrees
+
+POint F
+same as E facing left wall (-90)
+
+Point G
+45% at -width/2 , 0
+
+
+POint H
+28.5 from right wall
+28.5 from back wall
+
+
