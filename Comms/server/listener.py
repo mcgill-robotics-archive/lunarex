@@ -15,3 +15,5 @@ def listener():
 
 if __name__ == '__main__':
     listener()
+    except KeyboardInterrupt:
+        sys.exit(0)
