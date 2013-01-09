@@ -16,6 +16,8 @@ HOST=''
 PORT=5902
 BUFFERSIZE=4096
 
+pub = None
+
 COM='/dev/ttyACM0'
 BAUD=115200
 
@@ -41,9 +43,10 @@ class Handler(SocketServer.BaseRequestHandler):
 
         print str(self.request.getpeername())+" connected"
 
-    def node_init(self):
+    '''def node_init(self):
         self.pub = rospy.Publisher("commands", std_msgs.msg.String)
         rospy.init_node(NODE_NAME)
+    '''
 
     def handle(self):
         while(True):
@@ -70,7 +73,7 @@ class Handler(SocketServer.BaseRequestHandler):
                     if(not rospy.is_shutdown()):
                         try:
                             rospy.loginfo(ord(data_in))
-                            self.pub.publish(ord(data_in))
+                            pub.publish(ord(data_in))
                         except rospy.ROSInterruptException:
                             print 'Error in ROS node'
             except IOError:
@@ -96,6 +99,8 @@ class Server(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 
 if __name__ == "__main__":
     server = Server((HOST, PORT), Handler)
+    pub = rospy.Publisher("commands", std_msgs.msg.String)
+    rospy.init_node(NODE_NAME)
     # terminate with Ctrl-C
     try:
         server.serve_forever()
