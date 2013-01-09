@@ -40,7 +40,7 @@ class Handler(SocketServer.BaseRequestHandler):
         self.count=0
 
         print str(self.request.getpeername())+" connected"
-        
+
     def node_init(self):
         self.pub = rospy.Publisher("commands", std_msgs.msg.String)
         rospy.init_node(NODE_NAME)
