@@ -16,6 +16,7 @@ define lunarex position
     z [0 0.3]
   )
   color "green"
+  # Drive the robot on the basis of an angle and a speed
   drive "car"
 )
 
