@@ -73,7 +73,7 @@ class Handler(SocketServer.BaseRequestHandler):
                     if(not rospy.is_shutdown()&len(data_in)>0):
                         try:
                             rospy.loginfo(ord(data_in))
-                            pub.publish(data_in)
+                            pub.publish(ord(data_in))
                         except rospy.ROSInterruptException:
                             print 'Error in ROS node'
             except IOError:
@@ -99,7 +99,7 @@ class Server(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 
 if __name__ == "__main__":
     server = Server((HOST, PORT), Handler)
-    pub = rospy.Publisher("commands", std_msgs.msg.String)
+    pub = rospy.Publisher("commands", std_msgs.msg.Int8)
     rospy.init_node(NODE_NAME)
     # terminate with Ctrl-C
     try:

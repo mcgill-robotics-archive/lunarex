@@ -4,7 +4,7 @@ import rospy
 from std_msgs.msg import Int8
 
 def callback(data):
-    rospy.loginfo(rospy.get_name() + ": I heard %s" % ord(data.data))
+    rospy.loginfo(rospy.get_name() + ": I heard %s" % data.data)
 
 
 def listener():
