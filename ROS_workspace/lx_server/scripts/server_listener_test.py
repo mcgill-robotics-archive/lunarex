@@ -4,23 +4,22 @@ import rospy
 from std_msgs.msg import Int8
 import threading
 
-class serverListerner:
+def callback(data):
+    rospy.loginfo(rospy.get_name() + ": I heard %s" % data.data)
 
-    def callback(data):
-        rospy.loginfo(rospy.get_name() + ": I heard %s" % data.data)
-        
-    def initlistener(self):
-        rospy.init_node('listener', anonymous=True)
-        rospy.Subscriber("commands", Int8, self.callback)
-    
+class serverListener:
+
+    def __init__(self):
+        rospy.init_node('listener', anonymous = True)
+        rospy.Subscriber("commands", Int8, callback)
+
     def printlistener(self):
-        print "Yes?"
+        print "Yes?\n"
 
 
 if __name__ == '__main__':
     try:
-        listener = new serverListener()
-        listener.initlistener()
+        listener = serverListener()
         thread_1 = threading.Thread(target = rospy.spin())
         thread_2 = threading.Thread(target = listener.printlistener())
         thread_1.start()
