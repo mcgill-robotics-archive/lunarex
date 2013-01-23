@@ -1,0 +1,80 @@
+# World file for Lunarex Robot Simulation
+
+
+define lunarex position
+(
+  # size [0.33 0.33 0.3]  will need this later
+
+  # the shape of the robot. rectangular for now, more complicated form later.
+  block( 
+    points 4
+    point[3] [ 0.5 0.0 ]
+    point[2] [ 0.5 0.3 ]
+    point[1] [ 0.0 0.3 ]
+    point[0] [ 0.0 0.0 ]
+    # the height of the robot. I guess it's 30 cm perhaps?
+    z [0 0.3]
+  )
+  color "green"
+  # Drive the robot on the basis of an angle and a speed
+  drive "car"
+)
+
+
+
+
+define arena model
+(
+  # sombre, sensible, artistic
+  color "gray10"
+
+  # need a boundary here
+  boundary 1
+
+  # default GUI settings
+  gui_nose 0
+  gui_grid 0
+  gui_move 0
+  gui_outline 0
+  
+  # right now no sensor attached
+  gripper_return 0
+  fiducial_return 0
+  laser_return 0
+)
+
+speedup 10
+
+paused 0
+
+resolution 0.01
+
+# configure the GUI window
+window
+(
+  size [ 700.00 369.00 ] # in pixels
+  scale 94  # pixels per meter
+  center [ 0  0 ]
+  rotate [ 0  0 ]
+  			
+  show_data 1              # 1=on 0=off
+)
+
+# load an environment bitmap
+arena
+( 
+  name "Arena"
+  # size of the arena
+  size [7.38 3.88 0.50]
+  pose [0 0 0 0]
+)
+
+lunarex
+(		  
+  # can refer to the robot by this name
+  name "lunarex"
+  pose [ -2 0 0 90 ] 
+ 
+  # ctrl "wander"  do not need this for now
+)
+
