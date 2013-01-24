@@ -3,28 +3,25 @@ import roslib; roslib.load_manifest('lx_server')
 import rospy
 from std_msgs.msg import Int8
 import threading
+import lister_thread as lthread
 
-def callback(data):
-    rospy.loginfo(rospy.get_name() + ": I heard %s" % data.data)
+data = None
 
-class serverListener:
-
-    def __init__(self):
-        rospy.init_node('listener', anonymous = True)
-        rospy.Subscriber("commands", Int8, callback)
-
-    def printlistener(self):
-        print "Yes?\n"
-
+def printMessage():
+    data = lthread.getData()
+    if(data <> None):
+        print "Data is %s" % data
 
 if __name__ == '__main__':
     try:
-        listener = serverListener()
-        thread_1 = threading.Thread(target = rospy.spin())
-        thread_2 = threading.Thread(target = listener.printlistener())
-        thread_1.start()
-        thread_1.join()
-        thread_2.start()
-        thread_2.join()
+        thread1 = lthread.listenerThread("listenerThread", "commands")
+        thread2 = threading.Thread(target = printMessage)
+        thread1.start()
+        thread2.start()
+        threadList = []
+        threadList.append(thread1)
+        threadList.append(thread2)
+        for t in threadList:
+            t.join()
     except KeyboardInterrupt:
         sys.exit(0)
