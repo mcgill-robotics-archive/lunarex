@@ -31,7 +31,6 @@ class publisherThread(threading.Thread):
         print "Initiating publisher thread...\n"
         pub = rospy.Publisher('listen_pub', Int8)
         #rospy.init_node('listenerThread_pub')
-        self.thread_data = None
         print "ROS publisher initiated...\n"
         threading.Thread.__init__(self)
 
@@ -39,7 +38,7 @@ class publisherThread(threading.Thread):
         try:
             while not rospy.is_shutdown():
                 if(thread_data <> None):
-                    pub.publish(self.thread_data)
+                    pub.publish(thread_data)
                     rospy.sleep(1.0)
                 
         except KeyboardInterrupt:
