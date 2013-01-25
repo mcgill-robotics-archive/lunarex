@@ -3,17 +3,35 @@ import roslib; roslib.load_manifest('lx_server')
 import rospy
 from std_msgs.msg import Int8
 import threading
-import listener_thread as lthread
 import time
 
-data = None
+thread_data = None
 pub = None
-initialTime = time.time()
+NODE_NAME = "Listener_Multithread"
+
+def callback(data):
+    thread_data = data.data
+    print "I heard %s" % thread_data
+
+class listenerThread(threading.Thread):
+    def __init__(self, NODE_NAME, topic):
+        print "Initiating thread...\n"
+        self.NODE_NAME = NODE_NAME
+        self.topic = topic
+        rospy.Subscriber(self.topic, Int8, callback)
+        print "ROS subscriber initiated...\n"
+        threading.Thread.__init__(self)
+
+    def run(self):
+        try:
+            print "Currently running ROS subscriber thread...\n"
+            rospy.spin()
+        except KeyboardInterrupt:
 
 class publisherThread(threading.Thread):
     def __init__(self):
         print "Initiating publisher thread...\n"
-        pub = rospy.Publisher('listen_pub', String)
+        pub = rospy.Publisher('listen_pub', Int8)
         #rospy.init_node('listenerThread_pub')
         self.thread_data = None
         print "ROS publisher initiated...\n"
@@ -22,13 +40,10 @@ class publisherThread(threading.Thread):
     def run(self):
         try:
             while not rospy.is_shutdown():
-                '''
-                self.thread_data = lthread.getData()
-                if(self.thread_data <> None):
+                if(thread_data <> None):
                     pub.publish(self.thread_data)
                     rospy.sleep(1.0)
-                '''
-                pub.publish("WTF")
+                
         except KeyboardInterrupt:
             sys.exit(0)
 
@@ -46,8 +61,9 @@ def printMessage():
 if __name__ == '__main__':
     try:
         print "Running the main program...\n"
+        rospy.init_node(NODE_NAME, anonymous = True)
         #initialTime = time.time()
-        thread1 = lthread.listenerThread("listenerThread", "commands")
+        thread1 = listenerThread("listenerThread", "commands")
         #thread2 = threading.Thread(target = printMessage)
         thread2 = publisherThread()
         print "2 threads created...\n"
