@@ -9,7 +9,7 @@ def callback(data):
 #Unrequired comment made from Hadi's Laptops
 def listener():
     rospy.init_node('listener', anonymous=True)
-    rospy.Subscriber("listenpub", Int8, callback)
+    rospy.Subscriber("listenerpublisher", Int8, callback)
     rospy.spin()
 
 

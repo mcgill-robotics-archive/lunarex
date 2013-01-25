@@ -1,20 +1,27 @@
-#!/usr/bin/env python
-import roslib; roslib.load_manifest('lx_server')
+#!/usr/bin/env  python
+import sys
 import rospy
-from std_msgs.msg import String
+from std_msgs.msg import Int8
 
+_publishing = False
+_pub = None
+def start_publishing():
+    global _pub
+    if _pub is not None:
+        return
+    print "registering onto listenerpublisher"
+    _pub = rospy.Publisher("listenerpublisher", Int8)
+    
 def callback(data):
-    rospy.loginfo(rospy.get_name() + ": I heard %s" % data.data)
-
-#Unrequired comment made from Hadi's Laptops
+    print rospy.get_caller_id(), "I heard %s"%data.data
+    start_publishing()
+    print "publishing", data.data
+    _pub.publish((Int8)(data.data))
+    
 def listener():
-    rospy.init_node('listener', anonymous=True)
-    rospy.Subscriber("chatter", String, callback)
+    rospy.init_node("listenerpublisher")
+    rospy.Subscriber("commands", Int8, callback)
     rospy.spin()
-
-
+        
 if __name__ == '__main__':
-    try:
-        listener()
-    except KeyboardInterrupt:
-        sys.exit(0)
+    listener()
