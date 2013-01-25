@@ -7,24 +7,28 @@ import listener_thread as lthread
 import time
 
 data = None
+pub = None
 initialTime = time.time()
 
 class publisherThread(threading.Thread):
     def __init__(self):
         print "Initiating publisher thread...\n"
-        pub = rospy.Publisher('listen_pub', Int8)
-        rospy.init_node('listenerThread_pub')
+        pub = rospy.Publisher('listen_pub', String)
+        #rospy.init_node('listenerThread_pub')
         self.thread_data = None
         print "ROS publisher initiated...\n"
         threading.Thread.__init__(self)
-        
+
     def run(self):
         try:
             while not rospy.is_shutdown():
+                '''
                 self.thread_data = lthread.getData()
                 if(self.thread_data <> None):
                     pub.publish(self.thread_data)
                     rospy.sleep(1.0)
+                '''
+                pub.publish("WTF")
         except KeyboardInterrupt:
             sys.exit(0)
 

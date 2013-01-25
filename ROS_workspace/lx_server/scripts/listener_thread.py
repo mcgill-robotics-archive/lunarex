@@ -8,7 +8,7 @@ thread_data = None
 
 def callback(data):
     thread_data = data.data
-    print "I heard %s" % data.data
+    print "I heard %s" % thread_data
 
 def getData():
     return thread_data

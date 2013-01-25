@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import roslib; roslib.load_manifest('lx_server')
 import rospy
-from std_msgs.msg import String
+from std_msgs.msg import *
 
 def callback(data):
     rospy.loginfo(rospy.get_name() + ": I heard %s" % data.data)
