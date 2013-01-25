@@ -16,7 +16,7 @@ def callback(data):
 class listenerThread(threading.Thread):
     def __init__(self, topic):
         print "Initiating thread...\n"
-        rospy.Subscriber(topic, Int8, callback)
+        #rospy.Subscriber(topic, Int8, callback)
         print "ROS subscriber initiated...\n"
         threading.Thread.__init__(self)
 
@@ -25,11 +25,12 @@ class listenerThread(threading.Thread):
             print "Currently running ROS subscriber thread...\n"
             rospy.spin()
         except KeyboardInterrupt:
+            sys.exit(0)
 
 class publisherThread(threading.Thread):
     def __init__(self):
         print "Initiating publisher thread...\n"
-        pub = rospy.Publisher('listen_pub', Int8)
+        #pub = rospy.Publisher('listen_pub', Int8)
         #rospy.init_node('listenerThread_pub')
         print "ROS publisher initiated...\n"
         threading.Thread.__init__(self)
@@ -37,10 +38,12 @@ class publisherThread(threading.Thread):
     def run(self):
         try:
             while not rospy.is_shutdown():
+                #print "Proof that publisher is running...\n"
                 if(thread_data <> None):
+                    print "Data: %s" % thread_data
                     pub.publish(thread_data)
                     rospy.sleep(1.0)
-                
+
         except KeyboardInterrupt:
             sys.exit(0)
 
@@ -58,8 +61,11 @@ def printMessage():
 if __name__ == '__main__':
     try:
         print "Running the main program...\n"
-        rospy.init_node(NODE_NAME, anonymous = True)
+        rospy.init_node(NODE_NAME)
+        pub = rospy.Publisher("listen_pub", Int8)
+        rospy.Subscriber("commands", Int8, callback)
         #initialTime = time.time()
+        pub.publish(20)
         thread1 = listenerThread("commands")
         #thread2 = threading.Thread(target = printMessage)
         thread2 = publisherThread()
