@@ -38,6 +38,7 @@ class publisherThread(threading.Thread):
     def run(self):
         try:
             #while not rospy.is_shutdown():
+            print "Proof that the publisher thread is running...\n"
             while True:
                 #print "Proof that publisher is running...\n"
                 if(thread_data <> 0):

@@ -7,17 +7,17 @@ class subpub:
     def __init__(self):
         self.data = 0
         rospy.init_node("pubsub")
-        
+
         self.pub = rospy.Publisher('Pubsub', Int8, latch = True)
         rospy.Subscriber("commands", Int8, self.callback)
-        
+
     def callback(self, data):
         self.data = data.data
-    
+
     def run(self):
         rate = rospy.Rate(10)
         while not rospy.is_shutdown():
-            self.pub.publish(this.data)
+            self.pub.publish(self.data)
             rate.sleep()
 
 
