@@ -30,10 +30,11 @@ define LidarEx ranger
   samples 720	#max from lidar but choosing a smaller number decreases computational time  
   )
   
+  model(
   #physical model properties
   color "orange"
   size [ 0.060 0.060 0.087 ]	#length x width x height
-  
+  )
 )
 
 
@@ -54,7 +55,7 @@ define arena model
   # right now no sensor attached
   gripper_return 0
   fiducial_return 0
-  ranger_return 0 #if 1, robot will receive data. If 0, it won't receive data.
+  ranger_return 1 #if 1, robot will receive data. If 0, it won't receive data.
 )
 
 speedup 10
