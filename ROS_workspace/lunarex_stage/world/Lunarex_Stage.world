@@ -20,7 +20,21 @@ define lunabot position
   drive "car"
 )
 
-
+define LidarEx ranger
+(
+  sensor(
+  # laser-specific properties
+  # http://www.hokuyo-aut.jp/02sensor/07scanner/utm_30lx.html
+  range_max 30.0
+  fov 180.0
+  samples 720	#max from lidar but choosing a smaller number decreases computational time  
+  )
+  
+  #physical model properties
+  color "orange"
+  size [ 0.060 0.060 0.087 ]	#length x width x height
+  
+)
 
 
 define arena model
