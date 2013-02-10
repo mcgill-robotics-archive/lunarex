@@ -32,14 +32,15 @@ define roomba position
 
 define create roomba( color "gray90" )
 
-define sicklaser laser
+define sicklaser ranger
 (
   # laser-specific properties
   # factory settings for LMS200	
-  range_max 8.0
-  fov 180.0
-  samples 361
-
+  sensor(
+    range_max 8.0
+    fov 180.0
+    samples 361
+  )
   #samples 90 # still useful but much faster to compute
 
   # generic model properties
@@ -62,7 +63,7 @@ define floorplan model
   gui_outline 0
   gripper_return 0
   fiducial_return 0
-  laser_return 1
+  ranger_return 1
 )
 
 quit_time 3600 # 1 hour of simulated time
@@ -100,6 +101,6 @@ roomba
 
   sicklaser()
  
-  ctrl "wander"
+  #ctrl "wander"
 )
 
