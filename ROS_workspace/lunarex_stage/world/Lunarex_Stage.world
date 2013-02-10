@@ -19,6 +19,10 @@ define lunabot position
   drive "car"
 )
 
+define LidarEx ranger
+(
+
+)
 
 define arena model
 (
