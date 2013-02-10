@@ -20,7 +20,7 @@ define lunabot position
   drive "car"
 )
 
-define LidarEx ranger
+define LidarEx laser #ranger
 (
   sensor(
   # laser-specific properties
