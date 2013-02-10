@@ -1,22 +1,48 @@
 # World file for Lunarex Robot Simulation
 
+
+define LidarEx ranger
+(
+  sensor(
+  # laser-specific properties
+  # http://www.hokuyo-aut.jp/02sensor/07scanner/utm_30lx.html
+  range_max 30.0
+  fov 180.0
+  samples 720	#max from lidar but choosing a smaller number decreases computational time  
+  )
+  
+  model(
+  #physical model properties
+  color "orange"
+  size [ 0.060 0.060 0.087 ]	#length x width x height
+  )
+)
+
+
 define lunabot position
 (
   size [1.20 0.75 0.6]  #length x width x height
+  # origin [? ? ? ?] #define centre of rotation
 
-  # the shape of the robot. rectangular for now, more complicated form later.
+  # the shape of the robot. rectangular for now:
   block( 
     points 4
     point[3] [ 1.20 0.0 ]
     point[2] [ 1.20 0.75 ]
     point[1] [ 0.0 0.75 ]
     point[0] [ 0.0 0.0 ]
-    # the height of the robot. I guess it's 60 cm perhaps?
-    z [0 0.6]
+    
+    z [0 0.6] # the height of the robot
   )
   color "red"
   # Drive the robot on the basis of an angle and a speed
   drive "car"
+  
+  #attach lidar
+  LidarEx()
+  #ranger_return 1
+  #laser_return 1	#not sure if these are necessary, make it reflect laser/ranger beams
+  
 )
 
 
@@ -32,7 +58,7 @@ define arena model
   gui_nose 0
   gui_grid 0
   gui_move 0
-  gui_outline 1
+  gui_outline 0
   
   # right now no sensor attached
   gripper_return 0
@@ -61,10 +87,19 @@ window
 arena
 ( 
   name "Arena"
+  # bitmap "filepath" #if defined by bitmap, put it here
   # size of the arena
   size [7.38 3.88 0.50]	#according to competition rules
   pose [0 0 0 0]
 )
 
 
-
+lunabot
+(		  
+  # can refer to the robot by this name
+  name "lunabot"
+  pose [ -2 0 0 90 ]
+  color "red" 
+ 
+  # ctrl "wander"  do not need this for now
+)
