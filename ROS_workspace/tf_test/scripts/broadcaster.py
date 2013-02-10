@@ -18,5 +18,5 @@ if __name__ == '__main__':
                          "A",     # child
                          "W"      # parent
                          )
-        print 'sended'
+        print 'sent'
         rate.sleep()
