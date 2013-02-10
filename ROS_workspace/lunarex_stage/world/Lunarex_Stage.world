@@ -87,7 +87,7 @@ window
 arena
 ( 
   name "Arena"
-  # bitmap "filepath" #if defined by bitmap, put it here
+   bitmap "obstacleLunarena.bmp" #if defined by bitmap, put it here
   # size of the arena
   size [7.38 3.88 0.50]	#according to competition rules
   pose [0 0 0 0]
