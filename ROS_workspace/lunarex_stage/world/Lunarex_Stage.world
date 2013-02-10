@@ -17,6 +17,7 @@ define LidarEx ranger
   #physical model properties
   color "orange"
   size [ 0.060 0.060 0.087 ]	#length x width x height
+  spose [0 0.77 0] # pose of the transducer relative to its parent. [x y theta]
   )
 )
 
