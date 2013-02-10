@@ -9,7 +9,7 @@ define LidarEx ranger
   # range_max 30.0 #commented out because warning raised that it wasnt used
   # fov 180.0 # replaced below:
   
-  sview [0 2 180] # [range_min range_max fov]
+  sview [0 2 3.14] # [range_min range_max fov]
   samples 720	#max from lidar but choosing a smaller number decreases computational time  
   )
   
