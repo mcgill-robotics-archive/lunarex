@@ -1,21 +1,21 @@
 # World file for Lunarex Robot Simulation
 
 
-define lunarex position
+define lunabot position
 (
-  # size [0.33 0.33 0.3]  will need this later
+  size [1.20 0.75 0.6]  #length x width x height
 
   # the shape of the robot. rectangular for now, more complicated form later.
   block( 
     points 4
-    point[3] [ 0.5 0.0 ]
-    point[2] [ 0.5 0.3 ]
-    point[1] [ 0.0 0.3 ]
+    point[3] [ 1.20 0.0 ]
+    point[2] [ 1.20 0.75 ]
+    point[1] [ 0.0 0.75 ]
     point[0] [ 0.0 0.0 ]
-    # the height of the robot. I guess it's 30 cm perhaps?
-    z [0 0.3]
+    # the height of the robot. I guess it's 60 cm perhaps?
+    z [0 0.6]
   )
-  color "green"
+  color "red"
   # Drive the robot on the basis of an angle and a speed
   drive "car"
 )
@@ -53,7 +53,7 @@ resolution 0.01
 window
 (
   size [ 700.00 369.00 ] # in pixels
-  scale 94  # pixels per meter
+  scale 94  # pixels per meter, makes it slightly larger than the arena
   center [ 0  0 ]
   rotate [ 0  0 ]
   			
@@ -65,14 +65,14 @@ arena
 ( 
   name "Arena"
   # size of the arena
-  size [7.38 3.88 0.50]
+  size [7.38 3.88 0.50]	#according to competition rules
   pose [0 0 0 0]
 )
 
-lunarex
+lunabot
 (		  
   # can refer to the robot by this name
-  name "lunarex"
+  name "lunabot"
   pose [ -2 0 0 90 ] 
  
   # ctrl "wander"  do not need this for now
