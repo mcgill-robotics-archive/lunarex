@@ -66,12 +66,5 @@ arena
   pose [0 0 0 0]
 )
 
-lunabot
-(		  
-  # can refer to the robot by this name
-  name "lunabot"
-  pose [ -2 0 0 90 ] 
- 
-  # ctrl "wander"  do not need this for now
-)
+
 
