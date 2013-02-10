@@ -60,7 +60,7 @@ define arena model
   boundary 1
 
   # default GUI settings
-  gui_nose 90
+  gui_nose 0
   gui_grid 0
   gui_move 0
   gui_outline 0
@@ -103,7 +103,7 @@ lunabot
 (		  
   # can refer to the robot by this name
   name "lunabot"
-  pose [ -2 0 0 90 ]
+  pose [0 -2.5 0 90 ]	#initial position, (then rotation?)
   color "red" 
  
   # ctrl "wander"  do not need this for now
