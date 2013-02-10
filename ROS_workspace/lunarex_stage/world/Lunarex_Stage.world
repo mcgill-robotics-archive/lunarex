@@ -1,6 +1,23 @@
 # World file for Lunarex Robot Simulation
 
+define lunabot position
+(
+  size [1.20 0.75 0.6]  #length x width x height
 
+  # the shape of the robot. rectangular for now, more complicated form later.
+  block( 
+    points 4
+    point[3] [ 1.20 0.0 ]
+    point[2] [ 1.20 0.75 ]
+    point[1] [ 0.0 0.75 ]
+    point[0] [ 0.0 0.0 ]
+    # the height of the robot. I guess it's 60 cm perhaps?
+    z [0 0.6]
+  )
+  color "red"
+  # Drive the robot on the basis of an angle and a speed
+  drive "car"
+)
 
 
 define arena model
