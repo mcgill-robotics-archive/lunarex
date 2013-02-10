@@ -6,8 +6,10 @@ define LidarEx ranger
   sensor(
   # laser-specific properties
   # http://www.hokuyo-aut.jp/02sensor/07scanner/utm_30lx.html
-  range_max 30.0
-  fov 180.0
+  # range_max 30.0 #commented out because warning raised that it wasnt used
+  # fov 180.0 # replaced below:
+  
+  sview [0 30 180] # [range_min range_max fov]
   samples 720	#max from lidar but choosing a smaller number decreases computational time  
   )
   
@@ -75,7 +77,7 @@ resolution 0.01
 # configure the GUI window
 window
 (
-  size [ 700.00 369.00 ] # in pixels
+  size [369.00 700.00] # in pixels
   scale 94  # pixels per meter, makes it slightly larger than the arena
   center [ 0  0 ]
   rotate [ 0  0 ]
