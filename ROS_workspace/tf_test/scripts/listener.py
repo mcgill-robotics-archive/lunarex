@@ -1,18 +1,24 @@
 #!/usr/bin/env python
-import roslib; roslib.load_manifest('tf_test')
+import roslib
+roslib.load_manifest('tf_test')
 import rospy
+import math
 import tf
-import sys
-
+from tf.transformations import euler_from_quaternion
 
 if __name__ == '__main__':
-    rospy.init_node('test_listener')
-    LS = tf.TransformListener()
-    try:
-        while not rospy.is_shutdown():
-            now = rospy.Time.now()
-            #LS.waitForTransform('child', 'parent', now, rospy.Duration(10.0))
-            (trans, rot) = LS.lookupTransform('child', 'parent', now)
-            print 'find something' + trans + rot
-    except KeyboardInterrupt:
-        sys.exit(0)
+    rospy.init_node('tf_listen')
+    listener = tf.TransformListener()
+
+    rate = rospy.Rate(10.0)
+    while not rospy.is_shutdown():
+        try:
+            (trans,rot) = listener.lookupTransform('W', 'A', rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException):
+            continue
+
+        print 'translation: ',trans
+        angles = euler_from_quaternion(rot)
+        print 'rotation: ',[(180.0/math.pi)*i for i in angles]
+
+        rate.sleep()
