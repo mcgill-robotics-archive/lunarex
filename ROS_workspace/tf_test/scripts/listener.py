@@ -15,9 +15,10 @@ if __name__ == '__main__':
         try:
             (trans,rot) = listener.lookupTransform('W', 'A', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException):
+            print 'Error!'
             continue
 
-        print 'translation: ',trans
+        #print 'translation: ',trans
         angles = euler_from_quaternion(rot)
         print 'rotation: ',[(180.0/math.pi)*i for i in angles]
 
