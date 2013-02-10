@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<launch>
+
+	<node pkg="tf_test" type="broadcaster.py" name="broadcaster">
+		<param name="child_frame" value="A" />
+		<param name="parent_frame" value="W" />
+
+	</node>
+	
+    <node pkg="tf_test" type="listener.py" name="listener" />
+	
+
+</launch>
