@@ -6,10 +6,10 @@ define LidarEx ranger
   sensor(
   # laser-specific properties
   # http://www.hokuyo-aut.jp/02sensor/07scanner/utm_30lx.html
-  # range_max 30.0 #commented out because warning raised that it wasnt used
+  range_max 30.0 #commented out because warning raised that it wasnt used
   fov 180.0 #field of view in degrees
   
-  sview [0 2] # [range_min range_max fov] #fov is sketchy here so ommitt
+  #sview [0 2 180] # [range_min range_max fov] #doesnt seem to work but was suggested here http://playerstage.sourceforge.net/doc/Stage-3.2.1/group__model__laser.html
   samples 720	#max from lidar but choosing a smaller number decreases computational time  
   )
   
@@ -17,7 +17,7 @@ define LidarEx ranger
   #physical model properties
   color "orange"
   size [ 0.060 0.060 0.087 ]	#length x width x height
-  spose [0 0.77 0] # pose of the transducer relative to its parent. [x y theta]
+  spose [0.77 0 0] # pose of the transducer relative to its parent. [x y theta]
   )
 )
 
@@ -39,7 +39,7 @@ define lunabot position
     z [0 0.6] # the height of the robot
   )
   color "red"
-  # Drive the robot on the basis of an angle and a speed
+  # Drive the robot on the basis of an angle and a speed (choice between diff car omni)
   drive "diff"
   
   #attach lidar
