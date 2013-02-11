@@ -40,7 +40,7 @@ define lunabot position
   )
   color "red"
   # Drive the robot on the basis of an angle and a speed
-  drive "car"
+  drive "diff"
   
   #attach lidar
   LidarEx()
