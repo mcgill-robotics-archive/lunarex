@@ -31,12 +31,15 @@ maxj = 0
 
 x = []
 y = []
+count = 0
 
 for i in range(0,len(occupancyGrid)):
 	for j in range(0,len(occupancyGrid[i])):
 		if(occupancyGrid[i][j] == 100):
+			count +=1
 			x.append(i)
 			y.append(j)
+			print(i, j)
 		if(occupancyGrid[i][j] == 100 and topCorner[0] == 0):
 			topCorner[0] = i
 			topCorner[1] = j
@@ -65,6 +68,8 @@ subplot(gs[0])
 axis([0, 1024, 0, 1024])
 areaPos = pi*(2)**2 # radius of dots
 xlabel('cells',fontdict={'fontsize':20})
+
+
 
 grid(True)
 scatter(x,y,s=areaPos, marker='.', c='y', edgecolors ='none')
