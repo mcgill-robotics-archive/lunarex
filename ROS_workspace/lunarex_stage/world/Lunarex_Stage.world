@@ -17,7 +17,7 @@ define LidarEx ranger
 	#physical model properties
 	color "orange"
 	size [ 0.060 0.060 0.087 ]	#length x width x height
-	spose[0] [0.77 0 0] # pose of the transducer relative to its parent. [x y theta]
+	# spose[0] [0.77 0 0] # pose of the transducer relative to its parent. [x y theta], ignored though apparently
   )
 )
 
@@ -26,7 +26,8 @@ define lunabot position
 (
   size [1.20 0.75 0.3]  #length x width x height
   # origin [? ? ? ?] #define centre of rotation
-
+  localization_origin [0 0 0] #initial position
+  
   # the shape of the robot. rectangular for now. (identify points going ccw around robot, origin in bottom left
   block( 
 
