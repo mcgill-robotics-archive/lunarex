@@ -14,6 +14,14 @@ bag.close()
 
 print(gridData)
 
+#if(len(sys.argv) < 2):
+#    print(usage)
+#    sys.exit()
 
+#inputFile = open(sys.argv[1], 'r') 
+#inputString = inputFile.read()
+#scans = inputString.splitlines()
+
+#params = scans[0].split(",")
 
 
