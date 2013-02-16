@@ -103,7 +103,7 @@ lunabot
 (		  
   # can refer to the robot by this name
   name "lunabot"
-  pose [0 -2.5 0 90 ]	#initial position, (then rotation?)
+  pose [0 1.0 0 90 ]	#initial position, (then rotation?)
   color "red" 
  
   # ctrl "wander"  do not need this for now
