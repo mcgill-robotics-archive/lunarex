@@ -68,7 +68,7 @@ define lunabot position
 
     z [0 0.3] # the height of the robot
 
-    lidarEx(pose [0.77 0 90])
+    LidarEx(pose [0.77 0 90])
   )
   color "red"
   # Drive the robot on the basis of an angle and a speed (choice between diff car omni)
