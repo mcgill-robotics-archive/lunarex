@@ -26,17 +26,45 @@ define lunabot position
 (
   size [1.20 0.75 0.3]  #length x width x height
   # origin [? ? ? ?] #define centre of rotation
-  localization_origin [0 0 0] #initial position
+  # localization_origin [0 0 0] #initial position
   
   # the shape of the robot. rectangular for now. (identify points going ccw around robot, origin in bottom left
   block( 
 
-    points 4
-    point[3] [ 1.20 0.0 ]
-    point[2] [ 1.20 0.75 ]
-    point[1] [ 0.0 0.75 ]
-    point[0] [ 0.0 0.0 ]
+   # points 4
+   # point[3] [ 1.20 0.0 ]
+   # point[2] [ 1.20 0.75 ]
+   # point[1] [ 0.0 0.75 ]
+   # point[0] [ 0.0 0.0 ]
     
+    points 24
+    point[0] [0.15 0]
+    point[1] [0.15 0.38]
+    point[2] [0 0.38]
+    point[3] [0 0.62]
+    point[4] [15 0.62]
+    point[5] [0.15 0.96]
+    point[6] [0 0.96]
+    point[7] [0 1.22]
+    point[8] [0.15 1.22]
+    point[9] [0.15 1.29]
+    point[10] [0.35 1.29]
+    point[11] [0.35 1.45]
+    point[12] [0.45 1.45]
+    point[13] [0.45 1.29]
+    point[14] [0.65 1.29]
+    point[15] [0.65 1.22]
+    point[16] [0.75 1.22]
+    point[17] [0.75 0.96]
+    point[19] [0.65 0.96]
+    point[20] [0.65 0.62]
+    point[21] [0.75 0.62]
+    point[22] [0.75 0.38]
+    point[23] [0.65 0.38]
+    point[24] [0.65 0]
+
+
+
     z [0 0.3] # the height of the robot
   )
   color "red"
