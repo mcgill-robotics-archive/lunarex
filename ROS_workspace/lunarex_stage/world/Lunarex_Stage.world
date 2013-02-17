@@ -137,7 +137,7 @@ lunabot
   name "lunabot"
   pose [0 0 0 0 ]	#initial position, (then rotation?)
   color "red" 
-  LidarEx(pose [0 0 0 0]) #position of lidar relative to world, not robot (i think its x y z theta)
+  LidarEx(pose [1 0 0 0]) #position of lidar relative to world, not robot (i think its x y z theta)
  
   # ctrl "wander"  do not need this for now
 )
