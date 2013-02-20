@@ -29,7 +29,7 @@ void transformPoint(const tf::TransformListener& listener){
 
     try{
         geometry_msgs::PointStamped base_point;
-        listener.transformPoint("base_link", laser_point, base_point);
+        listener.transformPoint("base_footprint", laser_point, base_point);
 
     }
     catch(tf::TransformException& ex){

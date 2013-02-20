@@ -21,7 +21,7 @@ int main(int argc, char** argv){
             tf::StampedTransform(
                 tf::Transform(tf::Quaternion(0, 0, 0, 1), 
                 tf::Vector3(tf_coordianate_diff_x , tf_coordianate_diff_y, tf_coordianate_diff_z)),
-                ros::Time::now(),"base_link", "base_laser"));
+                ros::Time::now(),"base_footprint", "base_laser"));
         r.sleep();
     }
 }

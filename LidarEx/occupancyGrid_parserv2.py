@@ -39,9 +39,9 @@ occupancyGrid = np.reshape(gridData,(1024,1024))
 
 #DEFINING HOUGH MATRIX
 Rres = mapRes #r bucket resolution
-Rrank = (int)(math.sqrt(2)*max(mapWidth, mapHeight)/Rres) #nb of R buckets
+Rrank = (int)(math.sqrt(2)*max(mapWidth, mapHeight))#/Rres) #nb of R buckets
 Tres = 1
-Trank = 180/1
+Trank = 90/1#180/1
 
 H = [[0 for T in xrange(Trank)] for R in xrange(Rrank)] 
 
@@ -53,11 +53,37 @@ for i in range(0,len(occupancyGrid)):
 				pointR = i*mapRes*math.cos(math.radians(t)) + j*mapRes*math.sin(math.radians(t))
 				#print(i, j, t, pointR)
 				H[int(pointR/Rres)][t]+=1
-				
+
+
+
+
 Harray = np.asarray(H)
+
 #a,b = np.unravel_index(Harray.argmax(), Harray.shape)			
 #print(a, b)	
 
-#print Harray.argsort()[-4:][::-1]
-print(Sorted(H[0][]
+#make into 1 dim array to sort
+Harray = Harray.flatten()
+print np.shape(Harray)
+
+#sort and return flat coords for 10 most populous lines
+flat_coordinates =  Harray.argsort()[-15:][::-1]
+
+#unravel flat coords to corresponding coords of matrix shape H
+r, theta = np.unravel_index(flat_coordinates, np.shape(H))
+
+for i in range(0, len(r)):
+	print r[i], theta[i], H[r[i]][theta[i]]
+
+a = []
+a.append( (r[0], theta[0]) )
+
+for i in range(0, len(r)):
+	for j in range(0, len(a)):
+		if (r[i]-a[j][0]) not in range(-2,2) or (theta[i]-a[j][1]) not in range(-2,2):
+			a.append( (r[i], theta[i]) )
+
+print a
+
+#print(Sorted(H[0][]
 				
