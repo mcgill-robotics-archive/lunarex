@@ -1,0 +1,17 @@
+<package>
+  <description brief="map_builder">
+
+     map_builder
+
+  </description>
+  <author>LunarEx</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/map_builder</url>
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>
+  <depend package="nav_msgs"/>
+
+</package>
+
+
