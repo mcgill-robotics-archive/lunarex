@@ -6,14 +6,15 @@ from sensor_msgs.msg import LaserScan
 pub = None
 
 def callback(data):
-    pub.publish(data)
-    print "sent from base_scan to scan"
+    if pub <> None:
+        pub.publish(data)
+        #print "sent from base_scan to scan"
 
 if __name__ == '__main__':
     try:
         rospy.init_node("message_sender")
-        rospy.Subsriber("base_scan", LaserScan, callback)
-        pub = rospy.Publisher("scan", LaseerScan)
+        rospy.Subscriber("base_scan", LaserScan, callback)
+        pub = rospy.Publisher("scan", LaserScan)
         rospy.spin()
     except KeyboardInterrupt:
         sys.exit(0)
