@@ -1,0 +1,15 @@
+<package>
+  <description brief="lunarex_2dnav">
+
+     lunarex_2dnav
+
+  </description>
+  <author>LunarEx</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/lunarex_2dnav</url>
+  <depend package="move_base"/>
+
+</package>
+
+

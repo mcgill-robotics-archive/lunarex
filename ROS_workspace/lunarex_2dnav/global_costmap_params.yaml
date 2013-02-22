@@ -1,0 +1,8 @@
+global_costmap:
+  global_frame: /odom 
+  robot_base_frame: base_footprint 
+  update_frequency: 5.0
+  width: 40
+  height: 80
+  static_map: false
+  rolling_window: true

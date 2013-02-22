@@ -1,3 +1,5 @@
+Yang making a change.
+
 Lidar Data is obtained using "rostopic /scan"
 
 ROS needs to be installed with proper drivers for Hokuyo URG-30LX (hokuyo_node)
