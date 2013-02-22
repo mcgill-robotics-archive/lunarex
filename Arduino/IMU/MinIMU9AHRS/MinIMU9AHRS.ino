@@ -26,47 +26,19 @@ int SENSOR_SIGN[9] = {1,-1,-1,-1,1,1,1,-1,-1}; //Correct directions x,y,z - gyro
 #define Gyro_Scaled_Y(x) ((x)*ToRad(Gyro_Gain_Y)) //Return the scaled ADC raw data of the gyro in radians for second
 #define Gyro_Scaled_Z(x) ((x)*ToRad(Gyro_Gain_Z)) //Return the scaled ADC raw data of the gyro in radians for second
 
-// LSM303 magnetometer calibration constants; use the Calibrate example from
-// the Pololu LSM303 library to find the right values for your board
-#define M_X_MIN -150
-#define M_Y_MIN -150
-#define M_Z_MIN -150
-#define M_X_MAX 150
-#define M_Y_MAX 150
-#define M_Z_MAX 150
-
-
-/*#define M_X_MIN -114
-#define M_Y_MIN -371
-#define M_Z_MIN -371
-#define M_X_MAX 361
-#define M_Y_MAX 300
-#define M_Z_MAX 247*/
-
-/*
-#define M_X_MIN -507
-#define M_Y_MIN -612
-#define M_Z_MIN -479
-#define M_X_MAX 495
-#define M_Y_MAX 514
-#define M_Z_MAX 439
-*/
-
-#define Kp_ROLLPITCH 0.02
-#define Ki_ROLLPITCH 0.00002
-#define Kp_YAW 1.2
-#define Ki_YAW 0.00002
-
-/*For debugging purposes*/
-//OUTPUTMODE=1 will print the corrected data, 
-//OUTPUTMODE=0 will print uncorrected data of the gyros (with drift)
-#define OUTPUTMODE 0
-
-//#define PRINT_DCM 0     //Will print the whole direction cosine matrix
-#define PRINT_ANALOGS 0 //Will print the analog raw data
-#define PRINT_EULER 1   //Will print the Euler angles Roll, Pitch and Yaw
-
-#define STATUS_LED 13
+// Those configs are working properly with the Arduino Uno.
+const int M_X_MIN = -150;
+const int M_Y_MIN = -150;
+const int M_Z_MIN = -150;
+const int M_X_MAX = 150;
+const int M_Y_MAX = 150;
+const int M_Z_MAX = 150;
+const int Kp_ROLLPITCH = 0.02;
+const int Ki_ROLLPITCH = 0.00002;
+const int Kp_YAW = 1.2;
+const int Ki_YAW = 0.00002;
+const int PRINT_EULER = 1;
+const int STATUS_LED = 13;
 
 float G_Dt=0.02;    // Integration time (DCM algorithm)  We will run the integration loop at 50Hz if possible
 
