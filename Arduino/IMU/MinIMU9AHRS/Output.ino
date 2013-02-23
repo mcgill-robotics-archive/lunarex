@@ -28,8 +28,7 @@ with MinIMU-9-Arduino-AHRS. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-void printdata(void)
-{    
+void printdata(void) {    
       Serial.print("!");
 
       /*Serial.print("roll(");
@@ -60,16 +59,16 @@ void printdata(void)
       Serial.print(")");*/
       
       
-      #if PRINT_EULER == 1
-      Serial.print("ANG:");
-      Serial.print(ToDeg(roll));
-      Serial.print(",");
-      Serial.print(ToDeg(pitch));
-      Serial.print(",");
-      Serial.print(ToDeg(yaw));
-      #endif      
-      #if PRINT_ANALOGS==1
-      Serial.print(",AN:");
+      if (PRINT_EULER == 1) {
+        Serial.print("ANG:");
+        Serial.print(ToDeg(roll));
+        Serial.print(",");
+        Serial.print(ToDeg(pitch));
+        Serial.print(",");
+        Serial.print(ToDeg(yaw));
+      }
+      
+      /*Serial.print(",AN:");
       Serial.print(AN[0]);  //(int)read_adc(0)
       Serial.print(",");
       Serial.print(AN[1]);
@@ -86,8 +85,8 @@ void printdata(void)
       Serial.print (",");
       Serial.print(c_magnetom_y);
       Serial.print (",");
-      Serial.print(c_magnetom_z);
-      #endif
+      Serial.print(c_magnetom_z);*/
+      
       
       
       /*#if PRINT_DCM == 1
@@ -114,8 +113,7 @@ void printdata(void)
       
 }
 
-long convert_to_dec(float x)
-{
+long convert_to_dec(float x) {
   return x*10000000;
 }
 
