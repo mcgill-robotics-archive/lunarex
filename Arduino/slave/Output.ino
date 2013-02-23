@@ -28,8 +28,8 @@ with MinIMU-9-Arduino-AHRS. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-void printdata(void)
-{    
+// This is going to be read by the Python code
+void printdata(void) {    
       Serial.print("!");
       Serial.print("ANG:");
       Serial.print(ToDeg(roll));
@@ -40,8 +40,7 @@ void printdata(void)
       Serial.println();    
 }
 
-long convert_to_dec(float x)
-{
+long convert_to_dec(float x) {
   return x*10000000;
 }
 

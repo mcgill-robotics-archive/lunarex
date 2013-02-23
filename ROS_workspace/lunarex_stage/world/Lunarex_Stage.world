@@ -8,7 +8,7 @@ define LidarEx ranger
   sensor(
     # laser-specific properties
     # http://www.hokuyo-aut.jp/02sensor/07scanner/utm_30lx.html
-	# range_max 30.0 #commented out because warning raised that it wasnt used
+	range_max 30.0 #commented out because warning raised that it wasnt used
 	fov 180.0 #field of view in degrees
 	
 	#sview [0 2 180] # [range_min range_max fov] #doesnt seem to work but was suggested here http://playerstage.sourceforge.net/doc/Stage-3.2.1/group__model__laser.html
