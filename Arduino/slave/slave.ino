@@ -1,3 +1,4 @@
+
 /*=====================================================================
 //  Name: slave
 //
@@ -55,7 +56,7 @@ const char OK_IMU_RESET[13] = "OK IMU RESET";
 int SENSOR_SIGN[9] = {1,-1,-1,-1,1,1,1,-1,-1};
 float G_Dt=0.02;    // Integration time (DCM algorithm)  We will run the integration loop at 50Hz if possible
 long imuTimer=0;   //general purpuse timer
-long timer_old;
+long imuTimerOld;
 int AN[6]; //array that stores the gyro and accelerometer data
 int AN_OFFSET[6]={0,0,0,0,0,0}; //Array that stores the Offset of the sensors
 int gyro_x;
@@ -90,10 +91,30 @@ float roll;
 float pitch;
 float yaw;
 
+boolean activeIMU = false;
+
+//=====================================================================
+// Variables used for ROS
+//=====================================================================
+
+ros:: Nodehandle nh;
+std_msgs:: Float32 sendHeading;
+std_msgs:: String str_msg;
+ros:: Publisher chatter("chatter", &str_msg);
+ros:: Publisher pub_IMU("heading", &sendHeading);
+ros:: Subscriber<std_msgs::Int8> sub_IMU("reset", &resetIMU);
+
 void setup() {
-  resetIMU();
+  nh.initNode();
+  nh.advertise(chatter);
+  nh.advertise(pub_IMU);
+  nh.subscribe(sub_IMU);
 }
 
 void loop() {
-  updateIMU();
+  nh.spinOnce();
+  
+  if (activeIMU) {
+    updateIMU();
+  }
 }
