@@ -1,0 +1,16 @@
+<package>
+  <description brief="ros_node">
+
+     ros_node
+
+  </description>
+  <author>LunarEx</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ros_node</url>
+  <depend package="rospy"/>
+  <depend package="sensor_msgs"/>
+
+</package>
+
+
