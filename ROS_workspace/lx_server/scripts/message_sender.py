@@ -7,6 +7,7 @@ pub = None
 
 def callback(data):
     if pub <> None:
+        #data.header.frame_id = "/base_laser_link"
         pub.publish(data)
         #print "sent from base_scan to scan"
 

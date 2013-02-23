@@ -5,6 +5,7 @@ from std_msgs.msg import *
 from nav_msgs.msg import OccupancyGrid
 from geometry_msgs.msg import PoseStamped
 from numpy import *
+import math
 
 class mapBuilder:
     def __init__(self):
@@ -33,7 +34,9 @@ class mapBuilder:
         print self.x_position
         print self.y_position
         print self.position.pose.orientation
-        #print self.position.pose.orientation.w
+        w = self.position.pose.orientation.w
+        z = self.position.pose.orientation.z
+        print math.copysign(2 * math.acos(w) * 180 / math.pi, z)
 
     def addCoordinates(x, y):
         self.obstacle_list.append([x,y])
