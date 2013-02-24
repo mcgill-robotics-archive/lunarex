@@ -23,6 +23,10 @@ class mapBuilder:
         self.map = grid
         #self.new_map = self.map
         self.getMapParameters()
+        # Add kinect obstacles to occupancy list
+        # assuming obstacle_list are in occupancyGrid coordinates
+        for obstacle in self.obstacle_list:
+            self.insertValueInOccupancyGrid(self, obstacle[0], obstacle[1], 100)
         self.pub.publish(self.map)
 
     #Retrieve position data
@@ -36,7 +40,7 @@ class mapBuilder:
         print self.position.pose.orientation
         w = self.position.pose.orientation.w
         z = self.position.pose.orientation.z
-        print math.copysign(2 * math.acos(w) * 180 / math.pi, z)
+        print math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
 
     def addCoordinates(x, y):
         self.obstacle_list.append([x,y])
@@ -57,8 +61,7 @@ class mapBuilder:
         pass    #implent later
 
     def insertValueInOccupancyGrid(self, x_coord, y_coord, val):
-        #self.map.data[]
-        pass
+        self.map.data[y_coord * self.map_width + x_coord] = val
 
 if __name__ == "__main__":
     try:
