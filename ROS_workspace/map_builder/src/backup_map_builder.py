@@ -22,7 +22,7 @@ class mapBuilder:
 
     def mapCallback(self, grid):
         self.map = grid
-        self.occupancy_grid = [grid.data[i] for i in range(len(grid.data))]     #Damn cool way by Seb_The_Guru to create a list out of a tuple
+        self.occupancy_grid = [grid.data[i] for i in range(len(grid.data))]
         self.getMapParameters()
         # Add kinect obstacles to occupancy list
         # assuming obstacle_list are in occupancyGrid coordinates
@@ -66,6 +66,7 @@ class mapBuilder:
         square_size = 6
         for i in range(square_size):
             for ii in range(square_size):
+                
                 self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
 
 if __name__ == "__main__":
