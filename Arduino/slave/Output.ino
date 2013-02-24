@@ -29,15 +29,17 @@ with MinIMU-9-Arduino-AHRS. If not, see <http://www.gnu.org/licenses/>.
 */
 
 // This is going to be read by the Python code
-void printdata(void) {    
-      Serial.print("!");
-      Serial.print("ANG:");
-      Serial.print(ToDeg(roll));
-      Serial.print(",");
-      Serial.print(ToDeg(pitch));
-      Serial.print(",");
-      Serial.print(ToDeg(yaw));
-      Serial.println();    
+void printdata(void) {
+  if (printData) {
+    Serial.print("!");
+    Serial.print("ANG:");
+    Serial.print(ToDeg(roll));
+    Serial.print(",");
+    Serial.print(ToDeg(pitch));
+    Serial.print(",");
+    Serial.print(ToDeg(yaw));
+    Serial.println();    
+  }
 }
 
 long convert_to_dec(float x) {
