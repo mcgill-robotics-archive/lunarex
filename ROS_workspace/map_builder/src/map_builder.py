@@ -63,7 +63,11 @@ class mapBuilder:
         pass    #implent later
 
     def insertValueInOccupancyGrid(self, x_coord, y_coord, val):
-        self.occupancy_grid[y_coord * self.map_width + x_coord] = val
+        square_size = 6
+        for i in range(square_size):
+            for ii in range(square_size):
+                
+                self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
 
 if __name__ == "__main__":
     try:
