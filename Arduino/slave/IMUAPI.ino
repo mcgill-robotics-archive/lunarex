@@ -19,7 +19,9 @@ float getHeading() {
 }
 
 void resetIMU() {
-  Serial.begin(115200);
+  if (printData) {
+    Serial.begin(115200);
+  }
   
   I2C_Init();
 
@@ -93,7 +95,7 @@ void updateIMU() {
     Drift_correction();
     Euler_angles();
    
-    //printdata();
+    printdata();
     
     // Publish the IMU heading.
     sendHeading.data = yaw;
