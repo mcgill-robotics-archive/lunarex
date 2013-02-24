@@ -5,6 +5,7 @@ from std_msgs.msg import *
 from nav_msgs.msg import OccupancyGrid
 from geometry_msgs.msg import PoseStamped
 from numpy import *
+import math
 
 class mapBuilder:
     def __init__(self):
@@ -14,14 +15,20 @@ class mapBuilder:
         self.pub = rospy.Publisher("global_map", OccupancyGrid)
         self.obstacle_list = [[2,2],[20,20],[50,50]]
         self.map = None
+        self.occupancy_grid = []
 
     def run(self):
         rospy.spin()
 
     def mapCallback(self, grid):
         self.map = grid
-        #self.new_map = self.map
+        self.occupancy_grid = [grid.data[i] for i in range(len(grid.data))]
         self.getMapParameters()
+        # Add kinect obstacles to occupancy list
+        # assuming obstacle_list are in occupancyGrid coordinates
+        for obstacle in self.obstacle_list:
+            self.insertValueInOccupancyGrid(obstacle[0], obstacle[1], 100)
+        self.map.data = self.occupancy_grid #Change the occupancy grid to the updated one
         self.pub.publish(self.map)
 
     #Retrieve position data
@@ -33,7 +40,9 @@ class mapBuilder:
         print self.x_position
         print self.y_position
         print self.position.pose.orientation
-        #print self.position.pose.orientation.w
+        w = self.position.pose.orientation.w
+        z = self.position.pose.orientation.z
+        print math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
 
     def addCoordinates(x, y):
         self.obstacle_list.append([x,y])
@@ -54,8 +63,7 @@ class mapBuilder:
         pass    #implent later
 
     def insertValueInOccupancyGrid(self, x_coord, y_coord, val):
-        #self.map.data[]
-        pass
+        self.occupancy_grid[y_coord * self.map_width + x_coord] = val
 
 if __name__ == "__main__":
     try:
