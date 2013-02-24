@@ -21,12 +21,11 @@ class mapBuilder:
 
     def mapCallback(self, grid):
         self.map = grid
-        #self.new_map = self.map
         self.getMapParameters()
         # Add kinect obstacles to occupancy list
         # assuming obstacle_list are in occupancyGrid coordinates
         for obstacle in self.obstacle_list:
-            self.insertValueInOccupancyGrid(self, obstacle[0], obstacle[1], 100)
+            self.insertValueInOccupancyGrid(obstacle[0], obstacle[1], 100)
         self.pub.publish(self.map)
 
     #Retrieve position data
