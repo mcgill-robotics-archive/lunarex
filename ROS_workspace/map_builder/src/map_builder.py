@@ -15,17 +15,20 @@ class mapBuilder:
         self.pub = rospy.Publisher("global_map", OccupancyGrid)
         self.obstacle_list = [[2,2],[20,20],[50,50]]
         self.map = None
+        self.occupancy_grid = []
 
     def run(self):
         rospy.spin()
 
     def mapCallback(self, grid):
         self.map = grid
+        self.occupancy_grid = grid.data
         self.getMapParameters()
         # Add kinect obstacles to occupancy list
         # assuming obstacle_list are in occupancyGrid coordinates
         for obstacle in self.obstacle_list:
             self.insertValueInOccupancyGrid(obstacle[0], obstacle[1], 100)
+        self.map.data = self.occupancy_grid #Change the occupancy grid to the updated one
         self.pub.publish(self.map)
 
     #Retrieve position data
@@ -60,7 +63,7 @@ class mapBuilder:
         pass    #implent later
 
     def insertValueInOccupancyGrid(self, x_coord, y_coord, val):
-        self.map.data[y_coord * self.map_width + x_coord] = val
+        self.occupancy_grid[y_coord * self.map_width + x_coord] = val
 
 if __name__ == "__main__":
     try:
