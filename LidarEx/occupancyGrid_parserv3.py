@@ -57,7 +57,7 @@ occupancyGrid = np.reshape(gridData,(1024,1024))
 Rres = mapRes #r bucket resolution
 Rrank = (int)(math.sqrt(2)*max(mapWidth, mapHeight))#/Rres) #nb of R buckets
 Tres = 1
-Trank = 180#360/1#90/1#180/1
+Trank = 360#360/1#90/1#180/1
 
 H = [[0 for T in xrange(Trank)] for R in xrange(Rrank)] 
 
@@ -77,7 +77,38 @@ for r in xrange(Rrank):
 		if(H[r][t]!=0 and len(H[r][t].points)>0):
 			lines.append(H[r][t])
 
-sortedLines = sorted(lines, key=lambda l: len(l.points), reverse=True)
-	print(l)
-for l in sortedLines[:10]:
+walls=[0,0,0,0]
 
+sortedLines = sorted(lines, key=lambda l: len(l.points), reverse=True)
+for l in sortedLines[:15]:
+	print l
+	
+walls[0]=sortedLines[0] #the first wall
+angles = [0,0,0,0]
+angles[0]= walls[0].theta
+angles[1]=(angles[0] + 90)%360
+angles[2] = (angles[0] + 180)%360
+angles[3] = (angles[0] + 270)%360
+thresh = 2
+
+wrapIndex = -1
+for i in range(0, len(angles)):
+	if(angles[i]>360-thresh or angles[i]<thresh):
+		wrapIndex=i
+
+#print wrapIndex
+#for a in angles:
+#	print a
+for l in sortedLines:
+	for i in range(0, 4):
+		if(walls[i]==0): #wall not set yet
+			if((i==wrapIndex and (l.theta<thresh or l.theta>360-thresh)) or (i!=wrapIndex and l.theta>angles[i]-thresh and l.theta<angles[i]+thresh)):
+				walls[i]=l
+	if(walls[1]!=0 and walls[2]!=0 and walls[3]!=0):
+		break
+
+for i in range(0,4):
+	print ("WALL "+str(i)+": "+str(walls[i])) 
+	
+
+	

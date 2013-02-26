@@ -23,28 +23,28 @@ class Point(object):
 		self.r = float(r)
 		self.x = math.cos(math.radians(self.theta))*self.r
 		self.y = math.sin(math.radians(self.theta))*self.r
-
+		
 	def __str__(self):
 		return "Point with angle: "+str(self.theta)+" and distance: "+str(self.r) + "\n X coord: "+str(self.x)+" and Y coord: "+str(self.y)
-
+	
 class Line(object):
-
+	
 	def __init__(self, r, theta):
 		self.theta = float(theta)
 		self.r = float(r) 				# negative line R <---------- 0 -------------> positive lineR, along x axis
 		self.points = []
 		self.pointCount = 0
-
+		
 	def addPoint(self, p):
 		self.points.append(p)
 		self.pointCount +=1
-
+		
 	def getClosestPoint(self, cloudSize):
 		pts = sorted(self.points, key = lambda p: p.r, reverse = False)
 		if(cloudSize>=len(self.points)):
 			return pts[0]			
 		return pts[cloudSize/2] #median
-
+		
 	def getFurthestPoint(self, cloudSize):
 		pts = sorted(self.points, key = lambda p: p.r, reverse = True)
 		if(cloudSize>=len(self.points)):
@@ -55,7 +55,7 @@ class Line(object):
 		s = "Line has "+str(self.pointCount)+" points at distance r= "+str(self.r)+" with angle theta = "+str(self.theta)
 		#s += "\n the points are: "+self.points
 		return s
-
+		
 class Scan(object):#degrees
 	def __init__(self, scanData, params):
 		self.scanData = scanData
@@ -67,7 +67,7 @@ class Scan(object):#degrees
 		self.minAngleDeg = math.degrees(minAngleDefault)
 		self.maxAngleDeg = math.degrees(maxAngleDefault)
 		self.angleIncDeg = math.degrees(angleIncDefault)
-
+		
 		for i in range (len(scanData)):
 			if(scanData[i]=="laser"):
 				continue
@@ -88,7 +88,7 @@ class Scan(object):#degrees
 				pointAngleDeg = self.minAngleDeg + pointNumber*self.angleIncDeg #point angle in degrees
 				pointAngleRad = self.minAngleRad + pointNumber*self.angleIncRad #point angle in radians
 				self.points.append(Point(pointAngleDeg, scanData[i]))		
-
+			
 class HoughMatrix(object):
 	def __init__(self, points, maxLineR, RIncr, minTheta, maxTheta, thetaIncr):
 		self.points = points
@@ -98,7 +98,7 @@ class HoughMatrix(object):
 		self.maxTheta = maxTheta
 		self.thetaIncr = thetaIncr
 		self.lines = []
-
+		
 		self.H = [[Line(0,0) for theta in xrange(int(math.fabs(minTheta) + math.fabs(maxTheta)))] for r in xrange(int(maxLineR/RIncr))] 
 		#the range of thetas should be int((math.fabs(minTheta) + math.fabs(maxTheta))/thetaIncr)		
 
@@ -113,31 +113,31 @@ class HoughMatrix(object):
 						#print("creating line with r: "+str(lineR) +" and theta: "+str(k))
 					self.H[int(lineR*100)][int(k)].addPoint(point) #add point, increments line counter
 				k+=thetaIncr
-
+				
 		for r in xrange(int(maxLineR/RIncr)):
 			for theta in xrange(int(math.fabs(minTheta) + math.fabs(maxTheta))):
 				if(self.H[r][theta].r!=0):
 					self.lines.append(self.H[r][theta])
-
+	
 	def getNMostPopulatedLines(self, N):
 		return self.getSortedLines()[:N]
-
+	
 	def getSortedLines(self):
 		return sorted(self.lines, key = lambda l: l.pointCount, reverse = True)
-
+		
 	#def __str__(self):
 		#return str(self.lines)
-
+			
 if(len(sys.argv)<2):
 	print(usage)
 	sys.exit()
-
+	
 inputFile = open(sys.argv[1], 'r') 
 inputString = inputFile.read()
 scans = inputString.splitlines()
 
 params = scans[0].split(",")
-
+	
 j=-1
 timehash = {}
 for scan in scans:
@@ -147,7 +147,7 @@ for scan in scans:
 	scanData = scan.split(",")
 	scans[j]= Scan(scanData, params)
 	timehash[scanData[0]] = j
-
+	
 maxLineR = 10
 minTheta = 0
 maxTheta = 90
