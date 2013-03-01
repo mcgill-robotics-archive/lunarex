@@ -33,10 +33,10 @@ def depthMatrixReshape(msg):
     for i in xrange(rowRank):
        for j in xrange(columnRank):
             depthArray[i][j] =  int(ord(depthArray[i][j]))
-	    array_sum += int(depthArray[i][j])
+	    array_sum += int(1000/(-0.0030711016 * depthArray[i][j] + 3.3309495161))
 	    array_dim += 1
 
-    print depthArray
+    #print depthArray
     print "Average: %d" % (array_sum / array_dim)
 
 
