@@ -13,14 +13,18 @@ import pprint
 
 pp = pprint.PrettyPrinter(indent=4)
 
+
 def depthMatrixReshape(msg):
     '''
     Takes X (step) and Y (row) values and shapes the 1D depth values into a 2D depth array
     '''
     rowRank = msg.height
     columnRank = msg.width
+    print columnRank, rowRank
+    array_sum = 0
+    array_dim = 0
     #depthArray = [[0 for j in range(columnRank)] for i in range(rowRank)]
-    depthArray = np.empty((rowRank, columnRank),dtype = 'object')
+    depthArray = np.empty((rowRank, columnRank),dtype = "object")
 
     for i in xrange(rowRank):
         for j in xrange(columnRank):
@@ -28,9 +32,12 @@ def depthMatrixReshape(msg):
 
     for i in xrange(rowRank):
        for j in xrange(columnRank):
-            depthArray[i][j] =  ord(depthArray[i][j])
+            depthArray[i][j] =  int(ord(depthArray[i][j]))
+	    array_sum += int(depthArray[i][j])
+	    array_dim += 1
 
     print depthArray
+    print "Average: %d" % (array_sum / array_dim)
 
 
 rospy.init_node('depthListener', anonymous=True)
