@@ -7,6 +7,10 @@ from geometry_msgs.msg import PoseStamped
 from numpy import *
 import math
 
+# the occupancy grid is 2.5 x 2.5 cm
+kinect_grid_size = 10 #cm
+occupancy_grid_size = 2.5 #cm
+
 class mapBuilder:
     def __init__(self):
         rospy.init_node("map_builder")
@@ -22,10 +26,11 @@ class mapBuilder:
 
     def mapCallback(self, grid):
         self.map = grid
-        self.occupancy_grid = [grid.data[i] for i in range(len(grid.data))]     #Damn cool way by Seb_The_Guru to create a list out of a tuple
-        self.getMapParameters()
-        # Add kinect obstacles to occupancy list
-        # assuming obstacle_list are in occupancyGrid coordinates
+        self.occupancy_grid = [grid.data[i] for i in range(len(grid.data))]     #Damn cool way by Seb_The_Guru to create a list out of a tuple - Alan
+        
+	self.getMapParameters()
+        # Add all found kinect obstacles to occupancy list
+        # The coordinates in obstacle_list are in occupancyGrid coordinates
         for obstacle in self.obstacle_list:
             self.insertValueInOccupancyGrid(obstacle[0], obstacle[1], 100)
         self.map.data = self.occupancy_grid #Change the occupancy grid to the updated one
@@ -36,23 +41,15 @@ class mapBuilder:
         self.position = pose
         self.x_position = self.position.pose.position.x
         self.y_position = self.position.pose.position.y
-        print "Current position:"
-        print self.x_position
-        print self.y_position
-        print self.position.pose.orientation
+	self.angle = math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
+        #print "Current position:"
+        #print self.x_position
+        #print self.y_position
+        #print self.position.pose.orientation	
         w = self.position.pose.orientation.w
         z = self.position.pose.orientation.z
-        print math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
+	print self.angle #math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
 
-    def addCoordinates(x, y):
-        self.obstacle_list.append([x,y])
-
-    #Rotate a coordinate ector
-    def rotateVector2D(vector, angle):
-        rotated_vect = []
-        rotated_vect.append( vector[0]*math.cos(angle) - math.sin(angle) )
-        rotated_vect.append( vector[1]*math.sin(angle)  + vector[1]*math.cos(angle) )
-        return rotated_vect
 
     def getMapParameters(self):
         self.map_height = self.map.info.height  #the height of occupancy gird
@@ -67,6 +64,48 @@ class mapBuilder:
         for i in range(square_size):
             for ii in range(square_size):
                 self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
+
+    def kinectCallback(self, grid):
+	# the grid is a one d array 
+	
+
+
+    def addCoordinates(x, y):
+	# x and y are coordinates on the kinect's frame of reference. 
+	# the grid size is the kinect_grid_size --> 10 cm at the moment
+	# ie: the kinect is the origin and the y axis points straight forward
+	# this functions needs to transfer the kinect obstacle coordinates in the global coordinate frame given by hector_mapping
+	
+	position_vector = [x,y] 
+
+	# rotate the vector to make it match the robot's heading
+	position_vector = rotateVector2D(vector, self.angle)
+	
+	# account for the different dimention of the kinect grid and the occupancy grid we use
+	occupancy_grid_units_per_kinect_units = kinect_grid_size / occupancy_grid_size
+	position_vector[0] = 	int (  position_vector[0] * occupancy_grid_units_per_kinect_units   )
+	position_vector[1] = 	int (  position_vector[1] * occupancy_grid_units_per_kinect_units   )
+
+	# add the global position of the robot
+	position_vector[0] += self.x_position
+	position_vector[1] += self.y_position
+
+	#
+        self.obstacle_list.append([x,y])
+
+	# *****	
+	# *****	We will later need to adjust for the fact that the kinect is not necessarily placed 		
+	# ***** at the same place as what is considered to be the robot's centre. 
+	# ***** For example, it my be 25 cm at the back. We would then need to remove 50 to the position_vector[1] 
+	# *****
+
+    #Rotate a coordinate ector
+    def rotateVector2D(vector, angle):
+        rotated_vect = []
+        rotated_vect.append(  vector[0]*math.cos(angle)  - math.sin(angle)             )
+        rotated_vect.append(  vector[1]*math.sin(angle)  + vector[1]*math.cos(angle)   )
+        return rotated_vect
+
 
 if __name__ == "__main__":
     try:
