@@ -28,8 +28,6 @@ with MinIMU-9-Arduino-AHRS. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-
-
 // This is going to be read by the Python code
 void printdata(void) {
   if (printData) {
@@ -47,4 +45,3 @@ void printdata(void) {
 long convert_to_dec(float x) {
   return x*10000000;
 }
-
