@@ -19,6 +19,7 @@ def depthMatrixReshape(msg):
     '''
     rowRank = msg.height
     columnRank = msg.width
+    print columnRank, rowRank
     #depthArray = [[0 for j in range(columnRank)] for i in range(rowRank)]
     depthArray = np.empty((rowRank, columnRank),dtype = 'object')
 
@@ -28,7 +29,7 @@ def depthMatrixReshape(msg):
 
     for i in xrange(rowRank):
        for j in xrange(columnRank):
-            depthArray[i][j] =  ord(depthArray[i][j])
+            depthArray[i][j] =  int(ord(depthArray[i][j]))
 
     print depthArray
 

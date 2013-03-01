@@ -9,22 +9,34 @@ import rospy
 from sensor_msgs.msg import Image		#takes image from sensor_imgs module
 import numpy as np
 
-def depthMatrixReshape(depthValues):
+import pprint
+
+pp = pprint.PrettyPrinter(indent=4)
+
+def depthMatrixReshape(msg):
     '''
     Takes X (step) and Y (row) values and shapes the 1D depth values into a 2D depth array
     '''
+    rowRank = msg.height
+    columnRank = msg.width
+    #depthArray = [[0 for j in range(columnRank)] for i in range(rowRank)]
+    depthArray = np.empty((rowRank, columnRank),dtype = 'object')
 
-    x = depthValues.height
-    y = depthValues.width
-    depthArray = [[0 for i in range(x)] for ii in range(y)]
-    depthArray = np.reshape(depthValues.data, (x, y))
-    print x
-    print y
+    for i in xrange(rowRank):
+        for j in xrange(columnRank):
+            depthArray[i][j]=msg.data[i*columnRank+j]
+
+    for i in xrange(rowRank):
+       for j in xrange(columnRank):
+            depthArray[i][j] =  ord(depthArray[i][j])
+
+    print depthArray
 
 
 rospy.init_node('depthListener', anonymous=True)
 rospy.Subscriber('/camera/depth/image', Image, depthMatrixReshape)
 rospy.spin()
+
 
 
 # A Couple Notes by Nick
