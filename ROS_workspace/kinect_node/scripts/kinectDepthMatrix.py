@@ -2,7 +2,7 @@
 '''
 The convention in Python is to describe what this module (program) does here.
 '''
-
+#comment
 
 import roslib; roslib.load_manifest('ros_node') #add directory
 import rospy
