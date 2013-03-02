@@ -1,0 +1,5 @@
+String request
+---
+Int8 height
+Int8 width
+Int8[] kinect_map
