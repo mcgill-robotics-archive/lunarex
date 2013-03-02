@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import roslib
-roslib.load_manifest('tf_test')
+roslib.load_manifest('tf_service_test')
 import rospy
 import math
 import tf

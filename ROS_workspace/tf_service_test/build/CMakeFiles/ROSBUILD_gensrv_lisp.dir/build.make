@@ -32,19 +32,50 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test
+CMAKE_SOURCE_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test/build
+CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build
 
 # Utility rule file for ROSBUILD_gensrv_lisp.
 
 # Include the progress variables for this target.
 include CMakeFiles/ROSBUILD_gensrv_lisp.dir/progress.make
 
-CMakeFiles/ROSBUILD_gensrv_lisp:
+CMakeFiles/ROSBUILD_gensrv_lisp: ../srv_gen/lisp/TestSrv.lisp
+CMakeFiles/ROSBUILD_gensrv_lisp: ../srv_gen/lisp/_package.lisp
+CMakeFiles/ROSBUILD_gensrv_lisp: ../srv_gen/lisp/_package_TestSrv.lisp
+
+../srv_gen/lisp/TestSrv.lisp: ../srv/TestSrv.srv
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/share/roslisp/rosbuild/scripts/genmsg_lisp.py
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/share/roslib/bin/gendeps
+../srv_gen/lisp/TestSrv.lisp: ../manifest.xml
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/stacks/bullet/manifest.xml
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/share/geometry_msgs/manifest.xml
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/share/sensor_msgs/manifest.xml
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/share/roslang/manifest.xml
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/share/roscpp/manifest.xml
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/share/rosconsole/manifest.xml
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/stacks/geometry/angles/manifest.xml
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/share/rospy/manifest.xml
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/share/rostest/manifest.xml
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/share/roswtf/manifest.xml
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/share/message_filters/manifest.xml
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/stacks/geometry/tf/manifest.xml
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/stacks/geometry/tf/msg_gen/generated
+../srv_gen/lisp/TestSrv.lisp: /opt/ros/fuerte/stacks/geometry/tf/srv_gen/generated
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../srv_gen/lisp/TestSrv.lisp, ../srv_gen/lisp/_package.lisp, ../srv_gen/lisp/_package_TestSrv.lisp"
+	/opt/ros/fuerte/share/roslisp/rosbuild/scripts/genmsg_lisp.py /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/srv/TestSrv.srv
+
+../srv_gen/lisp/_package.lisp: ../srv_gen/lisp/TestSrv.lisp
+
+../srv_gen/lisp/_package_TestSrv.lisp: ../srv_gen/lisp/TestSrv.lisp
 
 ROSBUILD_gensrv_lisp: CMakeFiles/ROSBUILD_gensrv_lisp
+ROSBUILD_gensrv_lisp: ../srv_gen/lisp/TestSrv.lisp
+ROSBUILD_gensrv_lisp: ../srv_gen/lisp/_package.lisp
+ROSBUILD_gensrv_lisp: ../srv_gen/lisp/_package_TestSrv.lisp
 ROSBUILD_gensrv_lisp: CMakeFiles/ROSBUILD_gensrv_lisp.dir/build.make
 .PHONY : ROSBUILD_gensrv_lisp
 
@@ -57,6 +88,6 @@ CMakeFiles/ROSBUILD_gensrv_lisp.dir/clean:
 .PHONY : CMakeFiles/ROSBUILD_gensrv_lisp.dir/clean
 
 CMakeFiles/ROSBUILD_gensrv_lisp.dir/depend:
-	cd /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test/build/CMakeFiles/ROSBUILD_gensrv_lisp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build/CMakeFiles/ROSBUILD_gensrv_lisp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/ROSBUILD_gensrv_lisp.dir/depend
 

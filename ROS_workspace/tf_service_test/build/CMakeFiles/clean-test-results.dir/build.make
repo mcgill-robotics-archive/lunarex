@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test
+CMAKE_SOURCE_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test/build
+CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build
 
 # Utility rule file for clean-test-results.
 
@@ -43,7 +43,7 @@ CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test/build
 include CMakeFiles/clean-test-results.dir/progress.make
 
 CMakeFiles/clean-test-results:
-	if ! rm -rf /home/lunarex/.ros/test_results/tf_test; then echo WARNING:\ failed\ to\ remove\ test-results\ directory ; fi
+	if ! rm -rf /home/lunarex/.ros/test_results/tf_service_test; then echo WARNING:\ failed\ to\ remove\ test-results\ directory ; fi
 
 clean-test-results: CMakeFiles/clean-test-results
 clean-test-results: CMakeFiles/clean-test-results.dir/build.make
@@ -58,6 +58,6 @@ CMakeFiles/clean-test-results.dir/clean:
 .PHONY : CMakeFiles/clean-test-results.dir/clean
 
 CMakeFiles/clean-test-results.dir/depend:
-	cd /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_test/build/CMakeFiles/clean-test-results.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build/CMakeFiles/clean-test-results.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/clean-test-results.dir/depend
 

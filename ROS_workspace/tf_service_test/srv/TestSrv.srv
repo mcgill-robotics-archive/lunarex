@@ -1,5 +1,5 @@
-String request
+int32 request
 ---
-Int8 height
-Int8 width
-Int8[] kinect_map
+int32 height
+int32 width
+int32[] kinect_map

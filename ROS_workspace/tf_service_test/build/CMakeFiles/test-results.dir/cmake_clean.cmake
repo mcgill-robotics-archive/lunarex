@@ -1,4 +1,7 @@
 FILE(REMOVE_RECURSE
+  "../srv_gen"
+  "../srv_gen"
+  "../src/tf_service_test/srv"
   "CMakeFiles/test-results"
 )
 
