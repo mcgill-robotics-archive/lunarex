@@ -39,7 +39,7 @@ def depthMatrixReshape(msg):
 
     #print depthArray
     print "Average: %d" % (array_sum / array_dim)
-    print depthArray
+    #print depthArray
 
 rospy.init_node('depthListener', anonymous=True)
 rospy.Subscriber('/camera/depth/disparity', DisparityImage, depthMatrixReshape)
