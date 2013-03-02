@@ -5,15 +5,19 @@ import sys
 
 import rospy
 from tf_service_test.srv import *
+from std_msgs.msg import Int8
 
 import numpy as np
 
 
 if __name__ == "__main__":
     try:
-        rospy.init_node('test_service_client')
+        rospy.init_node('test_service_client', anonymous = True)
+        print "Node Initiated."
         rate = rospy.Rate(1.0)
-        while not rospy.is_shutdown:
+        print "Rate set."
+        while not rospy.is_shutdown():
+            print "In loop now."
             rospy.wait_for_service('test_service')
             try:
                 service_resp = rospy.ServiceProxy('test_service', TestSrv)
