@@ -33,7 +33,7 @@ class mapBuilder:
     def run(self):
         #rospy.spin()
 	self.rate = rospy.Rate(0.5)	#period = 2s
-	while not True:#rospy.is_shutdown():
+	while not rospy.is_shutdown():
 	    rospy.wait_for_service('kinect_service')
 	    try:
 		self.request = rospy.ServiceProxy('kinect_service', KinectData)
@@ -64,7 +64,7 @@ class mapBuilder:
 
     #Retrieve position data
     def poseCallback(self, pose):
-	print "in poseCallback"
+	#print "in poseCallback"
 	self.isLocalized = True
         self.position = pose
         self.x_position = self.position.pose.position.x
@@ -76,7 +76,7 @@ class mapBuilder:
         w = self.position.pose.orientation.w
         z = self.position.pose.orientation.z
 	self.angle = math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
-	print "Angle: %f" %self.angle #math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
+	#print "Angle: %f" %self.angle #math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
 
 
     def getMapParameters(self):
