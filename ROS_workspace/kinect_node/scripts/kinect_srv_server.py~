@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# Sebastien Lemieux-Codere
+# Alan Yang
 import roslib; roslib.load_manifest('kinect_node')
 
 from kinect_node.srv import *

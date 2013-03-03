@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+
+'''
+Lunarex Map_Builder Node
+Author I: Sebastien Lemieux-Codere
+Author II:Alan Yan
+'''
+
 import roslib; roslib.load_manifest('kinect_node')
 
 from kinect_node.srv import *
