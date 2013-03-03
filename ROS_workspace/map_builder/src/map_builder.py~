@@ -61,6 +61,7 @@ class mapBuilder:
 
     #Retrieve position data
     def poseCallback(self, pose):
+	self.isLocalized == True
         self.position = pose
         self.x_position = self.position.pose.position.x
         self.y_position = self.position.pose.position.y
