@@ -109,7 +109,7 @@ class mapBuilder:
 	position_vector = [x,y] 
 
 	# rotate the vector to make it match the robot's heading
-	position_vector = self.rotateVector2D(vector, self.angle)
+	position_vector = self.rotateVector2D(position_vector , self.angle)
 	
 	# account for the different dimention of the kinect grid and the occupancy grid we use
 	occupancy_grid_units_per_kinect_units = kinect_grid_size / occupancy_grid_size

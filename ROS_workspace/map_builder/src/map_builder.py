@@ -27,6 +27,7 @@ class mapBuilder:
         self.obstacle_list = [[2,2],[20,20],[50,50]]
         self.map = None
         self.occupancy_grid = []
+	self.angle = 0.0
 
     def run(self):
         #rospy.spin()
