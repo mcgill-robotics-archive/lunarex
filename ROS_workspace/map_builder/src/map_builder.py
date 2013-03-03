@@ -62,13 +62,13 @@ class mapBuilder:
         self.position = pose
         self.x_position = self.position.pose.position.x
         self.y_position = self.position.pose.position.y
-	self.angle = math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
         #print "Current position:"
         #print self.x_position
         #print self.y_position
         #print self.position.pose.orientation	
         w = self.position.pose.orientation.w
         z = self.position.pose.orientation.z
+	self.angle = math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
 	print self.angle #math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
 
 

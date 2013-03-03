@@ -89,7 +89,7 @@ class mapBuilder:
 	# the grid is a one d array 
         grid   = self.kinect_data.data
 	height = self.kinect_data.height
-	widht  = self.kinect_data.width
+	width  = self.kinect_data.width
 	
 	length = len(grid)
 	
