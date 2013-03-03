@@ -98,7 +98,7 @@ class mapBuilder:
         grid   = self.kinect_data.data
 	height = self.kinect_data.height
 	width  = self.kinect_data.width
-	N
+	
 	length = len(grid)
 	
 	for i in range(length):
