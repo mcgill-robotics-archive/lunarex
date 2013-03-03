@@ -197,7 +197,7 @@ def getDepthFromPixel(pix):
 
 
 
-print createMap() #  runs it when  the node is starting
+print createMap()
 
 if __name__ == "__main__":
     try:
