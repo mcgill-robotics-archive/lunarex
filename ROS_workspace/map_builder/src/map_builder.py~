@@ -35,7 +35,8 @@ class mapBuilder:
 	    rospy.wait_for_service('kinect_service')
 	    try:
 		self.request = rospy.ServiceProxy('kinect_service', KinectData)
-		self.response = self.request(0)		#Send a request (containing any int) and get response
+		self.kinect_data = self.request(0)		#Send a request (containing any int) and get response
+		self.kinectCallback()
 		'''
 		print "Height: %d" % self.response.height
 		print "Width: %d" % self.response.width
@@ -76,8 +77,7 @@ class mapBuilder:
         self.map_width = self.map.info.width    #the width of occupancy grid
         self.map_resolution = self.map.info.resolution
 
-    def processMap(self):
-        pass    #implent later
+
 
     def insertValueInOccupancyGrid(self, x_coord, y_coord, val):
         square_size = 6
@@ -85,9 +85,20 @@ class mapBuilder:
             for ii in range(square_size):
                 self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
 
-    def kinectCallback(self, grid):
+    def kinectCallback(self):
 	# the grid is a one d array 
-	pass
+        grid   = self.kinect_data.data
+	height = self.kinect_data.height
+	widht  = self.kinect_data.width
+	
+	length = len(grid)
+	
+	for i in range(length):
+		row_number = int(i/width)
+		element_in_row = i % width
+		y = 40 - row_number		# the top row (row[0]) is far away  -- 400 m away 
+		x = element_in_row - 14		# 30 elements per row ; element 14 is at the center
+		self.addCoordinates(x, y)
 
     def addCoordinates(x, y):
 	# x and y are coordinates on the kinect's frame of reference. 
