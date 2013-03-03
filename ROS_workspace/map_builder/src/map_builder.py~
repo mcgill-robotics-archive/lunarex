@@ -100,7 +100,7 @@ class mapBuilder:
 		x = element_in_row - 14		# 30 elements per row ; element 14 is at the center
 		self.addCoordinates(x, y)
 
-    def addCoordinates(x, y):
+    def addCoordinates(self, x, y):
 	# x and y are coordinates on the kinect's frame of reference. 
 	# the grid size is the kinect_grid_size --> 10 cm at the moment
 	# ie: the kinect is the origin and the y axis points straight forward
