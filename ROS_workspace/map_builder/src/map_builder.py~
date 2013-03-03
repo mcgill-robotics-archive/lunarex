@@ -27,6 +27,8 @@ class mapBuilder:
         self.obstacle_list = [[2,2],[20,20],[50,50]]
         self.map = None
         self.occupancy_grid = []
+	self.angle = 0.0
+	self.isLocalized = False
 
     def run(self):
         #rospy.spin()
@@ -87,6 +89,8 @@ class mapBuilder:
 
     def kinectCallback(self):
 	# the grid is a one d array 
+	if (self.isLocalized == False):
+		return null
         grid   = self.kinect_data.data
 	height = self.kinect_data.height
 	width  = self.kinect_data.width

@@ -28,6 +28,7 @@ class mapBuilder:
         self.map = None
         self.occupancy_grid = []
 	self.angle = 0.0
+	self.isLocalized = False
 
     def run(self):
         #rospy.spin()
@@ -60,6 +61,7 @@ class mapBuilder:
 
     #Retrieve position data
     def poseCallback(self, pose):
+	self.isLocalized == True
         self.position = pose
         self.x_position = self.position.pose.position.x
         self.y_position = self.position.pose.position.y
@@ -88,6 +90,8 @@ class mapBuilder:
 
     def kinectCallback(self):
 	# the grid is a one d array 
+	if (self.isLocalized == False):
+		return null
         grid   = self.kinect_data.data
 	height = self.kinect_data.height
 	width  = self.kinect_data.width
