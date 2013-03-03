@@ -93,6 +93,7 @@ class mapBuilder:
 	# the grid is a one d array 
 	if (self.isLocalized == False):
 		return None
+	print "kinectCallback Running"
         grid   = self.kinect_data.data
 	height = self.kinect_data.height
 	width  = self.kinect_data.width

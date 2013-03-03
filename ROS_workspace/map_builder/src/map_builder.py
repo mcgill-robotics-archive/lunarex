@@ -91,6 +91,7 @@ class mapBuilder:
 
     def kinectCallback(self):
 	# the grid is a one d array 
+	print "kinectCallback called"
 	if (self.isLocalized == False):
 		return None
 	print "kinectCallback Running"
