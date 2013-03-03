@@ -64,6 +64,7 @@ class mapBuilder:
 
     #Retrieve position data
     def poseCallback(self, pose):
+	print "in poseCallback"
 	self.isLocalized = True
         self.position = pose
         self.x_position = self.position.pose.position.x
@@ -151,5 +152,7 @@ if __name__ == "__main__":
     try:
         builder = mapBuilder()
         builder.run()
+
+
     except KeyboardInterrupt:
         sys.exit(0)

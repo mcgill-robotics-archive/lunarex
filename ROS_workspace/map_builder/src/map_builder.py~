@@ -48,6 +48,7 @@ class mapBuilder:
 		print "Service failed: %s" % e
 
     def mapCallback(self, grid):
+	print "in mapCallback"
         self.map = grid
         self.occupancy_grid = [grid.data[i] for i in range(len(grid.data))]     #Damn cool way by Seb_The_Guru to create a list out of a tuple - Alan
         
@@ -150,5 +151,7 @@ if __name__ == "__main__":
     try:
         builder = mapBuilder()
         builder.run()
+
+
     except KeyboardInterrupt:
         sys.exit(0)
