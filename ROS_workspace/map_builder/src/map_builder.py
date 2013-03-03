@@ -73,7 +73,7 @@ class mapBuilder:
         w = self.position.pose.orientation.w
         z = self.position.pose.orientation.z
 	self.angle = math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
-	print self.angle #math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
+	print "Angle: %f" %self.angle #math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
 
 
     def getMapParameters(self):
