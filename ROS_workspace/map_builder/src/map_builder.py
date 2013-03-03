@@ -32,7 +32,7 @@ class mapBuilder:
 
     def run(self):
         #rospy.spin()
-	self.rate = rospy.Rate(0.5)	#period = 2s
+	self.rate = rospy.Rate(0.1)	#period = 2s
 	while not rospy.is_shutdown():
 	    rospy.wait_for_service('kinect_service')
 	    try:
