@@ -1,0 +1,9 @@
+K 10
+svn:ignore
+V 21
+bin
+build
+lib
+*.user
+
+END

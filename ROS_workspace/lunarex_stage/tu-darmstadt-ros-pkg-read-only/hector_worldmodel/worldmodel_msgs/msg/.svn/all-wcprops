@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/758/trunk/hector_worldmodel/worldmodel_msgs/msg
+END
+ImagePercept.msg
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/758/trunk/hector_worldmodel/worldmodel_msgs/msg/ImagePercept.msg
+END
+Object.msg
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/758/trunk/hector_worldmodel/worldmodel_msgs/msg/Object.msg
+END
+ObjectModel.msg
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/758/trunk/hector_worldmodel/worldmodel_msgs/msg/ObjectModel.msg
+END
+ObjectState.msg
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/758/trunk/hector_worldmodel/worldmodel_msgs/msg/ObjectState.msg
+END
+PosePercept.msg
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/758/trunk/hector_worldmodel/worldmodel_msgs/msg/PosePercept.msg
+END
+PerceptInfo.msg
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/758/trunk/hector_worldmodel/worldmodel_msgs/msg/PerceptInfo.msg
+END
+ObjectInfo.msg
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/758/trunk/hector_worldmodel/worldmodel_msgs/msg/ObjectInfo.msg
+END

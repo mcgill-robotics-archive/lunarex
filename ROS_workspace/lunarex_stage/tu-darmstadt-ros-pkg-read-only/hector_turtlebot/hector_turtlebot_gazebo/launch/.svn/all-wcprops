@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/862/trunk/hector_turtlebot/hector_turtlebot_gazebo/launch
+END
+bringup.launch
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/862/trunk/hector_turtlebot/hector_turtlebot_gazebo/launch/bringup.launch
+END
+spawn_robot_small_indoor_scenario.launch
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/758/trunk/hector_turtlebot/hector_turtlebot_gazebo/launch/spawn_robot_small_indoor_scenario.launch
+END

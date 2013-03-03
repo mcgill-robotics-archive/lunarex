@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/846/trunk/hector_models/hector_sensors_description/urdf
+END
+asus_camera.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/846/trunk/hector_models/hector_sensors_description/urdf/asus_camera.urdf.xacro
+END
+generic_camera.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/758/trunk/hector_models/hector_sensors_description/urdf/generic_camera.urdf.xacro
+END
+kinect_camera.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/846/trunk/hector_models/hector_sensors_description/urdf/kinect_camera.urdf.xacro
+END
+thermaleye_camera.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/758/trunk/hector_models/hector_sensors_description/urdf/thermaleye_camera.urdf.xacro
+END
+hokuyo_utm30lx.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/846/trunk/hector_models/hector_sensors_description/urdf/hokuyo_utm30lx.urdf.xacro
+END
+sonar_sensor.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/758/trunk/hector_models/hector_sensors_description/urdf/sonar_sensor.urdf.xacro
+END

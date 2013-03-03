@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/791/trunk/biorob_common/biorob_description/urdf/biorob_ultra_x4_hp
+END
+biorob_ultra_x4_hp.xml
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/788/trunk/biorob_common/biorob_description/urdf/biorob_ultra_x4_hp/biorob_ultra_x4_hp.xml
+END
+biorob_ultra_x4_hp_base.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/!svn/ver/791/trunk/biorob_common/biorob_description/urdf/biorob_ultra_x4_hp/biorob_ultra_x4_hp_base.urdf.xacro
+END
+biorob_ultra_x4_hp.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/788/trunk/biorob_common/biorob_description/urdf/biorob_ultra_x4_hp/biorob_ultra_x4_hp.urdf.xacro
+END

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_designer/src/model
+END
+arenaelementtyperegistry.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_designer/src/model/arenaelementtyperegistry.cpp
+END
+arena.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_designer/src/model/arena.h
+END
+xmlloadingexception.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_designer/src/model/xmlloadingexception.cpp
+END
+arenaelement.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_designer/src/model/arenaelement.cpp
+END
+arenaelementtyperegistry.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_designer/src/model/arenaelementtyperegistry.h
+END
+arenaelementtype.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_designer/src/model/arenaelementtype.cpp
+END
+xmlloadingexception.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_designer/src/model/xmlloadingexception.h
+END
+arenaelement.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_designer/src/model/arenaelement.h
+END
+arena.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_designer/src/model/arena.cpp
+END
+arenaelementtype.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_designer/src/model/arenaelementtype.h
+END

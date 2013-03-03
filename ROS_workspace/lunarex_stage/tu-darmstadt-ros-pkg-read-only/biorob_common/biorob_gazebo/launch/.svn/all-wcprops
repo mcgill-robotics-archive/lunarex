@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/862/trunk/biorob_common/biorob_gazebo/launch
+END
+spawn_biorob_v3_x6.launch
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/862/trunk/biorob_common/biorob_gazebo/launch/spawn_biorob_v3_x6.launch
+END
+spawn_biorob_v3_x4.launch
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/862/trunk/biorob_common/biorob_gazebo/launch/spawn_biorob_v3_x4.launch
+END
