@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test
+CMAKE_SOURCE_DIR = /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build
+CMAKE_BINARY_DIR = /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build
 
 # Utility rule file for ROSBUILD_gensrv_py.
 
@@ -45,9 +45,9 @@ include CMakeFiles/ROSBUILD_gensrv_py.dir/progress.make
 CMakeFiles/ROSBUILD_gensrv_py: ../src/tf_service_test/srv/__init__.py
 
 ../src/tf_service_test/srv/__init__.py: ../src/tf_service_test/srv/_TestSrv.py
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../src/tf_service_test/srv/__init__.py"
-	/opt/ros/fuerte/share/rospy/rosbuild/scripts/gensrv_py.py --initpy /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/srv/TestSrv.srv
+	/opt/ros/fuerte/share/rospy/rosbuild/scripts/gensrv_py.py --initpy /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/srv/TestSrv.srv
 
 ../src/tf_service_test/srv/_TestSrv.py: ../srv/TestSrv.srv
 ../src/tf_service_test/srv/_TestSrv.py: /opt/ros/fuerte/share/rospy/rosbuild/scripts/gensrv_py.py
@@ -65,11 +65,13 @@ CMakeFiles/ROSBUILD_gensrv_py: ../src/tf_service_test/srv/__init__.py
 ../src/tf_service_test/srv/_TestSrv.py: /opt/ros/fuerte/share/roswtf/manifest.xml
 ../src/tf_service_test/srv/_TestSrv.py: /opt/ros/fuerte/share/message_filters/manifest.xml
 ../src/tf_service_test/srv/_TestSrv.py: /opt/ros/fuerte/stacks/geometry/tf/manifest.xml
+../src/tf_service_test/srv/_TestSrv.py: /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/manifest.xml
 ../src/tf_service_test/srv/_TestSrv.py: /opt/ros/fuerte/stacks/geometry/tf/msg_gen/generated
 ../src/tf_service_test/srv/_TestSrv.py: /opt/ros/fuerte/stacks/geometry/tf/srv_gen/generated
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build/CMakeFiles $(CMAKE_PROGRESS_2)
+../src/tf_service_test/srv/_TestSrv.py: /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/srv_gen/generated
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../src/tf_service_test/srv/_TestSrv.py"
-	/opt/ros/fuerte/share/rospy/rosbuild/scripts/gensrv_py.py --noinitpy /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/srv/TestSrv.srv
+	/opt/ros/fuerte/share/rospy/rosbuild/scripts/gensrv_py.py --noinitpy /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/srv/TestSrv.srv
 
 ROSBUILD_gensrv_py: CMakeFiles/ROSBUILD_gensrv_py
 ROSBUILD_gensrv_py: ../src/tf_service_test/srv/__init__.py
@@ -86,6 +88,6 @@ CMakeFiles/ROSBUILD_gensrv_py.dir/clean:
 .PHONY : CMakeFiles/ROSBUILD_gensrv_py.dir/clean
 
 CMakeFiles/ROSBUILD_gensrv_py.dir/depend:
-	cd /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build/CMakeFiles/ROSBUILD_gensrv_py.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build/CMakeFiles/ROSBUILD_gensrv_py.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/ROSBUILD_gensrv_py.dir/depend
 

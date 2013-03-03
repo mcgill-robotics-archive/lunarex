@@ -10,6 +10,7 @@
   <url>http://ros.org/wiki/tf_test</url>
   <depend package="tf"/>
   <depend package="rospy"/>
+  <depend package="kinect_node"/>
 
 </package>
 

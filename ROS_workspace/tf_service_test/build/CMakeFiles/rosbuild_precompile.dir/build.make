@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test
+CMAKE_SOURCE_DIR = /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build
+CMAKE_BINARY_DIR = /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build
 
 # Utility rule file for rosbuild_precompile.
 
@@ -57,6 +57,6 @@ CMakeFiles/rosbuild_precompile.dir/clean:
 .PHONY : CMakeFiles/rosbuild_precompile.dir/clean
 
 CMakeFiles/rosbuild_precompile.dir/depend:
-	cd /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build/CMakeFiles/rosbuild_precompile.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build /home/seb/McGill_LunarEx_2013/ROS_workspace/tf_service_test/build/CMakeFiles/rosbuild_precompile.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/rosbuild_precompile.dir/depend
 

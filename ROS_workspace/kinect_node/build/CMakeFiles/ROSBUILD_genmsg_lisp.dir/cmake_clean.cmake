@@ -1,4 +1,7 @@
 FILE(REMOVE_RECURSE
+  "../src/kinect_node/srv"
+  "../srv_gen"
+  "../srv_gen"
   "CMakeFiles/ROSBUILD_genmsg_lisp"
 )
 

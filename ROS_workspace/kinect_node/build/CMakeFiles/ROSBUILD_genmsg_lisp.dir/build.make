@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/ros_node
+CMAKE_SOURCE_DIR = /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/ros_node/build
+CMAKE_BINARY_DIR = /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build
 
 # Utility rule file for ROSBUILD_genmsg_lisp.
 
@@ -57,6 +57,6 @@ CMakeFiles/ROSBUILD_genmsg_lisp.dir/clean:
 .PHONY : CMakeFiles/ROSBUILD_genmsg_lisp.dir/clean
 
 CMakeFiles/ROSBUILD_genmsg_lisp.dir/depend:
-	cd /home/lunarex/McGill_LunarEx_2013/ROS_workspace/ros_node/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lunarex/McGill_LunarEx_2013/ROS_workspace/ros_node /home/lunarex/McGill_LunarEx_2013/ROS_workspace/ros_node /home/lunarex/McGill_LunarEx_2013/ROS_workspace/ros_node/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/ros_node/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/ros_node/build/CMakeFiles/ROSBUILD_genmsg_lisp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles/ROSBUILD_genmsg_lisp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/ROSBUILD_genmsg_lisp.dir/depend
 
