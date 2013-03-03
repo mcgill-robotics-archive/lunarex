@@ -32,13 +32,13 @@ class mapBuilder:
 
     def run(self):
         #rospy.spin()
-	self.rate = rospy.Rate(0.1)	#period = 2s
+	self.rate = rospy.Rate(0.5)	#period = 2s
 	while not rospy.is_shutdown():
 	    rospy.wait_for_service('kinect_service')
 	    try:
-		self.request = rospy.ServiceProxy('kinect_service', KinectData)
-		self.kinect_data = self.request(0)		#Send a request (containing any int) and get response
-		self.kinectCallback()
+		#self.request = rospy.ServiceProxy('kinect_service', KinectData)
+		#self.kinect_data = self.request(0)		#Send a request (containing any int) and get response
+		#self.kinectCallback()
 		'''
 		print "Height: %d" % self.response.height
 		print "Width: %d" % self.response.width
