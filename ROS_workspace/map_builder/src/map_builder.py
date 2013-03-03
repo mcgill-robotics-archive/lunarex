@@ -58,6 +58,7 @@ class mapBuilder:
             self.insertValueInOccupancyGrid(obstacle[0], obstacle[1], 100)
         self.map.data = self.occupancy_grid #Change the occupancy grid to the updated one
         self.pub.publish(self.map)
+	print self.obstacle_list
 
     #Retrieve position data
     def poseCallback(self, pose):
