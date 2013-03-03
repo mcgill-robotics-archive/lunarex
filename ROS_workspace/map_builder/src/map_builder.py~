@@ -1,11 +1,18 @@
 #!/usr/bin/env python
 import roslib; roslib.load_manifest('map_builder')
 import rospy
+
+#import message types
 from std_msgs.msg import *
 from nav_msgs.msg import OccupancyGrid
 from geometry_msgs.msg import PoseStamped
+
+#import math tools
 from numpy import *
 import math
+
+#import service data type
+from kinect_node.srv import *
 
 # the occupancy grid is 2.5 x 2.5 cm
 kinect_grid_size = 10 #cm
@@ -22,7 +29,20 @@ class mapBuilder:
         self.occupancy_grid = []
 
     def run(self):
-        rospy.spin()
+        #rospy.spin()
+	self.rate = rospy.Rate(0.5)	#period = 2s
+	while not rospy.is_shutdown():
+	    rospy.wait_for_service('kinect_service')
+	    try:
+		self.request = rospy.ServiceProxy('kinect_service', KinectData)
+		self.response = self.request(0)		#Send a request (containing any int) and get response
+		'''
+		print "Height: %d" % self.response.height
+		print "Width: %d" % self.response.width
+		print self.response.data
+		'''
+	    except rospy.ServiceException, e:
+		print "Service failed: %s" % e
 
     def mapCallback(self, grid):
         self.map = grid
@@ -66,9 +86,8 @@ class mapBuilder:
                 self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
 
     def kinectCallback(self, grid):
+	# the grid is a one d array 
 	pass
-	
-
 
     def addCoordinates(x, y):
 	# x and y are coordinates on the kinect's frame of reference. 
