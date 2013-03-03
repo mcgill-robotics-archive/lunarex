@@ -71,9 +71,8 @@ class mapBuilder:
         self.position = pose
         self.x_position = self.position.pose.position.x
         self.y_position = self.position.pose.position.y
-        #print "Current position:"
-        #print self.x_position
-        #print self.y_position
+        print "Current position:" 
+        print self.x_position, self.y_position
         #print self.position.pose.orientation	
         w = self.position.pose.orientation.w
         z = self.position.pose.orientation.z

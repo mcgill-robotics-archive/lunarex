@@ -46,7 +46,7 @@ class mapBuilder:
 		'''
 	    except rospy.ServiceException, e:
 		print "Service failed: %s" % e
-	    self.rate.sleep()	
+	    self.rate.sleep()	# Alan, make don't omit this line... sleep is needed to make programs work - Seb
 		
 
     def mapCallback(self, grid):
