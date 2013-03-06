@@ -29,7 +29,7 @@ define LidarEx ranger
 
 define lunabot position
 (
-  size [1.200 0.750 0.300]  #length x width x height
+  size [1.20 0.75 0.3]  #length x width x height
   # origin [? ? ? ?] #define centre of rotation
   # localization_origin [0 0 0] #initial position
   
@@ -97,10 +97,10 @@ define arena model
   # choose which sensors are attached
   gripper_return 0
   fiducial_return 0
-  ranger_return 1.000 #if 1, robot will receive data. If 0, it won't receive data.
+  ranger_return 1 #if 1, robot will receive data. If 0, it won't receive data.
 )
 
-speedup 1.000 #has to do with playback of simulation, was 10 by default i think
+speedup 1 #has to do with playback of simulation, was 10 by default i think
 
 paused 0
 
@@ -123,8 +123,8 @@ arena
   name "Arena"
    bitmap "obstacleLunarena2.bmp" #if defined by bitmap, put it here
   # size of the arena
-  size [3.880 7.380 0.500]	#according to competition rules
-  pose [0.000 0.000 0.000 0.000]
+  size [3.88 7.38 0.50]	#according to competition rules
+  pose [0 0 0 0]
 )
 
 
@@ -132,9 +132,9 @@ lunabot
 (		  
   # can refer to the robot by this name
   name "lunabot"
-  pose [0 -3 0.000 0.000 ]	#initial position, (then rotation?), in the x-right y-up stage coordinates
+  pose [0 -3 0 0 ]	#initial position, (then rotation?), in the x-right y-up stage coordinates
   color "red" 
-  LidarEx(pose [0.000 0.300 0.000 90.000]) # call Lidar (ie place on on the lunabot) and position it relative to robot (i think its x y z theta)
+  LidarEx(pose [0 0.3 0 90]) # call Lidar (ie place on on the lunabot) and position it relative to robot (i think its x y z theta)
   #there's also this thing where the default TF is [0 0 .15 0] and so I think that it is added onto this pose, and so the resulting pose puts the lidar's z position at 0.15 relative to /base_link
  
  # ctrl "wander"  do not need this for now
