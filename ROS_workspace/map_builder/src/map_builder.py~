@@ -133,7 +133,8 @@ class mapBuilder:
 	position_vector[1] += self.y_position
 
 	#
-        self.obstacle_list.append([x,y])
+	if ([x,y] not in obstacle_list):
+        	self.obstacle_list.append([x,y])
 
 	# *****	
 	# *****	We will later need to adjust for the fact that the kinect is not necessarily placed 		

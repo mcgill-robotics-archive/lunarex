@@ -133,7 +133,7 @@ class mapBuilder:
 	position_vector[1] += self.y_position
 
 	#
-	if ([x,y] not in obstacle_list):
+	if ([x,y] not in self.obstacle_list):
         	self.obstacle_list.append([x,y])
 
 	# *****	
