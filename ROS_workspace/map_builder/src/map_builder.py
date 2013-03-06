@@ -119,7 +119,7 @@ class mapBuilder:
 	# this functions needs to transfer the kinect obstacle coordinates in the global coordinate frame given by hector_mapping
 	
 	position_vector = [x,y] 
-	print "addCoordinates" , position_vector
+	#print "addCoordinates" , position_vector
 	# rotate the vector to make it match the robot's heading
 	position_vector = self.rotateVector2D(position_vector , self.angle)
 	
@@ -129,9 +129,9 @@ class mapBuilder:
 	position_vector[1] = 	int (  position_vector[1] * occupancy_grid_units_per_kinect_units   )
 
 	# add the global position of the robot
-	position_vector[0] += 512
-	position_vector[1] += 512
-	print "before addedCoordinates" , [position_vector[0],position_vector[1]]
+	position_vector[0] += int( 1024 + self.x_position/2.5 )
+	position_vector[1] += int( 1024 + self.x_position/2.5 )
+	#print "before addedCoordinates" , [position_vector[0],position_vector[1]]
 	#
 	if ([position_vector[0],position_vector[1]] not in self.obstacle_list):
         	self.obstacle_list.append([position_vector[0],position_vector[1]])
@@ -141,6 +141,8 @@ class mapBuilder:
 	# ***** at the same place as what is considered to be the robot's centre. 
 	# ***** For example, it my be 25 cm at the back. We would then need to remove 50 to the position_vector[1] 
 	# *****
+
+
 
     #Rotate a coordinate ector
     def rotateVector2D(self, vector, angle):
