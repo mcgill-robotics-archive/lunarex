@@ -105,14 +105,14 @@ class mapBuilder:
 	height = self.kinect_data.height
 	width  = self.kinect_data.width
 	
-	length = len(grid)
-	
+
 	for i in range(length):
 		row_number = int(i/width)
 		element_in_row = i % width
 		y = 40 - row_number		# the top row (row[0]) is far away  -- 400 m away 
 		x = element_in_row - 14		# 30 elements per row ; element 14 is at the center
-		self.addCoordinates(x, y)
+		if (grid[i] == 100):
+			self.addCoordinates(x, y)
 
     def addCoordinates(self, x, y):
 	# x and y are coordinates on the kinect's frame of reference. 
