@@ -19,6 +19,7 @@ def service_server():
 
 def createMap():
     map = [ [ 0 for i in range(30)]for ii in range(40)]
+    map[20][20] = 100
     return map
 
 if __name__ == "__main__":

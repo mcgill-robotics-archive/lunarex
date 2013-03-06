@@ -71,8 +71,8 @@ class mapBuilder:
         self.position = pose
         self.x_position = self.position.pose.position.x
         self.y_position = self.position.pose.position.y
-        print "Current position:" 
-        print self.x_position, self.y_position
+        #print "Current position:" 
+        #print self.x_position, self.y_position
         #print self.position.pose.orientation	
         w = self.position.pose.orientation.w
         z = self.position.pose.orientation.z
@@ -98,7 +98,7 @@ class mapBuilder:
 	#print "kinectCallback called"
 	if (self.isLocalized == False):
 		return None
-	#print "kinectCallback Running"
+	print "kinectCallback Running"
         grid   = self.kinect_data.data
 	height = self.kinect_data.height
 	width  = self.kinect_data.width
@@ -119,7 +119,7 @@ class mapBuilder:
 	# this functions needs to transfer the kinect obstacle coordinates in the global coordinate frame given by hector_mapping
 	
 	position_vector = [x,y] 
-
+	print "addCoordinates" , position_vector
 	# rotate the vector to make it match the robot's heading
 	position_vector = self.rotateVector2D(position_vector , self.angle)
 	
@@ -129,13 +129,13 @@ class mapBuilder:
 	position_vector[1] = 	int (  position_vector[1] * occupancy_grid_units_per_kinect_units   )
 
 	# add the global position of the robot
-	position_vector[0] += self.x_position
-	position_vector[1] += self.y_position
-
+	position_vector[0] += 512
+	position_vector[1] += 512
+	print "before addedCoordinates" , [x,y]
 	#
-	if ([x,y] not in obstacle_list):
+	if ([x,y] not in self.obstacle_list):
         	self.obstacle_list.append([x,y])
-
+		print "addedCoordinates" , [x,y]
 	# *****	
 	# *****	We will later need to adjust for the fact that the kinect is not necessarily placed 		
 	# ***** at the same place as what is considered to be the robot's centre. 
