@@ -62,7 +62,7 @@ class mapBuilder:
         self.map.data = self.occupancy_grid #Change the occupancy grid to the updated one
         self.pub.publish(self.map)
 	
-	print self.obstacle_list
+	#print self.obstacle_list
 
     #Retrieve position data
     def poseCallback(self, pose):
@@ -89,9 +89,11 @@ class mapBuilder:
 
     def insertValueInOccupancyGrid(self, x_coord, y_coord, val):
         square_size = 6
-        for i in range(square_size):
-            for ii in range(square_size):
-                self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
+        #for i in range(square_size):
+        #    for ii in range(square_size):
+        #        self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
+
+	self.occupancy_grid[(y_coord ) * self.map_width + (x_coord)] = val
 
     def kinectCallback(self):
 	# the grid is a one d array 
@@ -129,8 +131,8 @@ class mapBuilder:
 	position_vector[1] = 	int (  position_vector[1] * occupancy_grid_units_per_kinect_units   )
 
 	# add the global position of the robot
-	position_vector[0] += 1024 + self.x_position/2.5
-	position_vector[1] += 1024 + self.x_position/2.5
+	position_vector[0] += int( 1024 + self.x_position/2.5 )
+	position_vector[1] += int( 1024 + self.x_position/2.5 )
 	#print "before addedCoordinates" , [position_vector[0],position_vector[1]]
 	#
 	if ([position_vector[0],position_vector[1]] not in self.obstacle_list):

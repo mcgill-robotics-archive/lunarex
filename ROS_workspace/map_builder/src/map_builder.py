@@ -62,7 +62,7 @@ class mapBuilder:
         self.map.data = self.occupancy_grid #Change the occupancy grid to the updated one
         self.pub.publish(self.map)
 	
-	print self.obstacle_list
+	#print self.obstacle_list
 
     #Retrieve position data
     def poseCallback(self, pose):
@@ -89,9 +89,11 @@ class mapBuilder:
 
     def insertValueInOccupancyGrid(self, x_coord, y_coord, val):
         square_size = 6
-        for i in range(square_size):
-            for ii in range(square_size):
-                self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
+        #for i in range(square_size):
+        #    for ii in range(square_size):
+        #        self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
+
+	self.occupancy_grid[(y_coord ) * self.map_width + (x_coord)] = val
 
     def kinectCallback(self):
 	# the grid is a one d array 
