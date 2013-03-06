@@ -27,13 +27,15 @@ public class GUIMain extends JFrame {
 	// hard-coded some pieces of information about the environment, such as width of Mining Area and initial x value of Obstacle Area
 	class Bob {
 
-		float x, y, w = 75, h = 100, velocity;
+		float x, y, w = 75, h = 100;
+		double angVel, linVel;;
 		int angle, containerAngle;
 		float massInContainer, totalMass;
-		int batteryLevel = 50;
+		double batteryLevel = 14.2;
 		float rpm1, rpm2, rpm3, rpm4;
 		boolean doorOpen;
-		int elevationWheel1, elevationWheel2, elevationWheel3, elevationWheel4;
+		int elevation;
+		
 
 	}
 
@@ -81,7 +83,7 @@ public class GUIMain extends JFrame {
 		canvas = new Canvas();
 		canvas.setIgnoreRepaint(true);
 		canvas.setSize(WIDTH, HEIGHT);
-		
+
 		add(canvas);
 		pack();
 
@@ -108,17 +110,17 @@ public class GUIMain extends JFrame {
 
 		/*
 		 * bob.velocity = client.getVelocity();
-		
+
 			bob.containerAngle = client.getContainerAngle();
 			bob.massInContainer = client.getMassInContainer();
-		
+
 			bob.batteryLevel = client.getBatteryLevel();
 			bob.doorOpen = client.getDoorOpen();
 			bob.rpm1 = client.getRpm1();
 			bob.rpm2 = client.getRpm2();
 			bob.rpm3 = client.getRpm3();
 			bob.rpm4 = client.getRpm4();
-		 * 
+		 *
 		 */
 
 	}
@@ -171,11 +173,22 @@ public class GUIMain extends JFrame {
 				// g2d.drawString("Speed: ");
 				g2d.drawString("Angle: "
 						+ (int) (360 * bob.angle / (2 * Math.PI)), 20, 64);
-				g2d.drawString("Manual Override: " + manualOverride, 20, 88);
-				g2d.drawString("Connected to server: " + connected, 20, 100);
+				//g2d.drawString("Manual Override: " + manualOverride, 20, 88);
+				//g2d.drawString("Connected to server: " + connected, 20, 88);
+				g2d.drawString("Angular velocity: "+bob.angVel, 20, 100);
+				g2d.drawString("Linear Velocity: "+bob.linVel, 20, 112);
+				g2d.drawString("Elevation: "+bob.elevation, 20, 124);
+				g2d.drawString("Container Angle: "+bob.containerAngle, 20, 136);
+				g2d.drawString("Door "+ (bob.doorOpen?"Open":"Closed"),20,148);
 
-				g2d.drawString("(0,0)", (int) (field.x - 25),
-						(int) (field.y - 2));
+				//g2d.drawString("(0,0)", (int) (field.x - 25),
+					//	(int) (field.y - 2));
+				g2d.drawString("Starting/Dumping Area", (int) (field.x + 10),(int) (field.y - 2) );
+				g2d.drawString("Obstacle Area", (int) (field.x + 250),(int) (field.y - 2) );
+				g2d.drawString("Mining Area", (int) (field.x + 550),(int) (field.y - 2) );
+				
+				
+				
 
 				// Move bob
 				processInput();
@@ -184,27 +197,27 @@ public class GUIMain extends JFrame {
 				g2d.setColor(Color.cyan);
 				g2d.drawRect((int) (field.x), (int) (field.y), (int) field.w,
 						(int) field.h);
-				
+
 				// Draw MiningArea on Field
-				g2d.setColor(Color.white);
+				g2d.setColor(Color.cyan);
 				g2d.draw(new Line2D.Double(field.x + field.w - miningArea.w,
 						field.y, field.x + field.w - miningArea.w, field.y
 								+ field.h));
 
 				// Draw ObstacleArea on Field
-				g2d.setColor(Color.pink);
+				g2d.setColor(Color.cyan);
 				g2d.draw(new Line2D.Double(field.x + obstacleArea1.x, field.y,
 						field.x + obstacleArea1.x, field.y + field.h));
-	
+
 				// Draw battery
 				g2d.setColor(Color.WHITE);
 				g2d.drawRect(1000, 50, 100, 33);
 				g2d.drawRect(1100, 61, 5, 10);
 				Color DARKGREEN = new Color(0, 220, 10);
 				g2d.setColor(DARKGREEN);
-				g2d.fillRect(1001, 51, bob.batteryLevel, 32);
+				g2d.fillRect(1001, 51, (int)bob.batteryLevel, 32);
 				g2d.setColor(Color.WHITE);
-				g2d.drawString("" + bob.batteryLevel + "%", 1040, 70);
+				g2d.drawString("" + bob.batteryLevel + "V", 1040, 70);
 
 				// Draw bob
 				g2d.setColor(Color.RED);
