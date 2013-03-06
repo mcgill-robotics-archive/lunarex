@@ -16,7 +16,7 @@ from kinect_node.srv import *
 
 # the occupancy grid is 2.5 x 2.5 cm
 kinect_grid_size = 10 #cm
-occupancy_grid_size = 2.5 #cm
+occupancy_grid_size = 5 #cm
 
 class mapBuilder:
     def __init__(self):
@@ -84,6 +84,7 @@ class mapBuilder:
         self.map_height = self.map.info.height  #the height of occupancy gird
         self.map_width = self.map.info.width    #the width of occupancy grid
         self.map_resolution = self.map.info.resolution
+	print self.map_resolution
 
 
 
