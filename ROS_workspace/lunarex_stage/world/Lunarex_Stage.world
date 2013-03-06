@@ -110,9 +110,9 @@ resolution 0.01
 window
 (
   size [369 700] # in pixels
-  scale 11.548  # pixels per meter, makes it slightly larger than the arena
-  center [ -6.309  790.195 ]
-  rotate [ 50.000  6.500 ]
+  scale 94  # pixels per meter, makes it slightly larger than the arena
+  center [ 0  0 ]
+  rotate [ 0  0 ]
   			
   show_data 1              # 1=on 0=off
 )
@@ -132,7 +132,7 @@ lunabot
 (		  
   # can refer to the robot by this name
   name "lunabot"
-  pose [0.735 -2.129 0.000 0.000 ]	#initial position, (then rotation?), in the x-right y-up stage coordinates
+  pose [0 -3 0.000 0.000 ]	#initial position, (then rotation?), in the x-right y-up stage coordinates
   color "red" 
   LidarEx(pose [0.000 0.300 0.000 90.000]) # call Lidar (ie place on on the lunabot) and position it relative to robot (i think its x y z theta)
   #there's also this thing where the default TF is [0 0 .15 0] and so I think that it is added onto this pose, and so the resulting pose puts the lidar's z position at 0.15 relative to /base_link
