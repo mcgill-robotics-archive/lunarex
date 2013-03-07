@@ -4,8 +4,8 @@ import rospy
 
 #import message types
 from std_msgs.msg import *
-from nav_msgs.msg import OccupancyGrid
-from geometry_msgs.msg import PoseStamped
+from nav_msgs.msg import *
+from geometry_msgs.msg import *
 
 #import math tools
 from numpy import *
@@ -27,12 +27,13 @@ class mapBuilder:
         self.obstacle_list = [[2,2],[20,20],[50,50]]
         self.map = None
         self.occupancy_grid = []
-	self.angle = 0.0
-	self.isLocalized = False
+		self.angle = 0.0
+		self.isLocalized = False
+		self.rate = rospy.Rate(0.5)	#period = 2s
 
     def run(self):
         #rospy.spin()
-	self.rate = rospy.Rate(0.5)	#period = 2s
+	
 	while not rospy.is_shutdown():
 	    rospy.wait_for_service('kinect_service')
 	    try:
@@ -67,7 +68,7 @@ class mapBuilder:
     #Retrieve position data
     def poseCallback(self, pose):
 	#print "in poseCallback"
-	self.isLocalized = True
+		self.isLocalized = True
         self.position = pose
         self.x_position = self.position.pose.position.x
         self.y_position = self.position.pose.position.y
@@ -76,7 +77,14 @@ class mapBuilder:
         #print self.position.pose.orientation	
         w = self.position.pose.orientation.w
         z = self.position.pose.orientation.z
-	self.angle = math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
+		self.angle = math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
+		
+		#Pose from CMs to cell coordinates
+		#WORKS IF map.origin has not been reset (which we might do)
+		middlePCoord = self.map.width / 2 #assume width = height
+		self.x_coords_on_grid = middleCoord + self.x_position/self.map.resolution
+		self.y_coords_on_grid = middleCoord + self.y_position/self.map.resolution
+		
 		
 	#print "Angle: %f" %self.angle #math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
 
