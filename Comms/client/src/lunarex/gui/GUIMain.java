@@ -38,7 +38,7 @@ public class GUIMain extends JFrame {
 		
 
 	}
-
+	
 	class Crater {
 		double x, y, rA, rB;
 	}
@@ -67,7 +67,7 @@ public class GUIMain extends JFrame {
 	Rect field = new Rect();
 	Random rand = new Random();// Used for random circle locations
 	boolean manualOverride;
-	byte[] outByte = new byte[1];
+	byte[] outByte = new byte[5];
 	Boulder rockNo1 = new Boulder();
 	Boulder rockNo2 = new Boulder();
 	Boulder rockNo3 = new Boulder();
@@ -137,21 +137,18 @@ public class GUIMain extends JFrame {
 
 		Graphics graphics = null;
 		Graphics2D g2d = null;
-		Color background = Color.BLACK;
+		Color background = Color.DARK_GRAY;
 
 		while (true) {
 			try {
 				// System.out.println(outByte[0]);
-				if (outByte[0] != 0) {
-					// client.send(outByte);
-					if (client != null) {
-						client.send(outByte);
-						// System.out.println(outByte[0]);
-					}
-					for (int i = 0; i < outByte.length; i++) {
-						outByte[i] = 0;
-					}
-				}
+				
+				System.out.println(outByte[1]);
+					
+				if (client != null) {
+					client.send(outByte);						
+				}		
+			
 
 				// Poll the keyboard
 				keyboard.poll();
@@ -165,72 +162,22 @@ public class GUIMain extends JFrame {
 				g2d.fillRect(0, 0, WIDTH, HEIGHT);
 
 				// Draw info text
-				g2d.setColor(Color.WHITE);
-				g2d.drawString("X: " + ((double) (int) ((bob.x - field.x) / 1))
-						/ 100 + " m", 20, 40);
-				g2d.drawString("Y: " + ((double) (int) ((bob.y - field.y) / 1))
-						/ 100 + " m", 20, 52);
-				// g2d.drawString("Speed: ");
-				g2d.drawString("Angle: "
-						+ (int) (360 * bob.angle / (2 * Math.PI)), 20, 64);
-				//g2d.drawString("Manual Override: " + manualOverride, 20, 88);
-				//g2d.drawString("Connected to server: " + connected, 20, 88);
-				g2d.drawString("Angular velocity: "+bob.angVel, 20, 100);
-				g2d.drawString("Linear Velocity: "+bob.linVel, 20, 112);
-				g2d.drawString("Elevation: "+bob.elevation, 20, 124);
-				g2d.drawString("Container Angle: "+bob.containerAngle, 20, 136);
-				g2d.drawString("Door "+ (bob.doorOpen?"Open":"Closed"),20,148);
-
-				//g2d.drawString("(0,0)", (int) (field.x - 25),
-					//	(int) (field.y - 2));
-				g2d.drawString("Starting/Dumping Area", (int) (field.x + 10),(int) (field.y - 2) );
-				g2d.drawString("Obstacle Area", (int) (field.x + 250),(int) (field.y - 2) );
-				g2d.drawString("Mining Area", (int) (field.x + 550),(int) (field.y - 2) );
+				drawTextInfo(g2d,20,40);
 				
+				// draw field
+				drawField(g2d,(int)field.x,(int)field.y);		
 				
-				
-
 				// Move bob
-				processInput();
-
-				// Draw Rectangular Field
-				g2d.setColor(Color.cyan);
-				g2d.drawRect((int) (field.x), (int) (field.y), (int) field.w,
-						(int) field.h);
-
-				// Draw MiningArea on Field
-				g2d.setColor(Color.cyan);
-				g2d.draw(new Line2D.Double(field.x + field.w - miningArea.w,
-						field.y, field.x + field.w - miningArea.w, field.y
-								+ field.h));
-
-				// Draw ObstacleArea on Field
-				g2d.setColor(Color.cyan);
-				g2d.draw(new Line2D.Double(field.x + obstacleArea1.x, field.y,
-						field.x + obstacleArea1.x, field.y + field.h));
-
+				processInput();			
+				
 				// Draw battery
-				g2d.setColor(Color.WHITE);
-				g2d.drawRect(1000, 50, 100, 33);
-				g2d.drawRect(1100, 61, 5, 10);
-				Color DARKGREEN = new Color(0, 220, 10);
-				g2d.setColor(DARKGREEN);
-				g2d.fillRect(1001, 51, (int)bob.batteryLevel, 32);
-				g2d.setColor(Color.WHITE);
-				g2d.drawString("" + bob.batteryLevel + "V", 1040, 70);
+				drawBattery(g2d,1000,50);				
 
-				// Draw bob
-				g2d.setColor(Color.RED);
-				g2d.rotate(bob.angle, bob.x + bob.w / 2, bob.y + bob.h / 2);
-				g2d.drawRect((int) bob.x, (int) bob.y, (int) bob.w, (int) bob.h);
-				g2d.draw(new Line2D.Double(bob.x + bob.w, bob.y,
-						(bob.x + 3 * bob.w / 2), (bob.y + bob.h / 2)));
-				g2d.draw(new Line2D.Double(bob.x + bob.w, bob.y + bob.h,
-						(bob.x + 3 * bob.w / 2), (bob.y + bob.h / 2)));
-				g2d.draw(new Line2D.Double(bob.x + bob.w / 2,
-						bob.y + bob.h / 2, (bob.x + 3 * bob.w / 2),
-						(bob.y + bob.h / 2)));
-				g2d.rotate(-bob.angle, bob.x, bob.y);
+				// Draw bob				
+				drawBob(g2d);
+				drawMeter(g2d,200,200,outByte[1],"Linear Velocity");
+				drawMeter(g2d,350,200,outByte[2],"AngularVelocity");
+				
 
 				// Blit image and flip...
 				graphics = buffer.getDrawGraphics();
@@ -266,25 +213,24 @@ public class GUIMain extends JFrame {
 	// keyboard input
 	protected void processInput() {
 		if (manualOverride) {
-			// If moving backward
-			if (keyboard.keyDown(KeyEvent.VK_DOWN)) {
-				outByte[0] |= 1 << 1;
-			}
-			// If moving forward
-			if (keyboard.keyDown(KeyEvent.VK_UP)) {
-				outByte[0] |= 1 << 0;
-			}
-			// If Rotate left
-			if (keyboard.keyDown(KeyEvent.VK_LEFT)) {
-				outByte[0] |= 1 << 2;
-			}
-			// If rotate right
-			if (keyboard.keyDown(KeyEvent.VK_RIGHT)) {
-				outByte[0] |= 1 << 3;
-			}
-			if (keyboard.keyDown(KeyEvent.VK_CONTROL)) {
-				outByte[0] |= 1 << 4;
-			}
+			// Linear Velocity
+			keyCom(KeyEvent.VK_Q,KeyEvent.VK_UP,KeyEvent.VK_DOWN,1);
+			
+			// Angular Velocity CCW is positive
+			keyCom(KeyEvent.VK_W,KeyEvent.VK_LEFT,KeyEvent.VK_RIGHT,2);
+			
+			//Elevation
+			keyCom(KeyEvent.VK_E,KeyEvent.VK_UP,KeyEvent.VK_DOWN,3);
+			
+			// Ogger control
+			keyCom(KeyEvent.VK_O,KeyEvent.VK_UP,KeyEvent.VK_DOWN,4);
+			
+			// Bucket Incline
+			keyCom(KeyEvent.VK_B,KeyEvent.VK_UP,KeyEvent.VK_DOWN,5);
+			
+			// Dooor open/close
+			keyCom(KeyEvent.VK_D,0);
+			
 		}
 		// IP ADDRESS BOX
 		if (keyboard.keyDownOnce(KeyEvent.VK_SPACE) && !connected) {
@@ -293,13 +239,10 @@ public class GUIMain extends JFrame {
 			client.start();
 			connected = true;
 		}
-		// Clear circles if they press C
-		if (keyboard.keyDownOnce(KeyEvent.VK_C)) {
-
-		}
-		if (keyboard.keyDownOnce(KeyEvent.VK_O)) {
+		
+		if (keyboard.keyDownOnce(KeyEvent.VK_M)) {
 			int reply = JOptionPane.showConfirmDialog(null,
-					"Dude, do you really want to take over manual control?",
+					"Do you really want to take over manual control?",
 					"Man Override", JOptionPane.YES_NO_OPTION);
 			if (reply == JOptionPane.YES_OPTION) {
 				manualOverride = !manualOverride;
@@ -314,4 +257,113 @@ public class GUIMain extends JFrame {
 		app.run();
 		System.exit(0);
 	}
+	private void drawTextInfo(Graphics2D g2d,int x,int y){
+		g2d.setColor(Color.WHITE);
+		
+		g2d.drawString("X: " + ((double) (int) ((bob.x - field.x) / 1))
+				/ 100 + " m", x, y);
+		y+=12;
+		g2d.drawString("Y: " + ((double) (int) ((bob.y - field.y) / 1))
+				/ 100 + " m", x, y);
+		y+=12;
+		
+		g2d.drawString("Angle: "
+				+ (int) (360 * bob.angle / (2 * Math.PI)), x, y);
+		y+=12;
+		//g2d.drawString("Manual Override: " + manualOverride, 20, 88);
+		g2d.drawString("Connected to server: " + connected, x, y);
+		y+=12;
+		g2d.drawString("Angular velocity: "+bob.angVel, x, y);
+		y+=12;
+		g2d.drawString("Linear Velocity: "+bob.linVel, x, y);
+		y+=12;
+		g2d.drawString("Elevation: "+bob.elevation, x, y);
+		y+=12;
+		g2d.drawString("Container Angle: "+bob.containerAngle, x, y);
+		y+=12;
+		g2d.drawString("Door "+ (bob.doorOpen?"Open":"Closed"),x,y);
+		y+=12;
+	}
+	private void drawField(Graphics2D g2d, int x, int y){
+		g2d.drawString("Starting/Dumping Area", (x + 10),(y - 2) );
+		g2d.drawString("Obstacle Area",  (x + 250),(y - 2) );
+		g2d.drawString("Mining Area", (x + 550),(y - 2) );
+
+		// Draw Rectangular Field
+		g2d.setColor(Color.cyan);
+		g2d.drawRect(x, y, (int) field.w,
+				(int) field.h);
+
+		// Draw MiningArea on Field
+		g2d.setColor(Color.cyan);
+		g2d.draw(new Line2D.Double(x + field.w - miningArea.w,
+				y, x + field.w - miningArea.w, y
+						+ field.h));
+
+		// Draw ObstacleArea on Field
+		g2d.setColor(Color.cyan);
+		g2d.draw(new Line2D.Double(x + obstacleArea1.x, y,
+				x + obstacleArea1.x, y + field.h));
+
+	}
+	private void drawBattery(Graphics2D g2d, int x, int y){
+		g2d.setColor(Color.WHITE);
+		g2d.drawRect(x, y, 100, 33);
+		g2d.drawRect(x+100, y+11, 5, 10);
+		Color DARKGREEN = new Color(0, 220, 10);
+		g2d.setColor(DARKGREEN);
+		g2d.fillRect(x+1, y+1, (int)bob.batteryLevel, 32);
+		g2d.setColor(Color.WHITE);
+		g2d.drawString("" + bob.batteryLevel + "V", x+40, y+20);
+	}
+	private void drawMeter(Graphics2D g2d, int x, int y, int ang, String title){
+		g2d.setColor(Color.WHITE);
+		g2d.drawString(title, x+5, y-5);
+		g2d.setColor(Color.BLACK);
+		g2d.fillOval(x, y, 100, 100);
+		g2d.setColor(Color.DARK_GRAY);
+		g2d.fillOval(x+10,y+10,80,80);
+		g2d.setColor(new Color(128,255,128));
+		g2d.rotate((ang/200.)*Math.PI,x+50,y+50);
+		g2d.fillRect(x+45, y+10, 10, 50);
+		g2d.rotate(-(ang/200.)*Math.PI,x+50,y+50);
+		
+	}
+	private void drawBob(Graphics2D g2d){
+		g2d.setColor(Color.RED);
+		g2d.rotate(bob.angle, bob.x + bob.w / 2, bob.y + bob.h / 2);
+		g2d.drawRect((int) bob.x, (int) bob.y, (int) bob.w, (int) bob.h);
+		g2d.draw(new Line2D.Double(bob.x + bob.w, bob.y,
+				(bob.x + 3 * bob.w / 2), (bob.y + bob.h / 2)));
+		g2d.draw(new Line2D.Double(bob.x + bob.w, bob.y + bob.h,
+				(bob.x + 3 * bob.w / 2), (bob.y + bob.h / 2)));
+		g2d.draw(new Line2D.Double(bob.x + bob.w / 2,
+				bob.y + bob.h / 2, (bob.x + 3 * bob.w / 2),
+				(bob.y + bob.h / 2)));
+		g2d.rotate(-bob.angle, bob.x, bob.y);
+	}
+	private void keyCom(int key, int i){
+		if(keyboard.keyDownOnce(key)){
+			outByte[0] |= ((outByte[0]&(byte)(0b11111111-Math.pow(10,i)))==0)?1:0 <<i;
+		}
+	}
+	private void keyCom(int keyMain, int keyUp, int keyDown, int i){
+		if (keyboard.keyDown(keyMain)) {
+			if(keyboard.keyDown(keyUp)){
+				if(outByte[i]!=127){
+					outByte[i]++;
+				}
+			}
+			if(keyboard.keyDown(keyDown)){
+				if(outByte[i]!=-128){
+					outByte[i]--;
+				}
+			}
+			if(keyboard.keyDown(KeyEvent.VK_SPACE)){
+				outByte[i] =0;
+			}
+		}
+	
+	}
+	
 }
