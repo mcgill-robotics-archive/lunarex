@@ -24,7 +24,7 @@ class mapBuilder:
         rospy.Subscriber("map", OccupancyGrid, self.mapCallback)   #subscribe to "/map" to get map from hector_mapping
         rospy.Subscriber("slam_out_pose", PoseStamped, self.poseCallback)   #get the position of the robot
         self.pub = rospy.Publisher("global_map", OccupancyGrid)
-        self.obstacle_list = []
+        self.obstacle_list = {}
         self.map = None
         self.occupancy_grid = []
 	self.angle = 0.0
@@ -57,8 +57,15 @@ class mapBuilder:
 	self.getMapParameters()
         # Add all found kinect obstacles to occupancy list
         # The coordinates in obstacle_list are in occupancyGrid coordinates
-        for obstacle in self.obstacle_list:
-            self.insertValueInOccupancyGrid(obstacle[0], obstacle[1], 100)
+        
+	#for obstacle in self.obstacle_list:
+        #    self.insertValueInOccupancyGrid(obstacle[0], obstacle[1], 100)
+
+	obstacles = self.obstacle_list.items()
+	print obstacles
+	for i in range(len(obstacles)):
+		self.insertValueInOccupancyGrid(obstacles[i][0][0], obstacles[i][0][1], obstacles[i][1][0])
+	
         self.map.data = self.occupancy_grid #Change the occupancy grid to the updated one
         self.pub.publish(self.map)
 	
@@ -89,7 +96,7 @@ class mapBuilder:
 
 
     def insertValueInOccupancyGrid(self, x_coord, y_coord, val):
-        square_size = 6
+        #square_size = 6
         #for i in range(square_size):
         #    for ii in range(square_size):
         #        self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
@@ -112,7 +119,7 @@ class mapBuilder:
 		element_in_row = i % width
 		y = 40 - row_number		# the top row (row[0]) is far away  -- 400 m away 
 		x = element_in_row - 14		# 30 elements per row ; element 14 is at the center
-		if (grid[i] == 100):
+		if (grid[i] != -1):
 			self.addCoordinates(x, y)
 
     def addCoordinates(self, x, y):
@@ -120,6 +127,7 @@ class mapBuilder:
 	# the grid size is the kinect_grid_size --> 10 cm at the moment
 	# ie: the kinect is the origin and the y axis points straight forward
 	# this functions needs to transfer the kinect obstacle coordinates in the global coordinate frame given by hector_mapping
+	val = 100 # in case we want to change it	
 	
 	print "angle", self.angle 
 	position_vector = [x,y] 
@@ -134,13 +142,20 @@ class mapBuilder:
 	position_vector[1] = 	int (  position_vector[1] * occupancy_grid_units_per_kinect_units   )
 
 	# add the global position of the robot
-	position_vector[0] += int( 1024 + self.x_position/0.025 )
-	position_vector[1] += int( 1024 + self.y_position/0.025 )
+	position_vector[0] += int( 1024 + self.x_position/0.05 )
+	position_vector[1] += int( 1024 + self.y_position/0.05 )
 	#print "before addedCoordinates" , [position_vector[0],position_vector[1]]
 	#
-	if ([position_vector[0],position_vector[1]] not in self.obstacle_list):
-        	self.obstacle_list.append([position_vector[0],position_vector[1]])
-		print "addedCoordinates" , [position_vector[0], position_vector[1]]
+	if ((position_vector[0],position_vector[1]) not in self.obstacle_list):
+        	#self.obstacle_list.append([position_vector[0],position_vector[1]])
+
+		self.obstacle_list[(position_vector[0],position_vector[1])] = [val,1]  # [cost value , number of readings there]
+	else:
+		#update the average cost value of the location
+		location = self.obstacle_list[(position_vector[0],position_vector[1])]
+		location[0] = int(location[0]/(location[1]+1)+ val/(location[1]+1))
+		location[1] +=1
+	print "addedCoordinates" , [position_vector[0], position_vector[1]]
 	# *****	
 	# *****	We will later need to adjust for the fact that the kinect is not necessarily placed 		
 	# ***** at the same place as what is considered to be the robot's centre. 
