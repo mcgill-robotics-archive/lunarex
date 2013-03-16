@@ -24,7 +24,7 @@ class mapBuilder:
         rospy.Subscriber("map", OccupancyGrid, self.mapCallback)   #subscribe to "/map" to get map from hector_mapping
         rospy.Subscriber("slam_out_pose", PoseStamped, self.poseCallback)   #get the position of the robot
         self.pub = rospy.Publisher("global_map", OccupancyGrid)
-        self.obstacle_list = [[2,2],[20,20],[50,50]]
+        self.obstacle_list = []
         self.map = None
         self.occupancy_grid = []
 	self.angle = 0.0
@@ -76,7 +76,7 @@ class mapBuilder:
         #print self.position.pose.orientation	
         w = self.position.pose.orientation.w
         z = self.position.pose.orientation.z
-	self.angle = math.copysign(2 * math.acos(w), z)    #True angle calculated using quaternion
+	self.angle = math.copysign(2 * math.acos(w), z) - math.pi/2   #True angle calculated using quaternion
 	#print "Angle: %f" %self.angle #math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
 
 
@@ -90,11 +90,11 @@ class mapBuilder:
 
     def insertValueInOccupancyGrid(self, x_coord, y_coord, val):
         square_size = 6
-        for i in range(square_size):
-            for ii in range(square_size):
-                self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
+        #for i in range(square_size):
+        #    for ii in range(square_size):
+        #        self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
 
-	#self.occupancy_grid[(y_coord ) * self.map_width + (x_coord)] = val
+	self.occupancy_grid[(y_coord ) * self.map_width + (x_coord)] = val
 
     def kinectCallback(self):
 	# the grid is a one d array 
@@ -134,8 +134,8 @@ class mapBuilder:
 	position_vector[1] = 	int (  position_vector[1] * occupancy_grid_units_per_kinect_units   )
 
 	# add the global position of the robot
-	position_vector[0] += int( 1024 + self.x_position/0.025 )
-	position_vector[1] += int( 1024 + self.y_position/0.025 )
+	position_vector[0] += int( 1024 + self.x_position/0.05 )
+	position_vector[1] += int( 1024 + self.y_position/0.05 )
 	#print "before addedCoordinates" , [position_vector[0],position_vector[1]]
 	#
 	if ([position_vector[0],position_vector[1]] not in self.obstacle_list):

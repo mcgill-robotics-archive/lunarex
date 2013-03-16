@@ -2,8 +2,8 @@
 
 '''
 Lunarex Map_Builder Node
-Author I: Sebastien Lemieux-Codere
-Author II:Alan Yan
+Author I  : Sebastien Lemieux-Codere
+Author II : Alan Yan
 '''
 
 import roslib; roslib.load_manifest('kinect_node')
@@ -19,13 +19,13 @@ import math
 from pylab import *
 
 
-height = 460
+height = 480
 width = 640
 vertical_view_angle = 43 # in degrees
 horizontal_view_angle = 57 # in degrees
 vert_angle = vertical_view_angle * math.pi / 180# in rads
 horiz_angle = horizontal_view_angle * math.pi / 180 # in rads
-height_of_kinect =77 # cm
+height_of_kinect =95 # cm
 Xmid = width/2
 Zmid = height/2
  
@@ -111,12 +111,12 @@ def createMap():
     projection = [[0 for i in range(30)] for ii in range(40)]
     print "Starting Processing"
     for iFrame in range(height/5, height-height/3):
-		#if(iFrame %2 !=0):
-		#	continue
+	if(iFrame %4 !=0):
+		continue
 
 	for iiFrame in range(width/5, width- width/5):
-			#if(iiFrame %2 !=0):
-			#	continue
+		if(iiFrame %4 !=0):
+			continue
 
 		val = getDepthFromPixel(depth_matrix[0][iFrame][iiFrame])
 		if (val<100000 and val > 10):
@@ -125,9 +125,7 @@ def createMap():
 				#print vector
 			if(((vector[0])/10+30/2)>=0 and (((vector[0])/10+30/2))<30 and (vector[1])>0 and (40-((vector[1])/10))>0):
 				if (math.fabs( getHeightOfVector(vector))>math.fabs(projection[int(40-(vector[1])/10)][int((vector[0]/10+30/2))])):
-					projection[int((40-vector[1]/10))][int((vector[0]/10+30/2))] =(getHeightOfVector(vector))# +projection[int((40-vector[1]/10))][int((vector[0]/10+30/2))])/2 # average of previous and new
-						#if (getHeightOfVector(vector)<10):
-						#	print vector[1], getHeightOfVector(vector)
+					projection[int((40-vector[1]/10))][int((vector[0]/10+30/2))] =(getHeightOfVector(vector))
 
 
 
