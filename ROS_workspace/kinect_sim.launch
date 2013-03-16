@@ -1,4 +1,6 @@
 <launch>
+  <master auto="start"/>
+
   <!-- Run Stage -->
   <include file="$(find lunarex_stage)/stageLaunchV1.launch" />
 
