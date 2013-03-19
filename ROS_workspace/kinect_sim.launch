@@ -8,8 +8,8 @@
   <include file="hector_launchers/l3.launch" />
 
   <!-- Run Kinect Service Server -->
-  <node pkg="kinect_node" name="kinect_srv_server_prototype" type="kinect_srv_server_prototype.py" respawn="false"/>
+  <node pkg="kinect_node" name="kinect_srv_server_prototype" type="kinect_srv_server_prototype.py" respawn="false" output="screen" launch-prefix="xterm -e"/>
 
   <!-- Run map_builder -->
-  <node pkg="map_builder" name="map_builder" type="map_builder.py" respawn="false"/>
+  <node pkg="map_builder" name="map_builder" type="map_builder.py" respawn="false" output="screen" launch-prefix="xterm -e"/>
 </launch>
