@@ -19,11 +19,11 @@ int main(int argc, char** argv){
   move_base_msgs::MoveBaseFeedback feedback;
 
   //we'll send a goal to the robot to move 1 meter forward
-  goal.target_pose.header.frame_id = "base_footprint";
+  goal.target_pose.header.frame_id = "base_link";
   goal.target_pose.header.stamp = ros::Time::now();
     
-  goal.target_pose.pose.position.x = 0.5;
-  //goal.target_pose.pose.position.y = 1.0;
+  goal.target_pose.pose.position.x = 1.0;
+  //goal.target_pose.pose.position.y = 0.5;
   goal.target_pose.pose.orientation.w = 1.0;  
   //goal.target_pose.pose.orientation.x = 1.0;
 

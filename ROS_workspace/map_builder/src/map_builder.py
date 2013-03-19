@@ -16,7 +16,7 @@ from kinect_node.srv import *
 
 # the occupancy grid is 2.5 x 2.5 cm
 kinect_grid_size = 10 #cm
-occupancy_grid_size = 2.5 #cm
+occupancy_grid_size = 5 #cm
 
 class mapBuilder:
     def __init__(self):
@@ -24,7 +24,7 @@ class mapBuilder:
         rospy.Subscriber("map", OccupancyGrid, self.mapCallback)   #subscribe to "/map" to get map from hector_mapping
         rospy.Subscriber("slam_out_pose", PoseStamped, self.poseCallback)   #get the position of the robot
         self.pub = rospy.Publisher("global_map", OccupancyGrid)
-        self.obstacle_list = [[2,2],[20,20],[50,50]]
+        self.obstacle_list = {}
         self.map = None
         self.occupancy_grid = []
 	self.angle = 0.0
@@ -57,8 +57,15 @@ class mapBuilder:
 	self.getMapParameters()
         # Add all found kinect obstacles to occupancy list
         # The coordinates in obstacle_list are in occupancyGrid coordinates
-        for obstacle in self.obstacle_list:
-            self.insertValueInOccupancyGrid(obstacle[0], obstacle[1], 100)
+        
+	#for obstacle in self.obstacle_list:
+        #    self.insertValueInOccupancyGrid(obstacle[0], obstacle[1], 100)
+
+	obstacles = self.obstacle_list.items()
+	print obstacles
+	for i in range(len(obstacles)):
+		self.insertValueInOccupancyGrid(obstacles[i][0][0], obstacles[i][0][1], obstacles[i][1][0])
+	
         self.map.data = self.occupancy_grid #Change the occupancy grid to the updated one
         self.pub.publish(self.map)
 	
@@ -76,8 +83,7 @@ class mapBuilder:
         #print self.position.pose.orientation	
         w = self.position.pose.orientation.w
         z = self.position.pose.orientation.z
-	self.angle = math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
-		
+	self.angle = math.copysign(2 * math.acos(w), z) - math.pi/2   #True angle calculated using quaternion
 	#print "Angle: %f" %self.angle #math.copysign(2 * math.acos(w) * 180 / math.pi, z)    #True angle calculated using quaternion
 
 
@@ -85,11 +91,12 @@ class mapBuilder:
         self.map_height = self.map.info.height  #the height of occupancy gird
         self.map_width = self.map.info.width    #the width of occupancy grid
         self.map_resolution = self.map.info.resolution
+	print self.map_resolution
 
 
 
     def insertValueInOccupancyGrid(self, x_coord, y_coord, val):
-        square_size = 6
+        #square_size = 6
         #for i in range(square_size):
         #    for ii in range(square_size):
         #        self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
@@ -101,30 +108,33 @@ class mapBuilder:
 	#print "kinectCallback called"
 	if (self.isLocalized == False):
 		return None
-	print "kinectCallback Running"
+	print "kinectCallback Running", self.x_position, self.y_position
         grid   = self.kinect_data.data
 	height = self.kinect_data.height
 	width  = self.kinect_data.width
-	
+	length = height*width
 
 	for i in range(length):
 		row_number = int(i/width)
 		element_in_row = i % width
 		y = 40 - row_number		# the top row (row[0]) is far away  -- 400 m away 
 		x = element_in_row - 14		# 30 elements per row ; element 14 is at the center
-		if (grid[i] == 100):
-			self.addCoordinates(x, y)
+		if (grid[i] != -1):
+			self.addCoordinates(x, y, grid[i])
 
-    def addCoordinates(self, x, y):
+    def addCoordinates(self, x, y, val):
 	# x and y are coordinates on the kinect's frame of reference. 
 	# the grid size is the kinect_grid_size --> 10 cm at the moment
 	# ie: the kinect is the origin and the y axis points straight forward
 	# this functions needs to transfer the kinect obstacle coordinates in the global coordinate frame given by hector_mapping
+
 	
+	print "angle", self.angle 
 	position_vector = [x,y] 
-	#print "addCoordinates" , position_vector
+	print "addCoordinates" , position_vector
 	# rotate the vector to make it match the robot's heading
 	position_vector = self.rotateVector2D(position_vector , self.angle)
+	
 	
 	# account for the different dimention of the kinect grid and the occupancy grid we use
 	occupancy_grid_units_per_kinect_units = kinect_grid_size / occupancy_grid_size
@@ -132,13 +142,20 @@ class mapBuilder:
 	position_vector[1] = 	int (  position_vector[1] * occupancy_grid_units_per_kinect_units   )
 
 	# add the global position of the robot
-	position_vector[0] += int( 1024 + self.x_position/2.5 )
-	position_vector[1] += int( 1024 + self.x_position/2.5 )
+	position_vector[0] += int( 1024 + self.x_position/0.05 )
+	position_vector[1] += int( 1024 + self.y_position/0.05 )
 	#print "before addedCoordinates" , [position_vector[0],position_vector[1]]
 	#
-	if ([position_vector[0],position_vector[1]] not in self.obstacle_list):
-        	self.obstacle_list.append([position_vector[0],position_vector[1]])
-		print "addedCoordinates" , [position_vector[0],position_vector[1]]
+	if ((position_vector[0],position_vector[1]) not in self.obstacle_list):
+        	#self.obstacle_list.append([position_vector[0],position_vector[1]])
+
+		self.obstacle_list[(position_vector[0],position_vector[1])] = [val,1]  # [cost value , number of readings there]
+	else:
+		#update the average cost value of the location
+		location = self.obstacle_list[(position_vector[0],position_vector[1])]
+		location[0] = int(location[0]/(location[1]+1)+ val/(location[1]+1))
+		location[1] +=1
+	print "addedCoordinates" , [position_vector[0], position_vector[1]]
 	# *****	
 	# *****	We will later need to adjust for the fact that the kinect is not necessarily placed 		
 	# ***** at the same place as what is considered to be the robot's centre. 
@@ -150,8 +167,8 @@ class mapBuilder:
     #Rotate a coordinate ector
     def rotateVector2D(self, vector, angle):
         rotated_vect = []
-        rotated_vect.append(  vector[0]*math.cos(angle)  - math.sin(angle)             )
-        rotated_vect.append(  vector[1]*math.sin(angle)  + vector[1]*math.cos(angle)   )
+        rotated_vect.append(  vector[0]*math.cos(angle)  - vector[1]*math.sin(angle)             )
+        rotated_vect.append(  vector[0]*math.sin(angle)  + vector[1]*math.cos(angle)   )
         return rotated_vect
 
 

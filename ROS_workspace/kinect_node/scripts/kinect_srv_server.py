@@ -2,8 +2,8 @@
 
 '''
 Lunarex Map_Builder Node
-Author I: Sebastien Lemieux-Codere
-Author II:Alan Yan
+Author I  : Sebastien Lemieux-Codere
+Author II : Alan Yan
 '''
 
 import roslib; roslib.load_manifest('kinect_node')
@@ -19,7 +19,7 @@ import math
 from pylab import *
 
 
-height = 460
+height = 480
 width = 640
 vertical_view_angle = 43 # in degrees
 horizontal_view_angle = 57 # in degrees
@@ -75,7 +75,7 @@ def createMap():
 	
 	# find the tilt angle
 	step_size = 0.005
-	x_tilt =-math.pi/5
+	x_tilt =-math.pi/4
 	score = 0
 	best_score = 0
 	best_angle = 0
@@ -108,15 +108,15 @@ def createMap():
     	##
 	# process the image
 	##
-    projection = [[0 for i in range(30)] for ii in range(40)]
+    projection = [[[0,0] for i in range(30)] for ii in range(40)]
     print "Starting Processing"
     for iFrame in range(height/5, height-height/3):
-		#if(iFrame %2 !=0):
-		#	continue
+	if(iFrame %6 !=0):
+		continue
 
 	for iiFrame in range(width/5, width- width/5):
-			#if(iiFrame %2 !=0):
-			#	continue
+		if(iiFrame %6 !=0):
+			continue
 
 		val = getDepthFromPixel(depth_matrix[0][iFrame][iiFrame])
 		if (val<100000 and val > 10):
@@ -124,26 +124,28 @@ def createMap():
 			vector = adjustForTilt(vector, tilt_x_axis )
 				#print vector
 			if(((vector[0])/10+30/2)>=0 and (((vector[0])/10+30/2))<30 and (vector[1])>0 and (40-((vector[1])/10))>0):
-				if (math.fabs( getHeightOfVector(vector))>math.fabs(projection[int(40-(vector[1])/10)][int((vector[0]/10+30/2))])):
-					projection[int((40-vector[1]/10))][int((vector[0]/10+30/2))] =(getHeightOfVector(vector))# +projection[int((40-vector[1]/10))][int((vector[0]/10+30/2))])/2 # average of previous and new
-						#if (getHeightOfVector(vector)<10):
-						#	print vector[1], getHeightOfVector(vector)
-
+				if (math.fabs( getHeightOfVector(vector))>math.fabs(projection[int(40-(vector[1])/10)][int((vector[0]/10+30/2))][0])):
+					projection[int((40-vector[1]/10))][int((vector[0]/10+30/2))][0] =(getHeightOfVector(vector))
+					projection[int((40-vector[1]/10))][int((vector[0]/10+30/2))][1] =1
 
 
     for i in range(40):
-	print str(40*10 -i*10) + "cm: "+str(projection[i])	
+	String = str(40*10 -i*10) + "cm: "
+    	for ii in range(30):
+		String+=", "+str(projection[i][ii][0])	
+	print String
     print str("      " )+str([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30])
 
 	# Sobel filter
-    sobel_filter = [[0 for i in range(30)] for ii in range(40)]
+    sobel_filter = [[-1 for i in range(30)] for ii in range(40)]
     for y in range(1, len(sobel_filter )-1):
 	for x in range(1,len(sobel_filter[0])-1):
-
+		if (projection[y][x][1] == 0):
+			continue;
 		subset = np.matrix(  [   
-		[ projection[y-1][x-1], projection[y-1][x], projection[y-1][x+1]  ],  
-		[ projection[y][x-1]  ,   projection[y][x],   projection[y][x+1]  ],
-  		[ projection[y+1][x-1], projection[y+1][x], projection[y+1][x+1]  ]   
+		[ projection[y-1][x-1][0], projection[y-1][x][0], projection[y-1][x+1][0]  ],  
+		[ projection[y][x-1][0]  ,   projection[y][x][0],   projection[y][x+1][0]  ],
+  		[ projection[y+1][x-1][0], projection[y+1][x][0], projection[y+1][x+1][0]  ]   
 		]  )
 
 		variance_x =sum(np.fabs( subset*sobel_x))

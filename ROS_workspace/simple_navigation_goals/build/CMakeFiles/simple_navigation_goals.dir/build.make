@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals
+CMAKE_SOURCE_DIR = /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build
+CMAKE_BINARY_DIR = /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/simple_navigation_goals.dir/depend.make
@@ -60,17 +60,17 @@ CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.o: /opt/ros/f
 CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.o: /opt/ros/fuerte/share/rostest/manifest.xml
 CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.o: /opt/ros/fuerte/share/actionlib/manifest.xml
 CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.o: /opt/ros/fuerte/stacks/navigation/move_base_msgs/msg_gen/generated
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -o CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.o -c /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/src/simple_navigation_goals.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -o CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.o -c /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/src/simple_navigation_goals.cpp
 
 CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -E /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/src/simple_navigation_goals.cpp > CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -E /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/src/simple_navigation_goals.cpp > CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.i
 
 CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -S /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/src/simple_navigation_goals.cpp -o CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -S /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/src/simple_navigation_goals.cpp -o CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.s
 
 CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.o.requires:
 .PHONY : CMakeFiles/simple_navigation_goals.dir/src/simple_navigation_goals.o.requires
@@ -106,6 +106,6 @@ CMakeFiles/simple_navigation_goals.dir/clean:
 .PHONY : CMakeFiles/simple_navigation_goals.dir/clean
 
 CMakeFiles/simple_navigation_goals.dir/depend:
-	cd /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build/CMakeFiles/simple_navigation_goals.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build/CMakeFiles/simple_navigation_goals.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/simple_navigation_goals.dir/depend
 

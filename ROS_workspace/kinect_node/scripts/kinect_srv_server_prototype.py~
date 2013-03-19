@@ -18,7 +18,7 @@ def service_server():
     rospy.spin()
 
 def createMap():
-    map = [ [ 0 for i in range(30)]for ii in range(40)]
+    map = [ [ -1 for i in range(30)]for ii in range(40)]
     map[20][20] = 100
     return map
 
