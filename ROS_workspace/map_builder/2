@@ -1,9 +1,14 @@
 <?xml version="1.0"?>
 
 <launch>
+  <!-- Run Hokuyo_node -->
+  <node pkg="hokuyo_node" name="hokuyo_node" type="kinect_srv_server_prototype.py" respawn="false"/>
+
+  <!-- Run hector_mapping -->
+  <include file="hector_launchers/l2.launch" />
 
   <!-- Run Kinect Service Server -->
-  <node pkg="kinect_node" name="kinect_srv_server" type="kinect_srv_server.py" respawn="false"/>
+  <node pkg="kinect_node" name="kinect_srv_server_prototype" type="kinect_srv_server_prototype.py" respawn="false"/>
 
   <!-- Run map_builder -->
   <node pkg="map_builder" name="map_builder" type="map_builder.py" respawn="false"/>
