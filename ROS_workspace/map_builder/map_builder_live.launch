@@ -1,0 +1,16 @@
+<launch>
+  <!-- Run Hokuyo_node -->
+  <node pkg="hokuyo_node" name="hokuyo_node" type="kinect_srv_server_prototype.py" respawn="false"/>
+
+  <!-- Run hector_mapping -->
+  <include file="hector_launchers/l2.launch" />
+
+  <!-- Run Kinect Service Server -->
+  <node pkg="kinect_node" name="kinect_srv_server_prototype" type="kinect_srv_server_prototype.py" respawn="false"/>
+
+  <!-- Run map_builder -->
+  <node pkg="map_builder" name="map_builder" type="map_builder.py" respawn="false"/>
+  
+  <!--- Run rviz -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find hector_slam_launch)/rviz_cfg/mapping_demo.vcg"/>
+</launch>
