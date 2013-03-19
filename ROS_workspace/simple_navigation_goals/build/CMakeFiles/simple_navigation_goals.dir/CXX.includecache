@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/src/simple_navigation_goals.cpp
+/home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/src/simple_navigation_goals.cpp
 ros/ros.h
 -
 move_base_msgs/MoveBaseAction.h

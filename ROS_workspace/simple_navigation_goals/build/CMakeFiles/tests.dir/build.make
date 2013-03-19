@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals
+CMAKE_SOURCE_DIR = /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build
+CMAKE_BINARY_DIR = /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build
 
 # Utility rule file for tests.
 
@@ -57,6 +57,6 @@ CMakeFiles/tests.dir/clean:
 .PHONY : CMakeFiles/tests.dir/clean
 
 CMakeFiles/tests.dir/depend:
-	cd /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build/CMakeFiles/tests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build /home/everfor/McGill_LunarEx_2013/ROS_workspace/simple_navigation_goals/build/CMakeFiles/tests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/tests.dir/depend
 
