@@ -47,17 +47,17 @@ class mapBuilder:
 	    except rospy.ServiceException, e:
 		print "Service failed: %s" % e
 	    self.rate.sleep()	# Alan, make don't omit this line... sleep is needed to make programs work - Seb
-		
+
 
     def mapCallback(self, grid):
 	print "in mapCallback"
         self.map = grid
         self.occupancy_grid = [grid.data[i] for i in range(len(grid.data))]     #Damn cool way by Seb_The_Guru to create a list out of a tuple - Alan
-        
+
 	self.getMapParameters()
         # Add all found kinect obstacles to occupancy list
         # The coordinates in obstacle_list are in occupancyGrid coordinates
-        
+
 	#for obstacle in self.obstacle_list:
         #    self.insertValueInOccupancyGrid(obstacle[0], obstacle[1], 100)
 
@@ -65,10 +65,10 @@ class mapBuilder:
 	print obstacles
 	for i in range(len(obstacles)):
 		self.insertValueInOccupancyGrid(obstacles[i][0][0], obstacles[i][0][1], obstacles[i][1][0])
-	
+
         self.map.data = self.occupancy_grid #Change the occupancy grid to the updated one
         self.pub.publish(self.map)
-	
+
 	#print self.obstacle_list
 
     #Retrieve position data
@@ -78,9 +78,9 @@ class mapBuilder:
         self.position = pose
         self.x_position = self.position.pose.position.x
         self.y_position = self.position.pose.position.y
-        #print "Current position:" 
+        #print "Current position:"
         #print self.x_position, self.y_position
-        #print self.position.pose.orientation	
+        #print self.position.pose.orientation
         w = self.position.pose.orientation.w
         z = self.position.pose.orientation.z
 	self.angle = math.copysign(2 * math.acos(w), z) - math.pi/2   #True angle calculated using quaternion
@@ -104,7 +104,7 @@ class mapBuilder:
 	self.occupancy_grid[(y_coord ) * self.map_width + (x_coord)] = val
 
     def kinectCallback(self):
-	# the grid is a one d array 
+	# the grid is a one d array
 	#print "kinectCallback called"
 	if (self.isLocalized == False):
 		return None
@@ -117,25 +117,25 @@ class mapBuilder:
 	for i in range(length):
 		row_number = int(i/width)
 		element_in_row = i % width
-		y = 40 - row_number		# the top row (row[0]) is far away  -- 400 m away 
+		y = 40 - row_number		# the top row (row[0]) is far away  -- 400 m away
 		x = element_in_row - 14		# 30 elements per row ; element 14 is at the center
 		if (grid[i] != -1):
 			self.addCoordinates(x, y, grid[i])
 
     def addCoordinates(self, x, y, val):
-	# x and y are coordinates on the kinect's frame of reference. 
+	# x and y are coordinates on the kinect's frame of reference.
 	# the grid size is the kinect_grid_size --> 10 cm at the moment
 	# ie: the kinect is the origin and the y axis points straight forward
 	# this functions needs to transfer the kinect obstacle coordinates in the global coordinate frame given by hector_mapping
 
-	
-	print "angle", self.angle 
-	position_vector = [x,y] 
+
+	print "angle", self.angle
+	position_vector = [x,y]
 	print "addCoordinates" , position_vector
 	# rotate the vector to make it match the robot's heading
 	position_vector = self.rotateVector2D(position_vector , self.angle)
-	
-	
+
+
 	# account for the different dimention of the kinect grid and the occupancy grid we use
 	occupancy_grid_units_per_kinect_units = kinect_grid_size / occupancy_grid_size
 	position_vector[0] = 	int (  position_vector[0] * occupancy_grid_units_per_kinect_units   )
@@ -156,10 +156,10 @@ class mapBuilder:
 		location[0] = int(location[0]/(location[1]+1)+ val/(location[1]+1))
 		location[1] +=1
 	print "addedCoordinates" , [position_vector[0], position_vector[1]]
-	# *****	
-	# *****	We will later need to adjust for the fact that the kinect is not necessarily placed 		
-	# ***** at the same place as what is considered to be the robot's centre. 
-	# ***** For example, it my be 25 cm at the back. We would then need to remove 50 to the position_vector[1] 
+	# *****
+	# *****	We will later need to adjust for the fact that the kinect is not necessarily placed
+	# ***** at the same place as what is considered to be the robot's centre.
+	# ***** For example, it my be 25 cm at the back. We would then need to remove 50 to the position_vector[1]
 	# *****
 
 
