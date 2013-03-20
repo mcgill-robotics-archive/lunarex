@@ -7,10 +7,12 @@ import time
 import select
 from threading import Thread
 
+#ROS settings
 NODE_NAME = 'ros_lunarex_server'
 import roslib; roslib.load_manifest('lx_server')
 import rospy
 from std_msgs.msg import *
+from geometry_msgs.msg import *		#mainly use Twist to publish velocities
 
 HOST=''
 PORT=5902
@@ -43,11 +45,6 @@ class Handler(SocketServer.BaseRequestHandler):
 
         print str(self.request.getpeername())+" connected"
 
-    '''def node_init(self):
-        self.pub = rospy.Publisher("commands", std_msgs.msg.String)
-        rospy.init_node(NODE_NAME)
-    '''
-
     def handle(self):
         while(True):
             self.currentTime = int(time.time()*1000.0)
@@ -68,7 +65,6 @@ class Handler(SocketServer.BaseRequestHandler):
                         self.currentState.y+=1
                     else:
                         self.currentState.y-=1
-                    #self.ser.write(str(ord(data_in)))
                     self.count+=1
                     if(not rospy.is_shutdown()&len(data_in)>0):
                         try:
@@ -100,6 +96,7 @@ class Server(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 if __name__ == "__main__":
     server = Server((HOST, PORT), Handler)
     pub = rospy.Publisher("commands", std_msgs.msg.Int8)
+    pub_vel = rospy.Publisher("cmd_vel", geometry_msgs.msg.Twist)	# publish velocities
     rospy.init_node(NODE_NAME)
     # terminate with Ctrl-C
     try:
