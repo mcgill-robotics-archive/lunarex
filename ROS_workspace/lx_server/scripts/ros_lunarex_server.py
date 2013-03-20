@@ -19,6 +19,7 @@ PORT=5902
 BUFFERSIZE=4096
 
 pub = None
+pub_vel = None
 
 COM='/dev/ttyACM0'
 BAUD=115200
@@ -66,6 +67,7 @@ class Handler(SocketServer.BaseRequestHandler):
                     else:
                         self.currentState.y-=1
                     self.count+=1
+		    self.processVel(data_in)
                     if(not rospy.is_shutdown()&len(data_in)>0):
                         try:
                             rospy.loginfo(ord(data_in))
@@ -80,6 +82,9 @@ class Handler(SocketServer.BaseRequestHandler):
                 self.request.send(dataPacket)
                 self.initialTime = self.currentTime
                 print dataPacket
+
+    def processVel(self, data):
+	pass	# to be implemented
 
     def finish(self):
         self.request.close()
