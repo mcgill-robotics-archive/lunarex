@@ -57,11 +57,13 @@ def sameBuckets(l1, l2):
 	return (sameRBucket(l1.r, l2.r) and sameTBucket(l1.theta, l2.theta))
 
 #BAG SETUP
-#bag = rosbag.Bag('localization_feb10.bag')
-#bag = rosbag.Bag('2013-03-19-14-26-50.bag') #shitty
-#bag = rosbag.Bag('2013-03-19-14-21-47.bag') #shitty
-bag = rosbag.Bag('2013-02-20-21-37-14.bag') # awesome stage bag
-#bag = rosbag.Bag('2013-03-19-14-19-48.bag')
+bag = rosbag.Bag('/home/ernie/Dropbox/LunarEx2012-2013/Software Team/ROS/Bags/localization_feb10.bag')
+##DO NOT USE THIS BAG. IT SUCKS. bag = rosbag.Bag('/home/ernie/Dropbox/LunarEx2012-2013/Software Team/ROS/Bags/2013-03-19-14-26-50.bag') #shitty
+
+#DO NOT USE THIS BAG. IT SUCKS. bag = rosbag.Bag('/home/ernie/Dropbox/LunarEx2012-2013/Software Team/ROS/Bags/2013-03-19-14-21-47.bag') #shitty
+
+#bag = rosbag.Bag('/home/ernie/Dropbox/LunarEx2012-2013/Software Team/ROS/Bags/2013-02-20-21-37-14.bag') # awesome stage bag
+#bag = rosbag.Bag('/home/ernie/Dropbox/LunarEx2012-2013/Software Team/ROS/Bags/2013-03-19-14-19-48.bag')
 
 #RETRIEVING MAP META DATA
 mapWidth=0
@@ -86,10 +88,15 @@ for topic, msg, t in bag.read_messages(topics=['/map']):
 occupancyGrid = np.reshape(gridData,(mapWidth,mapHeight))
 
 #DEFINING HOUGH MATRIX
-Rres = mapRes #r bucket resolution
-Rrank = (int)(math.sqrt(2)*max(mapWidth, mapHeight))#/Rres #nb of R buckets
+Rres = mapRes/4 #r bucket resolution. Doesn't make sense to have r buckets smaller than map res.
+Rrank = int((math.sqrt(2)*max(mapWidth, mapHeight))/Rres) #nb of R buckets
 Tres = 1
 Trank = 360#360/1#90/1#180/1
+
+
+print ("***Hough matrix has***")
+print(str(Rrank) +" R buckets of size: "+str(Rres))
+print("and : "+str(Trank) +" theta buckets of size: " +str(Tres))
 
 H = [[0 for T in xrange(Trank)] for R in xrange(Rrank)] 
 
@@ -154,26 +161,26 @@ print ("R: " + str(walls[1].r) + ", Theta: " + str(walls[1].theta))
 print ("R: " + str(walls[2].r) + ", Theta: " + str(walls[2].theta))
 print ("R: " + str(walls[3].r) + ", Theta: " + str(walls[3].theta))
 
-print ("X0: " + str(walls[0].r*cos(math.radians(walls[0].theta))/Rres) + ", Y0: " + str(walls[0].r*sin(math.radians(walls[0].theta))/Rres))
-print ("X1: " + str(walls[1].r*cos(math.radians(walls[1].theta))/Rres) + ", Y1: " + str(walls[1].r*sin(math.radians(walls[1].theta))/Rres))
-print ("X2: " + str(walls[2].r*cos(math.radians(walls[2].theta))/Rres) + ", Y2: " + str(walls[2].r*sin(math.radians(walls[2].theta))/Rres))
-print ("X3: " + str(walls[3].r*cos(math.radians(walls[3].theta))/Rres) + ", Y3: " + str(walls[3].r*sin(math.radians(walls[3].theta))/Rres))
+print ("X0: " + str(walls[0].r*cos(math.radians(walls[0].theta))/mapRes) + ", Y0: " + str(walls[0].r*sin(math.radians(walls[0].theta))/mapRes))
+print ("X1: " + str(walls[1].r*cos(math.radians(walls[1].theta))/mapRes) + ", Y1: " + str(walls[1].r*sin(math.radians(walls[1].theta))/mapRes))
+print ("X2: " + str(walls[2].r*cos(math.radians(walls[2].theta))/mapRes) + ", Y2: " + str(walls[2].r*sin(math.radians(walls[2].theta))/mapRes))
+print ("X3: " + str(walls[3].r*cos(math.radians(walls[3].theta))/mapRes) + ", Y3: " + str(walls[3].r*sin(math.radians(walls[3].theta))/mapRes))
 #print ("X3: " + str(walls[3].r*cos(0)/Rres) + ", Y3: " + str(walls[3].r*sin(0)/Rres))
 
 # y1: 457
 # x1: 445
 
-y1 = (walls[2].r*sin(math.radians(walls[2].theta)) + walls[1].r*sin(math.radians(walls[1].theta)))/Rres
-x1 = (walls[2].r*cos(math.radians(walls[2].theta)) + walls[1].r*cos(math.radians(walls[1].theta)))/Rres
+y1 = (walls[2].r*sin(math.radians(walls[2].theta)) + walls[1].r*sin(math.radians(walls[1].theta)))/mapRes
+x1 = (walls[2].r*cos(math.radians(walls[2].theta)) + walls[1].r*cos(math.radians(walls[1].theta)))/mapRes
 
-y2 = (walls[1].r*sin(math.radians(walls[1].theta)) + walls[3].r*sin(math.radians(walls[3].theta)))/Rres
-x2 = (walls[1].r*cos(math.radians(walls[1].theta)) + walls[3].r*cos(math.radians(walls[3].theta)))/Rres
+y2 = (walls[1].r*sin(math.radians(walls[1].theta)) + walls[3].r*sin(math.radians(walls[3].theta)))/mapRes
+x2 = (walls[1].r*cos(math.radians(walls[1].theta)) + walls[3].r*cos(math.radians(walls[3].theta)))/mapRes
 
-y3 = (walls[2].r*sin(math.radians(walls[2].theta)) + walls[0].r*sin(math.radians(walls[0].theta)))/Rres
-x3 = (walls[2].r*cos(math.radians(walls[2].theta)) + walls[0].r*cos(math.radians(walls[0].theta)))/Rres
+y3 = (walls[2].r*sin(math.radians(walls[2].theta)) + walls[0].r*sin(math.radians(walls[0].theta)))/mapRes
+x3 = (walls[2].r*cos(math.radians(walls[2].theta)) + walls[0].r*cos(math.radians(walls[0].theta)))/mapRes
 
-y4 = (walls[0].r*sin(math.radians(walls[0].theta)) + walls[3].r*sin(math.radians(walls[3].theta)))/Rres
-x4 = (walls[0].r*cos(math.radians(walls[0].theta)) + walls[3].r*cos(math.radians(walls[3].theta)))/Rres
+y4 = (walls[0].r*sin(math.radians(walls[0].theta)) + walls[3].r*sin(math.radians(walls[3].theta)))/mapRes
+x4 = (walls[0].r*cos(math.radians(walls[0].theta)) + walls[3].r*cos(math.radians(walls[3].theta)))/mapRes
  
 
 print ("Corner 1: x: " + str(x1) + ", y:" + str(y1) + " => Yellow ")  
@@ -207,7 +214,7 @@ for i in range(0,len(occupancyGrid)):
 
 
 grid(True)
-scatter(x,y,s=areaPos, marker='.', c='c', edgecolors ='none')
+#scatter(x,y,s=areaPos, marker='.', c='c', edgecolors ='none')
 scatter(x1,y1,s=areaP, marker='.', c='y', edgecolors ='none')
 scatter(x2,y2,s=areaP, marker='.', c='b', edgecolors ='none')
 scatter(x3,y3,s=areaP, marker='.', c='g', edgecolors ='none')
@@ -215,12 +222,12 @@ scatter(x4,y4,s=areaP, marker='.', c='r', edgecolors ='none')
 
 #print(str(xWalls))
 
-scatter(x,y,s=areaPos, marker='.', c='c', edgecolors ='none')
+#scatter(x,y,s=areaPos, marker='.', c='c', edgecolors ='none')
 scatter(xWalls,yWalls,s=areaPos, marker='.', c='b', edgecolors ='none')
-scatter(walls[0].r*cos(math.radians(walls[0].theta))/Rres,walls[0].r*sin(math.radians(walls[0].theta))/Rres,s=areaP, marker='.', c='y', edgecolors ='none')
-scatter(walls[1].r*cos(math.radians(walls[1].theta))/Rres,walls[1].r*sin(math.radians(walls[1].theta))/Rres,s=areaP, marker='.', c='b', edgecolors ='none')
-scatter(walls[2].r*cos(math.radians(walls[2].theta))/Rres,walls[2].r*sin(math.radians(walls[2].theta))/Rres,s=areaP, marker='.', c='g', edgecolors ='none')
-scatter(walls[3].r*cos(math.radians(walls[3].theta))/Rres,walls[3].r*sin(math.radians(walls[3].theta))/Rres,s=areaP, marker='.', c='r', edgecolors ='none')
+scatter(walls[0].r*cos(math.radians(walls[0].theta))/mapRes,walls[0].r*sin(math.radians(walls[0].theta))/mapRes,s=areaP, marker='.', c='y', edgecolors ='none')
+scatter(walls[1].r*cos(math.radians(walls[1].theta))/mapRes,walls[1].r*sin(math.radians(walls[1].theta))/mapRes,s=areaP, marker='.', c='b', edgecolors ='none')
+scatter(walls[2].r*cos(math.radians(walls[2].theta))/mapRes,walls[2].r*sin(math.radians(walls[2].theta))/mapRes,s=areaP, marker='.', c='g', edgecolors ='none')
+scatter(walls[3].r*cos(math.radians(walls[3].theta))/mapRes,walls[3].r*sin(math.radians(walls[3].theta))/mapRes,s=areaP, marker='.', c='r', edgecolors ='none')
 
 show()
 
