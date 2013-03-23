@@ -1,0 +1,13 @@
+making a message type to call the service with (map + metadata?)
+http://www.ros.org/wiki/srv
+
+backgournd on service types: http://www.ros.org/wiki/Services
+
+sybscribing to a topic at will/on demand
+http://answers.ros.org/question/38099/how-to-subscribe-to-a-topic-at-willon-demand/
+
+writing a service and client
+http://www.ros.org/wiki/ROS/Tutorials/WritingServiceClient%28python%29
+
+
+

@@ -1,0 +1,16 @@
+<package>
+  <description brief="corner_detector">
+
+     corner_detector
+
+  </description>
+  <author>Ernie</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/corner_detector</url>
+  <depend package="hector_mapping"/>
+  <depend package="hokuyo_node"/>
+  <depend package="rospy"/>
+</package>
+
+
