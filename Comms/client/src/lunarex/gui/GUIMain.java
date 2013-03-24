@@ -342,9 +342,10 @@ public class GUIMain extends JFrame {
 				(bob.y + bob.h / 2)));
 		g2d.rotate(-bob.angle, bob.x, bob.y);
 	}
+	//	What do these 2 methods do?
 	private void keyCom(int key, int i){
 		if(keyboard.keyDownOnce(key)){
-			outByte[0] |= ((outByte[0]&(byte)(0b11111111-Math.pow(10,i)))==0)?1:0 <<i;
+			outByte[0] |= ((outByte[0]&(byte)(0b11111111-Math.pow(10,i)))==0)?1:0 <<i;	//	Comment what does this line do.
 		}
 	}
 	private void keyCom(int keyMain, int keyUp, int keyDown, int i){
