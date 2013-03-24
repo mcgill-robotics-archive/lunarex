@@ -1,0 +1,6 @@
+mage: $(find lunarex_2dnav)/reallyEmptyLunarena.png
+resolution: 0.01
+origin: [0.0, 0.0, 0.0]
+occupied_thresh: 1.00
+free_thresh: 1.00
+negate: 0

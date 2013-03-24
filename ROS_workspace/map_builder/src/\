@@ -10,41 +10,45 @@ class mapPublisher:
 	#print "Node initiated"
 	self.pub = rospy.Publisher("map", OccupancyGrid)
 	#print "publisher created"
-	self.header = header()
-	self.info = info()
 	self.initGrid()
+	self.grid = occupancyGrid()
 
     def initGrid(self):
 	self.occupancy_grid = []
 	i = 0
 	for i in range(398 * 798):
 	    self.occupancy_grid.append(0)
-	self.info.resolution = 0.01
-	self.info.width = 398
-	self.info.height = 798
-	self.header.frame_id = "/map"
+	self.grid.data = self.occupancy_grid
+	self.grid.info.resolution = 0.01
+	self.grid.info.width = 398
+	self.grid.info.height = 798
+	self.grid.info.origin.position = [0,0,0]
+	self.grid.info.origin.orientation = [0,0,1]
+	self.grid.header.frame_id = "/map"
 
     def run(self):
 	frequency = rospy.Rate(10)
 	while not rospy.is_shutdown():
 	    self.initGrid()
-	    self.pub.publish(self.header, self.info, self.occupancy_grid)
-	    self.update()
+	    self.pub.publish(self.grid)
 	    print "Occupancy Grid sent"
 	    frequency.sleep()
 
-    def update(self):
-	self.header.stamp = rospy.get_rostime()
+class occupancyGrid:
+    def __init__(self):
+	self.header = header()
+	self.info = info()
+	self.data = []
 
 class header:
     def __init__(self):
 	self.seq = 123467
-	self.stamp = rospy.get_rostime
+	self.stamp = None
 	self.frame_id = ""
 
 class info:
     def __init__(self):
-	self.map_load_time = rospy.get_rostime() 
+	self.map_load_time = None
 	self.resolution = 0.0
 	self.width = 0
 	self.height = 0
@@ -52,21 +56,8 @@ class info:
 
 class origin:
     def __init__(self):
-	self.position = position()
-	self.orientation = orientation()
-
-class position:
-    def __init__(self):
-	self.x = 0
-	self.y = 0
-	self.z = 0
-
-class orientation:
-    def __init__(self):
-	self.x = 0
-	self.y = 0
-	self.z = 0
-	self.w = 1
+	self.position = []
+	self.orientation = []
 
 
 if __name__ == '__main__':
