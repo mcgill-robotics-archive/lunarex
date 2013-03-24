@@ -20,6 +20,10 @@ from corner_detector.srv import *
 
 BIGNUMBER = 1000
 
+tThresh = 5 #absolute: 2de
+rThresh = 1.0 #absolute: 8% R difference between 2 walls max in 1 bucket
+
+
 class Line(object):
 	
 	def __init__(self, r, theta):
@@ -86,7 +90,8 @@ def findCorners(req):
 	occupancyGrid = np.reshape(gridData,(mapWidth,mapHeight))
 
 	#DEFINING HOUGH MATRIX
-	Rres = mapRes/4 #r bucket resolution. Doesn't make sense to have r buckets smaller than map res.
+	Rres = mapRes/4 #CHANGE BACK TO mapRes/4 ONCE SERVICE IS WRITTEN
+	 #r bucket resolution. Doesn't make sense to have r buckets smaller than map res.
 	Rrank = int((math.sqrt(2)*max(mapWidth, mapHeight))/Rres) #nb of R buckets
 	Tres = 1
 	Trank = 360#360/1#90/1#180/1
@@ -128,10 +133,6 @@ def findCorners(req):
 	walls=[0,0,0,0] 
 	wallBuckets=[[] for i in range(0,4)]
 	walls[0]=sortedLines[0] #assume most populous line is first wall
-
-	#PARAMS: threshold for r & theta wall buckets
-	tThresh = 5 #absolute: 2de
-	rThresh = 1.0 #absolute: 8% R difference between 2 walls max in 1 bucket
 		
 	#FILL WALLS & WALL BUCKETS
 	wallIndex=1 #next wall to fill
@@ -193,35 +194,36 @@ def findCorners(req):
 				x.append(i)
 				y.append(j)
 
+	response = corner_detectorResponse()
+	response.lower_left = [walls[0].r*cos(math.radians(walls[0].theta))/mapRes, walls[0].r*sin(math.radians(walls[0].theta))/mapRes]
+	response.lower_right=[walls[1].r*cos(math.radians(walls[1].theta))/mapRes,walls[1].r*sin(math.radians(walls[1].theta))/mapRes]
+	response.top_right=[walls[2].r*cos(math.radians(walls[2].theta))/mapRes,walls[2].r*sin(math.radians(walls[2].theta))/mapRes]
+	response.top_left=[walls[3].r*cos(math.radians(walls[3].theta))/mapRes,walls[3].r*sin(math.radians(walls[3].theta))/mapRes]
 
-	grid(True)
-	#scatter(x,y,s=areaPos, marker='.', c='c', edgecolors ='none')
-	scatter(x1,y1,s=areaP, marker='.', c='y', edgecolors ='none')
-	scatter(x2,y2,s=areaP, marker='.', c='b', edgecolors ='none')
-	scatter(x3,y3,s=areaP, marker='.', c='g', edgecolors ='none')
-	scatter(x4,y4,s=areaP, marker='.', c='r', edgecolors ='none')
+	return response
 
-	#print(str(xWalls))
+	#grid(True)
+	##scatter(x,y,s=areaPos, marker='.', c='c', edgecolors ='none')
+	#scatter(x1,y1,s=areaP, marker='.', c='y', edgecolors ='none')
+	#scatter(x2,y2,s=areaP, marker='.', c='b', edgecolors ='none')
+	#scatter(x3,y3,s=areaP, marker='.', c='g', edgecolors ='none')
+	#scatter(x4,y4,s=areaP, marker='.', c='r', edgecolors ='none')
 
-	#scatter(x,y,s=areaPos, marker='.', c='c', edgecolors ='none')
-	scatter(xWalls,yWalls,s=areaPos, marker='.', c='b', edgecolors ='none')
-	scatter(walls[0].r*cos(math.radians(walls[0].theta))/mapRes,walls[0].r*sin(math.radians(walls[0].theta))/mapRes,s=areaP, marker='.', c='y', edgecolors ='none')
-	scatter(walls[1].r*cos(math.radians(walls[1].theta))/mapRes,walls[1].r*sin(math.radians(walls[1].theta))/mapRes,s=areaP, marker='.', c='b', edgecolors ='none')
-	scatter(walls[2].r*cos(math.radians(walls[2].theta))/mapRes,walls[2].r*sin(math.radians(walls[2].theta))/mapRes,s=areaP, marker='.', c='g', edgecolors ='none')
-	scatter(walls[3].r*cos(math.radians(walls[3].theta))/mapRes,walls[3].r*sin(math.radians(walls[3].theta))/mapRes,s=areaP, marker='.', c='r', edgecolors ='none')
+	##print(str(xWalls))
 
-	show()
+	##scatter(x,y,s=areaPos, marker='.', c='c', edgecolors ='none')
+	#scatter(xWalls,yWalls,s=areaPos, marker='.', c='b', edgecolors ='none')
+	#scatter(walls[0].r*cos(math.radians(walls[0].theta))/mapRes,walls[0].r*sin(math.radians(walls[0].theta))/mapRes,s=areaP, marker='.', c='y', edgecolors ='none')
+	#scatter(walls[1].r*cos(math.radians(walls[1].theta))/mapRes,walls[1].r*sin(math.radians(walls[1].theta))/mapRes,s=areaP, marker='.', c='b', edgecolors ='none')
+	#scatter(walls[2].r*cos(math.radians(walls[2].theta))/mapRes,walls[2].r*sin(math.radians(walls[2].theta))/mapRes,s=areaP, marker='.', c='g', edgecolors ='none')
+	#scatter(walls[3].r*cos(math.radians(walls[3].theta))/mapRes,walls[3].r*sin(math.radians(walls[3].theta))/mapRes,s=areaP, marker='.', c='r', edgecolors ='none')
+
+	#show()
 
 	#corner0X = (walls[1].b-walls[0].b)/(float(walls[0].m-walls[1].m))
 	#print corner0X
 
-	response = corner_detectorResponse()
-	response.lower_left = [walls[0].r*cos(math.radians(walls[0].theta))/mapRes, walls[0].r*sin(math.radians(walls[0].theta))/mapRes]
-	response.lower_right=[walls[1].r*cos(math.radians(walls[1].theta))/mapRes,walls[1].r*sin(math.radians(walls[1].theta))/mapRes]
-	response.upper_right=[walls[2].r*cos(math.radians(walls[2].theta))/mapRes,walls[2].r*sin(math.radians(walls[2].theta))/mapRes]
-	response.upper_left=[walls[3].r*cos(math.radians(walls[3].theta))/mapRes,walls[3].r*sin(math.radians(walls[3].theta))/mapRes]
 
-	return response
 	
 rospy.init_node('corner_detector')
 s = rospy.Service('corner_detector_srv', corner_detector, findCorners)
