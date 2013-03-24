@@ -1,7 +1,7 @@
 FILE(REMOVE_RECURSE
-  "../srv_gen"
-  "../srv_gen"
   "../src/kinect_node/srv"
+  "../srv_gen"
+  "../srv_gen"
   "CMakeFiles/ROSBUILD_gensrv_lisp"
   "../srv_gen/lisp/KinectData.lisp"
   "../srv_gen/lisp/_package.lisp"

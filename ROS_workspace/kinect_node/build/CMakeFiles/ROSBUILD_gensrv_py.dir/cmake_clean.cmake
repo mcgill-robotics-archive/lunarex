@@ -1,7 +1,7 @@
 FILE(REMOVE_RECURSE
-  "../srv_gen"
-  "../srv_gen"
   "../src/kinect_node/srv"
+  "../srv_gen"
+  "../srv_gen"
   "CMakeFiles/ROSBUILD_gensrv_py"
   "../src/kinect_node/srv/__init__.py"
   "../src/kinect_node/srv/_KinectData.py"
