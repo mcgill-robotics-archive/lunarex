@@ -66,8 +66,8 @@ public class GUIMain extends JFrame {
 	Bob bob = new Bob(); // Our rectangle
 	Rect field = new Rect();
 	Random rand = new Random();// Used for random circle locations
-	boolean manualOverride;
-	byte[] outByte = new byte[5];
+	boolean manualOverride =false;
+	byte[] outByte = new byte[6];
 	Boulder rockNo1 = new Boulder();
 	Boulder rockNo2 = new Boulder();
 	Boulder rockNo3 = new Boulder();
@@ -141,9 +141,8 @@ public class GUIMain extends JFrame {
 
 		while (true) {
 			try {
-				// System.out.println(outByte[0]);
 				
-				System.out.println(outByte[1]);
+				processInput();	
 					
 				if (client != null) {
 					client.send(outByte);						
@@ -167,16 +166,20 @@ public class GUIMain extends JFrame {
 				// draw field
 				drawField(g2d,(int)field.x,(int)field.y);		
 				
-				// Move bob
-				processInput();			
+						
 				
 				// Draw battery
 				drawBattery(g2d,1000,50);				
 
 				// Draw bob				
 				drawBob(g2d);
-				drawMeter(g2d,200,200,outByte[1],"Linear Velocity");
-				drawMeter(g2d,350,200,outByte[2],"AngularVelocity");
+				
+				//Draw meters
+				drawMeter(g2d,50,200,outByte[1],"Linear Velocity");
+				drawMeter(g2d,200,200,outByte[2],"Angular Velocity");
+				drawMeter(g2d,350,200,outByte[4],"Ogger");
+				drawMeter(g2d,500,200,outByte[3],"Elevation");
+				drawMeter(g2d,650,200,outByte[5],"Bucket Incline");
 				
 
 				// Blit image and flip...
@@ -342,10 +345,14 @@ public class GUIMain extends JFrame {
 				(bob.y + bob.h / 2)));
 		g2d.rotate(-bob.angle, bob.x, bob.y);
 	}
-	//	What do these 2 methods do?
 	private void keyCom(int key, int i){
 		if(keyboard.keyDownOnce(key)){
-			outByte[0] |= ((outByte[0]&(byte)(0b11111111-Math.pow(10,i)))==0)?1:0 <<i;	//	Comment what does this line do.
+			
+			if((outByte[0]&(0b00000001<<i))==0){
+				outByte[0] |= 1<<i;
+			}else{
+				outByte[0] &= 0b11111111-1<<i;
+			}
 		}
 	}
 	private void keyCom(int keyMain, int keyUp, int keyDown, int i){
