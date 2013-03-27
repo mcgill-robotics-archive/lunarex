@@ -18,18 +18,21 @@ HOST=''
 PORT=5902
 BUFFERSIZE=4096
 
-pub = None
+#Publisher
 pub_vel = None
 
+#Don't need these actually
 COM='/dev/ttyACM0'
 BAUD=115200
 
+#Data package sent fomr this server to the client
 class Data:
     def __init__(self,x,y,theta):
         self.x=x
         self.y=y
         self.theta=theta
 
+#Velocity message
 class Velocity:
     def __init__(self, x, y, z):
         self.x = x
@@ -37,7 +40,6 @@ class Velocity:
         self.z = z
 
 class Handler(SocketServer.BaseRequestHandler):
-
     def setup(self):
         self.currentState = Data(0.0,0.0,0.0)
 
@@ -56,20 +58,30 @@ class Handler(SocketServer.BaseRequestHandler):
         while(True):
             self.currentTime = int(time.time()*1000.0)
             try:
-                for i in range(0,5):
+                # Length of datalist is 6
+                for i in range(0 , 5):
                     data = self.request.recv(1)
                     self.datalist.append(data)
+                
+                # Print Statements just for test
                 print 'data received: '
                 print (ord)(self.datalist[1])
                 print (ord)(self.datalist[2])
-                self.linearVelocity = Velocity((float)((ord)(self.datalist[1]))/10.0, 0.0, 0.0)
-                self.angularVelocity = Velocity(0.0, 0.0, (float)((ord)(self.datalist[2]))/10.0)
-                if not rospy.is_shutdown():
-                    try:
-                        pub_vel.publish(self.linearVelocity, self.angularVelocity)
-                        self.datalist = []
-                    except rospy.ROSInterruptException:
-                        print 'Error in ROS node'
+                
+                #Only if data is received will publisher work
+                if len(self.datalist) > 0:
+                    #Create velocity message
+                    self.linearVelocity = Velocity((float)((ord)(self.datalist[1]))/10.0, 0.0, 0.0)     #   Linear Velocity from datalist[1]
+                    self.angularVelocity = Velocity(0.0, 0.0, (float)((ord)(self.datalist[2]))/10.0)    #   Angular Velocity from datalist[2]
+                
+                    #Publish to ros
+                    if not rospy.is_shutdown():
+                        try:
+                            pub_vel.publish(self.linearVelocity, self.angularVelocity)  #   Send Twist message to /cmd_vel topic
+                            self.datalist = []  #   And prepare datalist for next input
+                        except rospy.ROSInterruptException:
+                            print 'Error in ROS node'
+            
             except IOError:
                 pass
 
@@ -94,10 +106,13 @@ class Server(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
         SocketServer.TCPServer.__init__(self, server_address, RequestHandlerClass)
 
 if __name__ == "__main__":
+    #Create socket
     server = Server((HOST, PORT), Handler)
-    pub = rospy.Publisher("commands", std_msgs.msg.Int8)
+    
+    #Initiate ros node and create publisher
     pub_vel = rospy.Publisher("cmd_vel", geometry_msgs.msg.Twist)	# publish velocities
     rospy.init_node(NODE_NAME)
+    
     # terminate with Ctrl-C
     try:
         server.serve_forever()
