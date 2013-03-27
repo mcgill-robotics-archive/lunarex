@@ -83,18 +83,18 @@ class Handler(SocketServer.BaseRequestHandler):
                         except rospy.ROSInterruptException:
                             print 'Error in ROS node'
 		'''
-		print 'data received: '
-		print self.datalist(1)
-		self.linearVelocity = Velocity((float)(ord(self.datalist(1))/10), 0.0, 0.0)
-		self.angularVelocity = Velocity(0.0, 0.0, (float)(ord(self.datalist(2))/10))
-		if not rospy.is_shutdown():
-            try:
-                pub_vel.publish(self.linearVelocity, self.angularVelocity)
-                self.datalist = []
-            except rospy.ROSInterruptException:
-                print 'Error in ROS node'
-        except IOError:
-            pass
+            print 'data received: '
+            print self.datalist(1)
+            self.linearVelocity = Velocity((float)(ord(self.datalist(1))/10), 0.0, 0.0)
+            self.angularVelocity = Velocity(0.0, 0.0, (float)(ord(self.datalist(2))/10))
+            if not rospy.is_shutdown():
+                try:
+                    pub_vel.publish(self.linearVelocity, self.angularVelocity)
+                    self.datalist = []
+                except rospy.ROSInterruptException:
+                    print 'Error in ROS node'
+            except IOError:
+                pass
 
 	    '''
             if((self.currentTime-self.initialTime) > 500):
