@@ -55,44 +55,21 @@ class Handler(SocketServer.BaseRequestHandler):
     def handle(self):
         while(True):
             self.currentTime = int(time.time()*1000.0)
-            #self.node_init()
-            # self.request is the client connection
             try:
                 for i in range(0,5):
                     data = self.request.recv(1)
                     self.datalist.append(data)
-
-		'''
-                while(len(self.datalist) > 0):
-                    data_in = self.datalist.pop()
-
-                    if(ord(data_in) == 1):
-                        self.currentState.x+=1
-                    elif(ord(data_in) == 2):
-                        self.currentState.x-=1
-                    elif(ord(data_in) == 4):
-                        self.currentState.y+=1
-                    else:
-                        self.currentState.y-=1
-                    self.count+=1
-		    self.processVel(data_in)
-                    if(not rospy.is_shutdown()&len(data_in)>0):
-                        try:
-                            rospy.loginfo(ord(data_in))
-                            pub.publish(ord(data_in))
-                        except rospy.ROSInterruptException:
-                            print 'Error in ROS node'
-		'''
-            print 'data received: '
-            print self.datalist(1)
-            self.linearVelocity = Velocity((float)(ord(self.datalist(1))/10), 0.0, 0.0)
-            self.angularVelocity = Velocity(0.0, 0.0, (float)(ord(self.datalist(2))/10))
-            if not rospy.is_shutdown():
-                try:
-                    pub_vel.publish(self.linearVelocity, self.angularVelocity)
-                    self.datalist = []
-                except rospy.ROSInterruptException:
-                    print 'Error in ROS node'
+                print 'data received: '
+                print (ord)(self.datalist[1])
+                print (ord)(self.datalist[2])
+                self.linearVelocity = Velocity((float)((ord)(self.datalist[1]))/10.0, 0.0, 0.0)
+                self.angularVelocity = Velocity(0.0, 0.0, (float)((ord)(self.datalist[2]))/10.0)
+                if not rospy.is_shutdown():
+                    try:
+                        pub_vel.publish(self.linearVelocity, self.angularVelocity)
+                        self.datalist = []
+                    except rospy.ROSInterruptException:
+                        print 'Error in ROS node'
             except IOError:
                 pass
 
