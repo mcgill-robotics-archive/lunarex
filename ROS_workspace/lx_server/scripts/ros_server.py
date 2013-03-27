@@ -30,6 +30,12 @@ class Data:
         self.y=y
         self.theta=theta
 
+class Velocity:
+    def __init__(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
+
 class Handler(SocketServer.BaseRequestHandler):
 
     def setup(self):
@@ -52,8 +58,9 @@ class Handler(SocketServer.BaseRequestHandler):
             #self.node_init()
             # self.request is the client connection
             try:
-                data = self.request.recv(6)
-                #self.datalist.append(data)
+                for i in range(0,5):
+                    data = self.request.recv(1)
+                    self.datalist.append(data)
 
 		'''
                 while(len(self.datalist) > 0):
@@ -77,17 +84,17 @@ class Handler(SocketServer.BaseRequestHandler):
                             print 'Error in ROS node'
 		'''
 		print 'data received: '
-		print data
-		self.linearVelocity = Velocity((float)(data(1)/10), 0.0, 0.0)
-		self.angularVelocity = Velocity(0.0, 0.0, (float)(data(2)/10))
+		print self.datalist(1)
+		self.linearVelocity = Velocity((float)(ord(self.datalist(1))/10), 0.0, 0.0)
+		self.angularVelocity = Velocity(0.0, 0.0, (float)(ord(self.datalist(2))/10))
 		if not rospy.is_shutdown():
-		    try:
-			pub_vel.publish(self.linearVelocity, 
-				self.angularVelocity)
-		    except rospy.ROSInterruptException:
-			print 'Error in ROS node'
-            except IOError:
-                pass
+            try:
+                pub_vel.publish(self.linearVelocity, self.angularVelocity)
+                self.datalist = []
+            except rospy.ROSInterruptException:
+                print 'Error in ROS node'
+        except IOError:
+            pass
 
 	    '''
             if((self.currentTime-self.initialTime) > 500):
