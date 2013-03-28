@@ -64,12 +64,12 @@ class Handler(SocketServer.BaseRequestHandler):
                     data = self.request.recv(1)
                     self.datalist.append(data)
                 '''
-                self.datalist = self.request.recv()
+                self.datalist = self.request.recv(6)
                 # Print Statements just for test
                 print 'data received: '
                 print (ord)(self.datalist[1])
                 print (ord)(self.datalist[2])
-                
+
                 #Only if data is received will publisher work
                 if len(self.datalist) > 0:
                     #Create velocity message
@@ -81,7 +81,7 @@ class Handler(SocketServer.BaseRequestHandler):
                         angular_vel = angular_vel - 256.0
                     self.linearVelocity = Velocity(linear_vel/10.0, 0.0, 0.0)     #   Linear Velocity from datalist[1]
                     self.angularVelocity = Velocity(0.0, 0.0, angular_vel/10.0)    #   Angular Velocity from datalist[2]
-                
+
                     #Publish to ros
                     if not rospy.is_shutdown():
                         try:
@@ -89,7 +89,7 @@ class Handler(SocketServer.BaseRequestHandler):
                             self.datalist = []  #   And prepare datalist for next input
                         except rospy.ROSInterruptException:
                             print 'Error in ROS node'
-            
+
             except IOError:
                 pass
 
@@ -116,11 +116,11 @@ class Server(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 if __name__ == "__main__":
     #Create socket
     server = Server((HOST, PORT), Handler)
-    
+
     #Initiate ros node and create publisher
     pub_vel = rospy.Publisher("cmd_vel", geometry_msgs.msg.Twist)	# publish velocities
     rospy.init_node(NODE_NAME)
-    
+
     # terminate with Ctrl-C
     try:
         server.serve_forever()
