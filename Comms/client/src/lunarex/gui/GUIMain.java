@@ -349,10 +349,9 @@ public class GUIMain extends JFrame {
 		g2d.rotate(-bob.angle, bob.x, bob.y);
 	}
 	private void keyCom(int key, String stopSign){
-		if(keyboard.keyDownOnce(key)){
-			for(int i = 1; i < 5; i++){
-				outByte[i] = (byte)0;
-			}
+		if(keyboard.keyDown(key)){
+			outByte[1] >>= 1;
+			outByte[2] >>= 1;
 		}
 	}
 	private void keyCom(int key, int i){
