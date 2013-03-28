@@ -59,10 +59,12 @@ class Handler(SocketServer.BaseRequestHandler):
             self.currentTime = int(time.time()*1000.0)
             try:
                 self.datalist = self.request.recv(6)
+                '''
                 # Print Statements just for test
                 print 'data received: '
                 print (ord)(self.datalist[1])
                 print (ord)(self.datalist[2])
+                '''
 
                 #Only if data is received will publisher work
                 if len(self.datalist) > 0:
