@@ -79,16 +79,23 @@ class Handler(SocketServer.BaseRequestHandler):
                         linear_vel = linear_vel - 256.0
                     if angular_vel > 127.0:
                         angular_vel = angular_vel - 256.0
-                    self.linearVelocity = Velocity(linear_vel/10.0, 0.0, 0.0)     #   Linear Velocity from datalist[1]
-                    self.angularVelocity = Velocity(0.0, 0.0, angular_vel/10.0)    #   Angular Velocity from datalist[2]
+                    
+                    #Test if velocities change; if not then unnecessary to publish again
+                    if old_linear != linear_vel or old_angular != angular_vel:
+                        self.linearVelocity = Velocity(linear_vel/10.0, 0.0, 0.0)     #   Linear Velocity from datalist[1]
+                        self.angularVelocity = Velocity(0.0, 0.0, angular_vel/10.0)    #   Angular Velocity from datalist[2]
 
-                    #Publish to ros
-                    if not rospy.is_shutdown():
-                        try:
-                            pub_vel.publish(self.linearVelocity, self.angularVelocity)  #   Send Twist message to /cmd_vel topic
-                            self.datalist = []  #   And prepare datalist for next input
-                        except rospy.ROSInterruptException:
-                            print 'Error in ROS node'
+                        #Publish to ros
+                        if not rospy.is_shutdown():
+                            try:
+                                pub_vel.publish(self.linearVelocity, self.angularVelocity)  #   Send Twist message to /cmd_vel topic
+                                self.datalist = []  #   And prepare datalist for next input
+                            except rospy.ROSInterruptException:
+                                print 'Error in ROS node'
+                            
+                    #Store old velocities
+                    old_linear = linear_vel
+                    old_angular = angular_vel
 
             except IOError:
                 pass
