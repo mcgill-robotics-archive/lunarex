@@ -232,7 +232,10 @@ public class GUIMain extends JFrame {
 			keyCom(KeyEvent.VK_B,KeyEvent.VK_UP,KeyEvent.VK_DOWN,5);
 			
 			// Dooor open/close
-			keyCom(KeyEvent.VK_D,0);
+			keyCom(KeyEvent.VK_S,0);
+			
+			// Stop everything
+			keyCom(KeyEvent.VK_S, "stop");
 			
 		}
 		// IP ADDRESS BOX
@@ -344,6 +347,13 @@ public class GUIMain extends JFrame {
 				bob.y + bob.h / 2, (bob.x + 3 * bob.w / 2),
 				(bob.y + bob.h / 2)));
 		g2d.rotate(-bob.angle, bob.x, bob.y);
+	}
+	private void keyCom(int key, String stopSign){
+		if(keyboard.keyDownOnce(key)){
+			for(int i = 1; i < 5; i++){
+				outByte[i] = (byte)0;
+			}
+		}
 	}
 	private void keyCom(int key, int i){
 		if(keyboard.keyDownOnce(key)){
