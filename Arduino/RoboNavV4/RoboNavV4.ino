@@ -4,12 +4,15 @@
 #include <PID_v1.h>
 #include <Math.h>
 
+//Last updated March 28 by Nick
+
 //global variables
 float wheelRad;
 float width;
 float length;
-float distToAxisA, distToAxisB, distToAxisC, distToAxisD;
+float distToAxisA;
 Servo upLeftServo, upRightServo, boLeftServo boRightServo;
+
 int directionPin1 = 3;
 int directionPin2 = 4;
 int directionPin3 = 5;
@@ -22,10 +25,12 @@ int enablePin4 = 10;
 
 float minSpeed;
 float maxSpeed;
+float maxAngle;
 
 float ackRadius;
 float leftAckAngle, rightAckAngle;
 float innerFront, innerBack, outerFront, outerBack;
+
 
 //make a node on the arduino
 ros:: NodeHandle nh;
@@ -44,13 +49,17 @@ void setLinSpeed(const std_msgs:: Float32 &lin_speed)
 ros:: Subscriber<std_msgs::Float32> angSpeedSub("Set_Angular_Speed", &setAngSpeed);
 ros:: Subscriber<std_msgs::Float32> linSpeedSub("Set_Linear_Speed", &setLinSpeed);
 
-//Setup for the PID for each motor
 
 int motorPin1 = 9;
 int motorPin2 = 10;
 int motorPin3 = 11;
 int motorPin4 = 12;
 
+float motorSpeed1, motorSpeed2, motorSpeed3, motorSpeed4;
+float motorAng1, motorAng2, motorAng3, motorAng4;
+short dir1, dir2, dir3, dir4;
+int steering, dir, c
+int state[3];
 //setup, initialize node, serial and PID stuff
 void setup()
 {
@@ -84,6 +93,8 @@ void loop()
   navigate(angSpeed, linSpeed);
 }
 
+
+
 void navigate(float angSpeed, float linSpeed)
 {
   //motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
@@ -94,68 +105,73 @@ void navigate(float angSpeed, float linSpeed)
     //rotate all motors to 45 degrees
     //upper left and bottom right are 45 degrees clockwise - needs to be changed based on servo PWM
     //placeholders, to be changed
-    setWheelDirection(135, 45, 135, 45);
-    upLeftServo.write(135);
-    boRightServo.write(135);
-    
     //bottom left and upper right need to be set to 45 degrees CCW
-    //place holder values, to be changed
-    upRightServo.write(45);
-    boLeftServo.write(45);
-    
+    motorAng1 = 135;
+    motorAng2 = 45;
+    motorAng3 = 135;
+    motorAng4 = 45;
     //set CCW to positive, CW to negative
     if(angSpeed>0)
     {   
       //to be replaced with code compatible with controller and hardware conditions
-      //we assume here that HIGH = forward, LOW = backward
-      digitalWrite(directionPin1, LOW);
-      digitalWrite(directionPin2, HIGH);
-      digitalWrite(directionPin3, LOW);
-      digitalWrite(directionPin4, HIGH);
+      //we assume here that 1 = forward, 2 = backward
+      dir1 = 0;
+      dir2 = 1;
+      dir3 = 0;
+      dir4 = 1;
     }
     else if(angSpeed <= 0);
     {
-      digitalWrite(directionPin1, HIGH);
-      digitalWrite(directionPin2, LOW);
-      digitalWrite(directionPin3, HIGH);
-      digitalWrite(directionPin4, LOW);
+      dir1 = 1;
+      dir2 = 0;
+      dir3 = 1;
+      dir4 = 0;
     }
     
     //now set motor speed based on wheel radius, wheel distance from axis, values for max speed
     distToAxisA = distToCenter;
     wheelSpeed = angSpeed*distToAxisA/wheelRad;
     wheelSpeed = map(wheelSpeed, minSpeed, maxSpeed, 0, 255);
-    Setpoint1, Setpoint2, Setpoint3, Setpoint4 = wheelSpeed;
     
+    motorSpeed1 = wheelSpeed;
+    motorSpeed2 = wheelSpeed;
+    motorSpeed3 = wheelSpeed;
+    motorSpeed4 = wheelSpeed;
   }
   
   //if angular speed is 0, go straight, may impliment bandwidth for minimum angular speed
   else if(angSpeed == 0)
   {
     //set all wheel directions to straight, then impliment drive
-    upLeftServo.write(90);
-    upRightServo.write(90);
-    boLeftServo.write(90);
-    boRightServo.write(90);
+    setWheelAngle(90, 90, 90, 90);
+    motorAng1 = 90;
+    motorAng2 = 90;
+    motorAng3 = 90;
+    motorAng4 = 90;
     
     if(linSpeed>=0)
     {
-      digitalWrite(directionPin1, HIGH);
-      digitalWrite(directionPin2, HIGH);
-      digitalWrite(directionPin3, HIGH);
-      digitalWrite(directionPin4, HIGH);
+      setWheelDirection(forward, forward, forward, forward);
+      dir1 = 1;
+      dir2 = 1;
+      dir3 = 1;
+      dir4 = 1;
     }
     else if(linSpeed < 0)
     {
-      digitalWrite(directionPin1, LOW);
-      digitalWrite(directionPin2, LOW);
-      digitalWrite(directionPin3, LOW);
-      digitalWrite(directionPin4, LOW);
+      dir1 = 0;
+      dir2 = 0;
+      dir3 = 0;
+      dir4 = 0;
     }
     
     wheelSpeed = linSpeed/(2*PI*wheelRad);
     wheelSpeed = map(wheelSpeed, minSpeed, maxSpeed, 0, 255);
-    Setpoint1, Setpoint2, Setpoint3, Setpoint4 = wheelSpeed;
+    
+    motorSpeed1 = wheelSpeed;
+    motorSpeed2 = wheelSpeed;
+    motorSpeed3 = wheelSpeed;
+    motorSpeed4 = wheelSpeed;  
   }
   
   //otherwise, do turning in motion algorithm, ackerman or double ackerman
@@ -167,16 +183,38 @@ void navigate(float angSpeed, float linSpeed)
     
     //first determine direction
     float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed);
+    if(linSpeed <= 0)
+    {
+      dir1 = 0;
+      dir2 = 0;
+      dir3 = 0;
+      dir4 = 0;
+    }
+    else if(linSpeed > 0)
+    {
+      dir1 = 1;
+      dir2 = 1;
+      dir3 = 1;
+      dir4 = 1;
+    }
+    
     //single ackerman
     ackRadius = (abs(linSpeed)/2.0)*sin(abs(angSpeed)/2.0);
     innerFront = atan(length/(ackRadius - (width/2.0)));
     outerFront = atan(length/(ackRadius + (width/2.0)));
     innerBack = 0;
     outerBack = 0;
+    
     innerFront = innerFront*180/PI;
     outerFront = outerFront*180/PI;
+    int R1 = sqrt(pow(ackRadius,2) - pow(distToAxisA, 2));
+    int rad1 = sqrt(pow(length, 2) + pow(R1-width/2, 2));
+    int rad2 = sqrt(pow(length, 2) + pow(R1+width/2, 2));
+    int rad3 = R1 - width/2;
+    int rad4 = R1 + width/2;
     
-    if(innerFront>35)    //innerfront wheel will always have to turn more, do double if this condition is met
+    
+    if(innerFront>maxAngle)    //innerfront wheel will always have to turn more, do double if this condition is met
     {
        float c = length /2.0;
        innerFront = atan(c/(ackRadius - (width/2.0)));
@@ -188,31 +226,74 @@ void navigate(float angSpeed, float linSpeed)
        outerFront = outerFront*180/PI;
        innerBack= innerBack*180/PI;
        outerBack = outerBack*180/PI;
+       
     }
     
-    if((dir > 0 && angVel >0) || (dir<0 && angVel<0))
+    if(dir>0)  //counter clockwise
     {
-      upLeftServo.write(90 - innerFront);
-      upRightServo.write(90 - outerFront);
-      boLeftServo.write(90 + innerBack);
-      boRightServo.write(90 + innerBack);
+      
+      motorAng1 = 90 - innerFront;
+      motorAng2 = 90 - outerFront;
+      motorAng3 = 90 + innerBack;
+      motorAng4 = 90 + outerBack;
+      
+      rad1 = sqrt(pow(length/2, 2) + pow(ackRadius-width/2, 2));
+      rad2 = sqrt(pow(length/2, 2) + pow(ackRadius+width/2, 2));
+      rad3 = sqrt(pow(length/2, 2) + pow(ackRadius-width/2, 2));
+      rad4 = sqrt(pow(length/2, 2) + pow(ackRadius+width/2, 2));
     }
-    else
+    else if(dir<0)  //clockwise
     {
-      upLeftServo.write(90 + outerFront);
-      upRightServo.write(90 + outerFront);
-      boLeftServo.write(90 - innerBack);
-      boRightServo.write(90 - innerBack);
+      motorAng1 = 90 + outerFront;
+      motorAng2 = 90 + innerFront;
+      motorAng3 = 90 - outerBack;
+      motorAng4 = 90 - outerBack;
+      
+      rad1 = sqrt(pow(length/2, 2) + pow(ackRadius+width/2, 2));
+      rad2 = sqrt(pow(length/2, 2) + pow(ackRadius-width/2, 2));
+      rad3 = sqrt(pow(length/2, 2) + pow(ackRadius+width/2, 2));
+      rad4 = sqrt(pow(length/2, 2) + pow(ackRadius-width/2, 2));
     }
     
     //now for velocity
-    
+    motorSpeed1 = (rad1 / wheelRad) * angSpeed;
+    motorSpeed2 = (rad2 / wheelRad) * angSpeed;
+    motorSpeed3 = (rad3 / wheelRad) * angSpeed;
+    motorSpeed4 = (rad4 / wheelRad) * angSpeed;
   }
- 
-  analogWrite(Output1, motorPin1);
-  analogWrite(Output2, motorPin2);
-  analogWrite(Output3, motorPin3);
-  analogWrite(Output4, motorPin4);
+  
+  setWheelDirection(dir1, dir2, dir3, dir4);
+  setWheelAngle(motorAng1, motorAng2, motorAng3, motorAng4);
+  setWheelSpeed(motorSpeed1, motorSpeed2, motorSpeed3, motorSpeed4);
 }
 
-float 
+void setWheelDirection(int dir1, int dir2, int dir3, int dir4)
+{
+  digitalWrite(directionPin1, dir1);
+  digitalWrite(directionPin2, dir2);
+  digitalWrite(directionPin3, dir3);
+  digitalWrite(directionPin4, dir4);
+}
+
+void setWheelAngle(int motorAng1, int motorAng2, int motorAng3, int motorAng4)
+{
+  //motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
+  
+  int servoCmd1 = map(motorAng1,0,180,1000,2000); //still need to validate this mapping and might need to invert it for some of the motors
+  int servoCmd1 = map(motorAng1,0,180,1000,2000);
+  int servoCmd1 = map(motorAng1,0,180,1000,2000);
+  int servoCmd1 = map(motorAng1,0,180,1000,2000);
+  
+  upLeftServo.writeMicroseconds(servoCmd1);
+  upRightServo.writeMicroseconds(servoCmd2);
+  boLeftServo.writeMicroseconds(servoCmd3);
+  boRightServo.writeMicroseconds(servoCmd4);
+}
+
+void setWheelSpeed(int motorSpeed1, int motorSpeed2, int motorSpeed3, int motorSpeed4)
+{
+  analogWrite(motorPin1, motorSpeed1);
+  analogWrite(motorPin2, motorSpeed2);
+  analogWrite(motorPin3, motorSpeed3);
+  analogWrite(motorPin4, motorSpeed4);
+}
