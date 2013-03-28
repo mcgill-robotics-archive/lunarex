@@ -71,8 +71,14 @@ class Handler(SocketServer.BaseRequestHandler):
                 #Only if data is received will publisher work
                 if len(self.datalist) > 0:
                     #Create velocity message
-                    self.linearVelocity = Velocity((float)((ord)(self.datalist[1]))/10.0, 0.0, 0.0)     #   Linear Velocity from datalist[1]
-                    self.angularVelocity = Velocity(0.0, 0.0, (float)((ord)(self.datalist[2]))/10.0)    #   Angular Velocity from datalist[2]
+                    linear_vel = (float)((ord)(self.datalist[1]))
+                    angular_vel = (float)((ord)(self.datalist[2]))
+                    if linear_vel > 127.0:
+                        linear_vel = linear_vel - 256.0
+                    if angular_vel > 127.0:
+                        angular_vel = angular_vel - 256.0
+                    self.linearVelocity = Velocity(linear_vel/10.0, 0.0, 0.0)     #   Linear Velocity from datalist[1]
+                    self.angularVelocity = Velocity(0.0, 0.0, angular_vel/10.0)    #   Angular Velocity from datalist[2]
                 
                     #Publish to ros
                     if not rospy.is_shutdown():
