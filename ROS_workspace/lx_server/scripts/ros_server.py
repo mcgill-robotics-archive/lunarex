@@ -58,12 +58,6 @@ class Handler(SocketServer.BaseRequestHandler):
         while(True):
             self.currentTime = int(time.time()*1000.0)
             try:
-                '''
-                # Length of datalist is 6
-                for i in range(0 , 5):
-                    data = self.request.recv(1)
-                    self.datalist.append(data)
-                '''
                 self.datalist = self.request.recv(6)
                 # Print Statements just for test
                 print 'data received: '
