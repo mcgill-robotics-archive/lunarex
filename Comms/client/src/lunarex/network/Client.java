@@ -87,7 +87,7 @@ public class Client extends Thread {
 					if (this.sended) {
 						
 						if (commands != null) {
-							System.out.println((int)commands[1]);
+							//System.out.println((int)commands[1]);
 							out.write(commands);
 							/*
 							for (int i = 0; i < commands.length; i++) {
