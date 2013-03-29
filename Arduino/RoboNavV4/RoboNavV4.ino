@@ -2,7 +2,7 @@
 #include <std_msgs/Float32.h>
 #include <Servo.h>
 #include <PID_v1.h>
-#include <Math.h>
+#include <math.h>
 
 //Last updated March 28-29 by Nick
   //here are a couple comments on what I did as well as suggestions for changes to be made:
@@ -16,6 +16,7 @@
   // in "turn on spot" case, changed if angSpeed <= 0 to if <0 because angSpeed shouldnt be zero if turning on the spot. Made a similar change several times througout for clarity.
   //motorSpeed, dir, motorAng should be initialized
   //do we want a specific frequency of calls to Navigate() ?
+  //changed include Math.h to math.h
 
 
 //global variables
@@ -23,7 +24,7 @@ float wheelRad;
 float width;
 float length;
 float distToAxisA;
-Servo upLeftServo, upRightServo, boLeftServo boRightServo;
+Servo upLeftServo, upRightServo, boLeftServo, boRightServo;
 
 int directionPin1 = 3;
 int directionPin2 = 4;
