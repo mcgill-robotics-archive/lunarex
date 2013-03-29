@@ -4,7 +4,19 @@
 #include <PID_v1.h>
 #include <Math.h>
 
-//Last updated March 28 by Nick
+//Last updated March 28-29 by Nick
+  //here are a couple comments on what I did as well as suggestions for changes to be made:
+
+  //Added a couple comments for clarity
+  //mapped the angle from 0-180 degrees to 1000-2000 ms (is this measured clockwise from the -x axis, seen from above?)
+  //moved the pin declarations so they are all together
+  //in Navigate() added "STOP" condition for 0 angular AND linear velocity
+  //for drive motor directions, discrepency between comments and code in terms of 0vs1 or 1vs2, variable names are dir1, dir2 etc
+  //In the Navigate function for the cases of 0 ang vel or 0 lin vel, removed the call to setWheelAngle() and made it so this is only called once at the end of the function
+  // in "turn on spot" case, changed if angSpeed <= 0 to if <0 because angSpeed shouldnt be zero if turning on the spot. Made a similar change several times througout for clarity.
+  //motorSpeed, dir, motorAng should be initialized
+  //do we want a specific frequency of calls to Navigate() ?
+
 
 //global variables
 float wheelRad;
@@ -23,9 +35,15 @@ int enablePin2 = 8;
 int enablePin3 = 9;
 int enablePin4 = 10;
 
-float minSpeed;
-float maxSpeed;
-float maxAngle;
+//motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
+int motorPin1 = 9;
+int motorPin2 = 10;
+int motorPin3 = 11;
+int motorPin4 = 12;
+
+float minSpeed; //presumably 0... -Nick Speal
+float maxSpeed; //will require calibration. I think this is the measured speed that corresponds to full voltage
+float maxAngle; //Threshold to step up from single ackerman to double ackerman
 
 float ackRadius;
 float leftAckAngle, rightAckAngle;
@@ -49,11 +67,6 @@ void setLinSpeed(const std_msgs:: Float32 &lin_speed)
 ros:: Subscriber<std_msgs::Float32> angSpeedSub("Set_Angular_Speed", &setAngSpeed);
 ros:: Subscriber<std_msgs::Float32> linSpeedSub("Set_Linear_Speed", &setLinSpeed);
 
-
-int motorPin1 = 9;
-int motorPin2 = 10;
-int motorPin3 = 11;
-int motorPin4 = 12;
 
 float motorSpeed1, motorSpeed2, motorSpeed3, motorSpeed4;
 float motorAng1, motorAng2, motorAng3, motorAng4;
@@ -91,6 +104,7 @@ void loop()
 {
   nh.spinOnce();
   navigate(angSpeed, linSpeed);
+  // delay(some number here (in milliseconds)  Do we want a certain rate for this code? Or should it jjust call navigate() as frequently as possible?
 }
 
 
@@ -100,12 +114,28 @@ void navigate(float angSpeed, float linSpeed)
   //motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
   
   //if no linear speed, turn about axis in center of robot, may impliment bandwidth for minimum linear speed 
-  if(linSpeed == 0)
+  if (linSpeed == 0 && angSpeed == 0) //stop case
+  {
+   //Drive motors should stop and the servos should maintain their position
+   
+   //no change to motorAng
+   //no change to dir1,dir2, etc
+   motorSpeed1 = 0;
+   motorSpeed2 = 0;
+   motorSpeed3 = 0;
+   motorSpeed4 = 0;
+   
+  }
+
+  else if(linSpeed == 0) //turn on spot case
   {
     //rotate all motors to 45 degrees
     //upper left and bottom right are 45 degrees clockwise - needs to be changed based on servo PWM
     //placeholders, to be changed
     //bottom left and upper right need to be set to 45 degrees CCW
+
+    //I think these angles are defined as clockwise from the -x axis, as seen from the top? -Nick Speal
+
     motorAng1 = 135;
     motorAng2 = 45;
     motorAng3 = 135;
@@ -114,19 +144,20 @@ void navigate(float angSpeed, float linSpeed)
     if(angSpeed>0)
     {   
       //to be replaced with code compatible with controller and hardware conditions
-      //we assume here that 1 = forward, 2 = backward
+      //we assume here that 1 = forward, 2 = backward //but what about the 1 and 0? -Nick Speal
       dir1 = 0;
       dir2 = 1;
       dir3 = 0;
       dir4 = 1;
     }
-    else if(angSpeed <= 0);
+    else if(angSpeed < 0);
     {
       dir1 = 1;
       dir2 = 0;
       dir3 = 1;
       dir4 = 0;
-    }
+    }    
+    
     
     //now set motor speed based on wheel radius, wheel distance from axis, values for max speed
     distToAxisA = distToCenter;
@@ -143,15 +174,16 @@ void navigate(float angSpeed, float linSpeed)
   else if(angSpeed == 0)
   {
     //set all wheel directions to straight, then impliment drive
-    setWheelAngle(90, 90, 90, 90);
+    
+    //setWheelAngle() call moved to end from here
     motorAng1 = 90;
     motorAng2 = 90;
     motorAng3 = 90;
     motorAng4 = 90;
     
-    if(linSpeed>=0)
+    if(linSpeed>0) //changed from >= to > because '==' has a different case
     {
-      setWheelDirection(forward, forward, forward, forward);
+      //setWheelDirection() call moved to end from here
       dir1 = 1;
       dir2 = 1;
       dir3 = 1;
@@ -174,16 +206,17 @@ void navigate(float angSpeed, float linSpeed)
     motorSpeed4 = wheelSpeed;  
   }
   
-  //otherwise, do turning in motion algorithm, ackerman or double ackerman
-  else
+
+  else 
   {
-    //assume that the wheels will not turn more than 35 degrees
-    //determine radius of "ackerman circle", see what degree the wheels would need to turn
-    //if greater than 35, do double ackerman
+    //Now that we know that the linear AND angular velocities are non-zero.
+    //Implement ackerman or double ackerman "in motion steering algorithm" depending on how sharp a turn it is. 
+      //Default single ackerman unless a front wheel angle would be above a threshold, maxAngle
+      //If single ackerman generates too high an angle, recalculate with double ackerman
+
     
-    //first determine direction
-    float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed);
-    if(linSpeed <= 0)
+    //first determine direction of drive motors
+    if(linSpeed < 0) //changed from <= to < because '==' has a different case
     {
       dir1 = 0;
       dir2 = 0;
@@ -229,6 +262,9 @@ void navigate(float angSpeed, float linSpeed)
        
     }
     
+    //Check which direction the robot is rotating. Then the steering angles will be opposite, depending on the linear velocity.
+    float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed));  //Will return +/- 1 for CCW or CW, respectively (note this variable is distinct from dir1, dir2, etc)
+    
     if(dir>0)  //counter clockwise
     {
       
@@ -255,13 +291,14 @@ void navigate(float angSpeed, float linSpeed)
       rad4 = sqrt(pow(length/2, 2) + pow(ackRadius-width/2, 2));
     }
     
-    //now for velocity
+    //now for drive motor velocities
     motorSpeed1 = (rad1 / wheelRad) * angSpeed;
     motorSpeed2 = (rad2 / wheelRad) * angSpeed;
     motorSpeed3 = (rad3 / wheelRad) * angSpeed;
     motorSpeed4 = (rad4 / wheelRad) * angSpeed;
   }
   
+  //All angles, speeds, directions are chosen for the given case. Now send the signals:
   setWheelDirection(dir1, dir2, dir3, dir4);
   setWheelAngle(motorAng1, motorAng2, motorAng3, motorAng4);
   setWheelSpeed(motorSpeed1, motorSpeed2, motorSpeed3, motorSpeed4);
@@ -269,6 +306,7 @@ void navigate(float angSpeed, float linSpeed)
 
 void setWheelDirection(int dir1, int dir2, int dir3, int dir4)
 {
+  //forward or backwards for drive wheels
   digitalWrite(directionPin1, dir1);
   digitalWrite(directionPin2, dir2);
   digitalWrite(directionPin3, dir3);
@@ -279,10 +317,10 @@ void setWheelAngle(int motorAng1, int motorAng2, int motorAng3, int motorAng4)
 {
   //motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
   
-  int servoCmd1 = map(motorAng1,0,180,1000,2000); //still need to validate this mapping and might need to invert it for some of the motors
-  int servoCmd1 = map(motorAng1,0,180,1000,2000);
-  int servoCmd1 = map(motorAng1,0,180,1000,2000);
-  int servoCmd1 = map(motorAng1,0,180,1000,2000);
+  int servoCmd1 = map(motorAng1,0,180,1000,2000); //still need to validate this mapping and might need to invert it for the front or back servos (which are mounted backwards)
+  int servoCmd2 = map(motorAng2,0,180,1000,2000);
+  int servoCmd3 = map(motorAng3,0,180,1000,2000);
+  int servoCmd4 = map(motorAng4,0,180,1000,2000);
   
   upLeftServo.writeMicroseconds(servoCmd1);
   upRightServo.writeMicroseconds(servoCmd2);
