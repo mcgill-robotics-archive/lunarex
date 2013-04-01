@@ -42,10 +42,7 @@ cp -R /opt/ros/fuerte/stacks/rosserial/rosserial_arduino/libraries /home/lunarex
 #Restart IDE. To see if the ROS libaries are properly included, goto
 File > Examples --> ros_lib should be present
 
----------TUTORIALS --------------- http://www.ros.org/wiki/rosserial_arduino/Tutorials
-
-#Tutorial 1 - Simple publisher node on the arduino
-
+#When first verify with ROS includes:
 #fixing bug: WProgram.h: No such file or directory
 #from this page: http://nootropicdesign.com/forum/viewtopic.php?t=2434
 #go to this file
@@ -62,6 +59,10 @@ File > Examples --> ros_lib should be present
 	  #include "WProgram.h"
 	  #include <pins_arduino.h>
 	#endif
+
+---------TUTORIALS --------------- http://www.ros.org/wiki/rosserial_arduino/Tutorials
+
+#Tutorial 1 - Simple publisher node on the arduino
 
 #to run rosserial client application that fwds arduino messages, use
 rosrun rosserial_python serial_node.py /dev/ttyUSB0
