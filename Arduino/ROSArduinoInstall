@@ -28,14 +28,19 @@ it contains an arduino-specific package: http://www.ros.org/wiki/rosserial_ardui
 http://www.ros.org/wiki/rosserial_arduino/Tutorials/Arduino%20IDE%20Setup
 
 #Do not install from source, instead run:
-sudo apt-get install ros-fuerte=rosserial
+sudo apt-get install ros-fuerte-rosserial
 
-#note the arduino's "sketchbook" path is:
-/usr/share/arduino/libraries
+#for the netbook: the arduino sketchbook is in:
+/home/lunarex/sketchbook
 
-#remember, for reference, that all ROS packages are here:
-/opt/ros/fuerte/stacks/
+#the ROS library that needs to be in the arduino's build path is located in:
+/opt/ros/fuerte/stacks/rosserial/rosserial_arduino
 
+#Must copy the libraries folder to the sketchbook location. Run:
+cp -R /opt/ros/fuerte/stacks/rosserial/rosserial_arduino/libraries /home/lunarex/sketchbook
+
+#Restart IDE. To see if the ROS libaries are properly included, goto
+File > Examples --> ros_lib should be present
 
 ---------TUTORIALS --------------- http://www.ros.org/wiki/rosserial_arduino/Tutorials
 
