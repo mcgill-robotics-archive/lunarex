@@ -1,4 +1,3 @@
-
 #include <Servo.h>
 #include <ros.h>
 #include <std_msgs/Float32.h>
@@ -6,21 +5,21 @@
 
 Servo upLeftServo, upRightServo, boLeftServo, boRightServo;
 
-int directionPin1 = 3;
-int directionPin2 = 4;
-int directionPin3 = 5;
-int directionPin4 = 6;
+int directionPin1 = 22;
+int directionPin2 = 23;
+int directionPin3 = 24;
+int directionPin4 = 25;
 
-int enablePin1 = 7;
-int enablePin2 = 8;
-int enablePin3 = 9;
-int enablePin4 = 10;
+int enablePin1 = 26;
+int enablePin2 = 27;
+int enablePin3 = 28;
+int enablePin4 = 29;
 
 //motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
-int motorPin1 = 11;
-int motorPin2 = 12;
-int motorPin3 = 13;
-int motorPin4 = 14;
+int motorPin1 = 10;
+int motorPin2 = 11;
+int motorPin3 = 12;
+int motorPin4 = 13;
 
 boolean dir1 = 1;
 boolean dir2 = 1;
@@ -48,7 +47,7 @@ float maxSpeed = 1;
 float length = 0;
 float width = 0;
 float distToAxisA = 0;
-int maxAngle = 0;
+int maxAngle = 181;
 
 void setup()
 {
@@ -56,11 +55,21 @@ void setup()
   pinMode(motorPin2, OUTPUT);
   pinMode(motorPin3, OUTPUT);
   pinMode(motorPin4, OUTPUT);
+
+  upLeftServo.attach(2);
+  upRightServo.attach(3);
+  boLeftServo.attach(4);
+  boRightServo.attach(5);
   
   pinMode(enablePin1, OUTPUT);
   pinMode(enablePin2, OUTPUT);
   pinMode(enablePin3, OUTPUT);
   pinMode(enablePin4, OUTPUT);
+
+  pinMode(directonPin1, OUTPUT);
+  pinMode(directonPin2, OUTPUT);
+  pinMode(directonPin3, OUTPUT);
+  pinMode(directonPin4, OUTPUT);
   
   //enable motors, assumes high = enabled
   digitalWrite(enablePin1, HIGH);
