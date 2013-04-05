@@ -11,8 +11,8 @@ void setAngSpeed(const std_msgs:: Float32 &ang_speed)
 void setLinSpeed(const std_msgs:: Float32 &lin_speed)
 {linSpeed = lin_speed.data;}
 
-ros:: Subscriber<std_msgs::Float32> angSpeedSub("Set_Angular_Speed", &setAngSpeed);
-ros:: Subscriber<std_msgs::Float32> linSpeedSub("Set_Linear_Speed", &setLinSpeed);
+ros:: Subscriber<std_msgs::Float32> angSub("ang_speed", &setAngSpeed);
+ros:: Subscriber<std_msgs::Float32> linSub("lin_peed", &setLinSpeed);
 
 void setup()
 {
