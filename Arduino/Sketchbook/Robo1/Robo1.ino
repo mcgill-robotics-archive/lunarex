@@ -3,30 +3,32 @@
 #include <std_msgs/Float32.h>
 
 
+
 Servo upLeftServo, upRightServo, boLeftServo, boRightServo;
 
-int directionPin1 = 22;
-int directionPin2 = 23;
-int directionPin3 = 24;
-int directionPin4 = 25;
+int directionPin1 = 26;
+int directionPin2 = 27;
+int directionPin3 = 28;
+int directionPin4 = 29;
 
-int enablePin1 = 26;
-int enablePin2 = 27;
-int enablePin3 = 28;
-int enablePin4 = 29;
+int enablePin1 = 22;
+int enablePin2 = 22;
+int enablePin3 = 22;
+int enablePin4 = 22;
 
 //motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
-int motorPin1 = 10;
-int motorPin2 = 11;
-int motorPin3 = 12;
-int motorPin4 = 13;
+int motorPin1 = 9;
+int motorPin2 = 10;
+int motorPin3 = 11;
+int motorPin4 = 12;
 
+//temp initialization
 boolean dir1 = 1;
 boolean dir2 = 1;
 boolean dir3 = 1;
 boolean dir4 = 1;
 
-float linSpeed = 0;
+float linSpeed = 0.5; //in m/s?
 float angSpeed = 0;
 
 float motorSpeed1 = 0.0;
@@ -66,10 +68,10 @@ void setup()
   pinMode(enablePin3, OUTPUT);
   pinMode(enablePin4, OUTPUT);
 
-  pinMode(directonPin1, OUTPUT);
-  pinMode(directonPin2, OUTPUT);
-  pinMode(directonPin3, OUTPUT);
-  pinMode(directonPin4, OUTPUT);
+  pinMode(directionPin1, OUTPUT);
+  pinMode(directionPin2, OUTPUT);
+  pinMode(directionPin3, OUTPUT);
+  pinMode(directionPin4, OUTPUT);
   
   //enable motors, assumes high = enabled
   digitalWrite(enablePin1, HIGH);
