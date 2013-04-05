@@ -75,3 +75,12 @@ rosrun rosserial_python serial_node.py /dev/ttyACM0
 
 same thing with the port, everything else worked fine.
 
+
+
+
+---------------RUNNING ROS + ARDUINO----------------
+must run the python script that relays arduino shit to ROS
+the tutorials use serial_node.py in the rosserial package > rosserial_python > nodes
+
+
+
