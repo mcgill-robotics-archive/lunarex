@@ -11,4 +11,5 @@ TrajectoryPlannerROS:
     holonomic_robot: true
 
     controller_frequency: 10.0
+    latch_xy_goal_tolerance: false 
 
