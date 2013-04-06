@@ -102,7 +102,7 @@ void loop()
   
   if (linSpeed == 0 && angSpeed == 0)
   {stopAll();}
-  else if(linSpeed <= 0.0001 || linSpeed >= -0.0001)
+  else if(linSpeed == 0)
   {turnOnSpot();}
   else if(angSpeed == 0)
   {goStraight();}
