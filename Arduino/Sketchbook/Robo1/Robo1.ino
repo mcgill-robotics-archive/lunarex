@@ -55,7 +55,7 @@ float LR_servo_angle = 0.0;
 float RR_servo_angle = 0.0;
 
 float wheelSpeed;
-float WHEEL_RADIUS = 1;
+float WHEEL_RADIUS = 0.15;
 float MIN_SPEED = 0;
 float MAX_SPEED = 1;
 float LENGTH = 0;
