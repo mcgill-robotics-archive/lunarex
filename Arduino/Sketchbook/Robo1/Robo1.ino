@@ -5,11 +5,7 @@
 
 //these are init values. Can set tthem through ang_speed and lin_speed ros topics
 float angSpeed = 0;
-float linSpeed = 10000;
-
-//100000; is 80% of 5v, with 14.4V.. about 7.48rpm
-
-//0 - 20 000 rpm on motor
+float linSpeed = 0;
 
 ros:: NodeHandle nh;
 
@@ -21,10 +17,10 @@ void setLinSpeed(const std_msgs:: Float32 &lin_speed)
 ros:: Subscriber<std_msgs::Float32> angSub("ang_speed", &setAngSpeed);
 ros:: Subscriber<std_msgs::Float32> linSub("lin_speed", &setLinSpeed);
 
-/*
+
 arduino_msgs::ArduinoFeedback fb;
 ros:: Publisher feedback_publisher("arduino_feedback", &fb);
-*/
+
 
 Servo LF_servo, RF_servo, LR_servo, RR_servo;
 
@@ -38,10 +34,10 @@ int RF_motor_enable_pin = 22;
 int LR_motor_enable_pin = 22;
 int RR_motor_enable_pin = 22;
 
-int LF_motor_speed_pin = 9;
-int RF_motor_speed_pin = 10;
-int LR_motor_speed_pin = 11;
-int RR_motor_speed_pin = 12;
+int LF_motor_pin = 9;
+int RF_motor_pin = 10;
+int LR_motor_pin = 11;
+int RR_motor_pin = 12;
 
 boolean LF_motor_enable = 1;
 boolean RF_motor_enable = 1;
@@ -54,10 +50,10 @@ boolean RF_motor_dir = 1;
 boolean LR_motor_dir = 1;
 boolean RR_motor_dir = 1;
 
-float LF_motor_speed = 0.0;
-float RF_motor_speed = 0.0;
-float LR_motor_speed = 0.0;
-float RR_motor_speed = 0.0;
+float LF_wheel_rpm = 0.0;
+float RF_wheel_rpm = 0.0;
+float LR_wheel_rpm = 0.0;
+float RR_wheel_rpm = 0.0;
 
 float LF_servo_angle = 0.0;
 float RF_servo_angle = 0.0;
@@ -69,6 +65,10 @@ int RF_servo_cmd = 0;
 int LR_servo_cmd = 0;
 int RR_servo_cmd = 0;
 
+int LF_motor_cmd = 0;
+int RF_motor_cmd = 0;
+int LR_motor_cmd = 0;
+int RR_motor_cmd = 0;
 
 //all values in meters
 float motor_rpm;
@@ -86,10 +86,10 @@ int GEAR_RATIO = 74;
 
 void setup()
 {
-  pinMode(LF_motor_speed_pin, OUTPUT);
-  pinMode(RF_motor_speed_pin, OUTPUT);
-  pinMode(LR_motor_speed_pin, OUTPUT);
-  pinMode(RR_motor_speed_pin, OUTPUT);
+  pinMode(LF_motor_pin, OUTPUT);
+  pinMode(RF_motor_pin, OUTPUT);
+  pinMode(LR_motor_pin, OUTPUT);
+  pinMode(RR_motor_pin, OUTPUT);
 
   LF_servo.attach(2);
   RF_servo.attach(3);
@@ -115,18 +115,12 @@ void setup()
   nh.initNode();
   nh.subscribe(angSub);
   nh.subscribe(linSub);
-
-
-  //Serial.begin(9600);
 }
 
 void loop()
 {
   
   nh.spinOnce();
-   //Serial.println(linSpeed);
-  //analogWrite(LF_motor_speed_pin, (int) linSpeed);
-  
   
   if (linSpeed == 0 && angSpeed == 0)
   {stopAll();}
@@ -139,26 +133,19 @@ void loop()
   
   setWheelDirection(LF_motor_dir, RF_motor_dir, LR_motor_dir, RR_motor_dir);
   setWheelAngle(LF_servo_angle, RF_servo_angle, LR_servo_angle, RR_servo_angle);
-  setWheelSpeed(LF_motor_speed, RF_motor_speed, LR_motor_speed, RR_motor_speed);
+  setWheelSpeed(LF_wheel_rpm, RF_wheel_rpm, LR_wheel_rpm, RR_wheel_rpm);
   
-  /*
-  fb.linSpeed.data = linSpeed;
-  fb.angSpeed.data = angSpeed;
-  
-  fb.LF_motor_enable.data = LF_motor_enable;
-  fb.LF_motor_dir.data = LF_motor_dir;
-  fb.LF_servo_angle.data = LF_servo_angle;
-  fb.LF_wheel_rpm.data = LF_motor_speed;
-  */
-  
+  populateFeedbackMessage();
+
+  feedback_publisher.publish(&fb);
 }
 
 void stopAll()
 {
-   LF_motor_speed = 0.0;
-   RF_motor_speed = 0.0;
-   LR_motor_speed = 0.0;
-   RR_motor_speed = 0.0;
+   LF_wheel_rpm = 0.0;
+   RF_wheel_rpm = 0.0;
+   LR_wheel_rpm = 0.0;
+   RR_wheel_rpm = 0.0;
    
    digitalWrite(LF_motor_enable_pin, LF_motor_enable);
    digitalWrite(RF_motor_enable_pin, RF_motor_enable);
@@ -197,10 +184,10 @@ void turnOnSpot()
    
    motor_rpm = (DIST_TO_AXIS_A / WHEEL_RADIUS)*angSpeed*SEC_PER_MIN/(2*PI);
    
-   LF_motor_speed = motor_rpm;
-   RF_motor_speed = motor_rpm;
-   LR_motor_speed = motor_rpm;
-   RR_motor_speed = motor_rpm; 
+   LF_wheel_rpm = motor_rpm;
+   RF_wheel_rpm = motor_rpm;
+   LR_wheel_rpm = motor_rpm;
+   RR_wheel_rpm = motor_rpm; 
 }
 
 void goStraight()
@@ -236,10 +223,10 @@ void goStraight()
     
     motor_rpm = SEC_PER_MIN*linSpeed/(2*PI*WHEEL_RADIUS);
     
-    LF_motor_speed = motor_rpm;
-    RF_motor_speed = motor_rpm;
-    LR_motor_speed = motor_rpm;
-    RR_motor_speed = motor_rpm;  
+    LF_wheel_rpm = motor_rpm;
+    RF_wheel_rpm = motor_rpm;
+    LR_wheel_rpm = motor_rpm;
+    RR_wheel_rpm = motor_rpm;  
 }
 
 void doAckerman()
@@ -326,10 +313,10 @@ void doAckerman()
     }
     
     //now for drive motor velocities
-    LF_motor_speed = (rad1 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    RF_motor_speed = (rad2 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    LR_motor_speed = (rad3 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    RR_motor_speed = (rad4 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    LF_wheel_rpm = (rad1 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    RF_wheel_rpm = (rad2 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    LR_wheel_rpm = (rad3 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    RR_wheel_rpm = (rad4 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
   }
   
 void setWheelDirection(boolean LF_motor_dir, boolean RF_motor_dir, boolean LR_motor_dir, boolean RR_motor_dir)
@@ -365,15 +352,52 @@ void setWheelAngle(int LF_servo_angle, int RF_servo_angle, int LR_servo_angle, i
   RR_servo.writeMicroseconds(RR_servo_cmd);
 }
 
-void setWheelSpeed(int LF_motor_speed, int RF_motor_speed, int LR_motor_speed, int RR_motor_speed)
+void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_wheel_rpm)
 {
-  int LF_signal = 11.7718918*LF_motor_speed - 3.81049;
-  int RF_signal = 11.7718918*RF_motor_speed - 3.81049;
-  int LR_signal = 11.7718918*LR_motor_speed - 3.81049;
-  int RR_signal = 11.7718918*RR_motor_speed - 3.81049;
+  LF_motor_cmd = 11.7718918*LF_wheel_rpm - 3.81049;
+  RF_motor_cmd = 11.7718918*RF_wheel_rpm - 3.81049;
+  LR_motor_cmd = 11.7718918*LR_wheel_rpm - 3.81049;
+  RR_motor_cmd = 11.7718918*RR_wheel_rpm - 3.81049;
 
-  analogWrite(LF_motor_speed_pin, LF_motor_speed);
-  analogWrite(RF_motor_speed_pin, RF_motor_speed);
-  analogWrite(LR_motor_speed_pin, LR_motor_speed);
-  analogWrite(RR_motor_speed_pin, RR_motor_speed);
+  analogWrite(LF_motor_pin, LF_wheel_rpm);
+  analogWrite(RF_motor_pin, RF_wheel_rpm);
+  analogWrite(LR_motor_pin, LR_wheel_rpm);
+  analogWrite(RR_motor_pin, RR_wheel_rpm);
+}
+
+void populateFeedbackMessage(){
+  fb.linSpeed.data = linSpeed;
+  fb.angSpeed.data = angSpeed;
+  
+  fb.LF_motor_enable.data = LF_motor_enable;
+  fb.LF_motor_dir.data = LF_motor_dir;
+  fb.LF_wheel_rpm.data = LF_wheel_rpm;
+  fb.LF_motor_cmd.data = LF_motor_cmd;
+
+  fb.LF_servo_angle.data = LF_servo_angle;
+  fb.LF_servo_cmd.data = LF_servo_cmd;
+  
+  fb.RF_motor_enable.data = RF_motor_enable;
+  fb.RF_motor_dir.data = RF_motor_dir;
+  fb.RF_wheel_rpm.data = RF_wheel_rpm;
+  fb.RF_motor_cmd.data = RF_motor_cmd;
+
+  fb.RF_servo_angle.data = RF_servo_angle;
+  fb.RF_servo_cmd.data = RF_servo_cmd;
+  
+  fb.LR_motor_enable.data = LR_motor_enable;
+  fb.LR_motor_dir.data = LR_motor_dir;
+  fb.LR_wheel_rpm.data = LR_wheel_rpm;
+  fb.LR_motor_cmd.data = LR_motor_cmd;
+
+  fb.LR_servo_angle.data = LR_servo_angle;
+  fb.LR_servo_cmd.data = LR_servo_cmd;
+  
+  fb.RR_motor_enable.data = RR_motor_enable;
+  fb.RR_motor_dir.data = RR_motor_dir;
+  fb.RR_wheel_rpm.data = RR_wheel_rpm;
+  fb.RR_motor_cmd.data = RR_motor_cmd;
+
+  fb.RR_servo_angle.data = RR_servo_angle;
+  fb.RR_servo_cmd.data = RR_servo_cmd;
 }

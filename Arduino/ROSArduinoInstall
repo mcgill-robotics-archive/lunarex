@@ -83,4 +83,9 @@ must run the python script that relays arduino shit to ROS
 the tutorials use serial_node.py in the rosserial package > rosserial_python > nodes
 
 
+if made changes to the msg types, run
+rosrun rosserial_client make_library.py /home/ernie/McGill_LunarEx_2013/Arduino/Sketchbook/libraries  arduino_msgs
 
+to bind the IDE to the new msgs
+
+useful to create publisher: http://www.ros.org/wiki/rosserial_arduino/Tutorials/Hello%20World
