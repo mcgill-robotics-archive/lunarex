@@ -89,3 +89,10 @@ rosrun rosserial_client make_library.py /home/ernie/McGill_LunarEx_2013/Arduino/
 to bind the IDE to the new msgs
 
 useful to create publisher: http://www.ros.org/wiki/rosserial_arduino/Tutorials/Hello%20World
+
+bind rosserial to the arduino port
+rosrun rosserial_python serial_node.py /dev/ttyACM0
+
+send shit to arduino (example)
+rostopic pub ang_speed std_msgs/Float32 10 --rate=100
+
