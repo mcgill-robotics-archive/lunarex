@@ -23,8 +23,8 @@ int main(int argc, char** argv){
   goal.target_pose.header.stamp = ros::Time::now();
     
   goal.target_pose.pose.position.x = 2.0;
-  goal.target_pose.pose.position.y = 2.0; 
-  goal.target_pose.pose.orientation.w = 0;  
+  goal.target_pose.pose.position.y = 1.0; 
+  goal.target_pose.pose.orientation.w = 1.0;  
   //goal.target_pose.pose.orientation.x = 1.0;
 
   //ROS_INFO("x:%f;y:%f;w:%f",feedback.base_position.pose.position.x, feedback.base_position.pose.position.y,feedback.base_position.pose.orientation.w);
