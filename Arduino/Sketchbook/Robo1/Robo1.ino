@@ -115,13 +115,11 @@ void setup()
   nh.initNode();
   nh.subscribe(angSub);
   nh.subscribe(linSub);
+  nh.advertise(feedback_publisher);
 }
 
 void loop()
-{
-  
-  nh.spinOnce();
-  
+{ 
   if (linSpeed == 0 && angSpeed == 0)
   {stopAll();}
   else if(linSpeed == 0)
@@ -138,6 +136,8 @@ void loop()
   populateFeedbackMessage();
 
   feedback_publisher.publish(&fb);
+
+  nh.spinOnce();
 }
 
 void stopAll()
