@@ -4,7 +4,7 @@
 
 //these are init values. Can set tthem through ang_speed and lin_speed ros topics
 float angSpeed = 0;
-float linSpeed = 100000;
+float linSpeed = 10000;
 
 //100000; is 80% of 5v, with 14.4V.. about 7.48rpm
 
@@ -32,7 +32,6 @@ int RF_motor_enable_pin = 22;
 int LR_motor_enable_pin = 22;
 int RR_motor_enable_pin = 22;
 
-//motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
 int LF_motor_speed_pin = 9;
 int RF_motor_speed_pin = 10;
 int LR_motor_speed_pin = 11;
@@ -54,14 +53,19 @@ float RF_servo_angle = 0.0;
 float LR_servo_angle = 0.0;
 float RR_servo_angle = 0.0;
 
-float wheelSpeed;
-float WHEEL_RADIUS = 0.15;
+//all values in meters
+float motor_rpm;
+float WHEEL_RADIUS = 0.1397;
 float MIN_SPEED = 0;
-float MAX_SPEED = 1;
-float LENGTH = 0;
-float WIDTH = 0;
-float DIST_TO_AXIS_A = 0;
+//MAX_SPEED is in Revolutions per minutes
+float MAX_SPEED = 20000;
+float LENGTH = 0.71;
+float WIDTH = 0.7219;
+float DIST_TO_AXIS_A = 0.5074;
+//in degrees
 int MAX_ANGLE = 181;
+int SEC_PER_MIN = 60;
+int GEAR_RATIO = 74;
 
 void setup()
 {
@@ -94,13 +98,20 @@ void setup()
   nh.initNode();
   nh.subscribe(angSub);
   nh.subscribe(linSub);
+
+
+  //Serial.begin(9600);
 }
 
 void loop()
 {
-     nh.spinOnce();
   
-  if (linSpeed == 0 && angSpeed == 0)
+  nh.spinOnce();
+   //Serial.println(linSpeed);
+  analogWrite(LF_motor_speed_pin, (int) linSpeed);
+  
+  
+  /*if (linSpeed == 0 && angSpeed == 0)
   {stopAll();}
   else if(linSpeed == 0)
   {turnOnSpot();}
@@ -113,6 +124,12 @@ void loop()
   setWheelAngle(LF_servo_angle, RF_servo_angle, LR_servo_angle, RR_servo_angle);
   setWheelSpeed(LF_motor_speed, RF_motor_speed, LR_motor_speed, RR_motor_speed);
   
+  Serial.print("left motor speed: ");
+  Serial.println(LF_motor_speed);
+  //
+  Serial.print("left motor direction: ");
+  Serial.println(LF_motor_dir);*/
+  
 }
 
 void stopAll()
@@ -122,15 +139,15 @@ void stopAll()
    LR_motor_speed = 0.0;
    RR_motor_speed = 0.0;
    
-     digitalWrite(LF_motor_enable_pin, LOW);
-  digitalWrite(RF_motor_enable_pin, LOW);
-  digitalWrite(LR_motor_enable_pin, LOW);
-  digitalWrite(RR_motor_enable_pin, LOW);
+   //digitalWrite(LF_motor_enable_pin, LOW);
+   //digitalWrite(RF_motor_enable_pin, LOW);
+   //digitalWrite(LR_motor_enable_pin, LOW);
+   //digitalWrite(RR_motor_enable_pin, LOW);
 }
 
 void turnOnSpot()
 {
-    digitalWrite(LF_motor_enable_pin, HIGH);
+  digitalWrite(LF_motor_enable_pin, HIGH);
   digitalWrite(RF_motor_enable_pin, HIGH);
   digitalWrite(LR_motor_enable_pin, HIGH);
   digitalWrite(RR_motor_enable_pin, HIGH);
@@ -157,13 +174,13 @@ void turnOnSpot()
      RR_motor_dir = 0;
    }    
    
-   wheelSpeed = linSpeed/(2*PI*WHEEL_RADIUS);
-   wheelSpeed = map(wheelSpeed, MIN_SPEED, MAX_SPEED, 0, 255);
+   motor_rpm = GEAR_RATIO*(DIST_TO_AXIS_A / WHEEL_RADIUS)*angSpeed*SEC_PER_MIN/(2*PI);
+   motor_rpm = map(motor_rpm, MIN_SPEED, MAX_SPEED, 0, 255);
    
-   LF_motor_speed = wheelSpeed;
-   RF_motor_speed = wheelSpeed;
-   LR_motor_speed = wheelSpeed;
-   RR_motor_speed = wheelSpeed; 
+   LF_motor_speed = motor_rpm;
+   RF_motor_speed = motor_rpm;
+   LR_motor_speed = motor_rpm;
+   RR_motor_speed = motor_rpm; 
 }
 
 void goStraight()
@@ -197,13 +214,13 @@ void goStraight()
       RR_motor_dir = 0;
     }
     
-    wheelSpeed = linSpeed/(2*PI*WHEEL_RADIUS);
-    wheelSpeed = map(wheelSpeed, MIN_SPEED, MAX_SPEED, 0, 255);
+    motor_rpm = GEAR_RATIO*SEC_PER_MIN*linSpeed/(2*PI*WHEEL_RADIUS);
+    motor_rpm = map(motor_rpm, MIN_SPEED, MAX_SPEED, 0, 255);
     
-    LF_motor_speed = wheelSpeed;
-    RF_motor_speed = wheelSpeed;
-    LR_motor_speed = wheelSpeed;
-    RR_motor_speed = wheelSpeed;  
+    LF_motor_speed = motor_rpm;
+    RF_motor_speed = motor_rpm;
+    LR_motor_speed = motor_rpm;
+    RR_motor_speed = motor_rpm;  
 }
 
 void doAckerman()
@@ -290,14 +307,17 @@ void doAckerman()
     }
     
     //now for drive motor velocities
-    LF_motor_speed = (rad1 / WHEEL_RADIUS) * angSpeed;
-    RF_motor_speed = (rad2 / WHEEL_RADIUS) * angSpeed;
-    LR_motor_speed = (rad3 / WHEEL_RADIUS) * angSpeed;
-    RR_motor_speed = (rad4 / WHEEL_RADIUS) * angSpeed;
+    LF_motor_speed = GEAR_RATIO*(rad1 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    RF_motor_speed = GEAR_RATIO*(rad2 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    LR_motor_speed = GEAR_RATIO*(rad3 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    RR_motor_speed = GEAR_RATIO*(rad4 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
   }
   
-void setWheelDirection(int LF_motor_dir, int RF_motor_dir, int LR_motor_dir, int RR_motor_dir)
+void setWheelDirection(boolean LF_motor_dir, boolean RF_motor_dir, boolean LR_motor_dir, boolean RR_motor_dir)
 {
+  LF_motor_dir = !LF_motor_dir;
+  LR_motor_dir = !LR_motor_dir;
+  
   //forward or backwards for drive wheels
   digitalWrite(LF_motor_dir_pin, LF_motor_dir);
   digitalWrite(RF_motor_dir_pin, RF_motor_dir);
