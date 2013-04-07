@@ -1,6 +1,7 @@
 #include <Servo.h>
 #include <ros.h>
 #include <std_msgs/Float32.h>
+#include <arduino_msgs/ArduinoFeedback.h>
 
 //these are init values. Can set tthem through ang_speed and lin_speed ros topics
 float angSpeed = 0;
@@ -20,6 +21,11 @@ void setLinSpeed(const std_msgs:: Float32 &lin_speed)
 ros:: Subscriber<std_msgs::Float32> angSub("ang_speed", &setAngSpeed);
 ros:: Subscriber<std_msgs::Float32> linSub("lin_speed", &setLinSpeed);
 
+/*
+arduino_msgs::ArduinoFeedback fb;
+ros:: Publisher feedback_publisher("arduino_feedback", &fb);
+*/
+
 Servo LF_servo, RF_servo, LR_servo, RR_servo;
 
 int LF_motor_dir_pin = 26;
@@ -37,6 +43,11 @@ int RF_motor_speed_pin = 10;
 int LR_motor_speed_pin = 11;
 int RR_motor_speed_pin = 12;
 
+boolean LF_motor_enable = 1;
+boolean RF_motor_enable = 1;
+boolean LR_motor_enable = 1;
+boolean RR_motor_enable = 1;
+
 //temp initialization
 boolean LF_motor_dir = 1;
 boolean RF_motor_dir = 1;
@@ -52,6 +63,12 @@ float LF_servo_angle = 0.0;
 float RF_servo_angle = 0.0;
 float LR_servo_angle = 0.0;
 float RR_servo_angle = 0.0;
+
+int LF_servo_cmd = 0;
+int RF_servo_cmd = 0;
+int LR_servo_cmd = 0;
+int RR_servo_cmd = 0;
+
 
 //all values in meters
 float motor_rpm;
@@ -90,10 +107,10 @@ void setup()
   pinMode(RR_motor_dir_pin, OUTPUT);
   
   //enable motors, assumes high = enabled
-  digitalWrite(LF_motor_enable_pin, HIGH);
-  digitalWrite(RF_motor_enable_pin, HIGH);
-  digitalWrite(LR_motor_enable_pin, HIGH);
-  digitalWrite(RR_motor_enable_pin, HIGH);
+  digitalWrite(LF_motor_enable_pin, LF_motor_enable);
+  digitalWrite(RF_motor_enable_pin, RF_motor_enable);
+  digitalWrite(LR_motor_enable_pin, LR_motor_enable);
+  digitalWrite(RR_motor_enable_pin, RR_motor_enable);
   
   nh.initNode();
   nh.subscribe(angSub);
@@ -108,10 +125,10 @@ void loop()
   
   nh.spinOnce();
    //Serial.println(linSpeed);
-  analogWrite(LF_motor_speed_pin, (int) linSpeed);
+  //analogWrite(LF_motor_speed_pin, (int) linSpeed);
   
   
-  /*if (linSpeed == 0 && angSpeed == 0)
+  if (linSpeed == 0 && angSpeed == 0)
   {stopAll();}
   else if(linSpeed == 0)
   {turnOnSpot();}
@@ -124,11 +141,15 @@ void loop()
   setWheelAngle(LF_servo_angle, RF_servo_angle, LR_servo_angle, RR_servo_angle);
   setWheelSpeed(LF_motor_speed, RF_motor_speed, LR_motor_speed, RR_motor_speed);
   
-  Serial.print("left motor speed: ");
-  Serial.println(LF_motor_speed);
-  //
-  Serial.print("left motor direction: ");
-  Serial.println(LF_motor_dir);*/
+  /*
+  fb.linSpeed.data = linSpeed;
+  fb.angSpeed.data = angSpeed;
+  
+  fb.LF_motor_enable.data = LF_motor_enable;
+  fb.LF_motor_dir.data = LF_motor_dir;
+  fb.LF_servo_angle.data = LF_servo_angle;
+  fb.LF_wheel_rpm.data = LF_motor_speed;
+  */
   
 }
 
@@ -139,18 +160,18 @@ void stopAll()
    LR_motor_speed = 0.0;
    RR_motor_speed = 0.0;
    
-   //digitalWrite(LF_motor_enable_pin, LOW);
-   //digitalWrite(RF_motor_enable_pin, LOW);
-   //digitalWrite(LR_motor_enable_pin, LOW);
-   //digitalWrite(RR_motor_enable_pin, LOW);
+   digitalWrite(LF_motor_enable_pin, LF_motor_enable);
+   digitalWrite(RF_motor_enable_pin, RF_motor_enable);
+   digitalWrite(LR_motor_enable_pin, LF_motor_enable);
+   digitalWrite(RR_motor_enable_pin, RR_motor_enable);
 }
 
 void turnOnSpot()
 {
-  digitalWrite(LF_motor_enable_pin, HIGH);
-  digitalWrite(RF_motor_enable_pin, HIGH);
-  digitalWrite(LR_motor_enable_pin, HIGH);
-  digitalWrite(RR_motor_enable_pin, HIGH);
+  digitalWrite(LF_motor_enable_pin, LF_motor_enable);
+  digitalWrite(RF_motor_enable_pin, RF_motor_enable);
+  digitalWrite(LR_motor_enable_pin, LF_motor_enable);
+  digitalWrite(RR_motor_enable_pin, RR_motor_enable);
   
    LF_servo_angle = 135;
    RF_servo_angle = 45;
@@ -185,10 +206,10 @@ void turnOnSpot()
 
 void goStraight()
 {
-    digitalWrite(LF_motor_enable_pin, HIGH);
-  digitalWrite(RF_motor_enable_pin, HIGH);
-  digitalWrite(LR_motor_enable_pin, HIGH);
-  digitalWrite(RR_motor_enable_pin, HIGH);
+    digitalWrite(LF_motor_enable_pin, LF_motor_enable);
+  digitalWrite(RF_motor_enable_pin, RF_motor_enable);
+  digitalWrite(LR_motor_enable_pin, LR_motor_enable);
+  digitalWrite(RR_motor_enable_pin, RR_motor_enable);
   
   //set all wheel directions to straight, then impliment drive
     
@@ -228,10 +249,10 @@ void doAckerman()
     //Implement ackerman or double ackerman "in motion steering algorithm" depending on how sharp a turn it is. 
       //Default single ackerman unless a front wheel angle would be above a threshold, MAX_ANGLE
       //If single ackerman generates too high an angle, recalculate with double ackerman
-     digitalWrite(LF_motor_enable_pin, HIGH);
-  digitalWrite(RF_motor_enable_pin, HIGH);
-  digitalWrite(LR_motor_enable_pin, HIGH);
-  digitalWrite(RR_motor_enable_pin, HIGH);
+     digitalWrite(LF_motor_enable_pin, LF_motor_enable);
+  digitalWrite(RF_motor_enable_pin, RF_motor_enable);
+  digitalWrite(LR_motor_enable_pin, LR_motor_enable);
+  digitalWrite(RR_motor_enable_pin, RR_motor_enable);
    
    
    if(linSpeed < 0) //changed from <= to < because '==' has a different case
@@ -329,10 +350,10 @@ void setWheelAngle(int LF_servo_angle, int RF_servo_angle, int LR_servo_angle, i
 {
   //motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
   
-  int LF_servo_cmd = map(LF_servo_angle,0,180,1000,2000); //still need to validate this mapping and might need to invert it for the front or back servos (which are mounted backwards)
-  int RF_servo_cmd = map(RF_servo_angle,0,180,1000,2000);
-  int LR_servo_cmd = map(LR_servo_angle,0,180,1000,2000);
-  int RR_servo_cmd = map(RR_servo_angle,0,180,1000,2000);
+  LF_servo_cmd = map(LF_servo_angle,0,180,1000,2000); //still need to validate this mapping and might need to invert it for the front or back servos (which are mounted backwards)
+  RF_servo_cmd = map(RF_servo_angle,0,180,1000,2000);
+  LR_servo_cmd = map(LR_servo_angle,0,180,1000,2000);
+  RR_servo_cmd = map(RR_servo_angle,0,180,1000,2000);
   
   LF_servo.writeMicroseconds(LF_servo_cmd);
   RF_servo.writeMicroseconds(RF_servo_cmd);
