@@ -195,8 +195,7 @@ void turnOnSpot()
      RR_motor_dir = 0;
    }    
    
-   motor_rpm = GEAR_RATIO*(DIST_TO_AXIS_A / WHEEL_RADIUS)*angSpeed*SEC_PER_MIN/(2*PI);
-   motor_rpm = map(motor_rpm, MIN_SPEED, MAX_SPEED, 0, 255);
+   motor_rpm = (DIST_TO_AXIS_A / WHEEL_RADIUS)*angSpeed*SEC_PER_MIN/(2*PI);
    
    LF_motor_speed = motor_rpm;
    RF_motor_speed = motor_rpm;
@@ -235,8 +234,7 @@ void goStraight()
       RR_motor_dir = 0;
     }
     
-    motor_rpm = GEAR_RATIO*SEC_PER_MIN*linSpeed/(2*PI*WHEEL_RADIUS);
-    motor_rpm = map(motor_rpm, MIN_SPEED, MAX_SPEED, 0, 255);
+    motor_rpm = SEC_PER_MIN*linSpeed/(2*PI*WHEEL_RADIUS);
     
     LF_motor_speed = motor_rpm;
     RF_motor_speed = motor_rpm;
@@ -328,10 +326,10 @@ void doAckerman()
     }
     
     //now for drive motor velocities
-    LF_motor_speed = GEAR_RATIO*(rad1 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    RF_motor_speed = GEAR_RATIO*(rad2 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    LR_motor_speed = GEAR_RATIO*(rad3 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    RR_motor_speed = GEAR_RATIO*(rad4 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    LF_motor_speed = (rad1 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    RF_motor_speed = (rad2 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    LR_motor_speed = (rad3 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    RR_motor_speed = (rad4 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
   }
   
 void setWheelDirection(boolean LF_motor_dir, boolean RF_motor_dir, boolean LR_motor_dir, boolean RR_motor_dir)
@@ -363,6 +361,11 @@ void setWheelAngle(int LF_servo_angle, int RF_servo_angle, int LR_servo_angle, i
 
 void setWheelSpeed(int LF_motor_speed, int RF_motor_speed, int LR_motor_speed, int RR_motor_speed)
 {
+  int LF_signal = 11.7718918*LF_motor_speed - 3.81049;
+  int RF_signal = 11.7718918*RF_motor_speed - 3.81049;
+  int LR_signal = 11.7718918*LR_motor_speed - 3.81049;
+  int RR_signal = 11.7718918*RR_motor_speed - 3.81049;
+
   analogWrite(LF_motor_speed_pin, LF_motor_speed);
   analogWrite(RF_motor_speed_pin, RF_motor_speed);
   analogWrite(LR_motor_speed_pin, LR_motor_speed);
