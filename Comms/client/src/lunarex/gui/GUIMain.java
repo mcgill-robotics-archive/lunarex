@@ -235,7 +235,10 @@ public class GUIMain extends JFrame {
 			keyCom(KeyEvent.VK_S,0);
 			
 			// Stop everything
-			keyCom(KeyEvent.VK_S, "stop");
+			keyCom(KeyEvent.VK_H, "smoothHold");
+			
+			//	A smooth break
+			keyCom(KeyEvent.VK_J, "jerkyHold");
 			
 		}
 		// IP ADDRESS BOX
@@ -350,8 +353,20 @@ public class GUIMain extends JFrame {
 	}
 	private void keyCom(int key, String stopSign){
 		if(keyboard.keyDown(key)){
-			outByte[1] >>= 1;
-			outByte[2] >>= 1;
+			if(stopSign.equals("jerkyHold")){
+				outByte[1] >>= 1;
+				outByte[2] >>= 1;
+			}
+		}
+		else{
+			for(int i = 1; i <=2; i++){
+				if(outByte[i] < 0){
+					outByte[i]--;
+				}
+				else{
+					outByte[i]++;
+				}
+			}
 		}
 	}
 	private void keyCom(int key, int i){
