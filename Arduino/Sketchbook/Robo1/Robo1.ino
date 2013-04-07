@@ -353,6 +353,12 @@ void setWheelAngle(int LF_servo_angle, int RF_servo_angle, int LR_servo_angle, i
   LR_servo_cmd = map(LR_servo_angle,0,180,1000,2000);
   RR_servo_cmd = map(RR_servo_angle,0,180,1000,2000);
   
+  //prevent accidental continuous rotation:
+  LF_servo_cmd = constrain(LF_servo_cmd, 1000, 2000);
+  RF_servo_cmd = constrain(RF_servo_cmd, 1000, 2000);
+  LR_servo_cmd = constrain(LR_servo_cmd, 1000, 2000);
+  RR_servo_cmd = constrain(RR_servo_cmd, 1000, 2000);
+  
   LF_servo.writeMicroseconds(LF_servo_cmd);
   RF_servo.writeMicroseconds(RF_servo_cmd);
   LR_servo.writeMicroseconds(LR_servo_cmd);
