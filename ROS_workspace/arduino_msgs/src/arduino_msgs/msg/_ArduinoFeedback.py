@@ -7,7 +7,7 @@ import struct
 import std_msgs.msg
 
 class ArduinoFeedback(genpy.Message):
-  _md5sum = "9714a5e0162ffa0a697e028ea8e99e60"
+  _md5sum = "897055af1a9b4d2b502796702e4743ce"
   _type = "arduino_msgs/ArduinoFeedback"
   _has_header = True #flag to mark the presence of a Header object
   _full_text = """Header header
@@ -15,28 +15,28 @@ class ArduinoFeedback(genpy.Message):
 std_msgs/Float32 linSpeed
 std_msgs/Float32 angSpeed
 
-std_msgs/Bool LF_enable
+#std_msgs/Bool LF_enable
 std_msgs/Bool LF_direction
 std_msgs/Int8 LF_servo_angle
 std_msgs/Int16 LF_servo_pwm
 std_msgs/Float32 LF_wheel_rpm
 std_msgs/Int8 LF_motor_signal
 
-std_msgs/Bool RF_enable
+#std_msgs/Bool RF_enable
 std_msgs/Bool RF_direction
 std_msgs/Int8 RF_servo_angle
 std_msgs/Int16 RF_servo_pwm
 std_msgs/Float32 RF_wheel_rpm
 std_msgs/Int8 RF_motor_signal
 
-std_msgs/Bool LR_enable
+#std_msgs/Bool LR_enable
 std_msgs/Bool LR_direction
 std_msgs/Int8 LR_servo_angle
 std_msgs/Int16 LR_servo_pwm
 std_msgs/Float32 LR_wheel_rpm
 std_msgs/Int8 LR_motor_signal
 
-std_msgs/Bool RR_enable
+#std_msgs/Bool RR_enable
 std_msgs/Bool RR_direction
 std_msgs/Int8 RR_servo_angle
 std_msgs/Int16 RR_servo_pwm
@@ -76,8 +76,8 @@ MSG: std_msgs/Int16
 int16 data
 
 """
-  __slots__ = ['header','linSpeed','angSpeed','LF_enable','LF_direction','LF_servo_angle','LF_servo_pwm','LF_wheel_rpm','LF_motor_signal','RF_enable','RF_direction','RF_servo_angle','RF_servo_pwm','RF_wheel_rpm','RF_motor_signal','LR_enable','LR_direction','LR_servo_angle','LR_servo_pwm','LR_wheel_rpm','LR_motor_signal','RR_enable','RR_direction','RR_servo_angle','RR_servo_pwm','RR_wheel_rpm','RR_motor_signal']
-  _slot_types = ['std_msgs/Header','std_msgs/Float32','std_msgs/Float32','std_msgs/Bool','std_msgs/Bool','std_msgs/Int8','std_msgs/Int16','std_msgs/Float32','std_msgs/Int8','std_msgs/Bool','std_msgs/Bool','std_msgs/Int8','std_msgs/Int16','std_msgs/Float32','std_msgs/Int8','std_msgs/Bool','std_msgs/Bool','std_msgs/Int8','std_msgs/Int16','std_msgs/Float32','std_msgs/Int8','std_msgs/Bool','std_msgs/Bool','std_msgs/Int8','std_msgs/Int16','std_msgs/Float32','std_msgs/Int8']
+  __slots__ = ['header','linSpeed','angSpeed','LF_direction','LF_servo_angle','LF_servo_pwm','LF_wheel_rpm','LF_motor_signal','RF_direction','RF_servo_angle','RF_servo_pwm','RF_wheel_rpm','RF_motor_signal','LR_direction','LR_servo_angle','LR_servo_pwm','LR_wheel_rpm','LR_motor_signal','RR_direction','RR_servo_angle','RR_servo_pwm','RR_wheel_rpm','RR_motor_signal']
+  _slot_types = ['std_msgs/Header','std_msgs/Float32','std_msgs/Float32','std_msgs/Bool','std_msgs/Int8','std_msgs/Int16','std_msgs/Float32','std_msgs/Int8','std_msgs/Bool','std_msgs/Int8','std_msgs/Int16','std_msgs/Float32','std_msgs/Int8','std_msgs/Bool','std_msgs/Int8','std_msgs/Int16','std_msgs/Float32','std_msgs/Int8','std_msgs/Bool','std_msgs/Int8','std_msgs/Int16','std_msgs/Float32','std_msgs/Int8']
 
   def __init__(self, *args, **kwds):
     """
@@ -87,7 +87,7 @@ int16 data
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       header,linSpeed,angSpeed,LF_enable,LF_direction,LF_servo_angle,LF_servo_pwm,LF_wheel_rpm,LF_motor_signal,RF_enable,RF_direction,RF_servo_angle,RF_servo_pwm,RF_wheel_rpm,RF_motor_signal,LR_enable,LR_direction,LR_servo_angle,LR_servo_pwm,LR_wheel_rpm,LR_motor_signal,RR_enable,RR_direction,RR_servo_angle,RR_servo_pwm,RR_wheel_rpm,RR_motor_signal
+       header,linSpeed,angSpeed,LF_direction,LF_servo_angle,LF_servo_pwm,LF_wheel_rpm,LF_motor_signal,RF_direction,RF_servo_angle,RF_servo_pwm,RF_wheel_rpm,RF_motor_signal,LR_direction,LR_servo_angle,LR_servo_pwm,LR_wheel_rpm,LR_motor_signal,RR_direction,RR_servo_angle,RR_servo_pwm,RR_wheel_rpm,RR_motor_signal
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -102,8 +102,6 @@ int16 data
         self.linSpeed = std_msgs.msg.Float32()
       if self.angSpeed is None:
         self.angSpeed = std_msgs.msg.Float32()
-      if self.LF_enable is None:
-        self.LF_enable = std_msgs.msg.Bool()
       if self.LF_direction is None:
         self.LF_direction = std_msgs.msg.Bool()
       if self.LF_servo_angle is None:
@@ -114,8 +112,6 @@ int16 data
         self.LF_wheel_rpm = std_msgs.msg.Float32()
       if self.LF_motor_signal is None:
         self.LF_motor_signal = std_msgs.msg.Int8()
-      if self.RF_enable is None:
-        self.RF_enable = std_msgs.msg.Bool()
       if self.RF_direction is None:
         self.RF_direction = std_msgs.msg.Bool()
       if self.RF_servo_angle is None:
@@ -126,8 +122,6 @@ int16 data
         self.RF_wheel_rpm = std_msgs.msg.Float32()
       if self.RF_motor_signal is None:
         self.RF_motor_signal = std_msgs.msg.Int8()
-      if self.LR_enable is None:
-        self.LR_enable = std_msgs.msg.Bool()
       if self.LR_direction is None:
         self.LR_direction = std_msgs.msg.Bool()
       if self.LR_servo_angle is None:
@@ -138,8 +132,6 @@ int16 data
         self.LR_wheel_rpm = std_msgs.msg.Float32()
       if self.LR_motor_signal is None:
         self.LR_motor_signal = std_msgs.msg.Int8()
-      if self.RR_enable is None:
-        self.RR_enable = std_msgs.msg.Bool()
       if self.RR_direction is None:
         self.RR_direction = std_msgs.msg.Bool()
       if self.RR_servo_angle is None:
@@ -154,25 +146,21 @@ int16 data
       self.header = std_msgs.msg.Header()
       self.linSpeed = std_msgs.msg.Float32()
       self.angSpeed = std_msgs.msg.Float32()
-      self.LF_enable = std_msgs.msg.Bool()
       self.LF_direction = std_msgs.msg.Bool()
       self.LF_servo_angle = std_msgs.msg.Int8()
       self.LF_servo_pwm = std_msgs.msg.Int16()
       self.LF_wheel_rpm = std_msgs.msg.Float32()
       self.LF_motor_signal = std_msgs.msg.Int8()
-      self.RF_enable = std_msgs.msg.Bool()
       self.RF_direction = std_msgs.msg.Bool()
       self.RF_servo_angle = std_msgs.msg.Int8()
       self.RF_servo_pwm = std_msgs.msg.Int16()
       self.RF_wheel_rpm = std_msgs.msg.Float32()
       self.RF_motor_signal = std_msgs.msg.Int8()
-      self.LR_enable = std_msgs.msg.Bool()
       self.LR_direction = std_msgs.msg.Bool()
       self.LR_servo_angle = std_msgs.msg.Int8()
       self.LR_servo_pwm = std_msgs.msg.Int16()
       self.LR_wheel_rpm = std_msgs.msg.Float32()
       self.LR_motor_signal = std_msgs.msg.Int8()
-      self.RR_enable = std_msgs.msg.Bool()
       self.RR_direction = std_msgs.msg.Bool()
       self.RR_servo_angle = std_msgs.msg.Int8()
       self.RR_servo_pwm = std_msgs.msg.Int16()
@@ -200,7 +188,7 @@ int16 data
         length = len(_x)
       buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
-      buff.write(_struct_2f2Bbhfb2Bbhfb2Bbhfb2Bbhfb.pack(_x.linSpeed.data, _x.angSpeed.data, _x.LF_enable.data, _x.LF_direction.data, _x.LF_servo_angle.data, _x.LF_servo_pwm.data, _x.LF_wheel_rpm.data, _x.LF_motor_signal.data, _x.RF_enable.data, _x.RF_direction.data, _x.RF_servo_angle.data, _x.RF_servo_pwm.data, _x.RF_wheel_rpm.data, _x.RF_motor_signal.data, _x.LR_enable.data, _x.LR_direction.data, _x.LR_servo_angle.data, _x.LR_servo_pwm.data, _x.LR_wheel_rpm.data, _x.LR_motor_signal.data, _x.RR_enable.data, _x.RR_direction.data, _x.RR_servo_angle.data, _x.RR_servo_pwm.data, _x.RR_wheel_rpm.data, _x.RR_motor_signal.data))
+      buff.write(_struct_2fBbhfbBbhfbBbhfbBbhfb.pack(_x.linSpeed.data, _x.angSpeed.data, _x.LF_direction.data, _x.LF_servo_angle.data, _x.LF_servo_pwm.data, _x.LF_wheel_rpm.data, _x.LF_motor_signal.data, _x.RF_direction.data, _x.RF_servo_angle.data, _x.RF_servo_pwm.data, _x.RF_wheel_rpm.data, _x.RF_motor_signal.data, _x.LR_direction.data, _x.LR_servo_angle.data, _x.LR_servo_pwm.data, _x.LR_wheel_rpm.data, _x.LR_motor_signal.data, _x.RR_direction.data, _x.RR_servo_angle.data, _x.RR_servo_pwm.data, _x.RR_wheel_rpm.data, _x.RR_motor_signal.data))
     except struct.error as se: self._check_types(se)
     except TypeError as te: self._check_types(te)
 
@@ -216,8 +204,6 @@ int16 data
         self.linSpeed = std_msgs.msg.Float32()
       if self.angSpeed is None:
         self.angSpeed = std_msgs.msg.Float32()
-      if self.LF_enable is None:
-        self.LF_enable = std_msgs.msg.Bool()
       if self.LF_direction is None:
         self.LF_direction = std_msgs.msg.Bool()
       if self.LF_servo_angle is None:
@@ -228,8 +214,6 @@ int16 data
         self.LF_wheel_rpm = std_msgs.msg.Float32()
       if self.LF_motor_signal is None:
         self.LF_motor_signal = std_msgs.msg.Int8()
-      if self.RF_enable is None:
-        self.RF_enable = std_msgs.msg.Bool()
       if self.RF_direction is None:
         self.RF_direction = std_msgs.msg.Bool()
       if self.RF_servo_angle is None:
@@ -240,8 +224,6 @@ int16 data
         self.RF_wheel_rpm = std_msgs.msg.Float32()
       if self.RF_motor_signal is None:
         self.RF_motor_signal = std_msgs.msg.Int8()
-      if self.LR_enable is None:
-        self.LR_enable = std_msgs.msg.Bool()
       if self.LR_direction is None:
         self.LR_direction = std_msgs.msg.Bool()
       if self.LR_servo_angle is None:
@@ -252,8 +234,6 @@ int16 data
         self.LR_wheel_rpm = std_msgs.msg.Float32()
       if self.LR_motor_signal is None:
         self.LR_motor_signal = std_msgs.msg.Int8()
-      if self.RR_enable is None:
-        self.RR_enable = std_msgs.msg.Bool()
       if self.RR_direction is None:
         self.RR_direction = std_msgs.msg.Bool()
       if self.RR_servo_angle is None:
@@ -280,15 +260,11 @@ int16 data
         self.header.frame_id = str[start:end]
       _x = self
       start = end
-      end += 48
-      (_x.linSpeed.data, _x.angSpeed.data, _x.LF_enable.data, _x.LF_direction.data, _x.LF_servo_angle.data, _x.LF_servo_pwm.data, _x.LF_wheel_rpm.data, _x.LF_motor_signal.data, _x.RF_enable.data, _x.RF_direction.data, _x.RF_servo_angle.data, _x.RF_servo_pwm.data, _x.RF_wheel_rpm.data, _x.RF_motor_signal.data, _x.LR_enable.data, _x.LR_direction.data, _x.LR_servo_angle.data, _x.LR_servo_pwm.data, _x.LR_wheel_rpm.data, _x.LR_motor_signal.data, _x.RR_enable.data, _x.RR_direction.data, _x.RR_servo_angle.data, _x.RR_servo_pwm.data, _x.RR_wheel_rpm.data, _x.RR_motor_signal.data,) = _struct_2f2Bbhfb2Bbhfb2Bbhfb2Bbhfb.unpack(str[start:end])
-      self.LF_enable.data = bool(self.LF_enable.data)
+      end += 44
+      (_x.linSpeed.data, _x.angSpeed.data, _x.LF_direction.data, _x.LF_servo_angle.data, _x.LF_servo_pwm.data, _x.LF_wheel_rpm.data, _x.LF_motor_signal.data, _x.RF_direction.data, _x.RF_servo_angle.data, _x.RF_servo_pwm.data, _x.RF_wheel_rpm.data, _x.RF_motor_signal.data, _x.LR_direction.data, _x.LR_servo_angle.data, _x.LR_servo_pwm.data, _x.LR_wheel_rpm.data, _x.LR_motor_signal.data, _x.RR_direction.data, _x.RR_servo_angle.data, _x.RR_servo_pwm.data, _x.RR_wheel_rpm.data, _x.RR_motor_signal.data,) = _struct_2fBbhfbBbhfbBbhfbBbhfb.unpack(str[start:end])
       self.LF_direction.data = bool(self.LF_direction.data)
-      self.RF_enable.data = bool(self.RF_enable.data)
       self.RF_direction.data = bool(self.RF_direction.data)
-      self.LR_enable.data = bool(self.LR_enable.data)
       self.LR_direction.data = bool(self.LR_direction.data)
-      self.RR_enable.data = bool(self.RR_enable.data)
       self.RR_direction.data = bool(self.RR_direction.data)
       return self
     except struct.error as e:
@@ -311,7 +287,7 @@ int16 data
         length = len(_x)
       buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
-      buff.write(_struct_2f2Bbhfb2Bbhfb2Bbhfb2Bbhfb.pack(_x.linSpeed.data, _x.angSpeed.data, _x.LF_enable.data, _x.LF_direction.data, _x.LF_servo_angle.data, _x.LF_servo_pwm.data, _x.LF_wheel_rpm.data, _x.LF_motor_signal.data, _x.RF_enable.data, _x.RF_direction.data, _x.RF_servo_angle.data, _x.RF_servo_pwm.data, _x.RF_wheel_rpm.data, _x.RF_motor_signal.data, _x.LR_enable.data, _x.LR_direction.data, _x.LR_servo_angle.data, _x.LR_servo_pwm.data, _x.LR_wheel_rpm.data, _x.LR_motor_signal.data, _x.RR_enable.data, _x.RR_direction.data, _x.RR_servo_angle.data, _x.RR_servo_pwm.data, _x.RR_wheel_rpm.data, _x.RR_motor_signal.data))
+      buff.write(_struct_2fBbhfbBbhfbBbhfbBbhfb.pack(_x.linSpeed.data, _x.angSpeed.data, _x.LF_direction.data, _x.LF_servo_angle.data, _x.LF_servo_pwm.data, _x.LF_wheel_rpm.data, _x.LF_motor_signal.data, _x.RF_direction.data, _x.RF_servo_angle.data, _x.RF_servo_pwm.data, _x.RF_wheel_rpm.data, _x.RF_motor_signal.data, _x.LR_direction.data, _x.LR_servo_angle.data, _x.LR_servo_pwm.data, _x.LR_wheel_rpm.data, _x.LR_motor_signal.data, _x.RR_direction.data, _x.RR_servo_angle.data, _x.RR_servo_pwm.data, _x.RR_wheel_rpm.data, _x.RR_motor_signal.data))
     except struct.error as se: self._check_types(se)
     except TypeError as te: self._check_types(te)
 
@@ -328,8 +304,6 @@ int16 data
         self.linSpeed = std_msgs.msg.Float32()
       if self.angSpeed is None:
         self.angSpeed = std_msgs.msg.Float32()
-      if self.LF_enable is None:
-        self.LF_enable = std_msgs.msg.Bool()
       if self.LF_direction is None:
         self.LF_direction = std_msgs.msg.Bool()
       if self.LF_servo_angle is None:
@@ -340,8 +314,6 @@ int16 data
         self.LF_wheel_rpm = std_msgs.msg.Float32()
       if self.LF_motor_signal is None:
         self.LF_motor_signal = std_msgs.msg.Int8()
-      if self.RF_enable is None:
-        self.RF_enable = std_msgs.msg.Bool()
       if self.RF_direction is None:
         self.RF_direction = std_msgs.msg.Bool()
       if self.RF_servo_angle is None:
@@ -352,8 +324,6 @@ int16 data
         self.RF_wheel_rpm = std_msgs.msg.Float32()
       if self.RF_motor_signal is None:
         self.RF_motor_signal = std_msgs.msg.Int8()
-      if self.LR_enable is None:
-        self.LR_enable = std_msgs.msg.Bool()
       if self.LR_direction is None:
         self.LR_direction = std_msgs.msg.Bool()
       if self.LR_servo_angle is None:
@@ -364,8 +334,6 @@ int16 data
         self.LR_wheel_rpm = std_msgs.msg.Float32()
       if self.LR_motor_signal is None:
         self.LR_motor_signal = std_msgs.msg.Int8()
-      if self.RR_enable is None:
-        self.RR_enable = std_msgs.msg.Bool()
       if self.RR_direction is None:
         self.RR_direction = std_msgs.msg.Bool()
       if self.RR_servo_angle is None:
@@ -392,15 +360,11 @@ int16 data
         self.header.frame_id = str[start:end]
       _x = self
       start = end
-      end += 48
-      (_x.linSpeed.data, _x.angSpeed.data, _x.LF_enable.data, _x.LF_direction.data, _x.LF_servo_angle.data, _x.LF_servo_pwm.data, _x.LF_wheel_rpm.data, _x.LF_motor_signal.data, _x.RF_enable.data, _x.RF_direction.data, _x.RF_servo_angle.data, _x.RF_servo_pwm.data, _x.RF_wheel_rpm.data, _x.RF_motor_signal.data, _x.LR_enable.data, _x.LR_direction.data, _x.LR_servo_angle.data, _x.LR_servo_pwm.data, _x.LR_wheel_rpm.data, _x.LR_motor_signal.data, _x.RR_enable.data, _x.RR_direction.data, _x.RR_servo_angle.data, _x.RR_servo_pwm.data, _x.RR_wheel_rpm.data, _x.RR_motor_signal.data,) = _struct_2f2Bbhfb2Bbhfb2Bbhfb2Bbhfb.unpack(str[start:end])
-      self.LF_enable.data = bool(self.LF_enable.data)
+      end += 44
+      (_x.linSpeed.data, _x.angSpeed.data, _x.LF_direction.data, _x.LF_servo_angle.data, _x.LF_servo_pwm.data, _x.LF_wheel_rpm.data, _x.LF_motor_signal.data, _x.RF_direction.data, _x.RF_servo_angle.data, _x.RF_servo_pwm.data, _x.RF_wheel_rpm.data, _x.RF_motor_signal.data, _x.LR_direction.data, _x.LR_servo_angle.data, _x.LR_servo_pwm.data, _x.LR_wheel_rpm.data, _x.LR_motor_signal.data, _x.RR_direction.data, _x.RR_servo_angle.data, _x.RR_servo_pwm.data, _x.RR_wheel_rpm.data, _x.RR_motor_signal.data,) = _struct_2fBbhfbBbhfbBbhfbBbhfb.unpack(str[start:end])
       self.LF_direction.data = bool(self.LF_direction.data)
-      self.RF_enable.data = bool(self.RF_enable.data)
       self.RF_direction.data = bool(self.RF_direction.data)
-      self.LR_enable.data = bool(self.LR_enable.data)
       self.LR_direction.data = bool(self.LR_direction.data)
-      self.RR_enable.data = bool(self.RR_enable.data)
       self.RR_direction.data = bool(self.RR_direction.data)
       return self
     except struct.error as e:
@@ -408,4 +372,4 @@ int16 data
 
 _struct_I = genpy.struct_I
 _struct_3I = struct.Struct("<3I")
-_struct_2f2Bbhfb2Bbhfb2Bbhfb2Bbhfb = struct.Struct("<2f2Bbhfb2Bbhfb2Bbhfb2Bbhfb")
+_struct_2fBbhfbBbhfbBbhfbBbhfb = struct.Struct("<2fBbhfbBbhfbBbhfbBbhfb")

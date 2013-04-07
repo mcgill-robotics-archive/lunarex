@@ -5,8 +5,6 @@
           LINSPEED
           ANGSPEED-VAL
           ANGSPEED
-          LF_ENABLE-VAL
-          LF_ENABLE
           LF_DIRECTION-VAL
           LF_DIRECTION
           LF_SERVO_ANGLE-VAL
@@ -17,8 +15,6 @@
           LF_WHEEL_RPM
           LF_MOTOR_SIGNAL-VAL
           LF_MOTOR_SIGNAL
-          RF_ENABLE-VAL
-          RF_ENABLE
           RF_DIRECTION-VAL
           RF_DIRECTION
           RF_SERVO_ANGLE-VAL
@@ -29,8 +25,6 @@
           RF_WHEEL_RPM
           RF_MOTOR_SIGNAL-VAL
           RF_MOTOR_SIGNAL
-          LR_ENABLE-VAL
-          LR_ENABLE
           LR_DIRECTION-VAL
           LR_DIRECTION
           LR_SERVO_ANGLE-VAL
@@ -41,8 +35,6 @@
           LR_WHEEL_RPM
           LR_MOTOR_SIGNAL-VAL
           LR_MOTOR_SIGNAL
-          RR_ENABLE-VAL
-          RR_ENABLE
           RR_DIRECTION-VAL
           RR_DIRECTION
           RR_SERVO_ANGLE-VAL
