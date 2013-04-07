@@ -351,20 +351,20 @@ public class GUIMain extends JFrame {
 				(bob.y + bob.h / 2)));
 		g2d.rotate(-bob.angle, bob.x, bob.y);
 	}
-	private void keyCom(int key, String stopSign){
-		if(keyboard.keyDown(key)){
-			if(stopSign.equals("jerkyHold")){
+
+	private void keyCom(int key, String stopSign) {
+		if (keyboard.keyDown(key)) {
+			if (stopSign.equals("jerkyHold")) {
 				outByte[1] >>= 1;
 				outByte[2] >>= 1;
-			}
-		}
-		else{
-			for(int i = 1; i <=2; i++){
-				if(outByte[i] < 0){
-					outByte[i]--;
-				}
-				else{
-					outByte[i]++;
+			} 
+			else{
+				for (int i = 1; i <= 2; i++) {
+					if (outByte[i] < (byte)0) {
+						outByte[i]++;
+					} else {
+						outByte[i]--;
+					}
 				}
 			}
 		}
