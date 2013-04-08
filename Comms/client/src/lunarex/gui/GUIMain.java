@@ -2,11 +2,15 @@ package lunarex.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.font.NumericShaper;
 import java.awt.geom.Line2D;
 import java.awt.image.*;
 import java.util.*;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import lunarex.input.*;
 import lunarex.network.*;
@@ -65,6 +69,13 @@ public class GUIMain extends JFrame {
 	Canvas canvas; // Our drawing component
 	Bob bob = new Bob(); // Our rectangle
 	Rect field = new Rect();
+	
+	Panel panel = new Panel();
+	TextField linVelField = new TextField("Linear Velocity");
+	TextField angVelField = new TextField("Angular Velocity");
+	Button applyButton = new Button("Apply");
+	Label status = new Label("                                     ");
+	
 	Random rand = new Random();// Used for random circle locations
 	boolean manualOverride =false;
 	byte[] outByte = new byte[6];
@@ -83,10 +94,21 @@ public class GUIMain extends JFrame {
 		canvas = new Canvas();
 		canvas.setIgnoreRepaint(true);
 		canvas.setSize(WIDTH, HEIGHT);
+		panel.add(linVelField);
+		panel.add(angVelField);
+		panel.add(applyButton);
+		panel.add(status);
+		applyButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				sendVelInfo();
+			}
+		});
+		panel.add(canvas);
 
-		add(canvas);
+		this.add(panel);
+
 		pack();
-
 		// Hookup keyboard polling
 		addKeyListener(keyboard);
 		canvas.addKeyListener(keyboard);
@@ -141,7 +163,6 @@ public class GUIMain extends JFrame {
 
 		while (true) {
 			try {
-				
 				processInput();	
 					
 				if (client != null) {
@@ -166,8 +187,6 @@ public class GUIMain extends JFrame {
 				// draw field
 				drawField(g2d,(int)field.x,(int)field.y);		
 				
-						
-				
 				// Draw battery
 				drawBattery(g2d,1000,50);				
 
@@ -181,7 +200,8 @@ public class GUIMain extends JFrame {
 				drawMeter(g2d,500,200,outByte[3],"Elevation");
 				drawMeter(g2d,650,200,outByte[5],"Bucket Incline");
 				
-
+				// 
+				
 				// Blit image and flip...
 				graphics = buffer.getDrawGraphics();
 				graphics.drawImage(bi, 0, 0, null);
@@ -239,6 +259,9 @@ public class GUIMain extends JFrame {
 			
 			//	A smooth break
 			keyCom(KeyEvent.VK_J, "jerkyHold");
+			
+			// Set linear and angular velocity manually
+			keyCom(KeyEvent.VK_ENTER);
 			
 		}
 		// IP ADDRESS BOX
@@ -396,6 +419,26 @@ public class GUIMain extends JFrame {
 			}
 		}
 	
+	}
+	// sends linear and angular velocity on "Enter" key
+	private void keyCom(int key){
+		if (keyboard.keyDownOnce(key)){
+			sendVelInfo();
+		}
+	}
+	
+	private void sendVelInfo(){
+		try{
+			byte linVel=Byte.parseByte(linVelField.getText());
+			byte angVel=Byte.parseByte(angVelField.getText());
+			outByte[1]= linVel;
+			outByte[2]= angVel;
+			bob.linVel= linVel;
+			bob.angVel= angVel;
+			status.setText("                                     ");
+		} catch (NumberFormatException nfe) {
+			status.setText("Invalid inputs!");
+		}
 	}
 	
 }
