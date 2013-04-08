@@ -78,7 +78,7 @@ class Handler(SocketServer.BaseRequestHandler):
 
 
                     self.linearVelocity = Velocity(linear_vel/50.0, 0.0, 0.0)     #   Linear Velocity from datalist[1]
-                    self.angularVelocity = Velocity(0.0, 0.0, angular_vel/50.0)    #   Angular Velocity from datalist[2]
+                    self.angularVelocity = Velocity(0.0, 0.0, angular_vel/127.0)    #   Angular Velocity from datalist[2]
 
                     #Publish to ros
                     if not rospy.is_shutdown():

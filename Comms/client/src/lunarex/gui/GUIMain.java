@@ -429,10 +429,10 @@ public class GUIMain extends JFrame {
 	
 	private void sendVelInfo(){
 		try{
-			byte linVel=Byte.parseByte(linVelField.getText());
-			byte angVel=Byte.parseByte(angVelField.getText());
-			outByte[1]= linVel;
-			outByte[2]= angVel;
+			int linVel=Integer.parseInt(linVelField.getText());
+			int angVel=Integer.parseInt(angVelField.getText());
+			outByte[1]= (byte)(linVel * 50);
+			outByte[2]= (byte)(angVel * 127);
 			bob.linVel= linVel;
 			bob.angVel= angVel;
 			status.setText("                                     ");
