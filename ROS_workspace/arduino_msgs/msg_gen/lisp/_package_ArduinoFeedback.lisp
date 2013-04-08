@@ -5,50 +5,50 @@
           LINSPEED
           ANGSPEED-VAL
           ANGSPEED
-          LF_ENABLE-VAL
-          LF_ENABLE
-          LF_DIRECTION-VAL
-          LF_DIRECTION
+          LF_MOTOR_ENABLE-VAL
+          LF_MOTOR_ENABLE
+          LF_MOTOR_DIR-VAL
+          LF_MOTOR_DIR
           LF_SERVO_ANGLE-VAL
           LF_SERVO_ANGLE
-          LF_SERVO_PWM-VAL
-          LF_SERVO_PWM
+          LF_SERVO_CMD-VAL
+          LF_SERVO_CMD
           LF_WHEEL_RPM-VAL
           LF_WHEEL_RPM
           LF_MOTOR_SIGNAL-VAL
           LF_MOTOR_SIGNAL
-          RF_ENABLE-VAL
-          RF_ENABLE
-          RF_DIRECTION-VAL
-          RF_DIRECTION
+          RF_MOTOR_ENABLE-VAL
+          RF_MOTOR_ENABLE
+          RF_MOTOR_DIR-VAL
+          RF_MOTOR_DIR
           RF_SERVO_ANGLE-VAL
           RF_SERVO_ANGLE
-          RF_SERVO_PWM-VAL
-          RF_SERVO_PWM
+          RF_SERVO_CMD-VAL
+          RF_SERVO_CMD
           RF_WHEEL_RPM-VAL
           RF_WHEEL_RPM
           RF_MOTOR_SIGNAL-VAL
           RF_MOTOR_SIGNAL
-          LR_ENABLE-VAL
-          LR_ENABLE
-          LR_DIRECTION-VAL
-          LR_DIRECTION
+          LR_MOTOR_ENABLE-VAL
+          LR_MOTOR_ENABLE
+          LR_MOTOR_DIR-VAL
+          LR_MOTOR_DIR
           LR_SERVO_ANGLE-VAL
           LR_SERVO_ANGLE
-          LR_SERVO_PWM-VAL
-          LR_SERVO_PWM
+          LR_SERVO_CMD-VAL
+          LR_SERVO_CMD
           LR_WHEEL_RPM-VAL
           LR_WHEEL_RPM
           LR_MOTOR_SIGNAL-VAL
           LR_MOTOR_SIGNAL
-          RR_ENABLE-VAL
-          RR_ENABLE
-          RR_DIRECTION-VAL
-          RR_DIRECTION
+          RR_MOTOR_ENABLE-VAL
+          RR_MOTOR_ENABLE
+          RR_MOTOR_DIR-VAL
+          RR_MOTOR_DIR
           RR_SERVO_ANGLE-VAL
           RR_SERVO_ANGLE
-          RR_SERVO_PWM-VAL
-          RR_SERVO_PWM
+          RR_SERVO_CMD-VAL
+          RR_SERVO_CMD
           RR_WHEEL_RPM-VAL
           RR_WHEEL_RPM
           RR_MOTOR_SIGNAL-VAL
