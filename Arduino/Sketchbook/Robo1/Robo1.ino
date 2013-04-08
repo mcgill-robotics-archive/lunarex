@@ -262,8 +262,6 @@ void doAckerman()
     float innerBack = 0;
     float outerBack = 0;
     
-    innerFront = innerFront*180/PI;
-    outerFront = outerFront*180/PI;
     int R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
     int rad1 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
     int rad2 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
@@ -278,10 +276,6 @@ void doAckerman()
        innerBack = atan(c/(ackRadius - (WIDTH/2.0)));
        outerBack = atan(c/(ackRadius + (WIDTH/2.0)));
        
-       innerFront = innerFront*180/PI;
-       outerFront = outerFront*180/PI;
-       innerBack= innerBack*180/PI;
-       outerBack = outerBack*180/PI;
     }
     
     float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed));  //Will return +/- 1 for CCW or CW, respectively (note this variable is distinct from LF_motor_dir, RF_motor_dir, etc)
