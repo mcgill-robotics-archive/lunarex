@@ -162,8 +162,8 @@ void turnOnSpot()
   
    LF_servo_angle = 135;
    RF_servo_angle = 45;
-   LR_servo_angle = 135;
-   RR_servo_angle = 45;
+   LR_servo_angle = 45;
+   RR_servo_angle = 135;
    
    if(angSpeed>0)
    {   
@@ -315,8 +315,8 @@ void doAckerman()
   
 void setWheelDirection(boolean LF_motor_dir, boolean RF_motor_dir, boolean LR_motor_dir, boolean RR_motor_dir)
 {
-  LF_motor_dir = !LF_motor_dir;
-  LR_motor_dir = !LR_motor_dir;
+  RF_motor_dir = !RF_motor_dir;
+  RR_motor_dir = !RR_motor_dir;
   
   //forward or backwards for drive wheels
   digitalWrite(LF_motor_dir_pin, LF_motor_dir);

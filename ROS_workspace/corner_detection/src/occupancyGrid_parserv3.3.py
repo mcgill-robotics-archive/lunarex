@@ -11,7 +11,7 @@ import nav_msgs.msg
 import std_msgs.msg
 from pylab import *
 import matplotlib.gridspec as gridspec
-
+import rospy
 BIGNUMBER = 1000
 
 #DEFINING OBJECTS

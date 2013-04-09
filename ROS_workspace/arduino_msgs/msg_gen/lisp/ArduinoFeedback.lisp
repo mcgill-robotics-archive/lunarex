@@ -40,8 +40,13 @@
    (LF_motor_cmd
     :reader LF_motor_cmd
     :initarg :LF_motor_cmd
+<<<<<<< HEAD
     :type std_msgs-msg:Int16
     :initform (cl:make-instance 'std_msgs-msg:Int16))
+=======
+    :type std_msgs-msg:Int8
+    :initform (cl:make-instance 'std_msgs-msg:Int8))
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
    (LF_servo_angle
     :reader LF_servo_angle
     :initarg :LF_servo_angle
@@ -70,8 +75,13 @@
    (RF_motor_cmd
     :reader RF_motor_cmd
     :initarg :RF_motor_cmd
+<<<<<<< HEAD
     :type std_msgs-msg:Int16
     :initform (cl:make-instance 'std_msgs-msg:Int16))
+=======
+    :type std_msgs-msg:Int8
+    :initform (cl:make-instance 'std_msgs-msg:Int8))
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
    (RF_servo_angle
     :reader RF_servo_angle
     :initarg :RF_servo_angle
@@ -100,8 +110,13 @@
    (LR_motor_cmd
     :reader LR_motor_cmd
     :initarg :LR_motor_cmd
+<<<<<<< HEAD
     :type std_msgs-msg:Int16
     :initform (cl:make-instance 'std_msgs-msg:Int16))
+=======
+    :type std_msgs-msg:Int8
+    :initform (cl:make-instance 'std_msgs-msg:Int8))
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
    (LR_servo_angle
     :reader LR_servo_angle
     :initarg :LR_servo_angle
@@ -130,8 +145,13 @@
    (RR_motor_cmd
     :reader RR_motor_cmd
     :initarg :RR_motor_cmd
+<<<<<<< HEAD
     :type std_msgs-msg:Int16
     :initform (cl:make-instance 'std_msgs-msg:Int16))
+=======
+    :type std_msgs-msg:Int8
+    :initform (cl:make-instance 'std_msgs-msg:Int8))
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
    (RR_servo_angle
     :reader RR_servo_angle
     :initarg :RR_servo_angle
@@ -355,6 +375,7 @@
   "arduino_msgs/ArduinoFeedback")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<ArduinoFeedback>)))
   "Returns md5sum for a message object of type '<ArduinoFeedback>"
+<<<<<<< HEAD
   "bb6a00989cbfd262c4446155bd168ba0")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'ArduinoFeedback)))
   "Returns md5sum for a message object of type 'ArduinoFeedback"
@@ -365,6 +386,18 @@
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'ArduinoFeedback)))
   "Returns full string definition for message of type 'ArduinoFeedback"
   (cl:format cl:nil "Header header~%~%std_msgs/Float32 linSpeed~%std_msgs/Float32 angSpeed~%~%std_msgs/Bool LF_motor_enable~%std_msgs/Bool LF_motor_dir~%std_msgs/Float32 LF_wheel_rpm~%std_msgs/Int16 LF_motor_cmd~%~%std_msgs/Float32 LF_servo_angle~%std_msgs/Int16 LF_servo_cmd~%~%~%std_msgs/Bool RF_motor_enable~%std_msgs/Bool RF_motor_dir~%std_msgs/Float32 RF_wheel_rpm~%std_msgs/Int16 RF_motor_cmd~%~%std_msgs/Float32 RF_servo_angle~%std_msgs/Int16 RF_servo_cmd~%~%std_msgs/Bool LR_motor_enable~%std_msgs/Bool LR_motor_dir~%std_msgs/Float32 LR_wheel_rpm~%std_msgs/Int16 LR_motor_cmd~%~%std_msgs/Float32 LR_servo_angle~%std_msgs/Int16 LR_servo_cmd~%~%std_msgs/Bool RR_motor_enable~%std_msgs/Bool RR_motor_dir~%std_msgs/Float32 RR_wheel_rpm~%std_msgs/Int16 RR_motor_cmd~%~%std_msgs/Float32 RR_servo_angle~%std_msgs/Int16 RR_servo_cmd~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.secs: seconds (stamp_secs) since epoch~%# * stamp.nsecs: nanoseconds since stamp_secs~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%================================================================================~%MSG: std_msgs/Float32~%float32 data~%================================================================================~%MSG: std_msgs/Bool~%bool data~%================================================================================~%MSG: std_msgs/Int16~%int16 data~%~%~%"))
+=======
+  "452394dac99733fe01bdb73767acac9c")
+(cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'ArduinoFeedback)))
+  "Returns md5sum for a message object of type 'ArduinoFeedback"
+  "452394dac99733fe01bdb73767acac9c")
+(cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<ArduinoFeedback>)))
+  "Returns full string definition for message of type '<ArduinoFeedback>"
+  (cl:format cl:nil "Header header~%~%std_msgs/Float32 linSpeed~%std_msgs/Float32 angSpeed~%~%std_msgs/Bool LF_motor_enable~%std_msgs/Bool LF_motor_dir~%std_msgs/Float32 LF_wheel_rpm~%std_msgs/Int8 LF_motor_cmd~%~%std_msgs/Int8 LF_servo_angle~%std_msgs/Int16 LF_servo_cmd~%~%~%std_msgs/Bool RF_motor_enable~%std_msgs/Bool RF_motor_dir~%std_msgs/Float32 RF_wheel_rpm~%std_msgs/Int8 RF_motor_cmd~%~%std_msgs/Int8 RF_servo_angle~%std_msgs/Int16 RF_servo_cmd~%~%std_msgs/Bool LR_motor_enable~%std_msgs/Bool LR_motor_dir~%std_msgs/Float32 LR_wheel_rpm~%std_msgs/Int8 LR_motor_cmd~%~%std_msgs/Int8 LR_servo_angle~%std_msgs/Int16 LR_servo_cmd~%~%std_msgs/Bool RR_motor_enable~%std_msgs/Bool RR_motor_dir~%std_msgs/Float32 RR_wheel_rpm~%std_msgs/Int8 RR_motor_cmd~%~%std_msgs/Int8 RR_servo_angle~%std_msgs/Int16 RR_servo_cmd~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.secs: seconds (stamp_secs) since epoch~%# * stamp.nsecs: nanoseconds since stamp_secs~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%================================================================================~%MSG: std_msgs/Float32~%float32 data~%================================================================================~%MSG: std_msgs/Bool~%bool data~%================================================================================~%MSG: std_msgs/Int8~%int8 data~%~%================================================================================~%MSG: std_msgs/Int16~%int16 data~%~%~%"))
+(cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'ArduinoFeedback)))
+  "Returns full string definition for message of type 'ArduinoFeedback"
+  (cl:format cl:nil "Header header~%~%std_msgs/Float32 linSpeed~%std_msgs/Float32 angSpeed~%~%std_msgs/Bool LF_motor_enable~%std_msgs/Bool LF_motor_dir~%std_msgs/Float32 LF_wheel_rpm~%std_msgs/Int8 LF_motor_cmd~%~%std_msgs/Int8 LF_servo_angle~%std_msgs/Int16 LF_servo_cmd~%~%~%std_msgs/Bool RF_motor_enable~%std_msgs/Bool RF_motor_dir~%std_msgs/Float32 RF_wheel_rpm~%std_msgs/Int8 RF_motor_cmd~%~%std_msgs/Int8 RF_servo_angle~%std_msgs/Int16 RF_servo_cmd~%~%std_msgs/Bool LR_motor_enable~%std_msgs/Bool LR_motor_dir~%std_msgs/Float32 LR_wheel_rpm~%std_msgs/Int8 LR_motor_cmd~%~%std_msgs/Int8 LR_servo_angle~%std_msgs/Int16 LR_servo_cmd~%~%std_msgs/Bool RR_motor_enable~%std_msgs/Bool RR_motor_dir~%std_msgs/Float32 RR_wheel_rpm~%std_msgs/Int8 RR_motor_cmd~%~%std_msgs/Int8 RR_servo_angle~%std_msgs/Int16 RR_servo_cmd~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.secs: seconds (stamp_secs) since epoch~%# * stamp.nsecs: nanoseconds since stamp_secs~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%================================================================================~%MSG: std_msgs/Float32~%float32 data~%================================================================================~%MSG: std_msgs/Bool~%bool data~%================================================================================~%MSG: std_msgs/Int8~%int8 data~%~%================================================================================~%MSG: std_msgs/Int16~%int16 data~%~%~%"))
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <ArduinoFeedback>))
   (cl:+ 0
      (roslisp-msg-protocol:serialization-length (cl:slot-value msg 'header))

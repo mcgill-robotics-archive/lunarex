@@ -7,7 +7,11 @@ import struct
 import std_msgs.msg
 
 class ArduinoFeedback(genpy.Message):
+<<<<<<< HEAD
   _md5sum = "bb6a00989cbfd262c4446155bd168ba0"
+=======
+  _md5sum = "452394dac99733fe01bdb73767acac9c"
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
   _type = "arduino_msgs/ArduinoFeedback"
   _has_header = True #flag to mark the presence of a Header object
   _full_text = """Header header
@@ -18,34 +22,58 @@ std_msgs/Float32 angSpeed
 std_msgs/Bool LF_motor_enable
 std_msgs/Bool LF_motor_dir
 std_msgs/Float32 LF_wheel_rpm
+<<<<<<< HEAD
 std_msgs/Int16 LF_motor_cmd
 
 std_msgs/Float32 LF_servo_angle
+=======
+std_msgs/Int8 LF_motor_cmd
+
+std_msgs/Int8 LF_servo_angle
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 std_msgs/Int16 LF_servo_cmd
 
 
 std_msgs/Bool RF_motor_enable
 std_msgs/Bool RF_motor_dir
 std_msgs/Float32 RF_wheel_rpm
+<<<<<<< HEAD
 std_msgs/Int16 RF_motor_cmd
 
 std_msgs/Float32 RF_servo_angle
+=======
+std_msgs/Int8 RF_motor_cmd
+
+std_msgs/Int8 RF_servo_angle
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 std_msgs/Int16 RF_servo_cmd
 
 std_msgs/Bool LR_motor_enable
 std_msgs/Bool LR_motor_dir
 std_msgs/Float32 LR_wheel_rpm
+<<<<<<< HEAD
 std_msgs/Int16 LR_motor_cmd
 
 std_msgs/Float32 LR_servo_angle
+=======
+std_msgs/Int8 LR_motor_cmd
+
+std_msgs/Int8 LR_servo_angle
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 std_msgs/Int16 LR_servo_cmd
 
 std_msgs/Bool RR_motor_enable
 std_msgs/Bool RR_motor_dir
 std_msgs/Float32 RR_wheel_rpm
+<<<<<<< HEAD
 std_msgs/Int16 RR_motor_cmd
 
 std_msgs/Float32 RR_servo_angle
+=======
+std_msgs/Int8 RR_motor_cmd
+
+std_msgs/Int8 RR_servo_angle
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 std_msgs/Int16 RR_servo_cmd
 
 ================================================================================
@@ -78,7 +106,11 @@ int16 data
 
 """
   __slots__ = ['header','linSpeed','angSpeed','LF_motor_enable','LF_motor_dir','LF_wheel_rpm','LF_motor_cmd','LF_servo_angle','LF_servo_cmd','RF_motor_enable','RF_motor_dir','RF_wheel_rpm','RF_motor_cmd','RF_servo_angle','RF_servo_cmd','LR_motor_enable','LR_motor_dir','LR_wheel_rpm','LR_motor_cmd','LR_servo_angle','LR_servo_cmd','RR_motor_enable','RR_motor_dir','RR_wheel_rpm','RR_motor_cmd','RR_servo_angle','RR_servo_cmd']
+<<<<<<< HEAD
   _slot_types = ['std_msgs/Header','std_msgs/Float32','std_msgs/Float32','std_msgs/Bool','std_msgs/Bool','std_msgs/Float32','std_msgs/Int16','std_msgs/Float32','std_msgs/Int16','std_msgs/Bool','std_msgs/Bool','std_msgs/Float32','std_msgs/Int16','std_msgs/Float32','std_msgs/Int16','std_msgs/Bool','std_msgs/Bool','std_msgs/Float32','std_msgs/Int16','std_msgs/Float32','std_msgs/Int16','std_msgs/Bool','std_msgs/Bool','std_msgs/Float32','std_msgs/Int16','std_msgs/Float32','std_msgs/Int16']
+=======
+  _slot_types = ['std_msgs/Header','std_msgs/Float32','std_msgs/Float32','std_msgs/Bool','std_msgs/Bool','std_msgs/Float32','std_msgs/Int8','std_msgs/Int8','std_msgs/Int16','std_msgs/Bool','std_msgs/Bool','std_msgs/Float32','std_msgs/Int8','std_msgs/Int8','std_msgs/Int16','std_msgs/Bool','std_msgs/Bool','std_msgs/Float32','std_msgs/Int8','std_msgs/Int8','std_msgs/Int16','std_msgs/Bool','std_msgs/Bool','std_msgs/Float32','std_msgs/Int8','std_msgs/Int8','std_msgs/Int16']
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 
   def __init__(self, *args, **kwds):
     """
@@ -110,7 +142,11 @@ int16 data
       if self.LF_wheel_rpm is None:
         self.LF_wheel_rpm = std_msgs.msg.Float32()
       if self.LF_motor_cmd is None:
+<<<<<<< HEAD
         self.LF_motor_cmd = std_msgs.msg.Int16()
+=======
+        self.LF_motor_cmd = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       if self.LF_servo_angle is None:
         self.LF_servo_angle = std_msgs.msg.Float32()
       if self.LF_servo_cmd is None:
@@ -122,7 +158,11 @@ int16 data
       if self.RF_wheel_rpm is None:
         self.RF_wheel_rpm = std_msgs.msg.Float32()
       if self.RF_motor_cmd is None:
+<<<<<<< HEAD
         self.RF_motor_cmd = std_msgs.msg.Int16()
+=======
+        self.RF_motor_cmd = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       if self.RF_servo_angle is None:
         self.RF_servo_angle = std_msgs.msg.Float32()
       if self.RF_servo_cmd is None:
@@ -134,7 +174,11 @@ int16 data
       if self.LR_wheel_rpm is None:
         self.LR_wheel_rpm = std_msgs.msg.Float32()
       if self.LR_motor_cmd is None:
+<<<<<<< HEAD
         self.LR_motor_cmd = std_msgs.msg.Int16()
+=======
+        self.LR_motor_cmd = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       if self.LR_servo_angle is None:
         self.LR_servo_angle = std_msgs.msg.Float32()
       if self.LR_servo_cmd is None:
@@ -146,7 +190,11 @@ int16 data
       if self.RR_wheel_rpm is None:
         self.RR_wheel_rpm = std_msgs.msg.Float32()
       if self.RR_motor_cmd is None:
+<<<<<<< HEAD
         self.RR_motor_cmd = std_msgs.msg.Int16()
+=======
+        self.RR_motor_cmd = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       if self.RR_servo_angle is None:
         self.RR_servo_angle = std_msgs.msg.Float32()
       if self.RR_servo_cmd is None:
@@ -158,26 +206,46 @@ int16 data
       self.LF_motor_enable = std_msgs.msg.Bool()
       self.LF_motor_dir = std_msgs.msg.Bool()
       self.LF_wheel_rpm = std_msgs.msg.Float32()
+<<<<<<< HEAD
       self.LF_motor_cmd = std_msgs.msg.Int16()
       self.LF_servo_angle = std_msgs.msg.Float32()
+=======
+      self.LF_motor_cmd = std_msgs.msg.Int8()
+      self.LF_servo_angle = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       self.LF_servo_cmd = std_msgs.msg.Int16()
       self.RF_motor_enable = std_msgs.msg.Bool()
       self.RF_motor_dir = std_msgs.msg.Bool()
       self.RF_wheel_rpm = std_msgs.msg.Float32()
+<<<<<<< HEAD
       self.RF_motor_cmd = std_msgs.msg.Int16()
       self.RF_servo_angle = std_msgs.msg.Float32()
+=======
+      self.RF_motor_cmd = std_msgs.msg.Int8()
+      self.RF_servo_angle = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       self.RF_servo_cmd = std_msgs.msg.Int16()
       self.LR_motor_enable = std_msgs.msg.Bool()
       self.LR_motor_dir = std_msgs.msg.Bool()
       self.LR_wheel_rpm = std_msgs.msg.Float32()
+<<<<<<< HEAD
       self.LR_motor_cmd = std_msgs.msg.Int16()
       self.LR_servo_angle = std_msgs.msg.Float32()
+=======
+      self.LR_motor_cmd = std_msgs.msg.Int8()
+      self.LR_servo_angle = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       self.LR_servo_cmd = std_msgs.msg.Int16()
       self.RR_motor_enable = std_msgs.msg.Bool()
       self.RR_motor_dir = std_msgs.msg.Bool()
       self.RR_wheel_rpm = std_msgs.msg.Float32()
+<<<<<<< HEAD
       self.RR_motor_cmd = std_msgs.msg.Int16()
       self.RR_servo_angle = std_msgs.msg.Float32()
+=======
+      self.RR_motor_cmd = std_msgs.msg.Int8()
+      self.RR_servo_angle = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       self.RR_servo_cmd = std_msgs.msg.Int16()
 
   def _get_types(self):
@@ -201,7 +269,11 @@ int16 data
         length = len(_x)
       buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
+<<<<<<< HEAD
       buff.write(_struct_2f2Bfhfh2Bfhfh2Bfhfh2Bfhfh.pack(_x.linSpeed.data, _x.angSpeed.data, _x.LF_motor_enable.data, _x.LF_motor_dir.data, _x.LF_wheel_rpm.data, _x.LF_motor_cmd.data, _x.LF_servo_angle.data, _x.LF_servo_cmd.data, _x.RF_motor_enable.data, _x.RF_motor_dir.data, _x.RF_wheel_rpm.data, _x.RF_motor_cmd.data, _x.RF_servo_angle.data, _x.RF_servo_cmd.data, _x.LR_motor_enable.data, _x.LR_motor_dir.data, _x.LR_wheel_rpm.data, _x.LR_motor_cmd.data, _x.LR_servo_angle.data, _x.LR_servo_cmd.data, _x.RR_motor_enable.data, _x.RR_motor_dir.data, _x.RR_wheel_rpm.data, _x.RR_motor_cmd.data, _x.RR_servo_angle.data, _x.RR_servo_cmd.data))
+=======
+      buff.write(_struct_2f2Bf2bh2Bf2bh2Bf2bh2Bf2bh.pack(_x.linSpeed.data, _x.angSpeed.data, _x.LF_motor_enable.data, _x.LF_motor_dir.data, _x.LF_wheel_rpm.data, _x.LF_motor_cmd.data, _x.LF_servo_angle.data, _x.LF_servo_cmd.data, _x.RF_motor_enable.data, _x.RF_motor_dir.data, _x.RF_wheel_rpm.data, _x.RF_motor_cmd.data, _x.RF_servo_angle.data, _x.RF_servo_cmd.data, _x.LR_motor_enable.data, _x.LR_motor_dir.data, _x.LR_wheel_rpm.data, _x.LR_motor_cmd.data, _x.LR_servo_angle.data, _x.LR_servo_cmd.data, _x.RR_motor_enable.data, _x.RR_motor_dir.data, _x.RR_wheel_rpm.data, _x.RR_motor_cmd.data, _x.RR_servo_angle.data, _x.RR_servo_cmd.data))
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
     except struct.error as se: self._check_types(se)
     except TypeError as te: self._check_types(te)
 
@@ -224,7 +296,11 @@ int16 data
       if self.LF_wheel_rpm is None:
         self.LF_wheel_rpm = std_msgs.msg.Float32()
       if self.LF_motor_cmd is None:
+<<<<<<< HEAD
         self.LF_motor_cmd = std_msgs.msg.Int16()
+=======
+        self.LF_motor_cmd = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       if self.LF_servo_angle is None:
         self.LF_servo_angle = std_msgs.msg.Float32()
       if self.LF_servo_cmd is None:
@@ -236,7 +312,11 @@ int16 data
       if self.RF_wheel_rpm is None:
         self.RF_wheel_rpm = std_msgs.msg.Float32()
       if self.RF_motor_cmd is None:
+<<<<<<< HEAD
         self.RF_motor_cmd = std_msgs.msg.Int16()
+=======
+        self.RF_motor_cmd = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       if self.RF_servo_angle is None:
         self.RF_servo_angle = std_msgs.msg.Float32()
       if self.RF_servo_cmd is None:
@@ -248,7 +328,11 @@ int16 data
       if self.LR_wheel_rpm is None:
         self.LR_wheel_rpm = std_msgs.msg.Float32()
       if self.LR_motor_cmd is None:
+<<<<<<< HEAD
         self.LR_motor_cmd = std_msgs.msg.Int16()
+=======
+        self.LR_motor_cmd = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       if self.LR_servo_angle is None:
         self.LR_servo_angle = std_msgs.msg.Float32()
       if self.LR_servo_cmd is None:
@@ -260,7 +344,11 @@ int16 data
       if self.RR_wheel_rpm is None:
         self.RR_wheel_rpm = std_msgs.msg.Float32()
       if self.RR_motor_cmd is None:
+<<<<<<< HEAD
         self.RR_motor_cmd = std_msgs.msg.Int16()
+=======
+        self.RR_motor_cmd = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       if self.RR_servo_angle is None:
         self.RR_servo_angle = std_msgs.msg.Float32()
       if self.RR_servo_cmd is None:
@@ -281,8 +369,13 @@ int16 data
         self.header.frame_id = str[start:end]
       _x = self
       start = end
+<<<<<<< HEAD
       end += 64
       (_x.linSpeed.data, _x.angSpeed.data, _x.LF_motor_enable.data, _x.LF_motor_dir.data, _x.LF_wheel_rpm.data, _x.LF_motor_cmd.data, _x.LF_servo_angle.data, _x.LF_servo_cmd.data, _x.RF_motor_enable.data, _x.RF_motor_dir.data, _x.RF_wheel_rpm.data, _x.RF_motor_cmd.data, _x.RF_servo_angle.data, _x.RF_servo_cmd.data, _x.LR_motor_enable.data, _x.LR_motor_dir.data, _x.LR_wheel_rpm.data, _x.LR_motor_cmd.data, _x.LR_servo_angle.data, _x.LR_servo_cmd.data, _x.RR_motor_enable.data, _x.RR_motor_dir.data, _x.RR_wheel_rpm.data, _x.RR_motor_cmd.data, _x.RR_servo_angle.data, _x.RR_servo_cmd.data,) = _struct_2f2Bfhfh2Bfhfh2Bfhfh2Bfhfh.unpack(str[start:end])
+=======
+      end += 48
+      (_x.linSpeed.data, _x.angSpeed.data, _x.LF_motor_enable.data, _x.LF_motor_dir.data, _x.LF_wheel_rpm.data, _x.LF_motor_cmd.data, _x.LF_servo_angle.data, _x.LF_servo_cmd.data, _x.RF_motor_enable.data, _x.RF_motor_dir.data, _x.RF_wheel_rpm.data, _x.RF_motor_cmd.data, _x.RF_servo_angle.data, _x.RF_servo_cmd.data, _x.LR_motor_enable.data, _x.LR_motor_dir.data, _x.LR_wheel_rpm.data, _x.LR_motor_cmd.data, _x.LR_servo_angle.data, _x.LR_servo_cmd.data, _x.RR_motor_enable.data, _x.RR_motor_dir.data, _x.RR_wheel_rpm.data, _x.RR_motor_cmd.data, _x.RR_servo_angle.data, _x.RR_servo_cmd.data,) = _struct_2f2Bf2bh2Bf2bh2Bf2bh2Bf2bh.unpack(str[start:end])
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       self.LF_motor_enable.data = bool(self.LF_motor_enable.data)
       self.LF_motor_dir.data = bool(self.LF_motor_dir.data)
       self.RF_motor_enable.data = bool(self.RF_motor_enable.data)
@@ -312,7 +405,11 @@ int16 data
         length = len(_x)
       buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
+<<<<<<< HEAD
       buff.write(_struct_2f2Bfhfh2Bfhfh2Bfhfh2Bfhfh.pack(_x.linSpeed.data, _x.angSpeed.data, _x.LF_motor_enable.data, _x.LF_motor_dir.data, _x.LF_wheel_rpm.data, _x.LF_motor_cmd.data, _x.LF_servo_angle.data, _x.LF_servo_cmd.data, _x.RF_motor_enable.data, _x.RF_motor_dir.data, _x.RF_wheel_rpm.data, _x.RF_motor_cmd.data, _x.RF_servo_angle.data, _x.RF_servo_cmd.data, _x.LR_motor_enable.data, _x.LR_motor_dir.data, _x.LR_wheel_rpm.data, _x.LR_motor_cmd.data, _x.LR_servo_angle.data, _x.LR_servo_cmd.data, _x.RR_motor_enable.data, _x.RR_motor_dir.data, _x.RR_wheel_rpm.data, _x.RR_motor_cmd.data, _x.RR_servo_angle.data, _x.RR_servo_cmd.data))
+=======
+      buff.write(_struct_2f2Bf2bh2Bf2bh2Bf2bh2Bf2bh.pack(_x.linSpeed.data, _x.angSpeed.data, _x.LF_motor_enable.data, _x.LF_motor_dir.data, _x.LF_wheel_rpm.data, _x.LF_motor_cmd.data, _x.LF_servo_angle.data, _x.LF_servo_cmd.data, _x.RF_motor_enable.data, _x.RF_motor_dir.data, _x.RF_wheel_rpm.data, _x.RF_motor_cmd.data, _x.RF_servo_angle.data, _x.RF_servo_cmd.data, _x.LR_motor_enable.data, _x.LR_motor_dir.data, _x.LR_wheel_rpm.data, _x.LR_motor_cmd.data, _x.LR_servo_angle.data, _x.LR_servo_cmd.data, _x.RR_motor_enable.data, _x.RR_motor_dir.data, _x.RR_wheel_rpm.data, _x.RR_motor_cmd.data, _x.RR_servo_angle.data, _x.RR_servo_cmd.data))
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
     except struct.error as se: self._check_types(se)
     except TypeError as te: self._check_types(te)
 
@@ -336,7 +433,11 @@ int16 data
       if self.LF_wheel_rpm is None:
         self.LF_wheel_rpm = std_msgs.msg.Float32()
       if self.LF_motor_cmd is None:
+<<<<<<< HEAD
         self.LF_motor_cmd = std_msgs.msg.Int16()
+=======
+        self.LF_motor_cmd = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       if self.LF_servo_angle is None:
         self.LF_servo_angle = std_msgs.msg.Float32()
       if self.LF_servo_cmd is None:
@@ -348,7 +449,11 @@ int16 data
       if self.RF_wheel_rpm is None:
         self.RF_wheel_rpm = std_msgs.msg.Float32()
       if self.RF_motor_cmd is None:
+<<<<<<< HEAD
         self.RF_motor_cmd = std_msgs.msg.Int16()
+=======
+        self.RF_motor_cmd = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       if self.RF_servo_angle is None:
         self.RF_servo_angle = std_msgs.msg.Float32()
       if self.RF_servo_cmd is None:
@@ -360,7 +465,11 @@ int16 data
       if self.LR_wheel_rpm is None:
         self.LR_wheel_rpm = std_msgs.msg.Float32()
       if self.LR_motor_cmd is None:
+<<<<<<< HEAD
         self.LR_motor_cmd = std_msgs.msg.Int16()
+=======
+        self.LR_motor_cmd = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       if self.LR_servo_angle is None:
         self.LR_servo_angle = std_msgs.msg.Float32()
       if self.LR_servo_cmd is None:
@@ -372,7 +481,11 @@ int16 data
       if self.RR_wheel_rpm is None:
         self.RR_wheel_rpm = std_msgs.msg.Float32()
       if self.RR_motor_cmd is None:
+<<<<<<< HEAD
         self.RR_motor_cmd = std_msgs.msg.Int16()
+=======
+        self.RR_motor_cmd = std_msgs.msg.Int8()
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       if self.RR_servo_angle is None:
         self.RR_servo_angle = std_msgs.msg.Float32()
       if self.RR_servo_cmd is None:
@@ -393,8 +506,13 @@ int16 data
         self.header.frame_id = str[start:end]
       _x = self
       start = end
+<<<<<<< HEAD
       end += 64
       (_x.linSpeed.data, _x.angSpeed.data, _x.LF_motor_enable.data, _x.LF_motor_dir.data, _x.LF_wheel_rpm.data, _x.LF_motor_cmd.data, _x.LF_servo_angle.data, _x.LF_servo_cmd.data, _x.RF_motor_enable.data, _x.RF_motor_dir.data, _x.RF_wheel_rpm.data, _x.RF_motor_cmd.data, _x.RF_servo_angle.data, _x.RF_servo_cmd.data, _x.LR_motor_enable.data, _x.LR_motor_dir.data, _x.LR_wheel_rpm.data, _x.LR_motor_cmd.data, _x.LR_servo_angle.data, _x.LR_servo_cmd.data, _x.RR_motor_enable.data, _x.RR_motor_dir.data, _x.RR_wheel_rpm.data, _x.RR_motor_cmd.data, _x.RR_servo_angle.data, _x.RR_servo_cmd.data,) = _struct_2f2Bfhfh2Bfhfh2Bfhfh2Bfhfh.unpack(str[start:end])
+=======
+      end += 48
+      (_x.linSpeed.data, _x.angSpeed.data, _x.LF_motor_enable.data, _x.LF_motor_dir.data, _x.LF_wheel_rpm.data, _x.LF_motor_cmd.data, _x.LF_servo_angle.data, _x.LF_servo_cmd.data, _x.RF_motor_enable.data, _x.RF_motor_dir.data, _x.RF_wheel_rpm.data, _x.RF_motor_cmd.data, _x.RF_servo_angle.data, _x.RF_servo_cmd.data, _x.LR_motor_enable.data, _x.LR_motor_dir.data, _x.LR_wheel_rpm.data, _x.LR_motor_cmd.data, _x.LR_servo_angle.data, _x.LR_servo_cmd.data, _x.RR_motor_enable.data, _x.RR_motor_dir.data, _x.RR_wheel_rpm.data, _x.RR_motor_cmd.data, _x.RR_servo_angle.data, _x.RR_servo_cmd.data,) = _struct_2f2Bf2bh2Bf2bh2Bf2bh2Bf2bh.unpack(str[start:end])
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
       self.LF_motor_enable.data = bool(self.LF_motor_enable.data)
       self.LF_motor_dir.data = bool(self.LF_motor_dir.data)
       self.RF_motor_enable.data = bool(self.RF_motor_enable.data)
@@ -409,4 +527,8 @@ int16 data
 
 _struct_I = genpy.struct_I
 _struct_3I = struct.Struct("<3I")
+<<<<<<< HEAD
 _struct_2f2Bfhfh2Bfhfh2Bfhfh2Bfhfh = struct.Struct("<2f2Bfhfh2Bfhfh2Bfhfh2Bfhfh")
+=======
+_struct_2f2Bf2bh2Bf2bh2Bf2bh2Bf2bh = struct.Struct("<2f2Bf2bh2Bf2bh2Bf2bh2Bf2bh")
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300

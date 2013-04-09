@@ -19,6 +19,7 @@
 #include "std_msgs/Float32.h"
 #include "std_msgs/Bool.h"
 #include "std_msgs/Bool.h"
+<<<<<<< HEAD
 #include "std_msgs/Float32.h"
 #include "std_msgs/Int16.h"
 #include "std_msgs/Float32.h"
@@ -34,12 +35,35 @@
 #include "std_msgs/Float32.h"
 #include "std_msgs/Int16.h"
 #include "std_msgs/Float32.h"
+=======
+#include "std_msgs/Float32.h"
+#include "std_msgs/Int8.h"
+#include "std_msgs/Int8.h"
 #include "std_msgs/Int16.h"
 #include "std_msgs/Bool.h"
 #include "std_msgs/Bool.h"
 #include "std_msgs/Float32.h"
+#include "std_msgs/Int8.h"
+#include "std_msgs/Int8.h"
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 #include "std_msgs/Int16.h"
+#include "std_msgs/Bool.h"
+#include "std_msgs/Bool.h"
 #include "std_msgs/Float32.h"
+<<<<<<< HEAD
+=======
+#include "std_msgs/Int8.h"
+#include "std_msgs/Int8.h"
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
+#include "std_msgs/Int16.h"
+#include "std_msgs/Bool.h"
+#include "std_msgs/Bool.h"
+#include "std_msgs/Float32.h"
+<<<<<<< HEAD
+=======
+#include "std_msgs/Int8.h"
+#include "std_msgs/Int8.h"
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 #include "std_msgs/Int16.h"
 
 namespace arduino_msgs
@@ -128,11 +152,19 @@ struct ArduinoFeedback_ {
   typedef  ::std_msgs::Float32_<ContainerAllocator>  _LF_wheel_rpm_type;
    ::std_msgs::Float32_<ContainerAllocator>  LF_wheel_rpm;
 
+<<<<<<< HEAD
   typedef  ::std_msgs::Int16_<ContainerAllocator>  _LF_motor_cmd_type;
    ::std_msgs::Int16_<ContainerAllocator>  LF_motor_cmd;
 
   typedef  ::std_msgs::Float32_<ContainerAllocator>  _LF_servo_angle_type;
    ::std_msgs::Float32_<ContainerAllocator>  LF_servo_angle;
+=======
+  typedef  ::std_msgs::Int8_<ContainerAllocator>  _LF_motor_cmd_type;
+   ::std_msgs::Int8_<ContainerAllocator>  LF_motor_cmd;
+
+  typedef  ::std_msgs::Int8_<ContainerAllocator>  _LF_servo_angle_type;
+   ::std_msgs::Int8_<ContainerAllocator>  LF_servo_angle;
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 
   typedef  ::std_msgs::Int16_<ContainerAllocator>  _LF_servo_cmd_type;
    ::std_msgs::Int16_<ContainerAllocator>  LF_servo_cmd;
@@ -146,11 +178,19 @@ struct ArduinoFeedback_ {
   typedef  ::std_msgs::Float32_<ContainerAllocator>  _RF_wheel_rpm_type;
    ::std_msgs::Float32_<ContainerAllocator>  RF_wheel_rpm;
 
+<<<<<<< HEAD
   typedef  ::std_msgs::Int16_<ContainerAllocator>  _RF_motor_cmd_type;
    ::std_msgs::Int16_<ContainerAllocator>  RF_motor_cmd;
 
   typedef  ::std_msgs::Float32_<ContainerAllocator>  _RF_servo_angle_type;
    ::std_msgs::Float32_<ContainerAllocator>  RF_servo_angle;
+=======
+  typedef  ::std_msgs::Int8_<ContainerAllocator>  _RF_motor_cmd_type;
+   ::std_msgs::Int8_<ContainerAllocator>  RF_motor_cmd;
+
+  typedef  ::std_msgs::Int8_<ContainerAllocator>  _RF_servo_angle_type;
+   ::std_msgs::Int8_<ContainerAllocator>  RF_servo_angle;
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 
   typedef  ::std_msgs::Int16_<ContainerAllocator>  _RF_servo_cmd_type;
    ::std_msgs::Int16_<ContainerAllocator>  RF_servo_cmd;
@@ -164,11 +204,19 @@ struct ArduinoFeedback_ {
   typedef  ::std_msgs::Float32_<ContainerAllocator>  _LR_wheel_rpm_type;
    ::std_msgs::Float32_<ContainerAllocator>  LR_wheel_rpm;
 
+<<<<<<< HEAD
   typedef  ::std_msgs::Int16_<ContainerAllocator>  _LR_motor_cmd_type;
    ::std_msgs::Int16_<ContainerAllocator>  LR_motor_cmd;
 
   typedef  ::std_msgs::Float32_<ContainerAllocator>  _LR_servo_angle_type;
    ::std_msgs::Float32_<ContainerAllocator>  LR_servo_angle;
+=======
+  typedef  ::std_msgs::Int8_<ContainerAllocator>  _LR_motor_cmd_type;
+   ::std_msgs::Int8_<ContainerAllocator>  LR_motor_cmd;
+
+  typedef  ::std_msgs::Int8_<ContainerAllocator>  _LR_servo_angle_type;
+   ::std_msgs::Int8_<ContainerAllocator>  LR_servo_angle;
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 
   typedef  ::std_msgs::Int16_<ContainerAllocator>  _LR_servo_cmd_type;
    ::std_msgs::Int16_<ContainerAllocator>  LR_servo_cmd;
@@ -182,11 +230,19 @@ struct ArduinoFeedback_ {
   typedef  ::std_msgs::Float32_<ContainerAllocator>  _RR_wheel_rpm_type;
    ::std_msgs::Float32_<ContainerAllocator>  RR_wheel_rpm;
 
+<<<<<<< HEAD
   typedef  ::std_msgs::Int16_<ContainerAllocator>  _RR_motor_cmd_type;
    ::std_msgs::Int16_<ContainerAllocator>  RR_motor_cmd;
 
   typedef  ::std_msgs::Float32_<ContainerAllocator>  _RR_servo_angle_type;
    ::std_msgs::Float32_<ContainerAllocator>  RR_servo_angle;
+=======
+  typedef  ::std_msgs::Int8_<ContainerAllocator>  _RR_motor_cmd_type;
+   ::std_msgs::Int8_<ContainerAllocator>  RR_motor_cmd;
+
+  typedef  ::std_msgs::Int8_<ContainerAllocator>  _RR_servo_angle_type;
+   ::std_msgs::Int8_<ContainerAllocator>  RR_servo_angle;
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 
   typedef  ::std_msgs::Int16_<ContainerAllocator>  _RR_servo_cmd_type;
    ::std_msgs::Int16_<ContainerAllocator>  RR_servo_cmd;
@@ -220,12 +276,21 @@ template<class ContainerAllocator>
 struct MD5Sum< ::arduino_msgs::ArduinoFeedback_<ContainerAllocator> > {
   static const char* value() 
   {
+<<<<<<< HEAD
     return "bb6a00989cbfd262c4446155bd168ba0";
   }
 
   static const char* value(const  ::arduino_msgs::ArduinoFeedback_<ContainerAllocator> &) { return value(); } 
   static const uint64_t static_value1 = 0xbb6a00989cbfd262ULL;
   static const uint64_t static_value2 = 0xc4446155bd168ba0ULL;
+=======
+    return "452394dac99733fe01bdb73767acac9c";
+  }
+
+  static const char* value(const  ::arduino_msgs::ArduinoFeedback_<ContainerAllocator> &) { return value(); } 
+  static const uint64_t static_value1 = 0x452394dac99733feULL;
+  static const uint64_t static_value2 = 0x01bdb73767acac9cULL;
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 };
 
 template<class ContainerAllocator>
@@ -250,34 +315,58 @@ std_msgs/Float32 angSpeed\n\
 std_msgs/Bool LF_motor_enable\n\
 std_msgs/Bool LF_motor_dir\n\
 std_msgs/Float32 LF_wheel_rpm\n\
+<<<<<<< HEAD
 std_msgs/Int16 LF_motor_cmd\n\
 \n\
 std_msgs/Float32 LF_servo_angle\n\
+=======
+std_msgs/Int8 LF_motor_cmd\n\
+\n\
+std_msgs/Int8 LF_servo_angle\n\
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 std_msgs/Int16 LF_servo_cmd\n\
 \n\
 \n\
 std_msgs/Bool RF_motor_enable\n\
 std_msgs/Bool RF_motor_dir\n\
 std_msgs/Float32 RF_wheel_rpm\n\
+<<<<<<< HEAD
 std_msgs/Int16 RF_motor_cmd\n\
 \n\
 std_msgs/Float32 RF_servo_angle\n\
+=======
+std_msgs/Int8 RF_motor_cmd\n\
+\n\
+std_msgs/Int8 RF_servo_angle\n\
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 std_msgs/Int16 RF_servo_cmd\n\
 \n\
 std_msgs/Bool LR_motor_enable\n\
 std_msgs/Bool LR_motor_dir\n\
 std_msgs/Float32 LR_wheel_rpm\n\
+<<<<<<< HEAD
 std_msgs/Int16 LR_motor_cmd\n\
 \n\
 std_msgs/Float32 LR_servo_angle\n\
+=======
+std_msgs/Int8 LR_motor_cmd\n\
+\n\
+std_msgs/Int8 LR_servo_angle\n\
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 std_msgs/Int16 LR_servo_cmd\n\
 \n\
 std_msgs/Bool RR_motor_enable\n\
 std_msgs/Bool RR_motor_dir\n\
 std_msgs/Float32 RR_wheel_rpm\n\
+<<<<<<< HEAD
 std_msgs/Int16 RR_motor_cmd\n\
 \n\
 std_msgs/Float32 RR_servo_angle\n\
+=======
+std_msgs/Int8 RR_motor_cmd\n\
+\n\
+std_msgs/Int8 RR_servo_angle\n\
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
 std_msgs/Int16 RR_servo_cmd\n\
 \n\
 ================================================================================\n\
@@ -392,7 +481,11 @@ s << std::endl;
     Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.LF_wheel_rpm);
     s << indent << "LF_motor_cmd: ";
 s << std::endl;
+<<<<<<< HEAD
     Printer< ::std_msgs::Int16_<ContainerAllocator> >::stream(s, indent + "  ", v.LF_motor_cmd);
+=======
+    Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.LF_motor_cmd);
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
     s << indent << "LF_servo_angle: ";
 s << std::endl;
     Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.LF_servo_angle);
@@ -410,7 +503,11 @@ s << std::endl;
     Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.RF_wheel_rpm);
     s << indent << "RF_motor_cmd: ";
 s << std::endl;
+<<<<<<< HEAD
     Printer< ::std_msgs::Int16_<ContainerAllocator> >::stream(s, indent + "  ", v.RF_motor_cmd);
+=======
+    Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.RF_motor_cmd);
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
     s << indent << "RF_servo_angle: ";
 s << std::endl;
     Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.RF_servo_angle);
@@ -428,7 +525,11 @@ s << std::endl;
     Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.LR_wheel_rpm);
     s << indent << "LR_motor_cmd: ";
 s << std::endl;
+<<<<<<< HEAD
     Printer< ::std_msgs::Int16_<ContainerAllocator> >::stream(s, indent + "  ", v.LR_motor_cmd);
+=======
+    Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.LR_motor_cmd);
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
     s << indent << "LR_servo_angle: ";
 s << std::endl;
     Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.LR_servo_angle);
@@ -446,7 +547,11 @@ s << std::endl;
     Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.RR_wheel_rpm);
     s << indent << "RR_motor_cmd: ";
 s << std::endl;
+<<<<<<< HEAD
     Printer< ::std_msgs::Int16_<ContainerAllocator> >::stream(s, indent + "  ", v.RR_motor_cmd);
+=======
+    Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.RR_motor_cmd);
+>>>>>>> 20a3dba2a6fa7590e801443d44efc0d474a9f300
     s << indent << "RR_servo_angle: ";
 s << std::endl;
     Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.RR_servo_angle);
