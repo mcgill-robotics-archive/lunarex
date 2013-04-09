@@ -4,4 +4,4 @@
 
 git fetch --all
 
-git reset --hard origin/master
+git reset --hard origin/master #<filepath> if only overwriting one file
