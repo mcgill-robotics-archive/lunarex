@@ -60,6 +60,11 @@ float RF_servo_angle = 0.0;
 float LR_servo_angle = 0.0;
 float RR_servo_angle = 0.0;
 
+float LF_old_servo_angle = 0.0;
+float RF_old_servo_angle = 0.0;
+float LR_old_servo_angle = 0.0;
+float RR_old_servo_angle = 0.0;
+
 int LF_servo_cmd = 0;
 int RF_servo_cmd = 0;
 int LR_servo_cmd = 0;
@@ -130,8 +135,15 @@ void loop()
   {doAckerman();}
   
   setWheelDirection(LF_motor_dir, RF_motor_dir, LR_motor_dir, RR_motor_dir);
-  setWheelAngle(LF_servo_angle, RF_servo_angle, LR_servo_angle, RR_servo_angle);
+  if((LF_old_servo_angle != LF_servo_angle)||(RF_old_servo_angle != RF_servo_angle)||(LR_old_servo_angle != LR_servo_angle)||(RR_old_servo_angle != RR_servo_angle))
+  {setWheelAngle(LF_servo_angle, RF_servo_angle, LR_servo_angle, RR_servo_angle);}
   setWheelSpeed(LF_wheel_rpm, RF_wheel_rpm, LR_wheel_rpm, RR_wheel_rpm);
+  
+  LF_old_servo_angle = LF_servo_angle;  
+  RF_old_servo_angle = RF_servo_angle;  
+  LR_old_servo_angle = LR_servo_angle;  
+  RR_old_servo_angle = RR_servo_angle;
+  
   
   populateFeedbackMessage();
 
