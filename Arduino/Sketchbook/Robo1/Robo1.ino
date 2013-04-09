@@ -4,7 +4,7 @@
 #include <arduino_msgs/ArduinoFeedback.h>
 
 //these are init values. Can set tthem through ang_speed and lin_speed ros topics
-float angSpeed = 0;
+float angSpeed = 50;
 float linSpeed = 0;
 
 ros:: NodeHandle nh;
@@ -135,8 +135,8 @@ void loop()
   {doAckerman();}
   
   setWheelDirection(LF_motor_dir, RF_motor_dir, LR_motor_dir, RR_motor_dir);
-  if((LF_old_servo_angle != LF_servo_angle)||(RF_old_servo_angle != RF_servo_angle)||(LR_old_servo_angle != LR_servo_angle)||(RR_old_servo_angle != RR_servo_angle))
-  {setWheelAngle(LF_servo_angle, RF_servo_angle, LR_servo_angle, RR_servo_angle);}
+ // if((LF_old_servo_angle != LF_servo_angle)||(RF_old_servo_angle != RF_servo_angle)||(LR_old_servo_angle != LR_servo_angle)||(RR_old_servo_angle != RR_servo_angle))
+  setWheelAngle(LF_servo_angle, RF_servo_angle, LR_servo_angle, RR_servo_angle);
   setWheelSpeed(LF_wheel_rpm, RF_wheel_rpm, LR_wheel_rpm, RR_wheel_rpm);
   
   LF_old_servo_angle = LF_servo_angle;  
