@@ -1,10 +1,11 @@
 #include <Servo.h>
 #include <ros.h>
 #include <std_msgs/Float32.h>
+//#include <math.h>
 #include <arduino_msgs/ArduinoFeedback.h>
 
 //these are init values. Can set tthem through ang_speed and lin_speed ros topics
-float angSpeed = 50;
+float angSpeed = 0;
 float linSpeed = 0;
 
 ros:: NodeHandle nh;
@@ -55,6 +56,8 @@ float RF_wheel_rpm = 0.0;
 float LR_wheel_rpm = 0.0;
 float RR_wheel_rpm = 0.0;
 
+float TOL = 0.5;
+
 float LF_servo_angle = 0.0;
 float RF_servo_angle = 0.0;
 float LR_servo_angle = 0.0;
@@ -85,12 +88,13 @@ float LENGTH = 0.71;
 float WIDTH = 0.7219;
 float DIST_TO_AXIS_A = 0.5074;
 //in degrees
-int MAX_ANGLE = 181;
+int MAX_ANGLE = 35; //ratio of lin/ang = 1.5
 int SEC_PER_MIN = 60;
 int GEAR_RATIO = 74;
 
 void setup()
 {
+  Serial.begin(9600);
   pinMode(LF_motor_pin, OUTPUT);
   pinMode(RF_motor_pin, OUTPUT);
   pinMode(LR_motor_pin, OUTPUT);
@@ -135,16 +139,15 @@ void loop()
   {doAckerman();}
   
   setWheelDirection(LF_motor_dir, RF_motor_dir, LR_motor_dir, RR_motor_dir);
- // if((LF_old_servo_angle != LF_servo_angle)||(RF_old_servo_angle != RF_servo_angle)||(LR_old_servo_angle != LR_servo_angle)||(RR_old_servo_angle != RR_servo_angle))
   setWheelAngle(LF_servo_angle, RF_servo_angle, LR_servo_angle, RR_servo_angle);
   setWheelSpeed(LF_wheel_rpm, RF_wheel_rpm, LR_wheel_rpm, RR_wheel_rpm);
   
-  LF_old_servo_angle = LF_servo_angle;  
-  RF_old_servo_angle = RF_servo_angle;  
-  LR_old_servo_angle = LR_servo_angle;  
-  RR_old_servo_angle = RR_servo_angle;
-  
-  
+  Serial.println("angles");
+  Serial.println(LF_servo_angle);
+  Serial.println(RF_servo_angle);
+  Serial.println(LR_servo_angle);
+  Serial.println(RR_servo_angle);
+  delay(1000);
   populateFeedbackMessage();
 
   feedback_publisher.publish(&fb);
@@ -204,7 +207,7 @@ void turnOnSpot()
 
 void goStraight()
 {
-    digitalWrite(LF_motor_enable_pin, LF_motor_enable);
+  digitalWrite(LF_motor_enable_pin, LF_motor_enable);
   digitalWrite(RF_motor_enable_pin, RF_motor_enable);
   digitalWrite(LR_motor_enable_pin, LR_motor_enable);
   digitalWrite(RR_motor_enable_pin, RR_motor_enable);
@@ -268,9 +271,10 @@ void doAckerman()
       RR_motor_dir = 1;
     }
     
-    float ackRadius = (abs(linSpeed)/2.0)*sin(abs(angSpeed)/2.0);
-    float innerFront = atan(LENGTH/(ackRadius - (WIDTH/2.0)));
-    float outerFront = atan(LENGTH/(ackRadius + (WIDTH/2.0)));
+    //float ackRadius = (abs(linSpeed)/2.0)*sin(abs(angSpeed)/2.0); //old april 9
+    float ackRadius = abs(linSpeed)/abs(angSpeed);
+    float innerFront = atan(LENGTH/(ackRadius - (WIDTH/2.0)))*180/PI;
+    float outerFront = atan(LENGTH/(ackRadius + (WIDTH/2.0)))*180/PI;
     float innerBack = 0;
     float outerBack = 0;
     
@@ -280,15 +284,22 @@ void doAckerman()
     int rad3 = R1 - WIDTH/2;
     int rad4 = R1 + WIDTH/2;
     
-     if(innerFront>MAX_ANGLE)    //innerfront wheel will always have to turn more, do double if this condition is met
+     if(abs(innerFront)>MAX_ANGLE)    //innerfront wheel will always have to turn more, do double if this condition is met
     {
        float c = LENGTH /2.0;
-       innerFront = atan(c/(ackRadius - (WIDTH/2.0)));
-       outerFront = atan(c/(ackRadius + (WIDTH/2.0))); 
-       innerBack = atan(c/(ackRadius - (WIDTH/2.0)));
-       outerBack = atan(c/(ackRadius + (WIDTH/2.0)));
+       innerFront = atan(c/(ackRadius - (WIDTH/2.0)))*180/PI;
+       outerFront = atan(c/(ackRadius + (WIDTH/2.0)))*180/PI; 
+       innerBack = atan(c/(ackRadius - (WIDTH/2.0)))*180/PI;
+       outerBack = atan(c/(ackRadius + (WIDTH/2.0)))*180/PI;
        
     }
+    Serial.println("--");
+    Serial.println(innerFront);
+    Serial.println(outerFront);
+    Serial.println(innerBack);
+    Serial.println(outerBack);
+    Serial.println(ackRadius);
+    Serial.println(WIDTH/2.0);
     
     float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed));  //Will return +/- 1 for CCW or CW, respectively (note this variable is distinct from LF_motor_dir, RF_motor_dir, etc)
     
@@ -310,7 +321,7 @@ void doAckerman()
       LF_servo_angle = 90 + outerFront;
       RF_servo_angle = 90 + innerFront;
       LR_servo_angle = 90 - outerBack;
-      RR_servo_angle = 90 - outerBack;
+      RR_servo_angle = 90 - innerBack;
       
       rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
       rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
@@ -341,6 +352,7 @@ void setWheelAngle(int LF_servo_angle, int RF_servo_angle, int LR_servo_angle, i
 {
   //motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
   
+  
   LF_servo_cmd = map(LF_servo_angle,0,180,1000,2000); //still need to validate this mapping and might need to invert it for the front or back servos (which are mounted backwards)
   RF_servo_cmd = map(RF_servo_angle,0,180,1000,2000);
   LR_servo_cmd = map(LR_servo_angle,0,180,1000,2000);
@@ -351,11 +363,13 @@ void setWheelAngle(int LF_servo_angle, int RF_servo_angle, int LR_servo_angle, i
   RF_servo_cmd = constrain(RF_servo_cmd, 1000, 2000);
   LR_servo_cmd = constrain(LR_servo_cmd, 1000, 2000);
   RR_servo_cmd = constrain(RR_servo_cmd, 1000, 2000);
-  
-  LF_servo.writeMicroseconds(LF_servo_cmd);
-  RF_servo.writeMicroseconds(RF_servo_cmd);
-  LR_servo.writeMicroseconds(LR_servo_cmd);
-  RR_servo.writeMicroseconds(RR_servo_cmd);
+  if(abs(LF_servo_angle - LF_old_servo_angle)>TOL || abs(RR_servo_angle-RR_old_servo_angle)>TOL)
+  {
+    LF_servo.writeMicroseconds(LF_servo_cmd);
+    RF_servo.writeMicroseconds(RF_servo_cmd);
+    LR_servo.writeMicroseconds(LR_servo_cmd);
+    RR_servo.writeMicroseconds(RR_servo_cmd);
+  }
 }
 
 void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_wheel_rpm)
@@ -371,7 +385,7 @@ void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_
   analogWrite(RR_motor_pin, RR_wheel_rpm);
 }
 
-void populateFeedbackMessage(){
+  void populateFeedbackMessage(){
   fb.linSpeed.data = linSpeed;
   fb.angSpeed.data = angSpeed;
   
