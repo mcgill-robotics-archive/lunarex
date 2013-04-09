@@ -2,15 +2,12 @@ package lunarex.gui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.font.NumericShaper;
 import java.awt.geom.Line2D;
 import java.awt.image.*;
 import java.util.*;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import lunarex.input.*;
 import lunarex.network.*;
@@ -71,9 +68,11 @@ public class GUIMain extends JFrame {
 	Rect field = new Rect();
 	
 	Panel panel = new Panel();
-	TextField linVelField = new TextField("Linear Velocity");
-	TextField angVelField = new TextField("Angular Velocity");
+	TextField linVelField = new TextField("0",5);
+	TextField angVelField = new TextField("0",5);
 	Button applyButton = new Button("Apply");
+	Label linVelLabel = new Label("Linear Velocity");
+	Label angVelLabel = new Label("Angular Velocity");
 	Label status = new Label("                                     ");
 	
 	Random rand = new Random();// Used for random circle locations
@@ -94,7 +93,9 @@ public class GUIMain extends JFrame {
 		canvas = new Canvas();
 		canvas.setIgnoreRepaint(true);
 		canvas.setSize(WIDTH, HEIGHT);
+		panel.add(linVelLabel);
 		panel.add(linVelField);
+		panel.add(angVelLabel);
 		panel.add(angVelField);
 		panel.add(applyButton);
 		panel.add(status);
@@ -200,7 +201,8 @@ public class GUIMain extends JFrame {
 				drawMeter(g2d,500,200,outByte[3],"Elevation");
 				drawMeter(g2d,650,200,outByte[5],"Bucket Incline");
 				
-				// 
+				bob.linVel = outByte[1]/50.0;
+				bob.angVel = outByte[2]/127.0;
 				
 				// Blit image and flip...
 				graphics = buffer.getDrawGraphics();
