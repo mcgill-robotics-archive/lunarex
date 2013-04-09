@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs
+CMAKE_SOURCE_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build
+CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build
 
 # Utility rule file for ROSBUILD_genmsg_cpp.
 
@@ -51,12 +51,11 @@ CMakeFiles/ROSBUILD_genmsg_cpp: ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedb
 ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h: /opt/ros/fuerte/share/std_msgs/msg/Header.msg
 ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h: /opt/ros/fuerte/share/std_msgs/msg/Float32.msg
 ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h: /opt/ros/fuerte/share/std_msgs/msg/Bool.msg
-../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h: /opt/ros/fuerte/share/std_msgs/msg/Int8.msg
 ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h: ../manifest.xml
 ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h: /opt/ros/fuerte/share/std_msgs/manifest.xml
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h"
-	/opt/ros/fuerte/share/roscpp/rosbuild/scripts/genmsg_cpp.py /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/msg/ArduinoFeedback.msg
+	/opt/ros/fuerte/share/roscpp/rosbuild/scripts/genmsg_cpp.py /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/msg/ArduinoFeedback.msg
 
 ROSBUILD_genmsg_cpp: CMakeFiles/ROSBUILD_genmsg_cpp
 ROSBUILD_genmsg_cpp: ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h
@@ -72,6 +71,6 @@ CMakeFiles/ROSBUILD_genmsg_cpp.dir/clean:
 .PHONY : CMakeFiles/ROSBUILD_genmsg_cpp.dir/clean
 
 CMakeFiles/ROSBUILD_genmsg_cpp.dir/depend:
-	cd /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles/ROSBUILD_genmsg_cpp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles/ROSBUILD_genmsg_cpp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/ROSBUILD_genmsg_cpp.dir/depend
 

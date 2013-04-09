@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs
+CMAKE_SOURCE_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build
+CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build
 
 # Utility rule file for rosbuild_precompile.
 
@@ -57,6 +57,6 @@ CMakeFiles/rosbuild_precompile.dir/clean:
 .PHONY : CMakeFiles/rosbuild_precompile.dir/clean
 
 CMakeFiles/rosbuild_precompile.dir/depend:
-	cd /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles/rosbuild_precompile.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles/rosbuild_precompile.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/rosbuild_precompile.dir/depend
 

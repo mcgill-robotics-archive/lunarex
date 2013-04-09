@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs
+CMAKE_SOURCE_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build
+CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build
 
 # Utility rule file for ROSBUILD_genmsg_py.
 
@@ -45,9 +45,9 @@ include CMakeFiles/ROSBUILD_genmsg_py.dir/progress.make
 CMakeFiles/ROSBUILD_genmsg_py: ../src/arduino_msgs/msg/__init__.py
 
 ../src/arduino_msgs/msg/__init__.py: ../src/arduino_msgs/msg/_ArduinoFeedback.py
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../src/arduino_msgs/msg/__init__.py"
-	/opt/ros/fuerte/share/rospy/rosbuild/scripts/genmsg_py.py --initpy /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/msg/ArduinoFeedback.msg
+	/opt/ros/fuerte/share/rospy/rosbuild/scripts/genmsg_py.py --initpy /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/msg/ArduinoFeedback.msg
 
 ../src/arduino_msgs/msg/_ArduinoFeedback.py: ../msg/ArduinoFeedback.msg
 ../src/arduino_msgs/msg/_ArduinoFeedback.py: /opt/ros/fuerte/share/rospy/rosbuild/scripts/genmsg_py.py
@@ -56,12 +56,11 @@ CMakeFiles/ROSBUILD_genmsg_py: ../src/arduino_msgs/msg/__init__.py
 ../src/arduino_msgs/msg/_ArduinoFeedback.py: /opt/ros/fuerte/share/std_msgs/msg/Header.msg
 ../src/arduino_msgs/msg/_ArduinoFeedback.py: /opt/ros/fuerte/share/std_msgs/msg/Float32.msg
 ../src/arduino_msgs/msg/_ArduinoFeedback.py: /opt/ros/fuerte/share/std_msgs/msg/Bool.msg
-../src/arduino_msgs/msg/_ArduinoFeedback.py: /opt/ros/fuerte/share/std_msgs/msg/Int8.msg
 ../src/arduino_msgs/msg/_ArduinoFeedback.py: ../manifest.xml
 ../src/arduino_msgs/msg/_ArduinoFeedback.py: /opt/ros/fuerte/share/std_msgs/manifest.xml
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../src/arduino_msgs/msg/_ArduinoFeedback.py"
-	/opt/ros/fuerte/share/rospy/rosbuild/scripts/genmsg_py.py --noinitpy /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/msg/ArduinoFeedback.msg
+	/opt/ros/fuerte/share/rospy/rosbuild/scripts/genmsg_py.py --noinitpy /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/msg/ArduinoFeedback.msg
 
 ROSBUILD_genmsg_py: CMakeFiles/ROSBUILD_genmsg_py
 ROSBUILD_genmsg_py: ../src/arduino_msgs/msg/__init__.py
@@ -78,6 +77,6 @@ CMakeFiles/ROSBUILD_genmsg_py.dir/clean:
 .PHONY : CMakeFiles/ROSBUILD_genmsg_py.dir/clean
 
 CMakeFiles/ROSBUILD_genmsg_py.dir/depend:
-	cd /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles/ROSBUILD_genmsg_py.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles/ROSBUILD_genmsg_py.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/ROSBUILD_genmsg_py.dir/depend
 
