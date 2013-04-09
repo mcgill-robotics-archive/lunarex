@@ -2,7 +2,7 @@
 #include <ros.h>
 #include <std_msgs/Float32.h>
 //#include <math.h>
-#include <arduino_msgs/ArduinoFeedback.h>
+//#include <arduino_msgs/ArduinoFeedback.h>
 
 //these are init values. Can set tthem through ang_speed and lin_speed ros topics
 float angSpeed = 0;
@@ -15,13 +15,17 @@ void setAngSpeed(const std_msgs:: Float32 &ang_speed)
 void setLinSpeed(const std_msgs:: Float32 &lin_speed)
 {linSpeed = lin_speed.data;}
 
-ros:: Subscriber<std_msgs::Float32> angSub("ang_speed", &setAngSpeed);
-ros:: Subscriber<std_msgs::Float32> linSub("lin_speed", &setLinSpeed);
+void setSpeeds(const std_msgs:: Float32 &cmd_vel){
+ linSpeed 
+}
 
+//ros:: Subscriber<std_msgs::Float32> angSub("ang_speed", &setAngSpeed);
+//ros:: Subscriber<std_msgs::Float32> linSub("lin_speed", &setLinSpeed);
 
-arduino_msgs::ArduinoFeedback fb;
-ros:: Publisher feedback_publisher("arduino_feedback", &fb);
+ros:: Subscriber<geometry_msgs::Twist> cmdvel("cmd_vel", &setSpeeds);
 
+//arduino_msgs::ArduinoFeedback fb;
+//ros:: Publisher feedback_publisher("arduino_feedback", &fb);
 
 Servo LF_servo, RF_servo, LR_servo, RR_servo;
 

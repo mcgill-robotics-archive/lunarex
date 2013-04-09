@@ -18,7 +18,11 @@ public class GUIMain extends JFrame {
 	static final int WIDTH = 1280;
 	static final int HEIGHT = (int) (9 / 16.0 * WIDTH);
 
-	String ipAdressString = "142.157.37.138";
+	//FOR NETBOOK
+	//String ipAdressString = "142.157.37.138";
+	
+	//FOR LOCALHOST
+	String ipAdressString = "127.0.0.1";
 
 	String portNumberString = "5902";
 
