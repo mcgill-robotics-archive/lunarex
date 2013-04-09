@@ -19,28 +19,28 @@
 #include "std_msgs/Float32.h"
 #include "std_msgs/Bool.h"
 #include "std_msgs/Bool.h"
-#include "std_msgs/Int8.h"
-#include "std_msgs/Int16.h"
 #include "std_msgs/Float32.h"
 #include "std_msgs/Int8.h"
-#include "std_msgs/Bool.h"
-#include "std_msgs/Bool.h"
 #include "std_msgs/Int8.h"
 #include "std_msgs/Int16.h"
+#include "std_msgs/Bool.h"
+#include "std_msgs/Bool.h"
 #include "std_msgs/Float32.h"
 #include "std_msgs/Int8.h"
-#include "std_msgs/Bool.h"
-#include "std_msgs/Bool.h"
 #include "std_msgs/Int8.h"
 #include "std_msgs/Int16.h"
+#include "std_msgs/Bool.h"
+#include "std_msgs/Bool.h"
 #include "std_msgs/Float32.h"
 #include "std_msgs/Int8.h"
-#include "std_msgs/Bool.h"
-#include "std_msgs/Bool.h"
 #include "std_msgs/Int8.h"
 #include "std_msgs/Int16.h"
+#include "std_msgs/Bool.h"
+#include "std_msgs/Bool.h"
 #include "std_msgs/Float32.h"
 #include "std_msgs/Int8.h"
+#include "std_msgs/Int8.h"
+#include "std_msgs/Int16.h"
 
 namespace arduino_msgs
 {
@@ -54,28 +54,28 @@ struct ArduinoFeedback_ {
   , angSpeed()
   , LF_motor_enable()
   , LF_motor_dir()
+  , LF_wheel_rpm()
+  , LF_motor_cmd()
   , LF_servo_angle()
   , LF_servo_cmd()
-  , LF_wheel_rpm()
-  , LF_motor_signal()
   , RF_motor_enable()
   , RF_motor_dir()
+  , RF_wheel_rpm()
+  , RF_motor_cmd()
   , RF_servo_angle()
   , RF_servo_cmd()
-  , RF_wheel_rpm()
-  , RF_motor_signal()
   , LR_motor_enable()
   , LR_motor_dir()
+  , LR_wheel_rpm()
+  , LR_motor_cmd()
   , LR_servo_angle()
   , LR_servo_cmd()
-  , LR_wheel_rpm()
-  , LR_motor_signal()
   , RR_motor_enable()
   , RR_motor_dir()
+  , RR_wheel_rpm()
+  , RR_motor_cmd()
   , RR_servo_angle()
   , RR_servo_cmd()
-  , RR_wheel_rpm()
-  , RR_motor_signal()
   {
   }
 
@@ -85,28 +85,28 @@ struct ArduinoFeedback_ {
   , angSpeed(_alloc)
   , LF_motor_enable(_alloc)
   , LF_motor_dir(_alloc)
+  , LF_wheel_rpm(_alloc)
+  , LF_motor_cmd(_alloc)
   , LF_servo_angle(_alloc)
   , LF_servo_cmd(_alloc)
-  , LF_wheel_rpm(_alloc)
-  , LF_motor_signal(_alloc)
   , RF_motor_enable(_alloc)
   , RF_motor_dir(_alloc)
+  , RF_wheel_rpm(_alloc)
+  , RF_motor_cmd(_alloc)
   , RF_servo_angle(_alloc)
   , RF_servo_cmd(_alloc)
-  , RF_wheel_rpm(_alloc)
-  , RF_motor_signal(_alloc)
   , LR_motor_enable(_alloc)
   , LR_motor_dir(_alloc)
+  , LR_wheel_rpm(_alloc)
+  , LR_motor_cmd(_alloc)
   , LR_servo_angle(_alloc)
   , LR_servo_cmd(_alloc)
-  , LR_wheel_rpm(_alloc)
-  , LR_motor_signal(_alloc)
   , RR_motor_enable(_alloc)
   , RR_motor_dir(_alloc)
+  , RR_wheel_rpm(_alloc)
+  , RR_motor_cmd(_alloc)
   , RR_servo_angle(_alloc)
   , RR_servo_cmd(_alloc)
-  , RR_wheel_rpm(_alloc)
-  , RR_motor_signal(_alloc)
   {
   }
 
@@ -125,17 +125,17 @@ struct ArduinoFeedback_ {
   typedef  ::std_msgs::Bool_<ContainerAllocator>  _LF_motor_dir_type;
    ::std_msgs::Bool_<ContainerAllocator>  LF_motor_dir;
 
+  typedef  ::std_msgs::Float32_<ContainerAllocator>  _LF_wheel_rpm_type;
+   ::std_msgs::Float32_<ContainerAllocator>  LF_wheel_rpm;
+
+  typedef  ::std_msgs::Int8_<ContainerAllocator>  _LF_motor_cmd_type;
+   ::std_msgs::Int8_<ContainerAllocator>  LF_motor_cmd;
+
   typedef  ::std_msgs::Int8_<ContainerAllocator>  _LF_servo_angle_type;
    ::std_msgs::Int8_<ContainerAllocator>  LF_servo_angle;
 
   typedef  ::std_msgs::Int16_<ContainerAllocator>  _LF_servo_cmd_type;
    ::std_msgs::Int16_<ContainerAllocator>  LF_servo_cmd;
-
-  typedef  ::std_msgs::Float32_<ContainerAllocator>  _LF_wheel_rpm_type;
-   ::std_msgs::Float32_<ContainerAllocator>  LF_wheel_rpm;
-
-  typedef  ::std_msgs::Int8_<ContainerAllocator>  _LF_motor_signal_type;
-   ::std_msgs::Int8_<ContainerAllocator>  LF_motor_signal;
 
   typedef  ::std_msgs::Bool_<ContainerAllocator>  _RF_motor_enable_type;
    ::std_msgs::Bool_<ContainerAllocator>  RF_motor_enable;
@@ -143,17 +143,17 @@ struct ArduinoFeedback_ {
   typedef  ::std_msgs::Bool_<ContainerAllocator>  _RF_motor_dir_type;
    ::std_msgs::Bool_<ContainerAllocator>  RF_motor_dir;
 
+  typedef  ::std_msgs::Float32_<ContainerAllocator>  _RF_wheel_rpm_type;
+   ::std_msgs::Float32_<ContainerAllocator>  RF_wheel_rpm;
+
+  typedef  ::std_msgs::Int8_<ContainerAllocator>  _RF_motor_cmd_type;
+   ::std_msgs::Int8_<ContainerAllocator>  RF_motor_cmd;
+
   typedef  ::std_msgs::Int8_<ContainerAllocator>  _RF_servo_angle_type;
    ::std_msgs::Int8_<ContainerAllocator>  RF_servo_angle;
 
   typedef  ::std_msgs::Int16_<ContainerAllocator>  _RF_servo_cmd_type;
    ::std_msgs::Int16_<ContainerAllocator>  RF_servo_cmd;
-
-  typedef  ::std_msgs::Float32_<ContainerAllocator>  _RF_wheel_rpm_type;
-   ::std_msgs::Float32_<ContainerAllocator>  RF_wheel_rpm;
-
-  typedef  ::std_msgs::Int8_<ContainerAllocator>  _RF_motor_signal_type;
-   ::std_msgs::Int8_<ContainerAllocator>  RF_motor_signal;
 
   typedef  ::std_msgs::Bool_<ContainerAllocator>  _LR_motor_enable_type;
    ::std_msgs::Bool_<ContainerAllocator>  LR_motor_enable;
@@ -161,17 +161,17 @@ struct ArduinoFeedback_ {
   typedef  ::std_msgs::Bool_<ContainerAllocator>  _LR_motor_dir_type;
    ::std_msgs::Bool_<ContainerAllocator>  LR_motor_dir;
 
+  typedef  ::std_msgs::Float32_<ContainerAllocator>  _LR_wheel_rpm_type;
+   ::std_msgs::Float32_<ContainerAllocator>  LR_wheel_rpm;
+
+  typedef  ::std_msgs::Int8_<ContainerAllocator>  _LR_motor_cmd_type;
+   ::std_msgs::Int8_<ContainerAllocator>  LR_motor_cmd;
+
   typedef  ::std_msgs::Int8_<ContainerAllocator>  _LR_servo_angle_type;
    ::std_msgs::Int8_<ContainerAllocator>  LR_servo_angle;
 
   typedef  ::std_msgs::Int16_<ContainerAllocator>  _LR_servo_cmd_type;
    ::std_msgs::Int16_<ContainerAllocator>  LR_servo_cmd;
-
-  typedef  ::std_msgs::Float32_<ContainerAllocator>  _LR_wheel_rpm_type;
-   ::std_msgs::Float32_<ContainerAllocator>  LR_wheel_rpm;
-
-  typedef  ::std_msgs::Int8_<ContainerAllocator>  _LR_motor_signal_type;
-   ::std_msgs::Int8_<ContainerAllocator>  LR_motor_signal;
 
   typedef  ::std_msgs::Bool_<ContainerAllocator>  _RR_motor_enable_type;
    ::std_msgs::Bool_<ContainerAllocator>  RR_motor_enable;
@@ -179,17 +179,17 @@ struct ArduinoFeedback_ {
   typedef  ::std_msgs::Bool_<ContainerAllocator>  _RR_motor_dir_type;
    ::std_msgs::Bool_<ContainerAllocator>  RR_motor_dir;
 
+  typedef  ::std_msgs::Float32_<ContainerAllocator>  _RR_wheel_rpm_type;
+   ::std_msgs::Float32_<ContainerAllocator>  RR_wheel_rpm;
+
+  typedef  ::std_msgs::Int8_<ContainerAllocator>  _RR_motor_cmd_type;
+   ::std_msgs::Int8_<ContainerAllocator>  RR_motor_cmd;
+
   typedef  ::std_msgs::Int8_<ContainerAllocator>  _RR_servo_angle_type;
    ::std_msgs::Int8_<ContainerAllocator>  RR_servo_angle;
 
   typedef  ::std_msgs::Int16_<ContainerAllocator>  _RR_servo_cmd_type;
    ::std_msgs::Int16_<ContainerAllocator>  RR_servo_cmd;
-
-  typedef  ::std_msgs::Float32_<ContainerAllocator>  _RR_wheel_rpm_type;
-   ::std_msgs::Float32_<ContainerAllocator>  RR_wheel_rpm;
-
-  typedef  ::std_msgs::Int8_<ContainerAllocator>  _RR_motor_signal_type;
-   ::std_msgs::Int8_<ContainerAllocator>  RR_motor_signal;
 
 
   typedef boost::shared_ptr< ::arduino_msgs::ArduinoFeedback_<ContainerAllocator> > Ptr;
@@ -220,12 +220,12 @@ template<class ContainerAllocator>
 struct MD5Sum< ::arduino_msgs::ArduinoFeedback_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "9c21fb0eb2b954841570cb63aabdb737";
+    return "452394dac99733fe01bdb73767acac9c";
   }
 
   static const char* value(const  ::arduino_msgs::ArduinoFeedback_<ContainerAllocator> &) { return value(); } 
-  static const uint64_t static_value1 = 0x9c21fb0eb2b95484ULL;
-  static const uint64_t static_value2 = 0x1570cb63aabdb737ULL;
+  static const uint64_t static_value1 = 0x452394dac99733feULL;
+  static const uint64_t static_value2 = 0x01bdb73767acac9cULL;
 };
 
 template<class ContainerAllocator>
@@ -249,31 +249,36 @@ std_msgs/Float32 angSpeed\n\
 \n\
 std_msgs/Bool LF_motor_enable\n\
 std_msgs/Bool LF_motor_dir\n\
+std_msgs/Float32 LF_wheel_rpm\n\
+std_msgs/Int8 LF_motor_cmd\n\
+\n\
 std_msgs/Int8 LF_servo_angle\n\
 std_msgs/Int16 LF_servo_cmd\n\
-std_msgs/Float32 LF_wheel_rpm\n\
-std_msgs/Int8 LF_motor_signal\n\
+\n\
 \n\
 std_msgs/Bool RF_motor_enable\n\
 std_msgs/Bool RF_motor_dir\n\
+std_msgs/Float32 RF_wheel_rpm\n\
+std_msgs/Int8 RF_motor_cmd\n\
+\n\
 std_msgs/Int8 RF_servo_angle\n\
 std_msgs/Int16 RF_servo_cmd\n\
-std_msgs/Float32 RF_wheel_rpm\n\
-std_msgs/Int8 RF_motor_signal\n\
 \n\
 std_msgs/Bool LR_motor_enable\n\
 std_msgs/Bool LR_motor_dir\n\
+std_msgs/Float32 LR_wheel_rpm\n\
+std_msgs/Int8 LR_motor_cmd\n\
+\n\
 std_msgs/Int8 LR_servo_angle\n\
 std_msgs/Int16 LR_servo_cmd\n\
-std_msgs/Float32 LR_wheel_rpm\n\
-std_msgs/Int8 LR_motor_signal\n\
 \n\
 std_msgs/Bool RR_motor_enable\n\
 std_msgs/Bool RR_motor_dir\n\
+std_msgs/Float32 RR_wheel_rpm\n\
+std_msgs/Int8 RR_motor_cmd\n\
+\n\
 std_msgs/Int8 RR_servo_angle\n\
 std_msgs/Int16 RR_servo_cmd\n\
-std_msgs/Float32 RR_wheel_rpm\n\
-std_msgs/Int8 RR_motor_signal\n\
 \n\
 ================================================================================\n\
 MSG: std_msgs/Header\n\
@@ -332,28 +337,28 @@ template<class ContainerAllocator> struct Serializer< ::arduino_msgs::ArduinoFee
     stream.next(m.angSpeed);
     stream.next(m.LF_motor_enable);
     stream.next(m.LF_motor_dir);
+    stream.next(m.LF_wheel_rpm);
+    stream.next(m.LF_motor_cmd);
     stream.next(m.LF_servo_angle);
     stream.next(m.LF_servo_cmd);
-    stream.next(m.LF_wheel_rpm);
-    stream.next(m.LF_motor_signal);
     stream.next(m.RF_motor_enable);
     stream.next(m.RF_motor_dir);
+    stream.next(m.RF_wheel_rpm);
+    stream.next(m.RF_motor_cmd);
     stream.next(m.RF_servo_angle);
     stream.next(m.RF_servo_cmd);
-    stream.next(m.RF_wheel_rpm);
-    stream.next(m.RF_motor_signal);
     stream.next(m.LR_motor_enable);
     stream.next(m.LR_motor_dir);
+    stream.next(m.LR_wheel_rpm);
+    stream.next(m.LR_motor_cmd);
     stream.next(m.LR_servo_angle);
     stream.next(m.LR_servo_cmd);
-    stream.next(m.LR_wheel_rpm);
-    stream.next(m.LR_motor_signal);
     stream.next(m.RR_motor_enable);
     stream.next(m.RR_motor_dir);
+    stream.next(m.RR_wheel_rpm);
+    stream.next(m.RR_motor_cmd);
     stream.next(m.RR_servo_angle);
     stream.next(m.RR_servo_cmd);
-    stream.next(m.RR_wheel_rpm);
-    stream.next(m.RR_motor_signal);
   }
 
   ROS_DECLARE_ALLINONE_SERIALIZER;
@@ -386,72 +391,72 @@ s << std::endl;
     s << indent << "LF_motor_dir: ";
 s << std::endl;
     Printer< ::std_msgs::Bool_<ContainerAllocator> >::stream(s, indent + "  ", v.LF_motor_dir);
+    s << indent << "LF_wheel_rpm: ";
+s << std::endl;
+    Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.LF_wheel_rpm);
+    s << indent << "LF_motor_cmd: ";
+s << std::endl;
+    Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.LF_motor_cmd);
     s << indent << "LF_servo_angle: ";
 s << std::endl;
     Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.LF_servo_angle);
     s << indent << "LF_servo_cmd: ";
 s << std::endl;
     Printer< ::std_msgs::Int16_<ContainerAllocator> >::stream(s, indent + "  ", v.LF_servo_cmd);
-    s << indent << "LF_wheel_rpm: ";
-s << std::endl;
-    Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.LF_wheel_rpm);
-    s << indent << "LF_motor_signal: ";
-s << std::endl;
-    Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.LF_motor_signal);
     s << indent << "RF_motor_enable: ";
 s << std::endl;
     Printer< ::std_msgs::Bool_<ContainerAllocator> >::stream(s, indent + "  ", v.RF_motor_enable);
     s << indent << "RF_motor_dir: ";
 s << std::endl;
     Printer< ::std_msgs::Bool_<ContainerAllocator> >::stream(s, indent + "  ", v.RF_motor_dir);
+    s << indent << "RF_wheel_rpm: ";
+s << std::endl;
+    Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.RF_wheel_rpm);
+    s << indent << "RF_motor_cmd: ";
+s << std::endl;
+    Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.RF_motor_cmd);
     s << indent << "RF_servo_angle: ";
 s << std::endl;
     Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.RF_servo_angle);
     s << indent << "RF_servo_cmd: ";
 s << std::endl;
     Printer< ::std_msgs::Int16_<ContainerAllocator> >::stream(s, indent + "  ", v.RF_servo_cmd);
-    s << indent << "RF_wheel_rpm: ";
-s << std::endl;
-    Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.RF_wheel_rpm);
-    s << indent << "RF_motor_signal: ";
-s << std::endl;
-    Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.RF_motor_signal);
     s << indent << "LR_motor_enable: ";
 s << std::endl;
     Printer< ::std_msgs::Bool_<ContainerAllocator> >::stream(s, indent + "  ", v.LR_motor_enable);
     s << indent << "LR_motor_dir: ";
 s << std::endl;
     Printer< ::std_msgs::Bool_<ContainerAllocator> >::stream(s, indent + "  ", v.LR_motor_dir);
+    s << indent << "LR_wheel_rpm: ";
+s << std::endl;
+    Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.LR_wheel_rpm);
+    s << indent << "LR_motor_cmd: ";
+s << std::endl;
+    Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.LR_motor_cmd);
     s << indent << "LR_servo_angle: ";
 s << std::endl;
     Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.LR_servo_angle);
     s << indent << "LR_servo_cmd: ";
 s << std::endl;
     Printer< ::std_msgs::Int16_<ContainerAllocator> >::stream(s, indent + "  ", v.LR_servo_cmd);
-    s << indent << "LR_wheel_rpm: ";
-s << std::endl;
-    Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.LR_wheel_rpm);
-    s << indent << "LR_motor_signal: ";
-s << std::endl;
-    Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.LR_motor_signal);
     s << indent << "RR_motor_enable: ";
 s << std::endl;
     Printer< ::std_msgs::Bool_<ContainerAllocator> >::stream(s, indent + "  ", v.RR_motor_enable);
     s << indent << "RR_motor_dir: ";
 s << std::endl;
     Printer< ::std_msgs::Bool_<ContainerAllocator> >::stream(s, indent + "  ", v.RR_motor_dir);
+    s << indent << "RR_wheel_rpm: ";
+s << std::endl;
+    Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.RR_wheel_rpm);
+    s << indent << "RR_motor_cmd: ";
+s << std::endl;
+    Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.RR_motor_cmd);
     s << indent << "RR_servo_angle: ";
 s << std::endl;
     Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.RR_servo_angle);
     s << indent << "RR_servo_cmd: ";
 s << std::endl;
     Printer< ::std_msgs::Int16_<ContainerAllocator> >::stream(s, indent + "  ", v.RR_servo_cmd);
-    s << indent << "RR_wheel_rpm: ";
-s << std::endl;
-    Printer< ::std_msgs::Float32_<ContainerAllocator> >::stream(s, indent + "  ", v.RR_wheel_rpm);
-    s << indent << "RR_motor_signal: ";
-s << std::endl;
-    Printer< ::std_msgs::Int8_<ContainerAllocator> >::stream(s, indent + "  ", v.RR_motor_signal);
   }
 };
 
