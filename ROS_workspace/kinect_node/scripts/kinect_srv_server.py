@@ -111,11 +111,11 @@ def createMap():
     projection = [[[0,0] for i in range(30)] for ii in range(40)]
     print "Starting Processing"
     for iFrame in range(height/5, height-height/3):
-	if(iFrame %6 !=0):
+	if(iFrame %3 !=0):
 		continue
 
 	for iiFrame in range(width/5, width- width/5):
-		if(iiFrame %6 !=0):
+		if(iiFrame %3 !=0):
 			continue
 
 		val = getDepthFromPixel(depth_matrix[0][iFrame][iiFrame])
@@ -136,8 +136,11 @@ def createMap():
 	print String
     print str("      " )+str([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30])
 
-	# Sobel filter
+
+
+	# Sobel filter is the 2D array resulting from the filter
     sobel_filter = [[-1 for i in range(30)] for ii in range(40)]
+
     for y in range(1, len(sobel_filter )-1):
 	for x in range(1,len(sobel_filter[0])-1):
 		if (projection[y][x][1] == 0):
@@ -152,13 +155,65 @@ def createMap():
 		varience_y =sum(np.fabs(subset*sobel_y))
 
 		variance = math.sqrt(variance_x**2 + varience_y**2)
-		if (variance>230):
+		if (variance>200):
 			variance = 100
 		else:
 			variance = 0
 		sobel_filter[y][x] = int( variance)
 
 
+    ### reset filter
+    sobel_filter = [[-1 for i in range(30)] for ii in range(40)]
+    ###
+    #Height filter
+
+    height_threshold = 6 #cm
+    for y in range(1, len(sobel_filter )-1):
+	for x in range(1,len(sobel_filter[0])-1):
+		if (projection[y][x][1] == 0):
+			continue;
+		if (np.fabs(projection[y][x][0])>=height_threshold):
+			sobel_filter[y][x] = 100
+
+
+    ### reset filter
+    sobel_filter = [[-1 for i in range(30)] for ii in range(40)]
+    ###
+
+    #Filter with Relative Height from Every Adjacent Position, 
+    # it is assumed that the case with the greatest absolute value is the abstacle
+    height_difference_threshold = 4 #cm
+    for y in range(1, len(sobel_filter )-1):
+	for x in range(1,len(sobel_filter[0])-1):
+		if (projection[y][x][1] == 0):
+			continue;	
+		sobel_filter[y][x] = 0
+		if (projection[y][x-1][1] != 0 and np.fabs(projection[y][x][0] - projection[y][x-1][0])>=height_difference_threshold):
+			if(math.fabs(projection[y][x][0]) >=math.fabs(projection[y][x-1][0])):
+				sobel_filter[y][x] = 100
+			else:			
+				sobel_filter[y][x-1] = 100
+		if (projection[y][x+1][1] != 0 and np.fabs(projection[y][x][0] - projection[y][x+1][0])>=height_difference_threshold):
+
+			if(math.fabs(projection[y][x][0]) >=math.fabs(projection[y][x+1][0])):
+				sobel_filter[y][x] = 100
+			else:			
+				sobel_filter[y][x+1] = 100
+		if (projection[y-1][x][1] != 0 and np.fabs(projection[y][x][0] - projection[y-1][x][0])>=height_difference_threshold):
+			
+			if(math.fabs(projection[y][x][0]) >=math.fabs(projection[y-1][x][0])):
+				sobel_filter[y][x] = 100
+			else:
+				sobel_filter[y-1][x] = 100
+		if (projection[y+1][x][1] != 0 and np.fabs(projection[y][x][0] - projection[y+1][x][0])>=height_difference_threshold):
+			
+			if(math.fabs(projection[y][x][0]) >=math.fabs(projection[y+1][x][0])):
+				sobel_filter[y][x] = 100
+			else:
+				sobel_filter[y+1][x] = 100		
+
+
+    #print the fitered array 
     for i in range(40):
 	print str(40*10 -i*10) + "cm: "+str(sobel_filter[i])	
     print str("      " )+str([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30])
