@@ -32,7 +32,7 @@ class mapBuilder:
 
     def run(self):
         #rospy.spin()
-	self.rate = rospy.Rate(0.5)	#period = 2s
+	self.rate = rospy.Rate(0.3)	#period = 3s
 	while not rospy.is_shutdown():
 	    rospy.wait_for_service('kinect_service')
 	    try:
@@ -100,8 +100,18 @@ class mapBuilder:
         #for i in range(square_size):
         #    for ii in range(square_size):
         #        self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
-
-	self.occupancy_grid[(y_coord ) * self.map_width + (x_coord)] = val
+	if (self.occupancy_grid[(y_coord ) * self.map_width + (x_coord)] != 100):
+		self.occupancy_grid[(y_coord ) * self.map_width + (x_coord)] = val
+	#also insert the top, right and top-right diagonal that were rounded down when coordinates were added
+	
+	if (self.occupancy_grid[(y_coord+1 ) * self.map_width + (x_coord)] != 100):
+			self.occupancy_grid[(y_coord+1 ) * self.map_width + (x_coord)] = val
+	
+	if (self.occupancy_grid[(y_coord ) * self.map_width + (x_coord+1)] != 100):
+			self.occupancy_grid[(y_coord ) * self.map_width + (x_coord+1)] = val
+	
+	if (self.occupancy_grid[(y_coord+1) * self.map_width + (x_coord+1)] != 100):
+		self.occupancy_grid[(y_coord+1 ) * self.map_width + (x_coord+1)] = val
 
     def kinectCallback(self):
 	# the grid is a one d array
@@ -146,14 +156,22 @@ class mapBuilder:
 	position_vector[1] += int( 1024 + self.y_position/0.05 )
 	#print "before addedCoordinates" , [position_vector[0],position_vector[1]]
 	#
+
+	#round down to the lower even number if not even 
+	if(position_vector[0] % 2 !=0):
+		position_vector[0]-=1
+	if(position_vector[1] % 2 !=0):
+		position_vector[1]-=1
 	if ((position_vector[0],position_vector[1]) not in self.obstacle_list):
         	#self.obstacle_list.append([position_vector[0],position_vector[1]])
 
 		self.obstacle_list[(position_vector[0],position_vector[1])] = [val,1]  # [cost value , number of readings there]
+	
+	#update the average cost value of the location
 	else:
 		#update the average cost value of the location
 		location = self.obstacle_list[(position_vector[0],position_vector[1])]
-		location[0] = int(location[0]/(location[1]+1)+ val/(location[1]+1))
+		location[0] = int(((location[0]+0.0)*(location[1]+0.0) )/((location[1]+1.0)) + (val+0.0)/(location[1]+1.0))
 		location[1] +=1
 	print "addedCoordinates" , [position_vector[0], position_vector[1]]
 	# *****
