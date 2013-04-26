@@ -99,6 +99,9 @@ rosrun rosserial_python serial_node.py /dev/ttyACM0
 send shit to arduino (example)
 rostopic pub ang_speed std_msgs/Float32 10 --rate=100
 
+negative vals
+rostopic pub ang_speed std_msgs/Float32 --rate=100 -- -20
+
 MAKE_LIBRARY NOT FOUND AND SOLUTION
 [rosrun] Couldn't find executable named make_library.py below /opt/ros/fuerte/stacks/rosserial/rosserial_client
 [rosrun] Found the following, but they're either not files, 
