@@ -99,4 +99,14 @@ rosrun rosserial_python serial_node.py /dev/ttyACM0
 send shit to arduino (example)
 rostopic pub ang_speed std_msgs/Float32 10 --rate=100
 
+MAKE_LIBRARY NOT FOUND AND SOLUTION
+[rosrun] Couldn't find executable named make_library.py below /opt/ros/fuerte/stacks/rosserial/rosserial_client
+[rosrun] Found the following, but they're either not files, 
+[rosrun] or not executable:
+[rosrun]   /opt/ros/fuerte/stacks/rosserial/rosserial_client/src/rosserial_client/make_library.py
+lunarex@LunarEx:~/McGill_LunarEx_2013/Arduino$ sudo chmod +x /opt/ros/fuerte/stacks/rosserial/rosserial_client/src/rosserial_client/make_library.py
+
+SAME SOLUTION WITH SERIAL_NODE.PY
+
+
 

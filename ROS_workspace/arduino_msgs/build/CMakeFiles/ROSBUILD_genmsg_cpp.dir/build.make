@@ -42,7 +42,21 @@ CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/
 # Include the progress variables for this target.
 include CMakeFiles/ROSBUILD_genmsg_cpp.dir/progress.make
 
+CMakeFiles/ROSBUILD_genmsg_cpp: ../msg_gen/cpp/include/arduino_msgs/LiteArduinoFeedback.h
 CMakeFiles/ROSBUILD_genmsg_cpp: ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h
+
+../msg_gen/cpp/include/arduino_msgs/LiteArduinoFeedback.h: ../msg/LiteArduinoFeedback.msg
+../msg_gen/cpp/include/arduino_msgs/LiteArduinoFeedback.h: /opt/ros/fuerte/share/roscpp/rosbuild/scripts/genmsg_cpp.py
+../msg_gen/cpp/include/arduino_msgs/LiteArduinoFeedback.h: /opt/ros/fuerte/share/roslib/bin/gendeps
+../msg_gen/cpp/include/arduino_msgs/LiteArduinoFeedback.h: /opt/ros/fuerte/share/std_msgs/msg/Header.msg
+../msg_gen/cpp/include/arduino_msgs/LiteArduinoFeedback.h: /opt/ros/fuerte/share/std_msgs/msg/Float32.msg
+../msg_gen/cpp/include/arduino_msgs/LiteArduinoFeedback.h: /opt/ros/fuerte/share/std_msgs/msg/Bool.msg
+../msg_gen/cpp/include/arduino_msgs/LiteArduinoFeedback.h: /opt/ros/fuerte/share/std_msgs/msg/Int8.msg
+../msg_gen/cpp/include/arduino_msgs/LiteArduinoFeedback.h: ../manifest.xml
+../msg_gen/cpp/include/arduino_msgs/LiteArduinoFeedback.h: /opt/ros/fuerte/share/std_msgs/manifest.xml
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../msg_gen/cpp/include/arduino_msgs/LiteArduinoFeedback.h"
+	/opt/ros/fuerte/share/roscpp/rosbuild/scripts/genmsg_cpp.py /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/msg/LiteArduinoFeedback.msg
 
 ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h: ../msg/ArduinoFeedback.msg
 ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h: /opt/ros/fuerte/share/roscpp/rosbuild/scripts/genmsg_cpp.py
@@ -53,11 +67,12 @@ CMakeFiles/ROSBUILD_genmsg_cpp: ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedb
 ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h: /opt/ros/fuerte/share/std_msgs/msg/Bool.msg
 ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h: ../manifest.xml
 ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h: /opt/ros/fuerte/share/std_msgs/manifest.xml
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h"
 	/opt/ros/fuerte/share/roscpp/rosbuild/scripts/genmsg_cpp.py /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/msg/ArduinoFeedback.msg
 
 ROSBUILD_genmsg_cpp: CMakeFiles/ROSBUILD_genmsg_cpp
+ROSBUILD_genmsg_cpp: ../msg_gen/cpp/include/arduino_msgs/LiteArduinoFeedback.h
 ROSBUILD_genmsg_cpp: ../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h
 ROSBUILD_genmsg_cpp: CMakeFiles/ROSBUILD_genmsg_cpp.dir/build.make
 .PHONY : ROSBUILD_genmsg_cpp

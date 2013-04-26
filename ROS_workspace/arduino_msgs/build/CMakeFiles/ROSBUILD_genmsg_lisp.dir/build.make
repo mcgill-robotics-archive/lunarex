@@ -42,9 +42,29 @@ CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/
 # Include the progress variables for this target.
 include CMakeFiles/ROSBUILD_genmsg_lisp.dir/progress.make
 
+CMakeFiles/ROSBUILD_genmsg_lisp: ../msg_gen/lisp/LiteArduinoFeedback.lisp
+CMakeFiles/ROSBUILD_genmsg_lisp: ../msg_gen/lisp/_package.lisp
+CMakeFiles/ROSBUILD_genmsg_lisp: ../msg_gen/lisp/_package_LiteArduinoFeedback.lisp
 CMakeFiles/ROSBUILD_genmsg_lisp: ../msg_gen/lisp/ArduinoFeedback.lisp
 CMakeFiles/ROSBUILD_genmsg_lisp: ../msg_gen/lisp/_package.lisp
 CMakeFiles/ROSBUILD_genmsg_lisp: ../msg_gen/lisp/_package_ArduinoFeedback.lisp
+
+../msg_gen/lisp/LiteArduinoFeedback.lisp: ../msg/LiteArduinoFeedback.msg
+../msg_gen/lisp/LiteArduinoFeedback.lisp: /opt/ros/fuerte/share/roslisp/rosbuild/scripts/genmsg_lisp.py
+../msg_gen/lisp/LiteArduinoFeedback.lisp: /opt/ros/fuerte/share/roslib/bin/gendeps
+../msg_gen/lisp/LiteArduinoFeedback.lisp: /opt/ros/fuerte/share/std_msgs/msg/Header.msg
+../msg_gen/lisp/LiteArduinoFeedback.lisp: /opt/ros/fuerte/share/std_msgs/msg/Float32.msg
+../msg_gen/lisp/LiteArduinoFeedback.lisp: /opt/ros/fuerte/share/std_msgs/msg/Bool.msg
+../msg_gen/lisp/LiteArduinoFeedback.lisp: /opt/ros/fuerte/share/std_msgs/msg/Int8.msg
+../msg_gen/lisp/LiteArduinoFeedback.lisp: ../manifest.xml
+../msg_gen/lisp/LiteArduinoFeedback.lisp: /opt/ros/fuerte/share/std_msgs/manifest.xml
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../msg_gen/lisp/LiteArduinoFeedback.lisp, ../msg_gen/lisp/_package.lisp, ../msg_gen/lisp/_package_LiteArduinoFeedback.lisp"
+	/opt/ros/fuerte/share/roslisp/rosbuild/scripts/genmsg_lisp.py /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/msg/LiteArduinoFeedback.msg
+
+../msg_gen/lisp/_package.lisp: ../msg_gen/lisp/LiteArduinoFeedback.lisp
+
+../msg_gen/lisp/_package_LiteArduinoFeedback.lisp: ../msg_gen/lisp/LiteArduinoFeedback.lisp
 
 ../msg_gen/lisp/ArduinoFeedback.lisp: ../msg/ArduinoFeedback.msg
 ../msg_gen/lisp/ArduinoFeedback.lisp: /opt/ros/fuerte/share/roslisp/rosbuild/scripts/genmsg_lisp.py
@@ -55,7 +75,7 @@ CMakeFiles/ROSBUILD_genmsg_lisp: ../msg_gen/lisp/_package_ArduinoFeedback.lisp
 ../msg_gen/lisp/ArduinoFeedback.lisp: /opt/ros/fuerte/share/std_msgs/msg/Bool.msg
 ../msg_gen/lisp/ArduinoFeedback.lisp: ../manifest.xml
 ../msg_gen/lisp/ArduinoFeedback.lisp: /opt/ros/fuerte/share/std_msgs/manifest.xml
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../msg_gen/lisp/ArduinoFeedback.lisp, ../msg_gen/lisp/_package.lisp, ../msg_gen/lisp/_package_ArduinoFeedback.lisp"
 	/opt/ros/fuerte/share/roslisp/rosbuild/scripts/genmsg_lisp.py /home/lunarex/McGill_LunarEx_2013/ROS_workspace/arduino_msgs/msg/ArduinoFeedback.msg
 
@@ -64,6 +84,9 @@ CMakeFiles/ROSBUILD_genmsg_lisp: ../msg_gen/lisp/_package_ArduinoFeedback.lisp
 ../msg_gen/lisp/_package_ArduinoFeedback.lisp: ../msg_gen/lisp/ArduinoFeedback.lisp
 
 ROSBUILD_genmsg_lisp: CMakeFiles/ROSBUILD_genmsg_lisp
+ROSBUILD_genmsg_lisp: ../msg_gen/lisp/LiteArduinoFeedback.lisp
+ROSBUILD_genmsg_lisp: ../msg_gen/lisp/_package.lisp
+ROSBUILD_genmsg_lisp: ../msg_gen/lisp/_package_LiteArduinoFeedback.lisp
 ROSBUILD_genmsg_lisp: ../msg_gen/lisp/ArduinoFeedback.lisp
 ROSBUILD_genmsg_lisp: ../msg_gen/lisp/_package.lisp
 ROSBUILD_genmsg_lisp: ../msg_gen/lisp/_package_ArduinoFeedback.lisp
