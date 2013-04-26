@@ -1,6 +1,7 @@
 #include <Servo.h>
 #include <ros.h>
 #include <std_msgs/Float32.h>
+#include <geometry_msgs/Twist.h>
 
 //#include <math.h>
 //#include <arduino_msgs/ArduinoFeedback.h>
@@ -12,19 +13,24 @@ float linSpeed = 0;
 float TOL = 0.5;
 ros:: NodeHandle nh;
 
-void setAngSpeed(const std_msgs:: Float32 &ang_speed)
-{angSpeed = ang_speed.data;}
-void setLinSpeed(const std_msgs:: Float32 &lin_speed)
-{linSpeed = lin_speed.data;}
+//void setAngSpeed(const std_msgs:: Float32 &ang_speed)
+//{angSpeed = ang_speed.data;}
+//void setLinSpeed(const std_msgs:: Float32 &lin_speed)
+//{linSpeed = lin_speed.data;}
+
+void setSpeeds(const geometry_msgs::Twist &cmd_vel){
+  linSpeed = (float) cmd_vel.linear.x;
+  angSpeed = (float) cmd_vel.angular.z;
+}
 
 //repeat 2 lines below for each publisher
 //std_msgs::Float32 fb_lf_servo_cmd;
 //ros:: Publisher fb_lf_servo_cmd_publisher("fb_lf_servo_cmd", &fb_lf_servo_cmd);
 
-ros:: Subscriber<std_msgs::Float32> angSub("ang_speed", &setAngSpeed);
-ros:: Subscriber<std_msgs::Float32> linSub("lin_speed", &setLinSpeed);
+//ros:: Subscriber<std_msgs::Float32> angSub("ang_speed", &setAngSpeed);
+//ros:: Subscriber<std_msgs::Float32> linSub("lin_speed", &setLinSpeed);
 
-//ros:: Subscriber<geometry_msgs::Twist> cmdvel("cmd_vel", &setSpeeds);
+ros:: Subscriber<geometry_msgs::Twist> cmdVelSub("cmd_vel", &setSpeeds);
 
 //arduino_msgs::ArduinoFeedback fb;
 //ros:: Publisher feedback_publisher("arduino_feedback", &fb);
@@ -129,8 +135,8 @@ void setup()
   digitalWrite(RR_motor_enable_pin, RR_motor_enable);
   
   nh.initNode();
-  nh.subscribe(angSub);
-  nh.subscribe(linSub);
+  nh.subscribe(cmdVelSub);
+  //nh.subscribe(linSub);
   //nh.advertise(fb_lf_servo_cmd_publisher);
 }
 
