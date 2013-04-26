@@ -1,6 +1,8 @@
 #include <Servo.h>
 #include <ros.h>
 #include <std_msgs/Float32.h>
+
+//#include <math.h>
 //#include <arduino_msgs/ArduinoFeedback.h>
 
 //these are init values. Can set tthem through ang_speed and lin_speed ros topics
@@ -15,12 +17,17 @@ void setAngSpeed(const std_msgs:: Float32 &ang_speed)
 void setLinSpeed(const std_msgs:: Float32 &lin_speed)
 {linSpeed = lin_speed.data;}
 
+//repeat 2 lines below for each publisher
+//std_msgs::Float32 fb_lf_servo_cmd;
+//ros:: Publisher fb_lf_servo_cmd_publisher("fb_lf_servo_cmd", &fb_lf_servo_cmd);
+
 ros:: Subscriber<std_msgs::Float32> angSub("ang_speed", &setAngSpeed);
 ros:: Subscriber<std_msgs::Float32> linSub("lin_speed", &setLinSpeed);
 
-//repeat 2 lines below for each publisher
-std_msgs::Float32 fb_lf_servo_cmd;
-ros:: Publisher fb_lf_servo_cmd_publisher("fb_lf_servo_cmd", &fb_lf_servo_cmd);
+//ros:: Subscriber<geometry_msgs::Twist> cmdvel("cmd_vel", &setSpeeds);
+
+//arduino_msgs::ArduinoFeedback fb;
+//ros:: Publisher feedback_publisher("arduino_feedback", &fb);
 
 Servo LF_servo, RF_servo, LR_servo, RR_servo;
 
@@ -87,12 +94,14 @@ float LENGTH = 0.71;
 float WIDTH = 0.7219;
 float DIST_TO_AXIS_A = 0.5074;
 //in degrees
-int MAX_ANGLE = 35;
+int MAX_ANGLE = 35; //ratio of lin/ang = 1.5
+
 int SEC_PER_MIN = 60;
 int GEAR_RATIO = 74;
 
 void setup()
 {
+  Serial.begin(9600);
   pinMode(LF_motor_pin, OUTPUT);
   pinMode(RF_motor_pin, OUTPUT);
   pinMode(LR_motor_pin, OUTPUT);
@@ -122,7 +131,7 @@ void setup()
   nh.initNode();
   nh.subscribe(angSub);
   nh.subscribe(linSub);
-  nh.advertise(fb_lf_servo_cmd_publisher);
+  //nh.advertise(fb_lf_servo_cmd_publisher);
 }
 
 void loop()
@@ -137,10 +146,8 @@ void loop()
   {doAckerman();}
   
   setWheelDirection(LF_motor_dir, RF_motor_dir, LR_motor_dir, RR_motor_dir);
- // if((LF_old_servo_angle != LF_servo_angle)||(RF_old_servo_angle != RF_servo_angle)||(LR_old_servo_angle != LR_servo_angle)||(RR_old_servo_angle != RR_servo_angle))
   setWheelAngle(LF_servo_angle, RF_servo_angle, LR_servo_angle, RR_servo_angle);
   setWheelSpeed(LF_wheel_rpm, RF_wheel_rpm, LR_wheel_rpm, RR_wheel_rpm);
-  
   
   LF_old_servo_angle = LF_servo_angle;  
   RF_old_servo_angle = RF_servo_angle;  
@@ -149,10 +156,17 @@ void loop()
   
   
   //populateFeedbackMessage();
-   fb_lf_servo_cmd.data=LF_servo_cmd;
-   fb_lf_servo_cmd_publisher.publish(&fb_lf_servo_cmd);
+   //fb_lf_servo_cmd.data=LF_servo_cmd;
+   //fb_lf_servo_cmd_publisher.publish(&fb_lf_servo_cmd);
 
- nh.spinOnce();
+  Serial.println("angles");
+  Serial.println(LF_servo_angle);
+  Serial.println(RF_servo_angle);
+  Serial.println(LR_servo_angle);
+  Serial.println(RR_servo_angle);
+  delay(1000);
+
+  nh.spinOnce();
 }
 
 void stopAll()
@@ -207,7 +221,7 @@ void turnOnSpot()
 
 void goStraight()
 {
-    digitalWrite(LF_motor_enable_pin, LF_motor_enable);
+  digitalWrite(LF_motor_enable_pin, LF_motor_enable);
   digitalWrite(RF_motor_enable_pin, RF_motor_enable);
   digitalWrite(LR_motor_enable_pin, LR_motor_enable);
   digitalWrite(RR_motor_enable_pin, RR_motor_enable);
@@ -271,7 +285,10 @@ void doAckerman()
       RR_motor_dir = 1;
     }
     
+
     //float ackRadius = (abs(linSpeed)/2.0)*sin(abs(angSpeed)/2.0);
+
+    //float ackRadius = (abs(linSpeed)/2.0)*sin(abs(angSpeed)/2.0); //old april 9
     float ackRadius = abs(linSpeed)/abs(angSpeed);
     float innerFront = atan(LENGTH/(ackRadius - (WIDTH/2.0)))*180/PI;
     float outerFront = atan(LENGTH/(ackRadius + (WIDTH/2.0)))*180/PI;
@@ -284,7 +301,7 @@ void doAckerman()
     float rad3 = R1 - WIDTH/2;
     float rad4 = R1 + WIDTH/2;
     
-     if(innerFront>MAX_ANGLE)    //innerfront wheel will always have to turn more, do double if this condition is met
+     if(abs(innerFront)>MAX_ANGLE)    //innerfront wheel will always have to turn more, do double if this condition is met
     {
        float c = LENGTH /2.0;
        innerFront = atan(c/(ackRadius - (WIDTH/2.0)))*180/PI;
@@ -293,6 +310,13 @@ void doAckerman()
        outerBack = atan(c/(ackRadius + (WIDTH/2.0)))*180/PI;
        
     }
+    Serial.println("--");
+    Serial.println(innerFront);
+    Serial.println(outerFront);
+    Serial.println(innerBack);
+    Serial.println(outerBack);
+    Serial.println(ackRadius);
+    Serial.println(WIDTH/2.0);
     
     float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed));  //Will return +/- 1 for CCW or CW, respectively (note this variable is distinct from LF_motor_dir, RF_motor_dir, etc)
     
@@ -313,12 +337,16 @@ void doAckerman()
     }
     else if(dir<0.0)  //clockwise
     {
+
       LF_servo_angle = 90.0 + outerFront;
       RF_servo_angle = 90.0 + innerFront;
       LR_servo_angle = 90.0 - outerBack;
       RR_servo_angle = 90.0 - outerBack;
-      
-      
+
+      LF_servo_angle = 90 + outerFront;
+      RF_servo_angle = 90 + innerFront;
+      LR_servo_angle = 90 - outerBack;
+      RR_servo_angle = 90 - innerBack;
       
       rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
       rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
@@ -349,6 +377,7 @@ void setWheelAngle(float LF_servo_angle, float RF_servo_angle, float LR_servo_an
 {
   //motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
   
+  
   LF_servo_cmd = map(LF_servo_angle,0,180,1000,2000); //still need to validate this mapping and might need to invert it for the front or back servos (which are mounted backwards)
   RF_servo_cmd = map(RF_servo_angle,0,180,1000,2000);
   LR_servo_cmd = map(LR_servo_angle,0,180,1000,2000);
@@ -361,6 +390,7 @@ void setWheelAngle(float LF_servo_angle, float RF_servo_angle, float LR_servo_an
   RR_servo_cmd = constrain(RR_servo_cmd, 1000, 2000);
   
    if(abs(LF_servo_angle - LF_old_servo_angle)>TOL || abs(RR_servo_angle-RR_old_servo_angle)>TOL)
+  if(abs(LF_servo_angle - LF_old_servo_angle)>TOL || abs(RR_servo_angle-RR_old_servo_angle)>TOL)
   {
     LF_servo.writeMicroseconds(LF_servo_cmd);
     RF_servo.writeMicroseconds(RF_servo_cmd);
@@ -381,78 +411,5 @@ void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_
   analogWrite(LR_motor_pin, LR_wheel_rpm);
   analogWrite(RR_motor_pin, RR_wheel_rpm);
 }
-/*
-void populateFeedbackMessage(){
-  fb[0].data = LF_motor_enable;
-  fb[1].data = LF_motor_dir;
-  fb[2].data = LF_wheel_rpm;
-  fb[3].data = LF_motor_cmd;
 
-  fb[4].data = LF_servo_angle;
-  fb[5].data = LF_servo_cmd;
-  
-  fb[6].data = RF_motor_enable;
-  fb[7].data = RF_motor_dir;
-  fb[8].data = RF_wheel_rpm;
-  fb[9].data = RF_motor_cmd;
-
-  fb[10].data = RF_servo_angle;
-  fb[11].data = RF_servo_cmd;
-  
-  fb[12].data = LR_motor_enable;
-  fb[13].data = LR_motor_dir;
-  fb[14].data = LR_wheel_rpm;
-  fb[15].data = LR_motor_cmd;
-
-  fb[16].data = LR_servo_angle;
-  fb[17].data = LR_servo_cmd;
-  
-  fb[18].data = RR_motor_enable;
-  fb[19].data = RR_motor_dir;
-  fb[20].data = RR_wheel_rpm;
-  fb[21].data   = RR_motor_cmd;
-
-  fb[22].data = RR_servo_angle;
-  fb[23].data = RR_servo_cmd;
-}
-*/
-/*
-void populateFeedbackMessage(){
-  
-  fb.LF_motor_enable.data = LF_motor_enable;
-  fb.LF_motor_dir.data = LF_motor_dir;
-  fb.LF_wheel_rpm.data = LF_wheel_rpm;
-  fb.LF_motor_cmd.data = LF_motor_cmd;
-
-  fb.LF_servo_angle.data = LF_servo_angle;
-  fb.LF_servo_cmd.data = LF_servo_cmd;
-  
-  */
-  /*
-  fb.RF_motor_enable.data = RF_motor_enable;
-  fb.RF_motor_dir.data = RF_motor_dir;
-  fb.RF_wheel_rpm.data = RF_wheel_rpm;
-  fb.RF_motor_cmd.data = RF_motor_cmd;
-
-  fb.RF_servo_angle.data = RF_servo_angle;
-  fb.RF_servo_cmd.data = RF_servo_cmd;
-  
-  fb.LR_motor_enable.data = LR_motor_enable;
-  fb.LR_motor_dir.data = LR_motor_dir;
-  fb.LR_wheel_rpm.data = LR_wheel_rpm;
-  fb.LR_motor_cmd.data = LR_motor_cmd;
-
-  fb.LR_servo_angle.data = LR_servo_angle;
-  fb.LR_servo_cmd.data = LR_servo_cmd;
-  
-  fb.RR_motor_enable.data = RR_motor_enable;
-  fb.RR_motor_dir.data = RR_motor_dir;
-  fb.RR_wheel_rpm.data = RR_wheel_rpm;
-  fb.RR_motor_cmd.data = RR_motor_cmd;
-
-  fb.RR_servo_angle.data = RR_servo_angle;
-  fb.RR_servo_cmd.data = RR_servo_cmd;
-  
-}
-*/
 
