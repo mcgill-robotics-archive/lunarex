@@ -6,36 +6,84 @@
 //#include <math.h>
 //#include <arduino_msgs/ArduinoFeedback.h>
 
-//these are init values. Can set tthem through ang_speed and lin_speed ros topics
-float angSpeed = 0;
-float linSpeed = 0;
 
 float TOL = 0.5;
+
+// ========== ROS stuff ================
+
+/*
+Order of Operations: (whats gunna happen in this section of code)
+1. define nodehandle - rose node object 
+2. Initialize arduino variables that will be set in ROS
+3. subscribe to topics (point to arduino callback functions)
+4. define arduino callback functions that set arduino variables
+5. create publishers for feedback
+6. nh.initNode() and subscribe to subscribers and advertise publishers in Setup()
+7. nh.spinOnce() at the end of loop()
+8. use arduino variables within functions
+*/
+
 ros:: NodeHandle nh;
 
-//void setAngSpeed(const std_msgs:: Float32 &ang_speed)
-//{angSpeed = ang_speed.data;}
-//void setLinSpeed(const std_msgs:: Float32 &lin_speed)
-//{linSpeed = lin_speed.data;}
+//Initialize variables that will be set in ROS
+//Convention: use smallBig for arduino variable, under_score for ros topic
+float angSpeed = 0;
+float linSpeed = 0;
+float dumpPos = 0;
+float suspPos = 0;
+float doorPos = 0;
+float augerSpeed = 0;
+
+
+//Subsribers: instantiate subscribers and specify callback functions
+// Format: ros:: Subsriber<message type> subscriberName("topic", &callbackFunction);
+ros:: Subscriber<geometry_msgs::Twist> cmdVelSub("cmd_vel", &setSpeeds);  
+ros:: Subscriber<std_msgs::bool> dumpLASub("dump_pos", &setDumpLA); //dumping Linear Acutator position
+ros:: Subscriber<std_msgs::uint8> suspLASub("susp_pos", &setSuspLA); //suspension Linear Actuator position (same for both)
+ros:: Subscriber<std_msgs::bool> doorLASub("door_pos", &setDoorLA); //door Linear Acutator position (same for both)
+ros:: Subscriber<std_msgs::uint8> augerSpeedSub("auger_speed", &setAugerSpeed); //auger motor speed
+
+
+
+//Subscriber callback functions
+//Convention: use smallBig for arduino variable, under_score for ros topic
 
 void setSpeeds(const geometry_msgs::Twist &cmd_vel){
   linSpeed = (float) cmd_vel.linear.x;
   angSpeed = (float) cmd_vel.angular.z;
 }
+void setDumpLA(const std_msgs::Bool &dump_pos){
+  dumpPos = (boolean) dump_pos.data;
+}
+void setSuspLA(const std_msgs::Int8 &susp_pos){
+  suspPos = (int) susp_pos.data;
+}  
+void setDoorLA(const std_msgs::Bool &door_pos){
+  doorPos = (boolean) door_pos.data;
+}
+void setAugerSpeed(const std_msgs::Int8 &auger_speed){
+  augerSpeed = (int) auger_speed.data;
+}
+
+//Publishers
 
 //repeat 2 lines below for each publisher
 //std_msgs::Float32 fb_lf_servo_cmd;
 //ros:: Publisher fb_lf_servo_cmd_publisher("fb_lf_servo_cmd", &fb_lf_servo_cmd);
 
-//ros:: Subscriber<std_msgs::Float32> angSub("ang_speed", &setAngSpeed);
-//ros:: Subscriber<std_msgs::Float32> linSub("lin_speed", &setLinSpeed);
-
-ros:: Subscriber<geometry_msgs::Twist> cmdVelSub("cmd_vel", &setSpeeds);
-
 //arduino_msgs::ArduinoFeedback fb;
 //ros:: Publisher feedback_publisher("arduino_feedback", &fb);
 
+
+
+// =========== Non-ROS initializations ==============
+
 Servo LF_servo, RF_servo, LR_servo, RR_servo;
+
+//these 3 pins are arbitrary as of april 27
+int suspActuator_pin = 6;
+int dumpActuator_pin = 7;
+int augerMotor_pin = 8;
 
 int LF_motor_dir_pin = 27;
 int RF_motor_dir_pin = 29;
@@ -108,6 +156,8 @@ int GEAR_RATIO = 74;
 void setup()
 {
   Serial.begin(9600);
+  
+  // ===== Driving and Steering ====
   pinMode(LF_motor_pin, OUTPUT);
   pinMode(RF_motor_pin, OUTPUT);
   pinMode(LR_motor_pin, OUTPUT);
@@ -133,15 +183,23 @@ void setup()
   digitalWrite(RF_motor_enable_pin, RF_motor_enable);
   digitalWrite(LR_motor_enable_pin, LR_motor_enable);
   digitalWrite(RR_motor_enable_pin, RR_motor_enable);
+    
   
   nh.initNode();
   nh.subscribe(cmdVelSub);
-  //nh.subscribe(linSub);
+  nh.subscribe(dumpLASab);
+  nh.subscribe(suspLASub);
+  nh.subscribe(doorLASub);
+  nh.subscribe(augerSpeedSub);  
   //nh.advertise(fb_lf_servo_cmd_publisher);
 }
 
 void loop()
 { 
+  
+  
+  
+  // ===== Driving and Steering ======
   if (linSpeed <= 0.09 && angSpeed <= 0.09)
   {stopAll();}
   else if(linSpeed <= 0.09)
@@ -160,17 +218,22 @@ void loop()
   LR_old_servo_angle = LR_servo_angle;  
   RR_old_servo_angle = RR_servo_angle;
   
+  // ===== Actuators and Auger ======
+  analogWrite(suspActuator_pin, suspPos); //should be 0-255
+  
+  if dumpPos == false {analogWrite(dumpActuator_pin, 0);}
+  else {analogWrite(dumpActuator_pin, 255);}
+  
+  analogWrite(augerMotor_pin, augerSpeed);
+
+  
+  
+  // ===== OTHER  =====
+  
   
   //populateFeedbackMessage();
    //fb_lf_servo_cmd.data=LF_servo_cmd;
    //fb_lf_servo_cmd_publisher.publish(&fb_lf_servo_cmd);
-
-  Serial.println("angles");
-  Serial.println(LF_servo_angle);
-  Serial.println(RF_servo_angle);
-  Serial.println(LR_servo_angle);
-  Serial.println(RR_servo_angle);
-  delay(1000);
 
   nh.spinOnce();
 }
