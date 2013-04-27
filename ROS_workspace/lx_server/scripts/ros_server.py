@@ -69,7 +69,7 @@ class Handler(SocketServer.BaseRequestHandler):
                 #Only if data is received will publisher work
                 if len(self.datalist) > 0:
                     #Create velocity message
-                    linear_vel = (float)((ord)(self.datalist[1]))
+                    linear_vel = (float)((ord)(self.datalist[1])) #cast bytes to float
                     angular_vel = (float)((ord)(self.datalist[2]))
 
                     max_speed_linear = 1.8

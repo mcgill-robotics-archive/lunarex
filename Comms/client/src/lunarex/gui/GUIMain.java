@@ -2,18 +2,16 @@ package lunarex.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.font.NumericShaper;
 import java.awt.geom.Line2D;
 import java.awt.image.*;
 import java.util.*;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
-import net.java.games.input.Controller;
-import joystick.JFrameWindow;
-import joystick.JInputJoystick;
-import joystick.JInputJoystickTest;
-import joystick.JoystickTest;
 import lunarex.input.*;
 import lunarex.network.*;
 
@@ -22,16 +20,8 @@ public class GUIMain extends JFrame {
 	private static final long serialVersionUID = 1190876640530075607L;
 	static final int WIDTH = 1280;
 	static final int HEIGHT = (int) (9 / 16.0 * WIDTH);
-	static final double maxLinSpeed = 2.54;
-	static final double maxAngSpeed = 1;
-	static final double calibFactorLinV = 127/maxLinSpeed;
-	static final double calibFactorAngV = 127/maxAngSpeed;
 
-	//FOR NETBOOK
-	//String ipAdressString = "142.157.37.138";
-	
-	//FOR LOCALHOST
-	String ipAdressString = "127.0.0.1";
+	String ipAdressString = "142.157.37.138";
 
 	String portNumberString = "5902";
 
@@ -74,33 +64,20 @@ public class GUIMain extends JFrame {
 	class Rect {
 		double x, y, w, h;
 	}
-	// Creates controller
-    JInputJoystick joystick = new JInputJoystick(Controller.Type.STICK);
+
 	KeyboardInput keyboard = new KeyboardInput(); // Keyboard polling
-    final JFrameWindow window = new JFrameWindow();
-    JInputJoystickTest jinputJoystickTest = new JInputJoystickTest();
-    double XValueLeft= 0;
-	double YValueLeft= 0;
-	double XValueRight= 0;
-	double YValueRight= 0;
-    
-    Canvas canvas; // Our drawing component
-	Panel testPanel = new Panel();
-	Panel ctrlPanel = new Panel();
-	Container contentPane = this.getContentPane();
+	Canvas canvas; // Our drawing component
 	Bob bob = new Bob(); // Our rectangle
 	Rect field = new Rect();
-
-	TextField linVelField = new TextField("0",5);
-	TextField angVelField = new TextField("0",5);
+	
+	Panel panel = new Panel();
+	TextField linVelField = new TextField("Linear Velocity");
+	TextField angVelField = new TextField("Angular Velocity");
 	Button applyButton = new Button("Apply");
-	Label linVelLabel = new Label("Linear Velocity");
-	Label angVelLabel = new Label("Angular Velocity");
 	Label status = new Label("                                     ");
 	
 	Random rand = new Random();// Used for random circle locations
 	boolean manualOverride =false;
-	boolean controller =false;
 	byte[] outByte = new byte[6];
 	Boulder rockNo1 = new Boulder();
 	Boulder rockNo2 = new Boulder();
@@ -111,32 +88,26 @@ public class GUIMain extends JFrame {
 	MiningArea miningArea = new MiningArea();
 
 	public GUIMain() {
-		window.dispose();
+
 		setIgnoreRepaint(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		canvas = new Canvas();
 		canvas.setIgnoreRepaint(true);
-		canvas.setSize(WIDTH, HEIGHT);		
-		
-		testPanel.add(linVelLabel);
-		testPanel.add(linVelField);
-		testPanel.add(angVelLabel);
-		testPanel.add(angVelField);
-		testPanel.add(applyButton);
-		testPanel.add(status);
+		canvas.setSize(WIDTH, HEIGHT);
+		panel.add(linVelField);
+		panel.add(angVelField);
+		panel.add(applyButton);
+		panel.add(status);
 		applyButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getAndSendVelInfo();
+				sendVelInfo();
 			}
 		});
+		panel.add(canvas);
 
-		ctrlPanel.add(window.getContentPane());
-		
-		contentPane.add(ctrlPanel,BorderLayout.LINE_START);
-		contentPane.add(testPanel,BorderLayout.PAGE_START);
-		contentPane.add(canvas,BorderLayout.LINE_END);
-		
+		this.add(panel);
+
 		pack();
 		// Hookup keyboard polling
 		addKeyListener(keyboard);
@@ -150,9 +121,8 @@ public class GUIMain extends JFrame {
 		field.y = HEIGHT - field.h - 20;
 		bob.x = (float) field.x;
 		bob.y = (float) field.y;
-//		manualOverride = true;
-		
-		JoystickTest.initControllerWindow(joystick, window);
+		manualOverride = true;
+
 	}
 
 	public void updateData() {
@@ -190,12 +160,10 @@ public class GUIMain extends JFrame {
 		Graphics graphics = null;
 		Graphics2D g2d = null;
 		Color background = Color.DARK_GRAY;
-//		jinputJoystickTest.pollControllerAndItsComponents(Controller.Type.STICK);
+
 		while (true) {
 			try {
 				processInput();	
-				processControllerInput();
-				JoystickTest.updateControllerWindow(joystick, window);
 					
 				if (client != null) {
 					client.send(outByte);						
@@ -224,14 +192,15 @@ public class GUIMain extends JFrame {
 
 				// Draw bob				
 				drawBob(g2d);
+				
 				//Draw meters
 				drawMeter(g2d,50,200,outByte[1],"Linear Velocity");
 				drawMeter(g2d,200,200,outByte[2],"Angular Velocity");
-				drawMeter(g2d,350,200,outByte[4],"Auger");
+				drawMeter(g2d,350,200,outByte[4],"Ogger");
 				drawMeter(g2d,500,200,outByte[3],"Elevation");
 				drawMeter(g2d,650,200,outByte[5],"Bucket Incline");
-				bob.linVel = outByte[1]/calibFactorLinV;
-				bob.angVel = outByte[2]/calibFactorAngV;
+				
+				// 
 				
 				// Blit image and flip...
 				graphics = buffer.getDrawGraphics();
@@ -239,8 +208,6 @@ public class GUIMain extends JFrame {
 				if (!buffer.contentsLost())
 					buffer.show();
 
-
-				
 				// Let the OS have a little time...
 				try {
 					Thread.sleep(10);
@@ -256,8 +223,6 @@ public class GUIMain extends JFrame {
 			}
 		}
 	}
-
-
 	//Teleport bob to position x,y
 	public void teleport(Bob b, int x, int y, int theta){
 		b.x = (float) field.x + client.getX() + x;
@@ -280,8 +245,8 @@ public class GUIMain extends JFrame {
 			//Elevation
 			keyCom(KeyEvent.VK_E,KeyEvent.VK_UP,KeyEvent.VK_DOWN,3);
 			
-			// Auger control
-			keyCom(KeyEvent.VK_A,KeyEvent.VK_UP,KeyEvent.VK_DOWN,4);
+			// Ogger control
+			keyCom(KeyEvent.VK_O,KeyEvent.VK_UP,KeyEvent.VK_DOWN,4);
 			
 			// Bucket Incline
 			keyCom(KeyEvent.VK_B,KeyEvent.VK_UP,KeyEvent.VK_DOWN,5);
@@ -299,7 +264,7 @@ public class GUIMain extends JFrame {
 			keyCom(KeyEvent.VK_ENTER);
 			
 		}
-		// IP ADDRESS BOXtrue
+		// IP ADDRESS BOX
 		if (keyboard.keyDownOnce(KeyEvent.VK_SPACE) && !connected) {
 			client = new Client(ipAdressString,
 					Integer.parseInt(portNumberString));
@@ -315,26 +280,8 @@ public class GUIMain extends JFrame {
 				manualOverride = !manualOverride;
 			}
 		}
-		if (keyboard.keyDownOnce(KeyEvent.VK_C)) {
-			int reply = JOptionPane.showConfirmDialog(null,
-					"Toggle controller state?",
-					"Controller", JOptionPane.YES_NO_OPTION);
-			if (reply == JOptionPane.YES_OPTION) {
-				controller = !controller;
-			}
-		}
 	}
-	private void processControllerInput() {
-		if(manualOverride&&controller){
-			//Linear Velocity
-			 double yValue = (-1)*maxLinSpeed*joystick.getYAxisValue();
-			 //Angular Velocity
-			 double xValue = maxAngSpeed*joystick.getZAxisValue();
-			 sendVelInfo(yValue, xValue);
-			 
-//			 System.out.println(xValue);
-		}
-	}
+
 	public static void main(String[] args) {
 		GUIMain app = new GUIMain();
 		app.setTitle("Simple Keyboard Input");
@@ -354,8 +301,8 @@ public class GUIMain extends JFrame {
 		
 		g2d.drawString("Angle: "
 				+ (int) (360 * bob.angle / (2 * Math.PI)), x, y);
-		
 		y+=12;
+		//g2d.drawString("Manual Override: " + manualOverride, 20, 88);
 		g2d.drawString("Connected to server: " + connected, x, y);
 		y+=12;
 		g2d.drawString("Angular velocity: "+bob.angVel, x, y);
@@ -368,9 +315,6 @@ public class GUIMain extends JFrame {
 		y+=12;
 		g2d.drawString("Door "+ (bob.doorOpen?"Open":"Closed"),x,y);
 		y+=12;
-		g2d.drawString("Manual Override: " + manualOverride, x, y);
-		y+=12;
-		g2d.drawString("Controller: " + controller  , x, y);
 	}
 	private void drawField(Graphics2D g2d, int x, int y){
 		g2d.drawString("Starting/Dumping Area", (x + 10),(y - 2) );
@@ -479,25 +423,47 @@ public class GUIMain extends JFrame {
 	// sends linear and angular velocity on "Enter" key
 	private void keyCom(int key){
 		if (keyboard.keyDownOnce(key)){
-			getAndSendVelInfo();
+			sendVelInfo();
 		}
 	}
 	
-	private void getAndSendVelInfo(){
+	private void sendVelInfo(){
 		try{
-			double linVel=Double.parseDouble(linVelField.getText());
-			double angVel=Double.parseDouble(angVelField.getText());
-			sendVelInfo(linVel, angVel);
+			byte linVel=mapVelToByte(Float.parseFloat(linVelField.getText()));
+			System.out.println(linVel);
+			byte angVel=mapAngToByte(Float.parseFloat(angVelField.getText()));
+			outByte[1]= (byte)(linVel);
+			outByte[2]= (byte)(angVel);
+			bob.linVel= linVel;
+			bob.angVel= angVel;
 			status.setText("                                     ");
 		} catch (NumberFormatException nfe) {
 			status.setText("Invalid inputs!");
 		}
 	}
-	private void sendVelInfo(double linVel, double angVel){
-		outByte[1]= (byte)(linVel * calibFactorLinV);
-		outByte[2]= (byte)(angVel * calibFactorAngV);
-		bob.linVel= linVel;
-		bob.angVel= angVel;
+	
+	private byte mapVelToByte(float realVel){
+		//realVel is the desired speed in m/s
+		// max speed is approx 1.8 m/s
+		//map it to int between 0 and 255
+		float MAX_SPEED = 1.8f; //symmetrical about 0
+		
+		float tempSpeed = realVel + MAX_SPEED; // shift up to positives
+		tempSpeed = tempSpeed*255/(2*MAX_SPEED); //scale
+		byte byteSpeed = (byte) Math.min(Math.max(tempSpeed,0),255); //constrain values to be only within [0,255] - saturates values otherwise				
+		return byteSpeed;
+	}
+	
+	private byte mapAngToByte(float realAng){
+		//realVel is the desired speed in m/s
+		// max speed is approx 4.0 rad/s
+		//map it to int between 0 and 255
+		float MAX_SPEED = 4.0f; //symmetrical about 0
+		
+		float tempSpeed = realAng + MAX_SPEED; // shift up to positives
+		tempSpeed = tempSpeed*255/(2*MAX_SPEED); //scale
+		byte byteSpeed = (byte) Math.min(Math.max(tempSpeed,0),255); //constrain values to be only within [0,255] - saturates values otherwise				
+		return byteSpeed;
 	}
 	
 }
