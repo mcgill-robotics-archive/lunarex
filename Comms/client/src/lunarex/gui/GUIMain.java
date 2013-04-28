@@ -350,7 +350,7 @@ public class GUIMain extends JFrame {
 	}
 	
 	private void drawTextInfo(Graphics2D g2d,int x,int y){
-		int bucketPosPercentage = (255-OUT_bucketPos)*100/255;
+		int bucketPosPercentage = (OUT_bucketPos)*100/255;
 		int suspPosPercentage = (255-OUT_suspension)*100/255;
 		
 		g2d.setColor(Color.WHITE);
