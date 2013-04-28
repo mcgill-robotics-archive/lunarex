@@ -20,13 +20,11 @@ import lunarex.network.*;
 public class GUIMain extends JFrame {
 
 	private static final long serialVersionUID = 1190876640530075607L;
+	
+	/*DISPLAY CONSTANTS*/
 	static final int WIDTH = /*1280*/800;
 	static final int HEIGHT = /*(int) (9 / 16.0 * WIDTH)*/800;
 	static final int LINE_SPACING = 20;
-	static final float MAX_LIN_SPEED = 1.8f;
-	static final float MAX_ANG_SPEED = 4f;
-	static final double calibFactorLinV = 127/MAX_LIN_SPEED;
-	static final double calibFactorAngV = 127/MAX_ANG_SPEED;
 
 	//FOR NETBOOK
 	//String ipAdressString = "142.157.37.138";
@@ -58,28 +56,38 @@ public class GUIMain extends JFrame {
 	Label status = new Label("                                     ");
 	
 	Random rand = new Random();// Used for random circle locations
-	boolean manualOverride =true;
 	boolean controller =false;
 	boolean prevController = false;
+	
 	byte[] outByte = new byte[6];
-
+	/*
+	 * BYTE 0: OUT_doorOpen
+	 * BYTE 1: OUT_linVel
+	 * BYTE 2: OUT_angVel
+	 * BYTE 3: OUT_suspension
+	 * BYTE 4: OUT_augerSpeed
+	 * BYTE 5: OUT_bucketPos
+	 */
+	
 	int fontsize = 40000;
 	Font font = new Font("Helvetica", Font.PLAIN, fontsize);
 
 	/*COMMANDS TO ROBOT*/
 	
 	//Commands we're sending out
-	byte OUT_angVel, OUT_linVel, OUT_suspension, OUT_augerSpeed;
-	boolean OUT_doorOpen, OUT_bucketPos;
+	byte OUT_angVel, OUT_linVel, OUT_suspension, OUT_augerSpeed, OUT_doorOpen, OUT_bucketPos;
 	
 	//used for processing
 	double angVel, linVel;
 	int suspensionPos; // 0 to 255
 	int augerSpeed; //0 to 255
 	
+	/*COMMAND CONSTANTS*/
 	final int SUSPENSION_DELAY = 2;
 	final int AUGER_DELAY = 5;
 	
+	static final float MAX_LIN_SPEED = 0.9f; //1.8 before
+	static final float MAX_ANG_SPEED = 2f; //4  before
 	
 	public GUIMain() {
 		
@@ -114,8 +122,6 @@ public class GUIMain extends JFrame {
 		addKeyListener(keyboard);
 		canvas.addKeyListener(keyboard);
 
-
-//		manualOverride = true;
 		try{
 			JoystickTest.initControllerWindow(joystick, window);
 		} catch (Exception e){
@@ -137,20 +143,24 @@ public class GUIMain extends JFrame {
 		Graphics2D g2d = null;
 		              
 		Color background = Color.DARK_GRAY;
-//		jinputJoystickTest.pollControllerAndItsComponents(Controller.Type.STICK);
 		
 		while (true) {
 			try {
-				processInput();	
+				processKeyboardInput();	
 				try{
-					processControllerInput();
+					if(controller){
+						processControllerInput();
+					}
+						
 					JoystickTest.updateControllerWindow(joystick, window);
 					
+					//if "Start" is pressed, set controller to true
 					if(!this.prevController&&joystick.getButtonValue(3)) {
 						controller = !controller;
 					}
 					this.prevController = joystick.getButtonValue(3);
 					
+					//if not connected
 					if(!this.prevConnected&&joystick.getButtonValue(0)) {
 						if(!connected){
 							client = new Client(ipAdressString,
@@ -161,15 +171,20 @@ public class GUIMain extends JFrame {
 					}
 					this.prevConnected = joystick.getButtonValue(0);
 					
-				} catch (Exception e){
+				} catch (Exception e){}
 					
-				}
-					
+				outByte[0] = OUT_doorOpen;
+				outByte[1] = OUT_linVel;
+				outByte[2] = OUT_angVel;
+				outByte[3] = OUT_suspension;
+				outByte[4] = OUT_augerSpeed;
+				outByte[5] = OUT_bucketPos;
+
+				//send the array of bytes to the client
 				if (client != null) {
 					client.send(outByte);						
 				}		
 			
-
 				// Poll the keyboard
 				keyboard.poll();
 				// Should we exit?
@@ -191,8 +206,6 @@ public class GUIMain extends JFrame {
 				if (!buffer.contentsLost())
 					buffer.show();
 
-
-				
 				// Let the OS have a little time...
 				try {
 					Thread.sleep(10);
@@ -210,36 +223,34 @@ public class GUIMain extends JFrame {
 	}
 
 	// keyboard input
-	protected void processInput() {
-		if (manualOverride) {
-			// Linear Velocity
-			keyCom(KeyEvent.VK_Q,KeyEvent.VK_UP,KeyEvent.VK_DOWN,1);
-			
-			// Angular Velocity CCW is positive
-			keyCom(KeyEvent.VK_W,KeyEvent.VK_LEFT,KeyEvent.VK_RIGHT,2);
-			
-			//Elevation
-			keyCom(KeyEvent.VK_E,KeyEvent.VK_UP,KeyEvent.VK_DOWN,3);
-			
-			// Auger control
-			keyCom(KeyEvent.VK_A,KeyEvent.VK_UP,KeyEvent.VK_DOWN,4);
-			
-			// Bucket Incline
-			keyCom(KeyEvent.VK_B,KeyEvent.VK_UP,KeyEvent.VK_DOWN,5);
-			
-			// Dooor open/close
-			keyCom(KeyEvent.VK_S,0);
-			
-			// Stop everything
-			keyCom(KeyEvent.VK_H, "smoothHold");
-			
-			//	A smooth break
-			keyCom(KeyEvent.VK_J, "jerkyHold");
-			
-			// Set linear and angular velocity manually
-			keyCom(KeyEvent.VK_ENTER);
-			
-		}
+	protected void processKeyboardInput() {
+		// Linear Velocity
+		keyCom(KeyEvent.VK_Q,KeyEvent.VK_UP,KeyEvent.VK_DOWN,1);
+		
+		// Angular Velocity CCW is positive
+		keyCom(KeyEvent.VK_W,KeyEvent.VK_LEFT,KeyEvent.VK_RIGHT,2);
+		
+		//Elevation
+		keyCom(KeyEvent.VK_E,KeyEvent.VK_UP,KeyEvent.VK_DOWN,3);
+		
+		// Auger control
+		keyCom(KeyEvent.VK_A,KeyEvent.VK_UP,KeyEvent.VK_DOWN,4);
+		
+		// Bucket Incline
+		keyCom(KeyEvent.VK_B,KeyEvent.VK_UP,KeyEvent.VK_DOWN,5);
+		
+		// Dooor open/close
+		keyCom(KeyEvent.VK_S,0);
+		
+		// Stop everything
+		keyCom(KeyEvent.VK_H, "smoothHold");
+		
+		//	A smooth break
+		keyCom(KeyEvent.VK_J, "jerkyHold");
+		
+		// Set linear and angular velocity manually
+		keyCom(KeyEvent.VK_ENTER);
+
 		// IP ADDRESS BOXtrue
 		if (keyboard.keyDownOnce(KeyEvent.VK_SPACE) && !connected) {
 			client = new Client(ipAdressString,
@@ -248,14 +259,6 @@ public class GUIMain extends JFrame {
 			connected = true;
 		}
 		
-		if (keyboard.keyDownOnce(KeyEvent.VK_M)) {
-			int reply = JOptionPane.showConfirmDialog(null,
-					"Do you really want to take over manual control?",
-					"Man Override", JOptionPane.YES_NO_OPTION);
-			if (reply == JOptionPane.YES_OPTION) {
-				manualOverride = !manualOverride;
-			}
-		}
 		if (keyboard.keyDownOnce(KeyEvent.VK_C)) {
 			int reply = JOptionPane.showConfirmDialog(null,
 					"Toggle controller state?",
@@ -265,42 +268,52 @@ public class GUIMain extends JFrame {
 			}
 		}
 	}
+	
 	private void processControllerInput() {
-		if(manualOverride&&controller){
-			ArrayList<Boolean> buttons = joystick.getButtonsValues();
-			if(buttons.get(12)&&suspensionPos<=255-SUSPENSION_DELAY){ //triangle
-				suspensionPos+=SUSPENSION_DELAY;
-			}	else if(buttons.get(14)&&suspensionPos>=SUSPENSION_DELAY){ //X
-				suspensionPos-=SUSPENSION_DELAY;
-			}  	else if (buttons.get(15)) //square
-				suspensionPos=0;
-				else if (buttons.get(13)) //circle
-				suspensionPos=255;
-				
-			if(buttons.get(4)&&augerSpeed<=255-AUGER_DELAY){ //up arrow
-				augerSpeed+=AUGER_DELAY;
-			}	else if(buttons.get(6)&&augerSpeed>=AUGER_DELAY){ //down arrow
-				augerSpeed-=AUGER_DELAY;
-			}	else if(buttons.get(7)) //left arrow
-				augerSpeed=0;
-				else if(buttons.get(5)) //right arrow
-				augerSpeed=255;
-			
-			if(buttons.get(11)) OUT_doorOpen = true; //R1
-			else if(buttons.get(10)) OUT_doorOpen = false; //L1
-			
-			if(buttons.get(9)) OUT_bucketPos = true; //R2
-			else if(buttons.get(8))  OUT_bucketPos = false; //L2
-			//Linear Velocity
-			 double yValue = (-1)*MAX_LIN_SPEED*joystick.getYAxisValue();
-			 //Angular Velocity
-			 double xValue = MAX_ANG_SPEED*joystick.getZAxisValue();
-			 sendVelocities(yValue, xValue); 
-		}
+		ArrayList<Boolean> buttons = joystick.getButtonsValues();
+		
+		/*SUSPENSION BUTTONS*/
+		if(buttons.get(12)&&suspensionPos<=255-SUSPENSION_DELAY){ //triangle
+			suspensionPos+=SUSPENSION_DELAY;
+		}	else if(buttons.get(14)&&suspensionPos>=SUSPENSION_DELAY){ //X
+			suspensionPos-=SUSPENSION_DELAY;
+		}  	else if (buttons.get(15)) //square
+			suspensionPos=0;
+			else if (buttons.get(13)) //circle
+			suspensionPos=255;
+		this.OUT_suspension = (byte)suspensionPos;
+		
+		/*AUGER BUTTONS*/
+		if(buttons.get(4)&&augerSpeed<=255-AUGER_DELAY){ //up arrow
+			augerSpeed+=AUGER_DELAY;
+		}	else if(buttons.get(6)&&augerSpeed>=AUGER_DELAY){ //down arrow
+			augerSpeed-=AUGER_DELAY;
+		}	else if(buttons.get(7)) //left arrow
+			augerSpeed=0;
+			else if(buttons.get(5)) //right arrow
+			augerSpeed=255;
+		this.OUT_augerSpeed=(byte)augerSpeed;
+		
+		/*DOOR BUTTONS*/
+		if(buttons.get(11)) OUT_doorOpen = (byte) 1; //R1
+		else if(buttons.get(10)) OUT_doorOpen = (byte) 0; //L1
+		
+		/*BUCKET BUTTONS*/
+		if(buttons.get(9)) OUT_bucketPos = (byte) 1; //R2
+		else if(buttons.get(8))  OUT_bucketPos = (byte) 0; //L2
+		
+		/*VELOCITY JOYSTICKS*/
+		//Linear Velocity
+		this.linVel = (-1)*MAX_LIN_SPEED*joystick.getYAxisValue();
+		//Angular Velocity
+		this.angVel = (-1)*MAX_ANG_SPEED*joystick.getZAxisValue();
+		this.OUT_linVel=mapVelToByte((float)linVel);
+		this.OUT_angVel=mapAngToByte((float)angVel);
 	}
+	
 	public static void main(String[] args) {
 		GUIMain app = new GUIMain();
-		app.setTitle("Simple Keyboard Input");
+		app.setTitle("LunarEx Control Dashboard");
 		app.setVisible(true);
 		app.run();
 		System.exit(0);
