@@ -23,14 +23,14 @@ public class GUIMain extends JFrame {
 	
 	/*DISPLAY CONSTANTS*/
 	static final int WIDTH = /*1280*/800;
-	static final int HEIGHT = /*(int) (9 / 16.0 * WIDTH)*/800;
+	static final int HEIGHT = 800;  /*(int) (9 / 16.0 * WIDTH)*/
 	static final int LINE_SPACING = 20;
 
 	//FOR NETBOOK ON MCGILL NETWORK
-	//String ipAdressString = "142.157.37.138";
+	String ipAdressString = "142.157.36.7";
 	
-	//FOR NETBOOK ON ADHOC NETWORK
-	String ipAdressString = "192.168.1.101";
+	//FOR NETBOOK ON OUR NETWORK
+	//String ipAdressString = "192.168.1.101";
 	
 	//FOR LOCALHOST
 	//String ipAdressString = "127.0.0.1";
@@ -84,10 +84,12 @@ public class GUIMain extends JFrame {
 	double angVel, linVel;
 	int suspensionPos; // 0 to 255
 	int augerSpeed; //0 to 255
+	int bucketPos; // 0 to 255
 	
 	/*COMMAND CONSTANTS*/
-	final int SUSPENSION_DELAY = 2;
-	final int AUGER_DELAY = 5;
+	final int SUSPENSION_INCREMENT = 2;
+	final int AUGER_INCREMENT = 5;
+	final int BUCKET_INCREMENT = 1;
 	
 	static final float MAX_LIN_SPEED = 0.9f; //1.8 before
 	static final float MAX_ANG_SPEED = 2f; //4  before
@@ -276,10 +278,10 @@ public class GUIMain extends JFrame {
 		ArrayList<Boolean> buttons = joystick.getButtonsValues();
 		
 		/*SUSPENSION BUTTONS*/
-		if(buttons.get(12)&&suspensionPos<=255-SUSPENSION_DELAY){ //triangle
-			suspensionPos+=SUSPENSION_DELAY;
-		}	else if(buttons.get(14)&&suspensionPos>=SUSPENSION_DELAY){ //X
-			suspensionPos-=SUSPENSION_DELAY;
+		if(buttons.get(12)&&suspensionPos<=255-SUSPENSION_INCREMENT){ //triangle
+			suspensionPos+=SUSPENSION_INCREMENT;
+		}	else if(buttons.get(14)&&suspensionPos>=SUSPENSION_INCREMENT){ //X
+			suspensionPos-=SUSPENSION_INCREMENT;
 		}  	else if (buttons.get(15)) //square
 			suspensionPos=0;
 			else if (buttons.get(13)) //circle
@@ -287,10 +289,10 @@ public class GUIMain extends JFrame {
 		this.OUT_suspension = (byte)suspensionPos;
 		
 		/*AUGER BUTTONS*/
-		if(buttons.get(4)&&augerSpeed<=255-AUGER_DELAY){ //up arrow
-			augerSpeed+=AUGER_DELAY;
-		}	else if(buttons.get(6)&&augerSpeed>=AUGER_DELAY){ //down arrow
-			augerSpeed-=AUGER_DELAY;
+		if(buttons.get(4)&&augerSpeed<=255-AUGER_INCREMENT){ //up arrow
+			augerSpeed+=AUGER_INCREMENT;
+		}	else if(buttons.get(6)&&augerSpeed>=AUGER_INCREMENT){ //down arrow
+			augerSpeed-=AUGER_INCREMENT;
 		}	else if(buttons.get(7)) //left arrow
 			augerSpeed=0;
 			else if(buttons.get(5)) //right arrow
@@ -302,8 +304,13 @@ public class GUIMain extends JFrame {
 		else if(buttons.get(10)) OUT_doorOpen = (byte) 0; //L1
 		
 		/*BUCKET BUTTONS*/
-		if(buttons.get(9)) OUT_bucketPos = (byte) 1; //R2
-		else if(buttons.get(8))  OUT_bucketPos = (byte) 0; //L2
+		if(buttons.get(9) && bucketPos<=255-BUCKET_INCREMENT) {
+			bucketPos+=BUCKET_INCREMENT; //R2
+		}
+		else if(buttons.get(8) && bucketPos >= BUCKET_INCREMENT){
+			bucketPos -= BUCKET_INCREMENT; //L2
+		}
+		OUT_bucketPos = (byte) bucketPos;
 		
 		/*VELOCITY JOYSTICKS*/
 		//Linear Velocity
@@ -339,11 +346,11 @@ public class GUIMain extends JFrame {
 		y+=LINE_SPACING;
 		g2d.drawString("Door open? : "+OUT_doorOpen, x, y);
 		y+=LINE_SPACING;
-		g2d.drawString("Bucket up? : "+OUT_bucketPos, x, y);
+		g2d.drawString("Bucket up? : "+bucketPos, x, y);
 		y+=LINE_SPACING;
-		g2d.drawString("Suspension position: "+ /*OUT_suspension*/ suspensionPos,x,y);
+		g2d.drawString("Suspension position: "+ suspensionPos,x,y);
 		y+=LINE_SPACING;
-		g2d.drawString("Auger speed: " + /*OUT_augerSpeed*/augerSpeed, x, y);
+		g2d.drawString("Auger speed: " + augerSpeed, x, y);
 	}
 	
 	private void keyCom(int key, String stopSign) {
