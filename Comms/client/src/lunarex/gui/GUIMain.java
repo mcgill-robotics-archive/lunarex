@@ -80,7 +80,8 @@ public class GUIMain extends JFrame {
 	/*COMMANDS TO ROBOT*/
 	
 	//Commands we're sending out
-	byte OUT_angVel, OUT_linVel, OUT_suspension, OUT_augerSpeed, OUT_doorOpen;
+	byte OUT_angVel, OUT_linVel, OUT_suspension, OUT_augerSpeed, OUT_doorOpen; 
+	
 	byte OUT_bucketPos = (byte)255;
 
 	final int SUSPENSION_POS_HIGH = 0;
