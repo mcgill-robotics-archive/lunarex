@@ -2,7 +2,6 @@ package lunarex.gui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Line2D;
 import java.awt.image.*;
 import java.util.*;
 
@@ -25,6 +24,8 @@ public class GUIMain extends JFrame {
 	static final int WIDTH = /*1280*/800;
 	static final int HEIGHT = 800;  /*(int) (9 / 16.0 * WIDTH)*/
 	static final int LINE_SPACING = 20;
+	static final int COLUMN_WIDTH = 250;
+	static final int FONTSIZE = 20;
 
 	//FOR NETBOOK ON MCGILL NETWORK
 	String ipAdressString = "142.157.36.7";
@@ -50,6 +51,7 @@ public class GUIMain extends JFrame {
 	Panel testPanel = new Panel();
 	Panel ctrlPanel = new Panel();
 	Container contentPane = this.getContentPane();	
+	Font font = new Font("Helvetica", Font.PLAIN, FONTSIZE);
 
 	TextField linVelField = new TextField("0",5);
 	TextField angVelField = new TextField("0",5);
@@ -62,6 +64,8 @@ public class GUIMain extends JFrame {
 	boolean controller =false;
 	boolean prevController = false;
 	
+	boolean manualOverride= false;
+	
 	byte[] outByte = new byte[6];
 	/*
 	 * BYTE 0: OUT_doorOpen
@@ -72,19 +76,24 @@ public class GUIMain extends JFrame {
 	 * BYTE 5: OUT_bucketPos
 	 */
 	
-	int fontsize = 40000;
-	Font font = new Font("Helvetica", Font.PLAIN, fontsize);
 
 	/*COMMANDS TO ROBOT*/
 	
 	//Commands we're sending out
-	byte OUT_angVel, OUT_linVel, OUT_suspension, OUT_augerSpeed, OUT_doorOpen, OUT_bucketPos;
+	byte OUT_angVel, OUT_linVel, OUT_suspension, OUT_augerSpeed, OUT_doorOpen;
+	byte OUT_bucketPos = (byte)255;
+
+	final int SUSPENSION_POS_HIGH = 0;
+	final int SUSPENSION_POS_LOW = 255;
+	final int BUCKET_POS_HIGH = 0;
+	final int BUCKET_POS_LOW = 255;
 	
 	//used for processing
-	double angVel, linVel;
-	int suspensionPos; // 0 to 255
-	int augerSpeed; //0 to 255
-	int bucketPos; // 0 to 255
+	double angVel = 0;
+	double linVel = 0;
+	int suspensionPos = SUSPENSION_POS_HIGH; // 0 to 255
+	int augerSpeed = 0; //0 to 255
+	int bucketPos = BUCKET_POS_LOW; // 0 to 255
 	
 	/*COMMAND CONSTANTS*/
 	final int SUSPENSION_INCREMENT = 2;
@@ -153,7 +162,7 @@ public class GUIMain extends JFrame {
 			try {
 				processKeyboardInput();	
 				try{
-					if(controller){
+					if(manualOverride&&controller){
 						processControllerInput();
 					}
 						
@@ -200,10 +209,10 @@ public class GUIMain extends JFrame {
 				g2d = bi.createGraphics();
 				g2d.setColor(background);
 				g2d.fillRect(0, 0, WIDTH, HEIGHT);
-
+				g2d.setFont(font);
+				
 				// Draw info text
 				drawTextInfo(g2d,20,40);
-				g2d.setFont(font);
 				
 				// Blit image and flip...
 				graphics = buffer.getDrawGraphics();
@@ -229,47 +238,57 @@ public class GUIMain extends JFrame {
 
 	// keyboard input
 	protected void processKeyboardInput() {
-		// Linear Velocity
-		keyCom(KeyEvent.VK_Q,KeyEvent.VK_UP,KeyEvent.VK_DOWN,1);
-		
-		// Angular Velocity CCW is positive
-		keyCom(KeyEvent.VK_W,KeyEvent.VK_LEFT,KeyEvent.VK_RIGHT,2);
-		
-		//Elevation
-		keyCom(KeyEvent.VK_E,KeyEvent.VK_UP,KeyEvent.VK_DOWN,3);
-		
-		// Auger control
-		keyCom(KeyEvent.VK_A,KeyEvent.VK_UP,KeyEvent.VK_DOWN,4);
-		
-		// Bucket Incline
-		keyCom(KeyEvent.VK_B,KeyEvent.VK_UP,KeyEvent.VK_DOWN,5);
-		
-		// Dooor open/close
-		keyCom(KeyEvent.VK_S,0);
-		
-		// Stop everything
-		keyCom(KeyEvent.VK_H, "smoothHold");
-		
-		//	A smooth break
-		keyCom(KeyEvent.VK_J, "jerkyHold");
-		
-		// Set linear and angular velocity manually
-		keyCom(KeyEvent.VK_ENTER);
-
-		// IP ADDRESS BOXtrue
-		if (keyboard.keyDownOnce(KeyEvent.VK_SPACE) && !connected) {
-			client = new Client(ipAdressString,
-					Integer.parseInt(portNumberString));
-			client.start();
-			connected = true;
-		}
-		
-		if (keyboard.keyDownOnce(KeyEvent.VK_C)) {
+		if (keyboard.keyDownOnce(KeyEvent.VK_M)) {
 			int reply = JOptionPane.showConfirmDialog(null,
-					"Toggle controller state?",
-					"Controller", JOptionPane.YES_NO_OPTION);
+					"Do you really want to take over manual control?",
+					"Man Override", JOptionPane.YES_NO_OPTION);
 			if (reply == JOptionPane.YES_OPTION) {
-				controller = !controller;
+				manualOverride = !manualOverride;
+			}
+		}
+		if(manualOverride){
+			// Linear Velocity
+			keyCom(KeyEvent.VK_Q,KeyEvent.VK_UP,KeyEvent.VK_DOWN,1);
+
+			// Angular Velocity CCW is positive
+			keyCom(KeyEvent.VK_W,KeyEvent.VK_LEFT,KeyEvent.VK_RIGHT,2);
+
+			//Elevation
+			keyCom(KeyEvent.VK_E,KeyEvent.VK_UP,KeyEvent.VK_DOWN,3);
+
+			// Auger control
+			keyCom(KeyEvent.VK_A,KeyEvent.VK_UP,KeyEvent.VK_DOWN,4);
+
+			// Bucket Incline
+			keyCom(KeyEvent.VK_B,KeyEvent.VK_UP,KeyEvent.VK_DOWN,5);
+
+			// Dooor open/close
+			keyCom(KeyEvent.VK_S,0);
+
+			// Stop everything
+			keyCom(KeyEvent.VK_H, "smoothHold");
+
+			//	A smooth break
+			keyCom(KeyEvent.VK_J, "jerkyHold");
+
+			// Set linear and angular velocity manually
+			keyCom(KeyEvent.VK_ENTER);
+
+			// IP ADDRESS BOXtrue
+			if (keyboard.keyDownOnce(KeyEvent.VK_SPACE) && !connected) {
+				client = new Client(ipAdressString,
+						Integer.parseInt(portNumberString));
+				client.start();
+				connected = true;
+			}
+
+			if (keyboard.keyDownOnce(KeyEvent.VK_C)) {
+				int reply = JOptionPane.showConfirmDialog(null,
+						"Toggle controller state?",
+						"Controller", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+					controller = !controller;
+				}
 			}
 		}
 	}
@@ -278,13 +297,13 @@ public class GUIMain extends JFrame {
 		ArrayList<Boolean> buttons = joystick.getButtonsValues();
 		
 		/*SUSPENSION BUTTONS*/
-		if(buttons.get(12)&&suspensionPos<=255-SUSPENSION_INCREMENT){ //triangle
+		if(buttons.get(14)&&suspensionPos<=255-SUSPENSION_INCREMENT){ //X
 			suspensionPos+=SUSPENSION_INCREMENT;
-		}	else if(buttons.get(14)&&suspensionPos>=SUSPENSION_INCREMENT){ //X
+		}	else if(buttons.get(12)&&suspensionPos>=SUSPENSION_INCREMENT){ //triangle
 			suspensionPos-=SUSPENSION_INCREMENT;
-		}  	else if (buttons.get(15)) //square
+		}  	else if (buttons.get(13)) //circle
 			suspensionPos=0;
-			else if (buttons.get(13)) //circle
+			else if (buttons.get(15)) //square
 			suspensionPos=255;
 		this.OUT_suspension = (byte)suspensionPos;
 		
@@ -334,23 +353,34 @@ public class GUIMain extends JFrame {
 				
 		g2d.drawString("----CLIENT STATUS ----", x, y); 
 		y+=LINE_SPACING;
-		g2d.drawString("Connected to server: " + connected, x, y);
+		g2d.drawString("Manual Override: ", x, y);
+		g2d.drawString(""+manualOverride, x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
-		g2d.drawString("Input from Controller: " + controller  , x, y);
+		g2d.drawString("Connected to Server: ", x, y);
+		g2d.drawString(""+connected, x+COLUMN_WIDTH, y);
+		y+=LINE_SPACING;
+		g2d.drawString("Input from Controller: ", x, y);
+		g2d.drawString(""+controller, x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING*2;
 		g2d.drawString("----OUTGOING TO SERVER ----", x, y); 
 		y+=LINE_SPACING;
-		g2d.drawString("Angular velocity: "+OUT_angVel+" ("+angVel+")", x, y);
+		g2d.drawString("Angular Velocity: ", x, y);
+		g2d.drawString(""+OUT_angVel+" ("+angVel+")", x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
-		g2d.drawString("Linear Velocity: "+OUT_linVel+" ("+linVel+")", x, y);
+		g2d.drawString("Linear Velocity: ", x, y);
+		g2d.drawString(""+OUT_linVel+" ("+linVel+")", x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
-		g2d.drawString("Door open? : "+OUT_doorOpen, x, y);
+		g2d.drawString("Door Open? : ", x, y);
+		g2d.drawString(""+OUT_doorOpen, x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
-		g2d.drawString("Bucket up? : "+bucketPos, x, y);
+		g2d.drawString("Bucket Position : ", x, y);
+		g2d.drawString(""+bucketPos, x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
-		g2d.drawString("Suspension position: "+ suspensionPos,x,y);
+		g2d.drawString("Suspension Position: ",x,y);
+		g2d.drawString(""+ suspensionPos, x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
-		g2d.drawString("Auger speed: " + augerSpeed, x, y);
+		g2d.drawString("Auger Speed: ", x, y);
+		g2d.drawString(""+ augerSpeed, x+COLUMN_WIDTH, y);
 	}
 	
 	private void keyCom(int key, String stopSign) {
