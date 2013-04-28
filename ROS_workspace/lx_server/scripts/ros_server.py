@@ -63,31 +63,27 @@ class Handler(SocketServer.BaseRequestHandler):
             self.currentTime = int(time.time()*1000.0)
             try:
                 self.datalist = self.request.recv(6)
-                '''
-                # Print Statements just for test
-                print 'data received: '
-                print (ord)(self.datalist[1])
-                print (ord)(self.datalist[2])
-                '''
-
+		
                 #Only if data is received will publisher work
-                if len(self.datalist) > 0:
-                    #Create velocity message
-                    linear_vel = (float)((ord)(self.datalist[1])) #cast bytes to float
-                    angular_vel = (float)((ord)(self.datalist[2]))
+		if self.datalist[0] != "":
+		    #Create velocity message
 		    
-		    linear_vel, angular_vel = self.processVel(linear_vel, angular_vel)	# Process the input velocity, convert byte to m/s 
+	            linear_vel = (float)((ord)(self.datalist[1])) #cast bytes to float
+        	    angular_vel = (float)((ord)(self.datalist[2]))
+		    
+	 	    linear_vel, angular_vel = self.processVel(linear_vel, angular_vel)	# Process the input velocity, convert byte to m/s 
 
-                    self.linearVelocity = Velocity(linear_vel, 0.0, 0.0)     #   Linear Velocity object from datalist[1]
-                    self.angularVelocity = Velocity(0.0, 0.0, angular_vel)    #   Angular Velocity object from datalist[2]
+        	    self.linearVelocity = Velocity(linear_vel, 0.0, 0.0)     #   Linear Velocity object from datalist[1]
+        	    self.angularVelocity = Velocity(0.0, 0.0, angular_vel)    #   Angular Velocity object from datalist[2]
 
 		    self.dump_pos = self.byteToBool((ord)(self.datalist[5]))
 
-		    self.susp_pos = (int)(ord)(self.datalist[3])
+		    self.susp_pos = int((ord)(self.datalist[3]))
 
 		    self.door_pos = self.byteToBool((ord)(self.datalist[0]))
 
-		    self.auger_speed = (int)(ord)(self.datalist[4])
+		    self.auger_speed = int((ord)(self.datalist[4]))
+		    
                     #Publish to ros
                     if not rospy.is_shutdown():
                         try:
@@ -105,14 +101,7 @@ class Handler(SocketServer.BaseRequestHandler):
             except IOError:
                 pass
 
-	    '''
-            if((self.currentTime-self.initialTime) > 500):
-                dataPacket = json.dumps(vars(self.currentState),sort_keys=True,indent=4)
-                self.request.send(dataPacket)
-                self.initialTime = self.currentTime
-                print dataPacket
-	    '''
-    def processVel(linear_vel, angular_vel):
+    def processVel(self, linear_vel, angular_vel):
 	max_speed_linear = 1.8
 	max_speed_angular = 4.0
 	#convert back from byte to float
@@ -124,7 +113,7 @@ class Handler(SocketServer.BaseRequestHandler):
 	return linear_vel, angular_vel
 
 	
-    def byteToBool(in_byte):
+    def byteToBool(self, in_byte):
 	if (int)(in_byte) == 1:
 	    return True
 	return False	
@@ -159,4 +148,5 @@ if __name__ == "__main__":
         server.serve_forever()
     except KeyboardInterrupt:
         sys.exit(0)
+
 
