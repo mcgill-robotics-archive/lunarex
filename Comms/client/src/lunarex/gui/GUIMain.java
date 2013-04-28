@@ -350,6 +350,9 @@ public class GUIMain extends JFrame {
 	}
 	
 	private void drawTextInfo(Graphics2D g2d,int x,int y){
+		int bucketPosPercentage = (255-OUT_bucketPos)*100/255;
+		int suspPosPercentage = (255-OUT_suspension)*100/255;
+		
 		g2d.setColor(Color.WHITE);
 				
 		g2d.drawString("----CLIENT STATUS ----", x, y); 
@@ -375,10 +378,10 @@ public class GUIMain extends JFrame {
 		g2d.drawString(""+OUT_doorOpen, x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Bucket Position : ", x, y);
-		g2d.drawString(""+bucketPos, x+COLUMN_WIDTH, y);
+		g2d.drawString(""+bucketPos+"("+bucketPosPercentage+"% Up)", x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Suspension Position: ",x,y);
-		g2d.drawString(""+ suspensionPos, x+COLUMN_WIDTH, y);
+		g2d.drawString(""+ suspensionPos+"("+suspPosPercentage+"% Up)", x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Auger Speed: ", x, y);
 		g2d.drawString(""+ augerSpeed, x+COLUMN_WIDTH, y);
