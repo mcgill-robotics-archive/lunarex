@@ -76,7 +76,7 @@ class Handler(SocketServer.BaseRequestHandler):
         	    self.linearVelocity = Velocity(linear_vel, 0.0, 0.0)     #   Linear Velocity object from datalist[1]
         	    self.angularVelocity = Velocity(0.0, 0.0, angular_vel)    #   Angular Velocity object from datalist[2]
 
-		    self.dump_pos = self.byteToBool((ord)(self.datalist[5]))
+		    self.dump_pos = int((ord)(self.datalist[5]))
 
 		    self.susp_pos = int((ord)(self.datalist[3]))
 
@@ -137,7 +137,7 @@ if __name__ == "__main__":
 
     #Initiate ros node and create publisher
     pub_vel = rospy.Publisher("cmd_vel", geometry_msgs.msg.Twist)	# publish velocities
-    dump_LA_pub = rospy.Publisher("dump_pos", std_msgs.msg.Bool)	# pulish dumping info
+    dump_LA_pub = rospy.Publisher("dump_pos", std_msgs.msg.UInt8)	# pulish dumping info
     susp_LA_pub = rospy.Publisher("susp_pos", std_msgs.msg.UInt8)	# publish suspension info
     door_LA_pub = rospy.Publisher("door_pos", std_msgs.msg.Bool)
     auger_Speed_pub = rospy.Publisher("auger_speed", std_msgs.msg.UInt8)

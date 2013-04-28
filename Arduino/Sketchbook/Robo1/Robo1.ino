@@ -14,6 +14,9 @@ float TOL = 0.5;
 
 /*
 Order of Operations: (whats gunna happen in this section of code)
+//order got messed up - need to tweak this comment
+
+
 1. define nodehandle - rose node object 
 2. Initialize arduino variables that will be set in ROS
 3. subscribe to topics (point to arduino callback functions)d
@@ -44,8 +47,8 @@ void setSpeeds(const geometry_msgs::Twist &cmd_vel){
   linSpeed = (float) cmd_vel.linear.x;
   angSpeed = (float) cmd_vel.angular.z;
 }
-void setDumpLA(const std_msgs::Bool &dump_pos){
-  dumpPos = (boolean) dump_pos.data;
+void setDumpLA(const std_msgs::UInt8 &dump_pos){
+  dumpPos = (int) dump_pos.data;
 }
 void setSuspLA(const std_msgs::UInt8 &susp_pos){
   suspPos = (int) susp_pos.data;
@@ -61,7 +64,7 @@ void setAugerSpeed(const std_msgs::UInt8 &auger_speed){
 //Subsribers: instantiate subscribers and specify callback functions
 // Format: ros:: Subsriber<message type> subscriberName("topic", &callbackFunction);
 ros:: Subscriber<geometry_msgs::Twist> cmdVelSub("cmd_vel", &setSpeeds);  
-ros:: Subscriber<std_msgs::Bool> dumpLASub("dump_pos", &setDumpLA); //dumping Linear Acutator position
+ros:: Subscriber<std_msgs::UInt8> dumpLASub("dump_pos", &setDumpLA); //dumping Linear Acutator position
 ros:: Subscriber<std_msgs::UInt8> suspLASub("susp_pos", &setSuspLA); //suspension Linear Actuator position (same for both)
 ros:: Subscriber<std_msgs::Bool> doorLASub("door_pos", &setDoorLA); //door Linear Acutator position (same for both)
 ros:: Subscriber<std_msgs::UInt8> augerSpeedSub("auger_speed", &setAugerSpeed); //auger motor speed
@@ -221,8 +224,12 @@ void loop()
   // ===== Actuators and Auger ======
   analogWrite(suspActuator_pin, suspPos); //should be 0-255
   
-  if (dumpPos == false) {analogWrite(dumpActuator_pin, 0);}
-  else {analogWrite(dumpActuator_pin, 255);}
+  // THIS CODE IS FOR BOOLEAN DUMP POSITION
+  //if (dumpPos == false) {analogWrite(dumpActuator_pin, 0);}
+  //else {analogWrite(dumpActuator_pin, 255);}
+  
+  //THIS CODE IS FOR INTEGER DUMP POSITION
+  analogWrite(dumpPos);
   
   analogWrite(augerMotor_pin, augerSpeed);
 
