@@ -4,7 +4,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/json-simple-1.1.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/test"/>
-	<classpathentry kind="lib" path="/test/jinput.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-6-openjdk-i386"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/controller"/>
+	<classpathentry kind="lib" path="/controller/jinput.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
