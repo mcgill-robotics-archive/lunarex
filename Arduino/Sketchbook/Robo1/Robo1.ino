@@ -1,6 +1,8 @@
 #include <Servo.h>
 #include <ros.h>
 #include <std_msgs/Float32.h>
+#include <std_msgs/Bool.h>
+#include <std_msgs/UInt8.h>
 #include <geometry_msgs/Twist.h>
 
 //#include <math.h>
@@ -35,14 +37,6 @@ float doorPos = 0;
 float augerSpeed = 0;
 
 
-//Subsribers: instantiate subscribers and specify callback functions
-// Format: ros:: Subsriber<message type> subscriberName("topic", &callbackFunction);
-ros:: Subscriber<geometry_msgs::Twist> cmdVelSub("cmd_vel", &setSpeeds);  
-ros:: Subscriber<std_msgs::bool> dumpLASub("dump_pos", &setDumpLA); //dumping Linear Acutator position
-ros:: Subscriber<std_msgs::uint8> suspLASub("susp_pos", &setSuspLA); //suspension Linear Actuator position (same for both)
-ros:: Subscriber<std_msgs::bool> doorLASub("door_pos", &setDoorLA); //door Linear Acutator position (same for both)
-ros:: Subscriber<std_msgs::uint8> augerSpeedSub("auger_speed", &setAugerSpeed); //auger motor speed
-
 //Subscriber callback functions
 //Convention: use smallBig for arduino variable, under_score for ros topic
 
@@ -53,15 +47,24 @@ void setSpeeds(const geometry_msgs::Twist &cmd_vel){
 void setDumpLA(const std_msgs::Bool &dump_pos){
   dumpPos = (boolean) dump_pos.data;
 }
-void setSuspLA(const std_msgs::Int8 &susp_pos){
+void setSuspLA(const std_msgs::UInt8 &susp_pos){
   suspPos = (int) susp_pos.data;
 }  
 void setDoorLA(const std_msgs::Bool &door_pos){
   doorPos = (boolean) door_pos.data;
 }
-void setAugerSpeed(const std_msgs::Int8 &auger_speed){
+void setAugerSpeed(const std_msgs::UInt8 &auger_speed){
   augerSpeed = (int) auger_speed.data;
 }
+
+
+//Subsribers: instantiate subscribers and specify callback functions
+// Format: ros:: Subsriber<message type> subscriberName("topic", &callbackFunction);
+ros:: Subscriber<geometry_msgs::Twist> cmdVelSub("cmd_vel", &setSpeeds);  
+ros:: Subscriber<std_msgs::Bool> dumpLASub("dump_pos", &setDumpLA); //dumping Linear Acutator position
+ros:: Subscriber<std_msgs::UInt8> suspLASub("susp_pos", &setSuspLA); //suspension Linear Actuator position (same for both)
+ros:: Subscriber<std_msgs::Bool> doorLASub("door_pos", &setDoorLA); //door Linear Acutator position (same for both)
+ros:: Subscriber<std_msgs::UInt8> augerSpeedSub("auger_speed", &setAugerSpeed); //auger motor speed
 
 //Publishers
 
