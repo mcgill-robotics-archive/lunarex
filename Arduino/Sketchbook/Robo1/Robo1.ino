@@ -6,7 +6,6 @@
 //#include <math.h>
 //#include <arduino_msgs/ArduinoFeedback.h>
 
-
 float TOL = 0.5;
 
 // ========== ROS stuff ================
@@ -22,6 +21,7 @@ Order of Operations: (whats gunna happen in this section of code)
 7. nh.spinOnce() at the end of loop()
 8. use arduino variables within functions
 */
+
 
 ros:: NodeHandle nh;
 
@@ -42,8 +42,6 @@ ros:: Subscriber<std_msgs::bool> dumpLASub("dump_pos", &setDumpLA); //dumping Li
 ros:: Subscriber<std_msgs::uint8> suspLASub("susp_pos", &setSuspLA); //suspension Linear Actuator position (same for both)
 ros:: Subscriber<std_msgs::bool> doorLASub("door_pos", &setDoorLA); //door Linear Acutator position (same for both)
 ros:: Subscriber<std_msgs::uint8> augerSpeedSub("auger_speed", &setAugerSpeed); //auger motor speed
-
-
 
 //Subscriber callback functions
 //Convention: use smallBig for arduino variable, under_score for ros topic
@@ -73,8 +71,6 @@ void setAugerSpeed(const std_msgs::Int8 &auger_speed){
 
 //arduino_msgs::ArduinoFeedback fb;
 //ros:: Publisher feedback_publisher("arduino_feedback", &fb);
-
-
 
 // =========== Non-ROS initializations ==============
 
@@ -187,7 +183,7 @@ void setup()
   
   nh.initNode();
   nh.subscribe(cmdVelSub);
-  nh.subscribe(dumpLASab);
+  nh.subscribe(dumpLASub);
   nh.subscribe(suspLASub);
   nh.subscribe(doorLASub);
   nh.subscribe(augerSpeedSub);  
@@ -221,7 +217,7 @@ void loop()
   // ===== Actuators and Auger ======
   analogWrite(suspActuator_pin, suspPos); //should be 0-255
   
-  if dumpPos == false {analogWrite(dumpActuator_pin, 0);}
+  if (dumpPos == false) {analogWrite(dumpActuator_pin, 0);}
   else {analogWrite(dumpActuator_pin, 255);}
   
   analogWrite(augerMotor_pin, augerSpeed);
