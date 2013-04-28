@@ -95,9 +95,9 @@ class Handler(SocketServer.BaseRequestHandler):
 
                             self.datalist = []  #   And prepare datalist for next input
                         except rospy.ROSInterruptException:
-                            print 'Error in ROS nod
+                            print 'Error in ROS nod'
 
-		   -'''
+		    '''
 		    # DO NOT DELETE! USED FOR FEEDBACK MECHANISM
 -            	    if((self.currentTime-self.initialTime) > 500):
 -                	dataPacket = json.dumps(vars(self.currentState),sort_keys=True,indent=4)
