@@ -16,7 +16,7 @@ float TOL = 0.5;
 Order of Operations: (whats gunna happen in this section of code)
 1. define nodehandle - rose node object 
 2. Initialize arduino variables that will be set in ROS
-3. subscribe to topics (point to arduino callback functions)
+3. subscribe to topics (point to arduino callback functions)d
 4. define arduino callback functions that set arduino variables
 5. create publishers for feedback
 6. nh.initNode() and subscribe to subscribers and advertise publishers in Setup()
@@ -79,10 +79,11 @@ ros:: Subscriber<std_msgs::UInt8> augerSpeedSub("auger_speed", &setAugerSpeed); 
 
 Servo LF_servo, RF_servo, LR_servo, RR_servo;
 
-//these 3 pins are arbitrary as of april 27
+//these 4 pins are arbitrary as of april 27
 int suspActuator_pin = 6;
 int dumpActuator_pin = 7;
 int augerMotor_pin = 8;
+int doorPos_pin = 13;
 
 int LF_motor_dir_pin = 27;
 int RF_motor_dir_pin = 29;
@@ -225,7 +226,7 @@ void loop()
   
   analogWrite(augerMotor_pin, augerSpeed);
 
-  
+  analogWrite(doorPos_pin, doorPos);
   
   // ===== OTHER  =====
   
