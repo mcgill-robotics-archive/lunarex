@@ -26,11 +26,14 @@ public class GUIMain extends JFrame {
 	static final int HEIGHT = /*(int) (9 / 16.0 * WIDTH)*/800;
 	static final int LINE_SPACING = 20;
 
-	//FOR NETBOOK
+	//FOR NETBOOK ON MCGILL NETWORK
 	//String ipAdressString = "142.157.37.138";
 	
+	//FOR NETBOOK ON ADHOC NETWORK
+	String ipAdressString = "192.168.1.101";
+	
 	//FOR LOCALHOST
-	String ipAdressString = "127.0.0.1";
+	//String ipAdressString = "127.0.0.1";
 
 	String portNumberString = "5902";
 
