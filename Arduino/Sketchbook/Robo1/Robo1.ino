@@ -5,18 +5,12 @@
 #include <std_msgs/UInt8.h>
 #include <geometry_msgs/Twist.h>
 
-//#include <math.h>
 //#include <arduino_msgs/ArduinoFeedback.h>
 
-float TOL = 0.5;
-
 // ========== ROS stuff ================
-
 /*
 Order of Operations: (whats gunna happen in this section of code)
 //order got messed up - need to tweak this comment
-
-
 1. define nodehandle - rose node object 
 2. Initialize arduino variables that will be set in ROS
 3. subscribe to topics (point to arduino callback functions)d
@@ -27,18 +21,17 @@ Order of Operations: (whats gunna happen in this section of code)
 8. use arduino variables within functions
 */
 
-
 ros:: NodeHandle nh;
 
-//Initialize variables that will be set in ROS
+//Init Values for all variables set by ROS topics
+
 //Convention: use smallBig for arduino variable, under_score for ros topic
 float angSpeed = 0;
 float linSpeed = 0;
-float dumpPos = 0;
-float suspPos = 0;
+float dumpPos = 255; //down as default
+float suspPos = 0; //up as default
 float doorPos = 0;
 float augerSpeed = 0;
-
 
 //Subscriber callback functions
 //Convention: use smallBig for arduino variable, under_score for ros topic
@@ -60,7 +53,6 @@ void setAugerSpeed(const std_msgs::UInt8 &auger_speed){
   augerSpeed = (int) auger_speed.data;
 }
 
-
 //Subsribers: instantiate subscribers and specify callback functions
 // Format: ros:: Subsriber<message type> subscriberName("topic", &callbackFunction);
 ros:: Subscriber<geometry_msgs::Twist> cmdVelSub("cmd_vel", &setSpeeds);  
@@ -72,15 +64,16 @@ ros:: Subscriber<std_msgs::UInt8> augerSpeedSub("auger_speed", &setAugerSpeed); 
 //Publishers
 
 //repeat 2 lines below for each publisher
-//std_msgs::Float32 fb_lf_servo_cmd;
-//ros:: Publisher fb_lf_servo_cmd_publisher("fb_lf_servo_cmd", &fb_lf_servo_cmd);
+//std_msgs::Float32 fb_angspeed;
+//ros:: Publisher fb_angspeed_publisher("fb_angspeed", &fb_angspeed);
 
 //arduino_msgs::ArduinoFeedback fb;
 //ros:: Publisher feedback_publisher("arduino_feedback", &fb);
 
-// =========== Non-ROS initializations ==============
+// =========== Pin mappings ==============
 
 Servo LF_servo, RF_servo, LR_servo, RR_servo;
+Servo augerSudoServo;
 
 //these 4 pins are arbitrary as of april 27
 int suspActuator_pin = 6;
@@ -103,12 +96,13 @@ int RF_motor_pin = 10;
 int LR_motor_pin = 11;
 int RR_motor_pin = 12;
 
+//-----------Variables used to set motor speeds/enable/directions
+
 boolean LF_motor_enable = 1;
 boolean RF_motor_enable = 1;
 boolean LR_motor_enable = 1;
 boolean RR_motor_enable = 1;
 
-//temp initialization
 boolean LF_motor_dir = 1;
 boolean RF_motor_dir = 1;
 boolean LR_motor_dir = 1;
@@ -119,15 +113,16 @@ float RF_wheel_rpm = 0.0;
 float LR_wheel_rpm = 0.0;
 float RR_wheel_rpm = 0.0;
 
-float LF_servo_angle = 0.0;
-float RF_servo_angle = 0.0;
-float LR_servo_angle = 0.0;
-float RR_servo_angle = 0.0;
+//SET STRAIGHT AS DEFAULT
+float LF_servo_angle = 90.0;
+float RF_servo_angle = 90.0;
+float LR_servo_angle = 90.0;
+float RR_servo_angle = 90.0;
 
-float LF_old_servo_angle = 0.0;
-float RF_old_servo_angle = 0.0;
-float LR_old_servo_angle = 0.0;
-float RR_old_servo_angle = 0.0;
+float LF_old_servo_angle = 90.0;
+float RF_old_servo_angle = 90.0;
+float LR_old_servo_angle = 90.0;
+float RR_old_servo_angle = 90.0;
 
 int LF_servo_cmd = 0;
 int RF_servo_cmd = 0;
@@ -139,22 +134,22 @@ int RF_motor_cmd = 0;
 int LR_motor_cmd = 0;
 int RR_motor_cmd = 0;
 
-
 float motor_rpm;
 
-//constants
+//-----------------constants
 float WHEEL_RADIUS = 0.1397;
 float MIN_SPEED = 0;
-//MAX_SPEED is in Revolutions per minutes
-float MAX_SPEED = 20000;
+float MAX_SPEED = 20000; // in Revolutions per minutes
 float LENGTH = 0.71;
 float WIDTH = 0.7219;
 float DIST_TO_AXIS_A = 0.5074;
-//in degrees
-int MAX_ANGLE = 35; //ratio of lin/ang = 1.5
+int MAX_ANGLE = 35; //in degrees; ratio of lin/ang = 1.5
 
 int SEC_PER_MIN = 60;
 int GEAR_RATIO = 74;
+
+float TOL = 0.5;
+float STOP_THRESH = 0.9;
 
 void setup()
 {
@@ -171,6 +166,8 @@ void setup()
   LR_servo.attach(4);
   RR_servo.attach(5);
   
+  augerSudoServo.attach(augerMotor_pin);
+  
   pinMode(LF_motor_enable_pin, OUTPUT);
   pinMode(RF_motor_enable_pin, OUTPUT);
   pinMode(LR_motor_enable_pin, OUTPUT);
@@ -186,7 +183,6 @@ void setup()
   digitalWrite(RF_motor_enable_pin, RF_motor_enable);
   digitalWrite(LR_motor_enable_pin, LR_motor_enable);
   digitalWrite(RR_motor_enable_pin, RR_motor_enable);
-    
   
   nh.initNode();
   nh.subscribe(cmdVelSub);
@@ -194,22 +190,19 @@ void setup()
   nh.subscribe(suspLASub);
   nh.subscribe(doorLASub);
   nh.subscribe(augerSpeedSub);  
-  //nh.advertise(fb_lf_servo_cmd_publisher);
+ // nh.advertise(fb_angspeed_publisher);
 }
 
 void loop()
 { 
-  
-  
-  
   // ===== Driving and Steering ======
-  if (linSpeed <= 0.09 && angSpeed <= 0.09)
+  if (abs(linSpeed) <= STOP_THRESH && abs(angSpeed) <= STOP_THRESH)
   {stopAll();}
-  else if(linSpeed <= 0.09)
+  else if(abs(linSpeed) <= STOP_THRESH)//so abs(angSpeed)>=STOPTHRESH 
   {turnOnSpot();}
-  else if(angSpeed <= 0.09)
+  else if(abs(angSpeed) <= STOP_THRESH) //so abs(linSpeed)>=STOPTHRESH
   {goStraight();}
-  else if(angSpeed!= 0 && linSpeed!=0)
+  else 
   {doAckerman();}
   
   setWheelDirection(LF_motor_dir, RF_motor_dir, LR_motor_dir, RR_motor_dir);
@@ -229,18 +222,18 @@ void loop()
   //else {analogWrite(dumpActuator_pin, 255);}
   
   //THIS CODE IS FOR INTEGER DUMP POSITION
-  analogWrite(dumpPos);
+  analogWrite(dumpActuator_pin, dumpPos);
   
-  analogWrite(augerMotor_pin, augerSpeed);
-
+  int augerSignal = map(augerSpeed, 0, 255, 1000, 2000);
+  //alogWrite(augerMotor_pin, augerSpeed);
+  augerSudoServo.writeMicroseconds(augerSignal);
   analogWrite(doorPos_pin, doorPos);
   
   // ===== OTHER  =====
   
-  
   //populateFeedbackMessage();
-   //fb_lf_servo_cmd.data=LF_servo_cmd;
-   //fb_lf_servo_cmd_publisher.publish(&fb_lf_servo_cmd);
+  // fb_angspeed.data=angSpeed;
+  // fb_angspeed_publisher.publish(&fb_angspeed);
 
   nh.spinOnce();
 }
