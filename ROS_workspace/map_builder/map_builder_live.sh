@@ -37,7 +37,7 @@ echo "***Running hector_mapping"
 xterm -e roslaunch ../hector_launchers/l2.launch &
 
 echo "***Starting rviz"
-xterm -e rosrun rviz rviz -d ../rviz_configs/hector_mapping_demo.vcg
+xterm -e rosrun rviz rviz -d ../rviz_configs/hector_mapping_demo.vcg &
 
 echo "***Launching kinect and map builder"
 roslaunch map_builder_live.launch

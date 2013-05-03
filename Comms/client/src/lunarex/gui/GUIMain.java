@@ -28,10 +28,10 @@ public class GUIMain extends JFrame {
 	static final int FONTSIZE = 20;
 
 	//FOR NETBOOK ON MCGILL NETWORK
-	String ipAdressString = "142.157.36.7";
+	//String ipAdressString = "142.157.36.7";
 	
 	//FOR NETBOOK ON OUR NETWORK
-	//String ipAdressString = "192.168.1.101";
+	String ipAdressString = "192.168.1.101";
 	
 	//FOR LOCALHOST
 	//String ipAdressString = "127.0.0.1";
@@ -80,10 +80,8 @@ public class GUIMain extends JFrame {
 	/*COMMANDS TO ROBOT*/
 	
 	//Commands we're sending out
-	byte OUT_angVel, OUT_linVel, OUT_suspension, OUT_augerSpeed, OUT_doorOpen; 
+	byte OUT_angVel, OUT_linVel, OUT_suspension, OUT_augerSpeed, OUT_doorOpen, OUT_bucketPos; 
 	
-	byte OUT_bucketPos = (byte)255;
-
 	final int SUSPENSION_POS_HIGH = 0;
 	final int SUSPENSION_POS_LOW = 255;
 	final int BUCKET_POS_HIGH = 0;
@@ -95,14 +93,15 @@ public class GUIMain extends JFrame {
 	int suspensionPos = SUSPENSION_POS_HIGH; // 0 to 255
 	int augerSpeed = 0; //0 to 255
 	int bucketPos = BUCKET_POS_LOW; // 0 to 255
+	int doorOpen = 0;
 	
 	/*COMMAND CONSTANTS*/
 	final int SUSPENSION_INCREMENT = 2;
 	final int AUGER_INCREMENT = 5;
 	final int BUCKET_INCREMENT = 1;
 	
-	static final float MAX_LIN_SPEED = 0.9f; //1.8 before
-	static final float MAX_ANG_SPEED = 2f; //4  before
+	static final float MAX_LIN_SPEED = 2.6f; //1.8 before
+	static final float MAX_ANG_SPEED = 1.4f; //4  before
 	
 	public GUIMain() {
 		
@@ -188,12 +187,11 @@ public class GUIMain extends JFrame {
 					
 				} catch (Exception e){}
 					
-				outByte[0] = OUT_doorOpen;
-				outByte[1] = OUT_linVel;
-				outByte[2] = OUT_angVel;
-				outByte[3] = OUT_suspension;
-				outByte[4] = OUT_augerSpeed;
-				outByte[5] = OUT_bucketPos;
+				/*The above functions have only changed the non-OUT variables.
+				 * Now update all OUT* variables, and the outByte array
+				 */
+				updateAllOUTValues();				
+				populateOUTArray();
 
 				//send the array of bytes to the client
 				if (client != null) {
@@ -236,63 +234,6 @@ public class GUIMain extends JFrame {
 			}
 		}
 	}
-
-	// keyboard input
-	protected void processKeyboardInput() {
-		if (keyboard.keyDownOnce(KeyEvent.VK_M)) {
-			int reply = JOptionPane.showConfirmDialog(null,
-					"Do you really want to take over manual control?",
-					"Man Override", JOptionPane.YES_NO_OPTION);
-			if (reply == JOptionPane.YES_OPTION) {
-				manualOverride = !manualOverride;
-			}
-		}
-		if(manualOverride){
-			// Linear Velocity
-			keyCom(KeyEvent.VK_Q,KeyEvent.VK_UP,KeyEvent.VK_DOWN,1);
-
-			// Angular Velocity CCW is positive
-			keyCom(KeyEvent.VK_W,KeyEvent.VK_LEFT,KeyEvent.VK_RIGHT,2);
-
-			//Elevation
-			keyCom(KeyEvent.VK_E,KeyEvent.VK_UP,KeyEvent.VK_DOWN,3);
-
-			// Auger control
-			keyCom(KeyEvent.VK_A,KeyEvent.VK_UP,KeyEvent.VK_DOWN,4);
-
-			// Bucket Incline
-			keyCom(KeyEvent.VK_B,KeyEvent.VK_UP,KeyEvent.VK_DOWN,5);
-
-			// Dooor open/close
-			keyCom(KeyEvent.VK_S,0);
-
-			// Stop everything
-			keyCom(KeyEvent.VK_H, "smoothHold");
-
-			//	A smooth break
-			keyCom(KeyEvent.VK_J, "jerkyHold");
-
-			// Set linear and angular velocity manually
-			keyCom(KeyEvent.VK_ENTER);
-
-			// IP ADDRESS BOXtrue
-			if (keyboard.keyDownOnce(KeyEvent.VK_SPACE) && !connected) {
-				client = new Client(ipAdressString,
-						Integer.parseInt(portNumberString));
-				client.start();
-				connected = true;
-			}
-
-			if (keyboard.keyDownOnce(KeyEvent.VK_C)) {
-				int reply = JOptionPane.showConfirmDialog(null,
-						"Toggle controller state?",
-						"Controller", JOptionPane.YES_NO_OPTION);
-				if (reply == JOptionPane.YES_OPTION) {
-					controller = !controller;
-				}
-			}
-		}
-	}
 	
 	private void processControllerInput() {
 		ArrayList<Boolean> buttons = joystick.getButtonsValues();
@@ -306,7 +247,6 @@ public class GUIMain extends JFrame {
 			suspensionPos=0;
 			else if (buttons.get(15)) //square
 			suspensionPos=255;
-		this.OUT_suspension = (byte)suspensionPos;
 		
 		/*AUGER BUTTONS*/
 		if(buttons.get(4)&&augerSpeed<=255-AUGER_INCREMENT){ //up arrow
@@ -317,28 +257,28 @@ public class GUIMain extends JFrame {
 			augerSpeed=0;
 			else if(buttons.get(5)) //right arrow
 			augerSpeed=255;
-		this.OUT_augerSpeed=(byte)augerSpeed;
 		
 		/*DOOR BUTTONS*/
-		if(buttons.get(11)) OUT_doorOpen = (byte) 1; //R1
-		else if(buttons.get(10)) OUT_doorOpen = (byte) 0; //L1
+		if(buttons.get(11)){
+			doorOpen = 1; //R1
+		}
+		else if(buttons.get(10)){
+			doorOpen = 0; //L1
+		}
 		
 		/*BUCKET BUTTONS*/
-		if(buttons.get(9) && bucketPos<=255-BUCKET_INCREMENT) {
+		if(buttons.get(8) && bucketPos<=255-BUCKET_INCREMENT) {
 			bucketPos+=BUCKET_INCREMENT; //R2
 		}
-		else if(buttons.get(8) && bucketPos >= BUCKET_INCREMENT){
+		else if(buttons.get(9) && bucketPos >= BUCKET_INCREMENT){
 			bucketPos -= BUCKET_INCREMENT; //L2
 		}
-		OUT_bucketPos = (byte) bucketPos;
 		
 		/*VELOCITY JOYSTICKS*/
 		//Linear Velocity
-		this.linVel = (-1)*MAX_LIN_SPEED*joystick.getYAxisValue();
+		linVel = (-1)*MAX_LIN_SPEED*joystick.getYAxisValue();
 		//Angular Velocity
-		this.angVel = (-1)*MAX_ANG_SPEED*joystick.getZAxisValue();
-		this.OUT_linVel=mapVelToByte((float)linVel);
-		this.OUT_angVel=mapAngToByte((float)angVel);
+		angVel = (-1)*MAX_ANG_SPEED*joystick.getZAxisValue();
 	}
 	
 	public static void main(String[] args) {
@@ -349,8 +289,26 @@ public class GUIMain extends JFrame {
 		System.exit(0);
 	}
 	
+	private void updateAllOUTValues(){
+		OUT_linVel=mapVelToByte((float)linVel);
+		OUT_angVel=mapAngToByte((float)angVel);
+		OUT_suspension =(byte) suspensionPos;
+		OUT_augerSpeed =(byte)augerSpeed;
+		OUT_bucketPos =	(byte) bucketPos;
+		OUT_doorOpen = (byte) doorOpen;
+	}
+	
+	private void populateOUTArray(){
+		outByte[0] = OUT_doorOpen;
+		outByte[1] = OUT_linVel;
+		outByte[2] = OUT_angVel;
+		outByte[3] = OUT_suspension;
+		outByte[4] = OUT_augerSpeed;
+		outByte[5] = OUT_bucketPos;
+	}
+	
 	private void drawTextInfo(Graphics2D g2d,int x,int y){
-		int bucketPosPercentage = (OUT_bucketPos)*100/255;
+		int bucketPosPercentage = (-OUT_bucketPos)*100/255;
 		int suspPosPercentage = (255-OUT_suspension)*100/255;
 		
 		g2d.setColor(Color.WHITE);
@@ -470,6 +428,64 @@ public class GUIMain extends JFrame {
 			status.setText("                                     ");
 		} catch (NumberFormatException nfe) {
 			status.setText("Invalid inputs!");
+		}
+	}
+	
+
+	// keyboard input
+	protected void processKeyboardInput() {
+		if (keyboard.keyDownOnce(KeyEvent.VK_M)) {
+			int reply = JOptionPane.showConfirmDialog(null,
+					"Do you really want to take over manual control?",
+					"Man Override", JOptionPane.YES_NO_OPTION);
+			if (reply == JOptionPane.YES_OPTION) {
+				manualOverride = !manualOverride;
+			}
+		}
+		if(manualOverride){
+			// Linear Velocity
+			keyCom(KeyEvent.VK_Q,KeyEvent.VK_UP,KeyEvent.VK_DOWN,1);
+
+			// Angular Velocity CCW is positive
+			keyCom(KeyEvent.VK_W,KeyEvent.VK_LEFT,KeyEvent.VK_RIGHT,2);
+
+			//Elevation
+			keyCom(KeyEvent.VK_E,KeyEvent.VK_UP,KeyEvent.VK_DOWN,3);
+
+			// Auger control
+			keyCom(KeyEvent.VK_A,KeyEvent.VK_UP,KeyEvent.VK_DOWN,4);
+
+			// Bucket Incline
+			keyCom(KeyEvent.VK_B,KeyEvent.VK_UP,KeyEvent.VK_DOWN,5);
+
+			// Dooor open/close
+			keyCom(KeyEvent.VK_S,0);
+
+			// Stop everything
+			keyCom(KeyEvent.VK_H, "smoothHold");
+
+			//	A smooth break
+			keyCom(KeyEvent.VK_J, "jerkyHold");
+
+			// Set linear and angular velocity manually
+			keyCom(KeyEvent.VK_ENTER);
+
+			// IP ADDRESS BOXtrue
+			if (keyboard.keyDownOnce(KeyEvent.VK_SPACE) && !connected) {
+				client = new Client(ipAdressString,
+						Integer.parseInt(portNumberString));
+				client.start();
+				connected = true;
+			}
+
+			if (keyboard.keyDownOnce(KeyEvent.VK_C)) {
+				int reply = JOptionPane.showConfirmDialog(null,
+						"Toggle controller state?",
+						"Controller", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+					controller = !controller;
+				}
+			}
 		}
 	}
 	
