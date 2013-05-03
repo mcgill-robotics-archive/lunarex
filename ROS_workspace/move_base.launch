@@ -1,7 +1,7 @@
 <launch>
   <master auto="start"/>
 
-  <!-- Run the map server -->
+  <!-- Run the map server sadsad -->
   <!--<node name="map_server" pkg="map_server" type="map_server" args="$(find lunarex_2dnav)/emptyMap2.pgm 0.01"></node>-->
 
   <!--- Run AMCL -->
