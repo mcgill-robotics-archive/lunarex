@@ -29,7 +29,7 @@ define LidarEx ranger
 define lunabot position
 (
   size [1.20 0.75 0.3]  #length x width x height
-  # origin [? ? ? ?] #define centre of rotation
+  origin [0 0 0 0] #define centre of rotation
   # localization_origin [0 0 0] #initial position
   
   # the shape of the robot.  (identify points going ccw around robot, origin in bottom left)
