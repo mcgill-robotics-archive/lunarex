@@ -259,20 +259,31 @@ import struct
 
 
 class corner_detectorResponse(genpy.Message):
-  _md5sum = "b8f0d4aa6433aa8e2d7d6e5f1ee7dcb6"
+  _md5sum = "e7925e83305a4ec1da4d857bef4fef6d"
   _type = "corner_detector/corner_detectorResponse"
   _has_header = False #flag to mark the presence of a Header object
   _full_text = """
-float32[] lower_left
-float32[] lower_right
-float32[] top_left
-float32[] top_right
+uint32[] left_bottom_corner
+uint32[] right_bottom_corner
+uint32[] left_top_corner
+uint32[] right_top_corner
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 """
-  __slots__ = ['lower_left','lower_right','top_left','top_right']
-  _slot_types = ['float32[]','float32[]','float32[]','float32[]']
+  __slots__ = ['left_bottom_corner','right_bottom_corner','left_top_corner','right_top_corner']
+  _slot_types = ['uint32[]','uint32[]','uint32[]','uint32[]']
 
   def __init__(self, *args, **kwds):
     """
@@ -282,7 +293,7 @@ float32[] top_right
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       lower_left,lower_right,top_left,top_right
+       left_bottom_corner,right_bottom_corner,left_top_corner,right_top_corner
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -291,19 +302,19 @@ float32[] top_right
     if args or kwds:
       super(corner_detectorResponse, self).__init__(*args, **kwds)
       #message fields cannot be None, assign default values for those that are
-      if self.lower_left is None:
-        self.lower_left = []
-      if self.lower_right is None:
-        self.lower_right = []
-      if self.top_left is None:
-        self.top_left = []
-      if self.top_right is None:
-        self.top_right = []
+      if self.left_bottom_corner is None:
+        self.left_bottom_corner = []
+      if self.right_bottom_corner is None:
+        self.right_bottom_corner = []
+      if self.left_top_corner is None:
+        self.left_top_corner = []
+      if self.right_top_corner is None:
+        self.right_top_corner = []
     else:
-      self.lower_left = []
-      self.lower_right = []
-      self.top_left = []
-      self.top_right = []
+      self.left_bottom_corner = []
+      self.right_bottom_corner = []
+      self.left_top_corner = []
+      self.right_top_corner = []
 
   def _get_types(self):
     """
@@ -317,22 +328,22 @@ float32[] top_right
     :param buff: buffer, ``StringIO``
     """
     try:
-      length = len(self.lower_left)
+      length = len(self.left_bottom_corner)
       buff.write(_struct_I.pack(length))
-      pattern = '<%sf'%length
-      buff.write(struct.pack(pattern, *self.lower_left))
-      length = len(self.lower_right)
+      pattern = '<%sI'%length
+      buff.write(struct.pack(pattern, *self.left_bottom_corner))
+      length = len(self.right_bottom_corner)
       buff.write(_struct_I.pack(length))
-      pattern = '<%sf'%length
-      buff.write(struct.pack(pattern, *self.lower_right))
-      length = len(self.top_left)
+      pattern = '<%sI'%length
+      buff.write(struct.pack(pattern, *self.right_bottom_corner))
+      length = len(self.left_top_corner)
       buff.write(_struct_I.pack(length))
-      pattern = '<%sf'%length
-      buff.write(struct.pack(pattern, *self.top_left))
-      length = len(self.top_right)
+      pattern = '<%sI'%length
+      buff.write(struct.pack(pattern, *self.left_top_corner))
+      length = len(self.right_top_corner)
       buff.write(_struct_I.pack(length))
-      pattern = '<%sf'%length
-      buff.write(struct.pack(pattern, *self.top_right))
+      pattern = '<%sI'%length
+      buff.write(struct.pack(pattern, *self.right_top_corner))
     except struct.error as se: self._check_types(se)
     except TypeError as te: self._check_types(te)
 
@@ -346,31 +357,31 @@ float32[] top_right
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
-      pattern = '<%sf'%length
+      pattern = '<%sI'%length
       start = end
       end += struct.calcsize(pattern)
-      self.lower_left = struct.unpack(pattern, str[start:end])
+      self.left_bottom_corner = struct.unpack(pattern, str[start:end])
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
-      pattern = '<%sf'%length
+      pattern = '<%sI'%length
       start = end
       end += struct.calcsize(pattern)
-      self.lower_right = struct.unpack(pattern, str[start:end])
+      self.right_bottom_corner = struct.unpack(pattern, str[start:end])
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
-      pattern = '<%sf'%length
+      pattern = '<%sI'%length
       start = end
       end += struct.calcsize(pattern)
-      self.top_left = struct.unpack(pattern, str[start:end])
+      self.left_top_corner = struct.unpack(pattern, str[start:end])
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
-      pattern = '<%sf'%length
+      pattern = '<%sI'%length
       start = end
       end += struct.calcsize(pattern)
-      self.top_right = struct.unpack(pattern, str[start:end])
+      self.right_top_corner = struct.unpack(pattern, str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -383,22 +394,22 @@ float32[] top_right
     :param numpy: numpy python module
     """
     try:
-      length = len(self.lower_left)
+      length = len(self.left_bottom_corner)
       buff.write(_struct_I.pack(length))
-      pattern = '<%sf'%length
-      buff.write(self.lower_left.tostring())
-      length = len(self.lower_right)
+      pattern = '<%sI'%length
+      buff.write(self.left_bottom_corner.tostring())
+      length = len(self.right_bottom_corner)
       buff.write(_struct_I.pack(length))
-      pattern = '<%sf'%length
-      buff.write(self.lower_right.tostring())
-      length = len(self.top_left)
+      pattern = '<%sI'%length
+      buff.write(self.right_bottom_corner.tostring())
+      length = len(self.left_top_corner)
       buff.write(_struct_I.pack(length))
-      pattern = '<%sf'%length
-      buff.write(self.top_left.tostring())
-      length = len(self.top_right)
+      pattern = '<%sI'%length
+      buff.write(self.left_top_corner.tostring())
+      length = len(self.right_top_corner)
       buff.write(_struct_I.pack(length))
-      pattern = '<%sf'%length
-      buff.write(self.top_right.tostring())
+      pattern = '<%sI'%length
+      buff.write(self.right_top_corner.tostring())
     except struct.error as se: self._check_types(se)
     except TypeError as te: self._check_types(te)
 
@@ -413,31 +424,31 @@ float32[] top_right
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
-      pattern = '<%sf'%length
+      pattern = '<%sI'%length
       start = end
       end += struct.calcsize(pattern)
-      self.lower_left = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=length)
+      self.left_bottom_corner = numpy.frombuffer(str[start:end], dtype=numpy.uint32, count=length)
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
-      pattern = '<%sf'%length
+      pattern = '<%sI'%length
       start = end
       end += struct.calcsize(pattern)
-      self.lower_right = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=length)
+      self.right_bottom_corner = numpy.frombuffer(str[start:end], dtype=numpy.uint32, count=length)
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
-      pattern = '<%sf'%length
+      pattern = '<%sI'%length
       start = end
       end += struct.calcsize(pattern)
-      self.top_left = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=length)
+      self.left_top_corner = numpy.frombuffer(str[start:end], dtype=numpy.uint32, count=length)
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
-      pattern = '<%sf'%length
+      pattern = '<%sI'%length
       start = end
       end += struct.calcsize(pattern)
-      self.top_right = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=length)
+      self.right_top_corner = numpy.frombuffer(str[start:end], dtype=numpy.uint32, count=length)
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -445,6 +456,6 @@ float32[] top_right
 _struct_I = genpy.struct_I
 class corner_detector(object):
   _type          = 'corner_detector/corner_detector'
-  _md5sum = '6ab07915844f78d653bb02cb6aaed405'
+  _md5sum = '9720d9672632fb40037b88dcefe05516'
   _request_class  = corner_detectorRequest
   _response_class = corner_detectorResponse

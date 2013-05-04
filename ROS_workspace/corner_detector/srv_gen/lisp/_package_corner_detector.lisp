@@ -3,12 +3,12 @@
           MAP_META
           MAP-VAL
           MAP
-          LOWER_LEFT-VAL
-          LOWER_LEFT
-          LOWER_RIGHT-VAL
-          LOWER_RIGHT
-          TOP_LEFT-VAL
-          TOP_LEFT
-          TOP_RIGHT-VAL
-          TOP_RIGHT
+          LEFT_BOTTOM_CORNER-VAL
+          LEFT_BOTTOM_CORNER
+          RIGHT_BOTTOM_CORNER-VAL
+          RIGHT_BOTTOM_CORNER
+          LEFT_TOP_CORNER-VAL
+          LEFT_TOP_CORNER
+          RIGHT_TOP_CORNER-VAL
+          RIGHT_TOP_CORNER
 ))

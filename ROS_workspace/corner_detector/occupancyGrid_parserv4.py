@@ -201,29 +201,6 @@ def findCorners(req):
 	response.top_left=[walls[3].r*cos(math.radians(walls[3].theta))/mapRes,walls[3].r*sin(math.radians(walls[3].theta))/mapRes]
 
 	return response
-
-	#grid(True)
-	##scatter(x,y,s=areaPos, marker='.', c='c', edgecolors ='none')
-	#scatter(x1,y1,s=areaP, marker='.', c='y', edgecolors ='none')
-	#scatter(x2,y2,s=areaP, marker='.', c='b', edgecolors ='none')
-	#scatter(x3,y3,s=areaP, marker='.', c='g', edgecolors ='none')
-	#scatter(x4,y4,s=areaP, marker='.', c='r', edgecolors ='none')
-
-	##print(str(xWalls))
-
-	##scatter(x,y,s=areaPos, marker='.', c='c', edgecolors ='none')
-	#scatter(xWalls,yWalls,s=areaPos, marker='.', c='b', edgecolors ='none')
-	#scatter(walls[0].r*cos(math.radians(walls[0].theta))/mapRes,walls[0].r*sin(math.radians(walls[0].theta))/mapRes,s=areaP, marker='.', c='y', edgecolors ='none')
-	#scatter(walls[1].r*cos(math.radians(walls[1].theta))/mapRes,walls[1].r*sin(math.radians(walls[1].theta))/mapRes,s=areaP, marker='.', c='b', edgecolors ='none')
-	#scatter(walls[2].r*cos(math.radians(walls[2].theta))/mapRes,walls[2].r*sin(math.radians(walls[2].theta))/mapRes,s=areaP, marker='.', c='g', edgecolors ='none')
-	#scatter(walls[3].r*cos(math.radians(walls[3].theta))/mapRes,walls[3].r*sin(math.radians(walls[3].theta))/mapRes,s=areaP, marker='.', c='r', edgecolors ='none')
-
-	#show()
-
-	#corner0X = (walls[1].b-walls[0].b)/(float(walls[0].m-walls[1].m))
-	#print corner0X
-
-
 	
 rospy.init_node('corner_detector')
 s = rospy.Service('corner_detector_srv', corner_detector, findCorners)

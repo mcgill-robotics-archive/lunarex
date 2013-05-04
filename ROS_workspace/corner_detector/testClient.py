@@ -37,9 +37,14 @@ print("done waiting for corner_detector service")
 try:
 	corner_det = rospy.ServiceProxy('corner_detector_srv', corner_detector)
 	response = corner_det(request)
-	print(response.lower_left)
-	print(response.lower_right)
-	print(response.top_left)
-	print(response.top_right)
+	print(response.left_bottom_corner)
+	print(response.right_bottom_corner)
+	print(response.left_top_corner)
+	print(response.right_top_corner)
+	#print(response.lower_left)
+	#print(response.lower_right)
+	#print(response.top_left)
+	#print(response.top_right)
+
 except rospy.ServiceException, e:
 	print "Service call failed: %s"%e

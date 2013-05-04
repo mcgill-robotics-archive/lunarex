@@ -61,32 +61,32 @@ struct corner_detectorResponse_ {
   typedef corner_detectorResponse_<ContainerAllocator> Type;
 
   corner_detectorResponse_()
-  : lower_left()
-  , lower_right()
-  , top_left()
-  , top_right()
+  : left_bottom_corner()
+  , right_bottom_corner()
+  , left_top_corner()
+  , right_top_corner()
   {
   }
 
   corner_detectorResponse_(const ContainerAllocator& _alloc)
-  : lower_left(_alloc)
-  , lower_right(_alloc)
-  , top_left(_alloc)
-  , top_right(_alloc)
+  : left_bottom_corner(_alloc)
+  , right_bottom_corner(_alloc)
+  , left_top_corner(_alloc)
+  , right_top_corner(_alloc)
   {
   }
 
-  typedef std::vector<float, typename ContainerAllocator::template rebind<float>::other >  _lower_left_type;
-  std::vector<float, typename ContainerAllocator::template rebind<float>::other >  lower_left;
+  typedef std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  _left_bottom_corner_type;
+  std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  left_bottom_corner;
 
-  typedef std::vector<float, typename ContainerAllocator::template rebind<float>::other >  _lower_right_type;
-  std::vector<float, typename ContainerAllocator::template rebind<float>::other >  lower_right;
+  typedef std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  _right_bottom_corner_type;
+  std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  right_bottom_corner;
 
-  typedef std::vector<float, typename ContainerAllocator::template rebind<float>::other >  _top_left_type;
-  std::vector<float, typename ContainerAllocator::template rebind<float>::other >  top_left;
+  typedef std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  _left_top_corner_type;
+  std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  left_top_corner;
 
-  typedef std::vector<float, typename ContainerAllocator::template rebind<float>::other >  _top_right_type;
-  std::vector<float, typename ContainerAllocator::template rebind<float>::other >  top_right;
+  typedef std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  _right_top_corner_type;
+  std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  right_top_corner;
 
 
   typedef boost::shared_ptr< ::corner_detector::corner_detectorResponse_<ContainerAllocator> > Ptr;
@@ -236,12 +236,12 @@ template<class ContainerAllocator>
 struct MD5Sum< ::corner_detector::corner_detectorResponse_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "b8f0d4aa6433aa8e2d7d6e5f1ee7dcb6";
+    return "e7925e83305a4ec1da4d857bef4fef6d";
   }
 
   static const char* value(const  ::corner_detector::corner_detectorResponse_<ContainerAllocator> &) { return value(); } 
-  static const uint64_t static_value1 = 0xb8f0d4aa6433aa8eULL;
-  static const uint64_t static_value2 = 0x2d7d6e5f1ee7dcb6ULL;
+  static const uint64_t static_value1 = 0xe7925e83305a4ec1ULL;
+  static const uint64_t static_value2 = 0xda4d857bef4fef6dULL;
 };
 
 template<class ContainerAllocator>
@@ -259,10 +259,21 @@ struct Definition< ::corner_detector::corner_detectorResponse_<ContainerAllocato
   static const char* value() 
   {
     return "\n\
-float32[] lower_left\n\
-float32[] lower_right\n\
-float32[] top_left\n\
-float32[] top_right\n\
+uint32[] left_bottom_corner\n\
+uint32[] right_bottom_corner\n\
+uint32[] left_top_corner\n\
+uint32[] right_top_corner\n\
+\n\
+\n\
+\n\
+\n\
+\n\
+\n\
+\n\
+\n\
+\n\
+\n\
+\n\
 \n\
 \n\
 \n\
@@ -303,10 +314,10 @@ template<class ContainerAllocator> struct Serializer< ::corner_detector::corner_
 {
   template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
   {
-    stream.next(m.lower_left);
-    stream.next(m.lower_right);
-    stream.next(m.top_left);
-    stream.next(m.top_right);
+    stream.next(m.left_bottom_corner);
+    stream.next(m.right_bottom_corner);
+    stream.next(m.left_top_corner);
+    stream.next(m.right_top_corner);
   }
 
   ROS_DECLARE_ALLINONE_SERIALIZER;
@@ -322,7 +333,7 @@ template<>
 struct MD5Sum<corner_detector::corner_detector> {
   static const char* value() 
   {
-    return "6ab07915844f78d653bb02cb6aaed405";
+    return "9720d9672632fb40037b88dcefe05516";
   }
 
   static const char* value(const corner_detector::corner_detector&) { return value(); } 
@@ -342,7 +353,7 @@ template<class ContainerAllocator>
 struct MD5Sum<corner_detector::corner_detectorRequest_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "6ab07915844f78d653bb02cb6aaed405";
+    return "9720d9672632fb40037b88dcefe05516";
   }
 
   static const char* value(const corner_detector::corner_detectorRequest_<ContainerAllocator> &) { return value(); } 
@@ -362,7 +373,7 @@ template<class ContainerAllocator>
 struct MD5Sum<corner_detector::corner_detectorResponse_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "6ab07915844f78d653bb02cb6aaed405";
+    return "9720d9672632fb40037b88dcefe05516";
   }
 
   static const char* value(const corner_detector::corner_detectorResponse_<ContainerAllocator> &) { return value(); } 

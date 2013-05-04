@@ -3,8 +3,19 @@ nav_msgs/MapMetaData map_meta
 nav_msgs/OccupancyGrid map
 ---
 #RESPONSE
-float32[] lower_left
-float32[] lower_right
-float32[] top_left
-float32[] top_right
+uint32[] left_bottom_corner
+uint32[] right_bottom_corner
+uint32[] left_top_corner
+uint32[] right_top_corner
 
+
+#float32 left_bottom_corner
+#float32 right_bottom_corner
+#float32 left_top_corner
+#float32 right_top_corner
+
+#float32[] lower_left
+#float32[] lower_right
+#float32[] top_left
+#float32[] top_right
+		
