@@ -55,10 +55,17 @@ public class GUIMain extends JFrame {
 
 	TextField linVelField = new TextField("0",5);
 	TextField angVelField = new TextField("0",5);
-	Button applyButton = new Button("Apply");
-	Label linVelLabel = new Label("Linear Velocity");
-	Label angVelLabel = new Label("Angular Velocity");
-	Label status = new Label("                                     ");
+	TextField suspField = new TextField("0",5);
+	TextField bucketField = new TextField("0",5);
+	TextField augerField = new TextField("0",5);
+	CheckboxGroup doorField = new CheckboxGroup();
+	Button sendButton = new Button("Send");
+	Label linVelLabel = new Label("lin vel");
+	Label angVelLabel = new Label("ang vel");
+	Label suspLabel = new Label("susp lvl (%)");
+	Label bucketLabel = new Label("bucket lvl (%)");
+	Label augerLabel = new Label("auger speed (%)");
+	Label doorLabel = new Label("door");
 	
 	Random rand = new Random();// Used for random circle locations
 	boolean controller =false;
@@ -116,9 +123,18 @@ public class GUIMain extends JFrame {
 		testPanel.add(linVelField);
 		testPanel.add(angVelLabel);
 		testPanel.add(angVelField);
-		testPanel.add(applyButton);
-		testPanel.add(status);
-		applyButton.addActionListener(new ActionListener() {
+		testPanel.add(suspLabel);
+		testPanel.add(suspField);
+		testPanel.add(bucketLabel);
+		testPanel.add(bucketField);
+		testPanel.add(augerLabel);
+		testPanel.add(augerField);
+		testPanel.add(doorLabel);
+		testPanel.add(new Checkbox("open", false, doorField));
+		testPanel.add(new Checkbox("close", true, doorField));
+		testPanel.add(sendButton);
+
+		sendButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				getFromTextBoxesAndSendVelocities();
@@ -168,13 +184,14 @@ public class GUIMain extends JFrame {
 						
 					JoystickTest.updateControllerWindow(joystick, window);
 					
-					//if "Start" is pressed, set controller to true
+					//if "Start" is pressed, set manual override and controller to true
 					if(!this.prevController&&joystick.getButtonValue(3)) {
+						manualOverride = true;
 						controller = !controller;
 					}
 					this.prevController = joystick.getButtonValue(3);
 					
-					//if not connected
+					//if not connected, press "Select" to connect to server
 					if(!this.prevConnected&&joystick.getButtonValue(0)) {
 						if(!connected){
 							client = new Client(ipAdressString,
@@ -244,9 +261,9 @@ public class GUIMain extends JFrame {
 		}	else if(buttons.get(12)&&suspensionPos>=SUSPENSION_INCREMENT){ //triangle
 			suspensionPos-=SUSPENSION_INCREMENT;
 		}  	else if (buttons.get(13)) //circle
-			suspensionPos=0;
+			suspensionPos=SUSPENSION_POS_HIGH;
 			else if (buttons.get(15)) //square
-			suspensionPos=255;
+			suspensionPos=SUSPENSION_POS_LOW;
 		
 		/*AUGER BUTTONS*/
 		if(buttons.get(4)&&augerSpeed<=255-AUGER_INCREMENT){ //up arrow
@@ -268,10 +285,10 @@ public class GUIMain extends JFrame {
 		
 		/*BUCKET BUTTONS*/
 		if(buttons.get(8) && bucketPos<=255-BUCKET_INCREMENT) {
-			bucketPos+=BUCKET_INCREMENT; //R2
+			bucketPos+=BUCKET_INCREMENT; //L2?
 		}
 		else if(buttons.get(9) && bucketPos >= BUCKET_INCREMENT){
-			bucketPos -= BUCKET_INCREMENT; //L2
+			bucketPos -= BUCKET_INCREMENT; //R2?
 		}
 		
 		/*VELOCITY JOYSTICKS*/
@@ -405,9 +422,7 @@ public class GUIMain extends JFrame {
 			this.linVel=Double.parseDouble(linVelField.getText());
 			this.angVel=Double.parseDouble(angVelField.getText());
 			sendVelocities(linVel, angVel);
-			status.setText("                                     ");
 		} catch (NumberFormatException nfe) {
-			status.setText("Invalid inputs!");
 		}
 	}
 	
@@ -425,15 +440,20 @@ public class GUIMain extends JFrame {
 			this.OUT_angVel=mapAngToByte((float)angVel);
 			outByte[1]= this.OUT_linVel;
 			outByte[2]= this.OUT_angVel;
-			status.setText("                                     ");
 		} catch (NumberFormatException nfe) {
-			status.setText("Invalid inputs!");
 		}
 	}
 	
 
 	// keyboard input
 	protected void processKeyboardInput() {
+		// IP ADDRESS BOX
+		if (keyboard.keyDownOnce(KeyEvent.VK_SPACE) && !connected) {
+			client = new Client(ipAdressString,
+					Integer.parseInt(portNumberString));
+			client.start();
+			connected = true;
+		}
 		if (keyboard.keyDownOnce(KeyEvent.VK_M)) {
 			int reply = JOptionPane.showConfirmDialog(null,
 					"Do you really want to take over manual control?",
@@ -469,14 +489,6 @@ public class GUIMain extends JFrame {
 
 			// Set linear and angular velocity manually
 			keyCom(KeyEvent.VK_ENTER);
-
-			// IP ADDRESS BOXtrue
-			if (keyboard.keyDownOnce(KeyEvent.VK_SPACE) && !connected) {
-				client = new Client(ipAdressString,
-						Integer.parseInt(portNumberString));
-				client.start();
-				connected = true;
-			}
 
 			if (keyboard.keyDownOnce(KeyEvent.VK_C)) {
 				int reply = JOptionPane.showConfirmDialog(null,
