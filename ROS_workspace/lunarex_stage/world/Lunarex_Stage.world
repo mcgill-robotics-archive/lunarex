@@ -8,7 +8,7 @@ define LidarEx ranger
     # laser-specific properties
     # http://www.hokuyo-aut.jp/02sensor/07scanner/utm_30lx.html
 	#range_max 30.0 #commented out because warning raised that it wasnt used
-	fov 90.0 #field of view in degrees
+	fov 180.0 #field of view in degrees
 	range [0.0 30.0]
 	
 	#sview [0 30 180] # [range_min range_max fov] #doesnt seem to work but was suggested here http://playerstage.sourceforge.net/doc/Stage-3.2.1/group__model__laser.html
@@ -41,7 +41,7 @@ define lunabot position
    # point[1] [ 0.0 0.75 ]
    # point[0] [ 0.0 0.0 ]
     
-    points 24
+    #points 24
     #point[0]  [0.15 0.0]
     #point[1]  [0.15 0.38]
     #point[2]  [0.0 0.38]
@@ -67,6 +67,37 @@ define lunabot position
     #point[22] [0.60 0.38]
     #point[23] [0.60 0.0]
 
+	# -- Including front lidar mount
+
+		#points 24
+#	  point[0]  [0.0 0.15]
+#     point[1]  [0.38 0.15]
+#     point[2]  [0.38 0.0]
+#     point[3]  [0.62 0.0]
+#     point[4]  [0.62 0.15]
+#     point[5]  [0.96 0.15]
+#     point[6]  [0.96 0.0]
+#     point[7]  [1.22 0.0]
+#     point[8]  [1.22 0.15]
+#     point[9]  [1.29 0.15]
+#     point[10] [1.29 0.30]
+#     point[11] [1.45 0.30]
+#     point[12] [1.45 0.45]
+#     point[13] [1.29 0.45]
+#     point[14] [1.29 0.60]
+#     point[15] [1.22 0.60]
+#     point[16] [1.22 0.75]
+#     point[17] [0.96 0.75]
+#     point[18] [0.96 0.60]
+#     point[19] [0.62 0.60]
+#     point[20] [0.62 0.75]
+#     point[21] [0.38 0.75]
+#     point[22] [0.38 0.60]
+#     point[23] [0.0 0.60]
+
+	# -- Excluding front lidar mount
+
+	points 20
     point[0]  [0.0 0.15]
     point[1]  [0.38 0.15]
     point[2]  [0.38 0.0]
@@ -77,20 +108,18 @@ define lunabot position
     point[7]  [1.22 0.0]
     point[8]  [1.22 0.15]
     point[9]  [1.29 0.15]
-    point[10] [1.29 0.30]
-    point[11] [1.45 0.30]
-    point[12] [1.45 0.45]
-    point[13] [1.29 0.45]
-    point[14] [1.29 0.60]
-    point[15] [1.22 0.60]
-    point[16] [1.22 0.75]
-    point[17] [0.96 0.75]
-    point[18] [0.96 0.60]
-    point[19] [0.62 0.60]
-    point[20] [0.62 0.75]
-    point[21] [0.38 0.75]
-    point[22] [0.38 0.60]
-    point[23] [0.0 0.60]
+    point[10] [1.29 0.60]
+    point[11] [1.22 0.60]
+    point[12] [1.22 0.75]
+    point[13] [0.96 0.75]
+    point[14] [0.96 0.60]
+    point[15] [0.62 0.60]
+    point[16] [0.62 0.75]
+    point[17] [0.38 0.75]
+    point[18] [0.38 0.60]
+    point[19] [0.0 0.60]
+
+
 
     z [0 0.7] # the height of the robot
    
@@ -157,7 +186,7 @@ lunabot
   name "lunabot"
   pose [0.7 -2 0 90 ]	#initial position, (then rotation?), in the x-right y-up stage coordinates
   color "red" 
-  LidarEx(pose [0.4 0.35 0 0]) # call Lidar (ie place on on the lunabot) and position it relative to robot (i think its x y z theta)
+  LidarEx(pose [0.5 0.35 0 0]) # call Lidar (ie place on on the lunabot) and position it relative to robot (i think its x y z theta)
   #there's also this thing where the default TF is [0 0 .15 0] and so I think that it is added onto this pose, and so the resulting pose puts the lidar's z position at 0.15 relative to /base_link
  
  # ctrl "wander"  do not need this for now
