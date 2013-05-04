@@ -6,6 +6,7 @@ import numpy as np
 from numpy import *
 from pylab import *
 import matplotlib.gridspec as gridspec
+import matplotlib.nxutils as nx
 
 
 #plot point area
@@ -62,7 +63,7 @@ def findGlobalCoords(localCoords):
     y2ComponentDir = -1
   
   theta = math.atan2(abs(localOrigin[1]-xAxisPoint[1]), abs(localOrigin[0]-xAxisPoint[0]))
-  print theta
+  
   xGlobal = localOrigin[0] + x1ComponentDir*localCoords[0]*math.cos(theta)+x2ComponentDir*localCoords[1]*math.sin(theta)
 
   yGlobal = localOrigin[1] + y1ComponentDir*localCoords[0]*math.sin(theta)+y2ComponentDir*localCoords[1]*math.cos(theta)
@@ -72,12 +73,25 @@ def findGlobalCoords(localCoords):
 
 
 def isInObstacleArea(globalCoords):
+
   #Obstacle area corners in global coordinate system
-  corner0 = findGlobalCoords(0, 100)
-  corner1 = findGlobalCoords(0, 200)
-  corner2 = findGlobalCoords(156, 100)
-  corner3 = findGlobalCoords(156, 200)
-  ## not done
+  corner0 = findGlobalCoords((0, 100))
+  corner1 = findGlobalCoords((0, 200))
+  corner2 = findGlobalCoords((156, 100))
+  corner3 = findGlobalCoords((156, 200))
+  print corner0
+  print corner1
+  print corner2
+  print corner3
+  verts = np.array([[corner0[0], corner0[1]], [corner1[0], corner1[1]], [corner2[0], corner2[1]], [corner3[0], corner3[1]]])
+  
+  #nx.make_lunarex_robot()
+
+  if(nx.pnpoly(globalCoords[0],globalCoords[1], verts)==1):
+    return True
+  return False
+  
+    
   
       
   
@@ -88,7 +102,8 @@ yCorners = []
 
 ##### make mock arena coordinates to test algorithm ##############
 
-theta = 1*pi / 20
+#change theta here to spin mock arena around
+theta = np.pi / 12
 x1, y1 = 490, 580
 
 x2, y2 = x1-296*math.sin(theta), y1+296*math.cos(theta)
@@ -135,6 +150,13 @@ yAxisPoint = getYAxisPoint(localOrigin[0], localOrigin[1], xCorners, yCorners)
 
 
 globalCoords = findGlobalCoords(localCoords)
+
+print isInObstacleArea((500,500))
+print isInObstacleArea((0,0))
+
+print isInObstacleArea((500,700))
+print isInObstacleArea((600,750))
+print isInObstacleArea((495,770))
 
 
 grid(True)
