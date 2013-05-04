@@ -12,11 +12,15 @@ import matplotlib.gridspec as gridspec
 pi = np.pi
 dotArea = pi*(5)**2
 
+
+
 #returns the square of distance between two points
 def distance(x1,y1,x2,y2):
   return((x1-x2)**2+(y1-y2)**2)
 
 
+#given an xPosition, yPosition,and x and y coordinate values of the arena corners,
+#returns the corner closest to xPosition, yPosition
 def closestCorner(xPos, yPos, xcor, ycor):
   #fix this
   corner = (50000, 50000)
@@ -27,16 +31,22 @@ def closestCorner(xPos, yPos, xcor, ycor):
       corner = (xcor[i], ycor[i])
   return corner
 
+#returns coordinates of closest
 def getYAxisPoint(xPos, yPos, xcor, ycor):
   xtemp = xcor[:]
   ytemp = ycor[:]
   xtemp.remove(xPos)
   ytemp.remove(yPos)
-  xtemp.remove(closestCorner(localOrigin[0], localOrigin[1], xCorners, yCorners)[0])
-  ytemp.remove(closestCorner(localOrigin[0], localOrigin[1], xCorners, yCorners)[1])
-  return closestCorner(localOrigin[0], localOrigin[1], xtemp, ytemp)
+  #xtemp.remove(closestCorner(localOrigin[0], localOrigin[1], xCorners, yCorners)[0])
+  xtemp.remove(closestCorner(xPos, yPos, xCorners, yCorners)[0])
+  #ytemp.remove(closestCorner(localOrigin[0], localOrigin[1], xCorners, yCorners)[1])
+  ytemp.remove(closestCorner(xPos, yPos, xCorners, yCorners)[1])
+#  return closestCorner(localOrigin[0], localOrigin[1], xtemp, ytemp)
+  return closestCorner(xPos, yPos, xtemp, ytemp)
 
-def vectorAddition(xAxisPoint, yAxisPoint, localOrigin, localCoords):
+
+
+def findGlobalCoords(localCoords):
   x1ComponentDir = 1
   y1ComponentDir = 1
   if(xAxisPoint[0]-localOrigin[0] < 0):
@@ -61,32 +71,24 @@ def vectorAddition(xAxisPoint, yAxisPoint, localOrigin, localCoords):
   return a
 
 
-def findGlobalCoords(xPos, yPos, xCorners, yCorners, localCoords):
-  localOrigin = closestCorner(xPos, yPos, xCorners, yCorners)
-  xAxisPoint = closestCorner(localOrigin[0], localOrigin[1], xCorners, yCorners)
-  yAxisPoint = getYAxisPoint(localOrigin[0], localOrigin[1], xCorners, yCorners)
-  a= vectorAddition(xAxisPoint, yAxisPoint,localOrigin, localCoords)
-  return a
+def isInObstacleArea(globalCoords):
+  #Obstacle area corners in global coordinate system
+  corner0 = findGlobalCoords(0, 100)
+  corner1 = findGlobalCoords(0, 200)
+  corner2 = findGlobalCoords(156, 100)
+  corner3 = findGlobalCoords(156, 200)
+  ## not done
+  
+      
+  
 
-
-
-
-
-#corners
+#corner coordinates of the arena
 xCorners = []
 yCorners = []
 
-#Robot Position
-xPos = 600
-yPos = 600
-
-#local destination
-localCoords = (50, 200)
-
-
+##### make mock arena coordinates to test algorithm ##############
 
 theta = 1*pi / 20
-#manually position first corner, then arena makes itself
 x1, y1 = 490, 580
 
 x2, y2 = x1-296*math.sin(theta), y1+296*math.cos(theta)
@@ -110,12 +112,29 @@ yCorners.append(y3)
 xCorners.append(x4)
 yCorners.append(y4)
 
-#the local origin is defaulted to the corner closest to the robot
+###################################################################
 
-#the corner closest to the origin will be used to find the angle of the arena 
+
+
+
+#Robot starting position
+xPos = 600
+yPos = 600
+
+#local destination
+localCoords = (50,200)
+
+#find closest corner to robot at beginning of run, this is used as origin for local coordinate system
 localOrigin = closestCorner(xPos, yPos, xCorners, yCorners)
+
+#find other near corner at beginning of run, this is used to define positive X direction movement in the local coordinate system
 xAxisPoint = closestCorner(localOrigin[0], localOrigin[1], xCorners, yCorners)
+
+#find nearest farside corner at beginning of run, this is used to define positive Y direction movement in the local coordinate system
 yAxisPoint = getYAxisPoint(localOrigin[0], localOrigin[1], xCorners, yCorners)
+
+
+globalCoords = findGlobalCoords(localCoords)
 
 
 grid(True)
@@ -129,15 +148,11 @@ plot((x3,x4), (y3,y4), color = 'k')
 plot((x4,x1), (y4,y1), color = 'k')
 
 scatter(xPos, yPos, color = 'g', s = dotArea)
-scatter(localOrigin[0], localOrigin[1], color = 'b', s = dotArea*3)
-scatter(xAxisPoint[0], xAxisPoint[1], color = 'r', s = dotArea*3)
-scatter(yAxisPoint[0], yAxisPoint[1], color = 'g', s = dotArea*3)
+#scatter(localOrigin[0], localOrigin[1], color = 'b', s = dotArea*3)
+#scatter(xAxisPoint[0], xAxisPoint[1], color = 'r', s = dotArea*3)
+#scatter(yAxisPoint[0], yAxisPoint[1], color = 'g', s = dotArea*3)
 
-
-
-
-a = findGlobalCoords(xPos, yPos, xCorners, yCorners, localCoords)
-scatter(a[0],a[1], color = 'g' , s = dotArea*3)
+scatter(globalCoords[0],globalCoords[1], color = 'g' , s = dotArea*3)
 
 
 
