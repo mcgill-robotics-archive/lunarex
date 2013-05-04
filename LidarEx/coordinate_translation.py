@@ -8,17 +8,13 @@ from pylab import *
 import matplotlib.gridspec as gridspec
 import matplotlib.nxutils as nx
 
-
 #plot point area
 pi = np.pi
 dotArea = pi*(5)**2
 
-
-
 #returns the square of distance between two points
 def distance(x1,y1,x2,y2):
   return((x1-x2)**2+(y1-y2)**2)
-
 
 #given an xPosition, yPosition,and x and y coordinate values of the arena corners,
 #returns the corner closest to xPosition, yPosition
@@ -44,8 +40,6 @@ def getYAxisPoint(xPos, yPos, xcor, ycor):
   ytemp.remove(closestCorner(xPos, yPos, xCorners, yCorners)[1])
 #  return closestCorner(localOrigin[0], localOrigin[1], xtemp, ytemp)
   return closestCorner(xPos, yPos, xtemp, ytemp)
-
-
 
 def findGlobalCoords(localCoords):
   x1ComponentDir = 1
@@ -93,9 +87,6 @@ def isInObstacleArea(globalCoords):
   
     
   
-      
-  
-
 #corner coordinates of the arena
 xCorners = []
 yCorners = []
@@ -162,8 +153,6 @@ print isInObstacleArea((495,770))
 grid(True)
 scatter(xCorners, yCorners,s =dotArea, marker = '.', c = 'b', edgecolors = 'none') 
 
-
-
 plot((x1,x2), (y1, y2), color = 'k')
 plot((x2,x3), (y2,y3), color = 'k')
 plot((x3,x4), (y3,y4), color = 'k')
@@ -175,8 +164,6 @@ scatter(xPos, yPos, color = 'g', s = dotArea)
 #scatter(yAxisPoint[0], yAxisPoint[1], color = 'g', s = dotArea*3)
 
 scatter(globalCoords[0],globalCoords[1], color = 'g' , s = dotArea*3)
-
-
 
 #title(gridAngle*180/pi)
 axes().set_aspect('equal')

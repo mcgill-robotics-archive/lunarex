@@ -1,0 +1,10 @@
+#REQUEST
+nav_msgs/MapMetaData map_meta
+nav_msgs/OccupancyGrid map
+---
+#RESPONSE
+float32[] lower_left
+float32[] lower_right
+float32[] top_left
+float32[] top_right
+
