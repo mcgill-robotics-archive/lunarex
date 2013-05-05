@@ -36,6 +36,11 @@ class mapBuilder:
 	while not rospy.is_shutdown():
 	    rospy.wait_for_service('kinect_service')
 	    try:
+		# update position
+		self.x_position = self.x_position_recent
+		self.y_position = self.y_position_recent
+
+		# call the kinect service
 		self.request = rospy.ServiceProxy('kinect_service', KinectData)
 		self.kinect_data = self.request(0)		#Send a request (containing any int) and get response
 		self.kinectCallback()
@@ -76,8 +81,8 @@ class mapBuilder:
 	#print "in poseCallback"
 	self.isLocalized = True
         self.position = pose
-        self.x_position = self.position.pose.position.x
-        self.y_position = self.position.pose.position.y
+        self.x_position_recent = self.position.pose.position.x # transfered to x_position when kinect is called in order to reduce lag
+        self.y_position_recent = self.position.pose.position.y # transfered to y_position when kinect is called in order to reduce lag
         #print "Current position:"
         #print self.x_position, self.y_position
         #print self.position.pose.orientation
@@ -100,6 +105,11 @@ class mapBuilder:
         #for i in range(square_size):
         #    for ii in range(square_size):
         #        self.occupancy_grid[(y_coord -3+i) * self.map_width + (x_coord -3+ii)] = val
+
+	if (val<=40):
+		return 	
+	if (val>80):
+		val = 100
 	if (self.occupancy_grid[(y_coord ) * self.map_width + (x_coord)] != 100):
 		self.occupancy_grid[(y_coord ) * self.map_width + (x_coord)] = val
 	#also insert the top, right and top-right diagonal that were rounded down when coordinates were added
