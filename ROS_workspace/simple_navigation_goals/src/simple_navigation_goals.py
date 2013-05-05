@@ -88,30 +88,30 @@ def excavate():
 
 	This circle should be traced by the outside of the robot. Considering the centre of the robot, subtract half the width on each side of the circle -> subtract the whole width
 		2.5 - 0.75 = 1.75m
-		Therefore digRadius should be 1.75/2 = 0.875 m
+		Therefore DIG_RADIUS should be 1.75/2 = 0.875 m
 		This is also the ackerman radius
 
 	Arclength is defined as Length = R*theta
 	Differentiate both sides, linear velocity = R*Angular velocity
 
-	R is given above (digRadius). We want to be able to calibrate linear velocity (along with suspension height) to maximize flow rate and avoid choking the auger. Therefore angular velocity is a function of the other two parameters:
+	R is given above (DIG_RADIUS). We want to be able to calibrate linear velocity (along with suspension height) to maximize flow rate and avoid choking the auger. Therefore angular velocity is a function of the other two parameters:
 
-	AngVel = LinVel/digRadius
+	AngVel = LinVel/DIG_RADIUS
 	
 	'''
 	
 
 	#-- parameters
-	digRadius = 0.875 #defines circular path for digging
-	startX = 3.88/2 	#middle of lunarena width
-	startY = 7.38 - 2*digRadius - 0.22	#offset from far wall by digCircle and safety factor
-	startAng = -90.0 	#set the heading to face right
-	digSpeed = 1 #m/s linear component of velocity - free to choose it to maximize flow rate and avoid choking; ang speed with accomodate
+	DIG_RADIUS = 0.875 #defines circular path for digging
+	START_X = 3.88/2 	#middle of lunarena width
+	START_Y = 7.38 - 2*DIG_RADIUS - 0.22	#offset from far wall by digCircle and safety factor
+	START_ANG = -90.0 	#set the heading to face right
+	DIG_SPEED = 1 #m/s linear component of velocity - free to choose it to maximize flow rate and avoid choking; ang speed with accomodate
 
 	#-- go to the starting point
-	goal.target_pose.pose.position.x = startX
-	goal.target_pose.pose.position.y = startY
-	goal.target_pose.pose.orientation.w = startAng
+	goal.target_pose.pose.position.x = START_X
+	goal.target_pose.pose.position.y = START_Y
+	goal.target_pose.pose.orientation.w = START_ANG
 
 	client.send_goal(goal)  # Sends the goal to the action server.
 	client.wait_for_result() # Waits for the server to finish performing the action.
@@ -127,15 +127,15 @@ def excavate():
 	alreadyIncremented = False
 	
 	while circlesCompleted < DIG_DURATION:	#abort once circlesCompleted == DIG_DURATION			
-		linVelObject = Velocity(digSpeed, 0.0, 0.0)		#create the object
-		angVelObject = Velocity(0.0, 0.0, digSpeed/digRadius)	#see docstring for geometry explanation		
+		linVelObject = Velocity(DIG_SPEED, 0.0, 0.0)		#create the object
+		angVelObject = Velocity(0.0, 0.0, DIG_SPEED/DIG_RADIUS)	#see docstring for geometry explanation		
 		pub_vel.publish(linVelObject, angVelObject)  #   Send Twist message to /cmd_vel topic
 
 		#--Count number of circles
-		if heading > 178.00 and not alreadyIncremented:
+		if hector_heading_deg > 178.00 and not alreadyIncremented:
 			circlesCompleted += 1
 			alreadyIncremented = True
-		if heading > -160 and heading < 0:
+		if hector_heading_deg > -160 and hector_heading_deg < 0:
 			alreadyIncremented = False	#reset
 
 	#-- Stop locomotion
@@ -152,8 +152,8 @@ def excavate():
 
 	# drive through circular waypoints for a discrete parametrizable number of times
 	#for theta in range(0,DIG_DURATION*2*math.pi, 0.1)	#range(start, end, step)
-	#	goal.target_pose.pose.position.x = digCenterX + digRadius*math.cos(theta)
-	#	goal.target_pose.pose.position.y = digCenterY + digRadius*math.sin(theta)
+	#	goal.target_pose.pose.position.x = digCenterX + DIG_RADIUS*math.cos(theta)
+	#	goal.target_pose.pose.position.y = digCenterY + DIG_RADIUS*math.sin(theta)
 	#	time.sleep(500) #milliseconds
 		#WILL THIS LOOP HANG UP THE WHOLE ROBOT WHILE DIGGING???
 
@@ -165,13 +165,13 @@ def excavate():
 
 def setAugerSpeed(desiredSpeed);
 	# smoothly changes auger speed from current to desired (0-255)
-	increment = 10	
+	INCREMENT = 10	
 	# auger_speed needs to be global
 	
 	if auger_speed < desiredSpeed:
 		while auger_speed < desiredSpeed:
 			#speed up
-			auger_speed  = auger_speed + increment
+			auger_speed  = auger_speed + INCREMENT
 			auger_speed = min(auger_speed, 255)	#saturate
 			auger_Speed_pub.publish(auger_speed)
 			time.sleep(100) #milliseconds
@@ -179,7 +179,7 @@ def setAugerSpeed(desiredSpeed);
 	elif auger_speed > desiredSpeed:
 		while auger_speed > desiredSpeed:
 			#slow down
-			auger_speed = auger_speed - increment
+			auger_speed = auger_speed - INCREMENT
 			auger_speed = max(auger_speed, 0) #saturate
 			auger_Speed_pub.publish(auger_speed)
 			time.sleep(100) #milliseconds
@@ -251,28 +251,5 @@ goal.target_pose.pose.orientation = Quaternion(*quat)
 client.send_goal(goal)  
 client.wait_for_result() 
 
-
-
-
-
-
-
-
-
-
-#---------------------------- Nick
-
-
-
-
-
-
-
-
-						
-	
-        
-        
-	
-						
-
+#EXCAVATE
+excavate()
