@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#ISZydasiyd
 #WARNING: will overwrite all your local repo shit. Replaces it with remote repo.
 
 git fetch --all

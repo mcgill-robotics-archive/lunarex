@@ -25,7 +25,11 @@ vertical_view_angle = 43 # in degrees
 horizontal_view_angle = 57 # in degrees
 vert_angle = vertical_view_angle * math.pi / 180# in rads
 horiz_angle = horizontal_view_angle * math.pi / 180 # in rads
+<<<<<<< HEAD
 height_of_kinect =77 # cm
+=======
+height_of_kinect =94 # cm
+>>>>>>> c75658e8137d304960506a79f34c60f0e1bbc9d7
 Xmid = width/2
 Zmid = height/2
  

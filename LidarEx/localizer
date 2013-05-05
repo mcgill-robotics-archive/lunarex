@@ -11,7 +11,7 @@ import rospy
 from sensor_msgs.msg import *
 
 class Point(object):
-	def __init__(self, theta, r):
+	def __init__(self, theta, r): 
 		self.theta = float(theta)
 		self.r = float(r)
 		self.x = math.sin(math.radians(self.theta)) * self.r

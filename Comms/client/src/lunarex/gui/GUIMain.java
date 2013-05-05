@@ -2,12 +2,15 @@ package lunarex.gui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Line2D;
 import java.awt.image.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import net.java.games.input.Controller;
+import lunarex.controller.joystick.*;
 
 import lunarex.input.*;
 import lunarex.network.*;
@@ -15,141 +18,147 @@ import lunarex.network.*;
 public class GUIMain extends JFrame {
 
 	private static final long serialVersionUID = 1190876640530075607L;
-	static final int WIDTH = 1280;
-	static final int HEIGHT = (int) (9 / 16.0 * WIDTH);
+	
+	/*DISPLAY CONSTANTS*/
+	static final int WIDTH = /*1280*/800;
+	static final int HEIGHT = 800;  /*(int) (9 / 16.0 * WIDTH)*/
+	static final int LINE_SPACING = 20;
+	static final int COLUMN_WIDTH = 250;
+	static final int PERC_COLUMN_WIDTH = 50;
+	static final int FONTSIZE = 20;
 
-	//FOR NETBOOK
-	//String ipAdressString = "142.157.37.138";
+	//FOR NETBOOK ON MCGILL NETWORK
+	//String ipAdressString = "142.157.36.7";
+	
+	//FOR NETBOOK ON OUR NETWORK
+	String ipAdressString = "192.168.1.101";
 	
 	//FOR LOCALHOST
-	String ipAdressString = "127.0.0.1";
+	//String ipAdressString = "127.0.0.1";
 
 	String portNumberString = "5902";
 
 	Client client = null;
 	boolean connected = false;
-
-	// hard-coded some pieces of information about the environment, such as width of Mining Area and initial x value of Obstacle Area
-	class Bob {
-
-		float x, y, w = 75, h = 100;
-		double angVel, linVel;;
-		int angle, containerAngle;
-		float massInContainer, totalMass;
-		double batteryLevel = 14.2;
-		float rpm1, rpm2, rpm3, rpm4;
-		boolean doorOpen;
-		int elevation;
-		
-
-	}
-	
-	class Crater {
-		double x, y, rA, rB;
-	}
-
-	class Boulder {
-		double x, y, rA, rB;
-	}
-
-	class MiningArea {
-		double w = 294;
-	}
-
-	class ObstacleArea {
-		Boulder rockA, rockB, rockC;
-		Crater craterA, craterB;
-		double x = 150;
-	}
-
-	class Rect {
-		double x, y, w, h;
-	}
-
+	boolean prevConnected = false;
+	// Creates controller
+    JInputJoystick joystick = new JInputJoystick(Controller.Type.STICK);
 	KeyboardInput keyboard = new KeyboardInput(); // Keyboard polling
-	Canvas canvas; // Our drawing component
-	Bob bob = new Bob(); // Our rectangle
-	Rect field = new Rect();
-	
-	Panel panel = new Panel();
+    final JFrameWindow window = new JFrameWindow();
+    JInputJoystickTest jinputJoystickTest = new JInputJoystickTest();
+ 
+    Canvas canvas; // Our drawing component
+	Panel testPanel = new Panel();
+	Panel ctrlPanel = new Panel();
+	Container contentPane = this.getContentPane();	
+	Font font = new Font("Helvetica", Font.PLAIN, FONTSIZE);
+
 	TextField linVelField = new TextField("0",5);
 	TextField angVelField = new TextField("0",5);
-	Button applyButton = new Button("Apply");
-	Label linVelLabel = new Label("Linear Velocity");
-	Label angVelLabel = new Label("Angular Velocity");
-	Label status = new Label("                                     ");
+	TextField suspField = new TextField("0",5);
+	TextField bucketField = new TextField("0",5);
+	TextField augerField = new TextField("0",5);
+	CheckboxGroup doorField = new CheckboxGroup();
+	Button sendButton = new Button("Send");
+	Label linVelLabel = new Label("lin vel");
+	Label angVelLabel = new Label("ang vel");
+	Label suspLabel = new Label("susp lvl (%)");
+	Label bucketLabel = new Label("bucket lvl (%)");
+	Label augerLabel = new Label("auger speed (%)");
+	Label doorLabel = new Label("door");
 	
 	Random rand = new Random();// Used for random circle locations
-	boolean manualOverride =false;
+	boolean controller =false;
+	boolean prevController = false;
+	
+	boolean manualOverride= false;
+	
 	byte[] outByte = new byte[6];
-	Boulder rockNo1 = new Boulder();
-	Boulder rockNo2 = new Boulder();
-	Boulder rockNo3 = new Boulder();
-	Crater craterOne = new Crater();
-	Crater craterTwo = new Crater();
-	ObstacleArea obstacleArea1 = new ObstacleArea();
-	MiningArea miningArea = new MiningArea();
+	/*
+	 * BYTE 0: OUT_doorOpen
+	 * BYTE 1: OUT_linVel
+	 * BYTE 2: OUT_angVel
+	 * BYTE 3: OUT_suspension
+	 * BYTE 4: OUT_augerSpeed
+	 * BYTE 5: OUT_bucketPos
+	 */
+	
 
+	/*COMMANDS TO ROBOT*/
+	
+	//Commands we're sending out
+	byte OUT_angVel, OUT_linVel, OUT_suspension, OUT_augerSpeed, OUT_doorOpen, OUT_bucketPos; 
+	
+	final int SUSPENSION_POS_HIGH = 0;
+	final int SUSPENSION_POS_LOW = 255;
+	final int BUCKET_POS_HIGH = 0;
+	final int BUCKET_POS_LOW = 255;
+	
+	//used for processing
+	double angVel = 0;
+	double linVel = 0;
+	int suspensionPos = SUSPENSION_POS_HIGH; // 0 to 255
+	int augerSpeed = 0; //0 to 255
+	int bucketPos = BUCKET_POS_LOW; // 0 to 255
+	int doorOpen = 0;
+	
+	/*COMMAND CONSTANTS*/
+	final int SUSPENSION_INCREMENT = 2;
+	final int AUGER_INCREMENT = 5;
+	final int BUCKET_INCREMENT = 1;
+	
+	static final float MAX_LIN_SPEED = 2.6f; //1.8 before
+	static final float MAX_ANG_SPEED = 1.4f; //4  before
+	
 	public GUIMain() {
-
+		
+		window.dispose();
 		setIgnoreRepaint(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		canvas = new Canvas();
 		canvas.setIgnoreRepaint(true);
-		canvas.setSize(WIDTH, HEIGHT);
-		panel.add(linVelLabel);
-		panel.add(linVelField);
-		panel.add(angVelLabel);
-		panel.add(angVelField);
-		panel.add(applyButton);
-		panel.add(status);
-		applyButton.addActionListener(new ActionListener() {
+		canvas.setSize(WIDTH, HEIGHT);		
+		
+		testPanel.add(linVelLabel);
+		testPanel.add(linVelField);
+		testPanel.add(angVelLabel);
+		testPanel.add(angVelField);
+		testPanel.add(suspLabel);
+		testPanel.add(suspField);
+		testPanel.add(bucketLabel);
+		testPanel.add(bucketField);
+		testPanel.add(augerLabel);
+		testPanel.add(augerField);
+		testPanel.add(doorLabel);
+		testPanel.add(new Checkbox("open", false, doorField));
+		testPanel.add(new Checkbox("close", true, doorField));
+		testPanel.add(sendButton);
+
+		sendButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				sendVelInfo();
+				sendTextBoxesValues();
+				getFromTextBoxesAndSendVelocities();
 			}
+
 		});
-		panel.add(canvas);
 
-		this.add(panel);
-
+		ctrlPanel.add(window.getContentPane());
+		
+		contentPane.add(ctrlPanel,BorderLayout.LINE_START);
+		contentPane.add(testPanel,BorderLayout.PAGE_START);
+		contentPane.add(canvas,BorderLayout.LINE_END);
+		
 		pack();
 		// Hookup keyboard polling
 		addKeyListener(keyboard);
 		canvas.addKeyListener(keyboard);
 
-		//bob.w = 75;
-		//bob.h = 100;
-		field.w = 738 * 1;
-		field.h = 388 * 1;
-		field.x = WIDTH - field.w - 20;
-		field.y = HEIGHT - field.h - 20;
-		bob.x = (float) field.x;
-		bob.y = (float) field.y;
-		manualOverride = true;
-
-	}
-
-	public void updateData() {
-		bob.x = (float) field.x + client.getX();
-		bob.y = (float) field.y + client.getY();
-		bob.angle = (int) client.getTheta();
-
-		/*
-		 * bob.velocity = client.getVelocity();
-
-			bob.containerAngle = client.getContainerAngle();
-			bob.massInContainer = client.getMassInContainer();
-
-			bob.batteryLevel = client.getBatteryLevel();
-			bob.doorOpen = client.getDoorOpen();
-			bob.rpm1 = client.getRpm1();
-			bob.rpm2 = client.getRpm2();
-			bob.rpm3 = client.getRpm3();
-			bob.rpm4 = client.getRpm4();
-		 *
-		 */
-
+		try{
+			JoystickTest.initControllerWindow(joystick, window);
+		} catch (Exception e){
+			
+		}
 	}
 
 	public void run() {
@@ -164,17 +173,50 @@ public class GUIMain extends JFrame {
 
 		Graphics graphics = null;
 		Graphics2D g2d = null;
+		              
 		Color background = Color.DARK_GRAY;
-
+		
 		while (true) {
 			try {
-				processInput();	
+				processKeyboardInput();	
+				try{
+					if(manualOverride&&controller){
+						processControllerInput();
+					}
+						
+					JoystickTest.updateControllerWindow(joystick, window);
 					
+					//if "Start" is pressed, set manual override and controller to true
+					if(!this.prevController&&joystick.getButtonValue(3)) {
+						manualOverride = true;
+						controller = !controller;
+					}
+					this.prevController = joystick.getButtonValue(3);
+					
+					//if not connected, press "Select" to connect to server
+					if(!this.prevConnected&&joystick.getButtonValue(0)) {
+						if(!connected){
+							client = new Client(ipAdressString,
+									Integer.parseInt(portNumberString));
+							client.start();
+						}
+						connected = !connected;
+					}
+					this.prevConnected = joystick.getButtonValue(0);
+					
+				} catch (Exception e){}
+					
+				/*The above functions have only changed the non-OUT variables.
+				 * Now update all OUT* variables, and the outByte array
+				 */
+				updateAllOUTValues();				
+				populateOUTArray();
+
+				//send the array of bytes to the client
 				if (client != null) {
 					client.send(outByte);						
 				}		
 			
-
 				// Poll the keyboard
 				keyboard.poll();
 				// Should we exit?
@@ -185,28 +227,10 @@ public class GUIMain extends JFrame {
 				g2d = bi.createGraphics();
 				g2d.setColor(background);
 				g2d.fillRect(0, 0, WIDTH, HEIGHT);
-
+				g2d.setFont(font);
+				
 				// Draw info text
 				drawTextInfo(g2d,20,40);
-				
-				// draw field
-				drawField(g2d,(int)field.x,(int)field.y);		
-				
-				// Draw battery
-				drawBattery(g2d,1000,50);				
-
-				// Draw bob				
-				drawBob(g2d);
-				
-				//Draw meters
-				drawMeter(g2d,50,200,outByte[1],"Linear Velocity");
-				drawMeter(g2d,200,200,outByte[2],"Angular Velocity");
-				drawMeter(g2d,350,200,outByte[4],"Ogger");
-				drawMeter(g2d,500,200,outByte[3],"Elevation");
-				drawMeter(g2d,650,200,outByte[5],"Bucket Incline");
-				
-				bob.linVel = outByte[1]/50.0;
-				bob.angVel = outByte[2]/127.0;
 				
 				// Blit image and flip...
 				graphics = buffer.getDrawGraphics();
@@ -229,158 +253,123 @@ public class GUIMain extends JFrame {
 			}
 		}
 	}
-	//Teleport bob to position x,y
-	public void teleport(Bob b, int x, int y, int theta){
-		b.x = (float) field.x + client.getX() + x;
-		b.y = (float) field.y + client.getY() + y;
-		bob.angle = theta;
-	}
-
-	public void moveForward(Bob b, int x){
-		b.x += x;
-	}
-	// keyboard input
-	protected void processInput() {
-		if (manualOverride) {
-			// Linear Velocity
-			keyCom(KeyEvent.VK_Q,KeyEvent.VK_UP,KeyEvent.VK_DOWN,1);
-			
-			// Angular Velocity CCW is positive
-			keyCom(KeyEvent.VK_W,KeyEvent.VK_LEFT,KeyEvent.VK_RIGHT,2);
-			
-			//Elevation
-			keyCom(KeyEvent.VK_E,KeyEvent.VK_UP,KeyEvent.VK_DOWN,3);
-			
-			// Ogger control
-			keyCom(KeyEvent.VK_O,KeyEvent.VK_UP,KeyEvent.VK_DOWN,4);
-			
-			// Bucket Incline
-			keyCom(KeyEvent.VK_B,KeyEvent.VK_UP,KeyEvent.VK_DOWN,5);
-			
-			// Dooor open/close
-			keyCom(KeyEvent.VK_S,0);
-			
-			// Stop everything
-			keyCom(KeyEvent.VK_H, "smoothHold");
-			
-			//	A smooth break
-			keyCom(KeyEvent.VK_J, "jerkyHold");
-			
-			// Set linear and angular velocity manually
-			keyCom(KeyEvent.VK_ENTER);
-			
+	
+	private void processControllerInput() {
+		ArrayList<Boolean> buttons = joystick.getButtonsValues();
+		
+		/*SUSPENSION BUTTONS*/
+		if(buttons.get(14)&&suspensionPos<=255-SUSPENSION_INCREMENT){ //X
+			suspensionPos+=SUSPENSION_INCREMENT;
+		}	else if(buttons.get(12)&&suspensionPos>=SUSPENSION_INCREMENT){ //triangle
+			suspensionPos-=SUSPENSION_INCREMENT;
+		}  	else if (buttons.get(13)) //circle
+			suspensionPos=SUSPENSION_POS_HIGH;
+			else if (buttons.get(15)) //square
+			suspensionPos=SUSPENSION_POS_LOW;
+		
+		/*AUGER BUTTONS*/
+		if(buttons.get(4)&&augerSpeed<=255-AUGER_INCREMENT){ //up arrow
+			augerSpeed+=AUGER_INCREMENT;
+		}	else if(buttons.get(6)&&augerSpeed>=AUGER_INCREMENT){ //down arrow
+			augerSpeed-=AUGER_INCREMENT;
+		}	else if(buttons.get(7)) //left arrow
+			augerSpeed=0;
+			else if(buttons.get(5)) //right arrow
+			augerSpeed=255;
+		
+		/*DOOR BUTTONS*/
+		if(buttons.get(11)){
+			doorOpen = 1; //R1
 		}
-		// IP ADDRESS BOX
-		if (keyboard.keyDownOnce(KeyEvent.VK_SPACE) && !connected) {
-			client = new Client(ipAdressString,
-					Integer.parseInt(portNumberString));
-			client.start();
-			connected = true;
+		else if(buttons.get(10)){
+			doorOpen = 0; //L1
 		}
 		
-		if (keyboard.keyDownOnce(KeyEvent.VK_M)) {
-			int reply = JOptionPane.showConfirmDialog(null,
-					"Do you really want to take over manual control?",
-					"Man Override", JOptionPane.YES_NO_OPTION);
-			if (reply == JOptionPane.YES_OPTION) {
-				manualOverride = !manualOverride;
-			}
+		/*BUCKET BUTTONS*/
+		if(buttons.get(8) && bucketPos<=255-BUCKET_INCREMENT) {
+			bucketPos+=BUCKET_INCREMENT; //L2
 		}
+		else if(buttons.get(9) && bucketPos >= BUCKET_INCREMENT){
+			bucketPos -= BUCKET_INCREMENT; //R2
+		}
+		
+		/*VELOCITY JOYSTICKS*/
+		//Linear Velocity
+		linVel = (-1)*MAX_LIN_SPEED*joystick.getYAxisValue();
+		//Angular Velocity
+		angVel = (-1)*MAX_ANG_SPEED*joystick.getZAxisValue();
 	}
-
+	
 	public static void main(String[] args) {
 		GUIMain app = new GUIMain();
-		app.setTitle("Simple Keyboard Input");
+		app.setTitle("LunarEx Control Dashboard");
 		app.setVisible(true);
 		app.run();
 		System.exit(0);
 	}
+	
+	private void updateAllOUTValues(){
+		OUT_linVel=mapVelToByte((float)linVel);
+		OUT_angVel=mapAngToByte((float)angVel);
+		OUT_suspension =(byte) suspensionPos;
+		OUT_augerSpeed =(byte)augerSpeed;
+		OUT_bucketPos =	(byte) bucketPos;
+		OUT_doorOpen = (byte) doorOpen;
+	}
+	
+	private void populateOUTArray(){
+		outByte[0] = OUT_doorOpen;
+		outByte[1] = OUT_linVel;
+		outByte[2] = OUT_angVel;
+		outByte[3] = OUT_suspension;
+		outByte[4] = OUT_augerSpeed;
+		outByte[5] = OUT_bucketPos;
+	}
+	
 	private void drawTextInfo(Graphics2D g2d,int x,int y){
-		g2d.setColor(Color.WHITE);
+		int bucketPosPercentage = (255-bucketPos)*100/255;
+		int suspPosPercentage = (255-suspensionPos)*100/255;
+		int augerSpeedPercentage = augerSpeed*100/255;
 		
-		g2d.drawString("X: " + ((double) (int) ((bob.x - field.x) / 1))
-				/ 100 + " m", x, y);
-		y+=12;
-		g2d.drawString("Y: " + ((double) (int) ((bob.y - field.y) / 1))
-				/ 100 + " m", x, y);
-		y+=12;
-		
-		g2d.drawString("Angle: "
-				+ (int) (360 * bob.angle / (2 * Math.PI)), x, y);
-		y+=12;
-		//g2d.drawString("Manual Override: " + manualOverride, 20, 88);
-		g2d.drawString("Connected to server: " + connected, x, y);
-		y+=12;
-		g2d.drawString("Angular velocity: "+bob.angVel, x, y);
-		y+=12;
-		g2d.drawString("Linear Velocity: "+bob.linVel, x, y);
-		y+=12;
-		g2d.drawString("Elevation: "+bob.elevation, x, y);
-		y+=12;
-		g2d.drawString("Container Angle: "+bob.containerAngle, x, y);
-		y+=12;
-		g2d.drawString("Door "+ (bob.doorOpen?"Open":"Closed"),x,y);
-		y+=12;
-	}
-	private void drawField(Graphics2D g2d, int x, int y){
-		g2d.drawString("Starting/Dumping Area", (x + 10),(y - 2) );
-		g2d.drawString("Obstacle Area",  (x + 250),(y - 2) );
-		g2d.drawString("Mining Area", (x + 550),(y - 2) );
-
-		// Draw Rectangular Field
-		g2d.setColor(Color.cyan);
-		g2d.drawRect(x, y, (int) field.w,
-				(int) field.h);
-
-		// Draw MiningArea on Field
-		g2d.setColor(Color.cyan);
-		g2d.draw(new Line2D.Double(x + field.w - miningArea.w,
-				y, x + field.w - miningArea.w, y
-						+ field.h));
-
-		// Draw ObstacleArea on Field
-		g2d.setColor(Color.cyan);
-		g2d.draw(new Line2D.Double(x + obstacleArea1.x, y,
-				x + obstacleArea1.x, y + field.h));
-
-	}
-	private void drawBattery(Graphics2D g2d, int x, int y){
 		g2d.setColor(Color.WHITE);
-		g2d.drawRect(x, y, 100, 33);
-		g2d.drawRect(x+100, y+11, 5, 10);
-		Color DARKGREEN = new Color(0, 220, 10);
-		g2d.setColor(DARKGREEN);
-		g2d.fillRect(x+1, y+1, (int)bob.batteryLevel, 32);
-		g2d.setColor(Color.WHITE);
-		g2d.drawString("" + bob.batteryLevel + "V", x+40, y+20);
+				
+		g2d.drawString("----CLIENT STATUS ----", x, y); 
+		y+=LINE_SPACING;
+		g2d.drawString("Manual Override: ", x, y);
+		g2d.drawString(""+manualOverride, x+COLUMN_WIDTH, y);
+		y+=LINE_SPACING;
+		g2d.drawString("Connected to Server: ", x, y);
+		g2d.drawString(""+connected, x+COLUMN_WIDTH, y);
+		y+=LINE_SPACING;
+		g2d.drawString("Input from Controller: ", x, y);
+		g2d.drawString(""+controller, x+COLUMN_WIDTH, y);
+		y+=LINE_SPACING*2;
+		g2d.drawString("----OUTGOING TO SERVER ----", x, y); 
+		y+=LINE_SPACING;
+		g2d.drawString("Angular Velocity: ", x, y);
+		g2d.drawString(""+OUT_angVel, x+COLUMN_WIDTH, y);
+		g2d.drawString("("+ new DecimalFormat("#.###").format(angVel)+")", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
+		y+=LINE_SPACING;
+		g2d.drawString("Linear Velocity: ", x, y);
+		g2d.drawString(""+OUT_linVel, x+COLUMN_WIDTH, y);
+		g2d.drawString("("+new DecimalFormat("#.###").format(linVel)+")", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
+		y+=LINE_SPACING;
+		g2d.drawString("Door Open? : ", x, y);
+		g2d.drawString(""+OUT_doorOpen, x+COLUMN_WIDTH, y);
+		y+=LINE_SPACING;
+		g2d.drawString("Bucket Position : ", x, y);
+		g2d.drawString(""+bucketPos, x+COLUMN_WIDTH, y);
+		g2d.drawString("("+bucketPosPercentage+"% Up)", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
+		y+=LINE_SPACING;
+		g2d.drawString("Suspension Position: ",x,y);
+		g2d.drawString(""+suspensionPos, x+COLUMN_WIDTH, y);
+		g2d.drawString("("+suspPosPercentage+"% Up)", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
+		y+=LINE_SPACING;
+		g2d.drawString("Auger Speed: ", x, y);
+		g2d.drawString(""+augerSpeed, x+COLUMN_WIDTH, y);
+		g2d.drawString("("+augerSpeedPercentage+"% Up)", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
 	}
-	private void drawMeter(Graphics2D g2d, int x, int y, int ang, String title){
-		g2d.setColor(Color.WHITE);
-		g2d.drawString(title, x+5, y-5);
-		g2d.setColor(Color.BLACK);
-		g2d.fillOval(x, y, 100, 100);
-		g2d.setColor(Color.DARK_GRAY);
-		g2d.fillOval(x+10,y+10,80,80);
-		g2d.setColor(new Color(128,255,128));
-		g2d.rotate((ang/200.)*Math.PI,x+50,y+50);
-		g2d.fillRect(x+45, y+10, 10, 50);
-		g2d.rotate(-(ang/200.)*Math.PI,x+50,y+50);
-		
-	}
-	private void drawBob(Graphics2D g2d){
-		g2d.setColor(Color.RED);
-		g2d.rotate(bob.angle, bob.x + bob.w / 2, bob.y + bob.h / 2);
-		g2d.drawRect((int) bob.x, (int) bob.y, (int) bob.w, (int) bob.h);
-		g2d.draw(new Line2D.Double(bob.x + bob.w, bob.y,
-				(bob.x + 3 * bob.w / 2), (bob.y + bob.h / 2)));
-		g2d.draw(new Line2D.Double(bob.x + bob.w, bob.y + bob.h,
-				(bob.x + 3 * bob.w / 2), (bob.y + bob.h / 2)));
-		g2d.draw(new Line2D.Double(bob.x + bob.w / 2,
-				bob.y + bob.h / 2, (bob.x + 3 * bob.w / 2),
-				(bob.y + bob.h / 2)));
-		g2d.rotate(-bob.angle, bob.x, bob.y);
-	}
-
+	
 	private void keyCom(int key, String stopSign) {
 		if (keyboard.keyDown(key)) {
 			if (stopSign.equals("jerkyHold")) {
@@ -429,22 +418,124 @@ public class GUIMain extends JFrame {
 	// sends linear and angular velocity on "Enter" key
 	private void keyCom(int key){
 		if (keyboard.keyDownOnce(key)){
-			sendVelInfo();
+			getFromTextBoxesAndSendVelocities();
+		}
+	}
+	/**
+	 * 	Get values from textfields & send them to server
+	 */
+
+	private void sendTextBoxesValues() {
+		getFromTextBoxesAndSendVelocities();
+		//TODO: add other send methods
+	}
+	/**
+	 * Get values from textfields & send them to sendVelInfo
+	 */
+	private void getFromTextBoxesAndSendVelocities(){
+		try{
+			this.linVel=Double.parseDouble(linVelField.getText());
+			this.angVel=Double.parseDouble(angVelField.getText());
+			sendVelocities(linVel, angVel);
+		} catch (NumberFormatException nfe) {
+		}
+	}
+
+	/**
+	 * Send the params to the server
+	 * @param linVel
+	 * @param angVel
+	 */
+	private void sendVelocities(double linVel, double angVel){
+		try{
+			this.linVel = linVel;
+			this.angVel = angVel;
+			//byte linVel=mapVelToByte(Float.parseFloat(linVelField.getText()));
+			this.OUT_linVel=mapVelToByte((float)linVel);
+			this.OUT_angVel=mapAngToByte((float)angVel);
+			outByte[1]= this.OUT_linVel;
+			outByte[2]= this.OUT_angVel;
+		} catch (NumberFormatException nfe) {
 		}
 	}
 	
-	private void sendVelInfo(){
-		try{
-			int linVel=Integer.parseInt(linVelField.getText());
-			int angVel=Integer.parseInt(angVelField.getText());
-			outByte[1]= (byte)(linVel * 50);
-			outByte[2]= (byte)(angVel * 127);
-			bob.linVel= linVel;
-			bob.angVel= angVel;
-			status.setText("                                     ");
-		} catch (NumberFormatException nfe) {
-			status.setText("Invalid inputs!");
+
+	// keyboard input
+	protected void processKeyboardInput() {
+		// IP ADDRESS BOX
+		if (keyboard.keyDownOnce(KeyEvent.VK_SPACE) && !connected) {
+			client = new Client(ipAdressString,
+					Integer.parseInt(portNumberString));
+			client.start();
+			connected = true;
 		}
+		if (keyboard.keyDownOnce(KeyEvent.VK_M)) {
+			int reply = JOptionPane.showConfirmDialog(null,
+					"Do you really want to take over manual control?",
+					"Man Override", JOptionPane.YES_NO_OPTION);
+			if (reply == JOptionPane.YES_OPTION) {
+				manualOverride = !manualOverride;
+			}
+		}
+		if(manualOverride){
+			// Linear Velocity
+			keyCom(KeyEvent.VK_Q,KeyEvent.VK_UP,KeyEvent.VK_DOWN,1);
+
+			// Angular Velocity CCW is positive
+			keyCom(KeyEvent.VK_W,KeyEvent.VK_LEFT,KeyEvent.VK_RIGHT,2);
+
+			//Elevation
+			keyCom(KeyEvent.VK_E,KeyEvent.VK_UP,KeyEvent.VK_DOWN,3);
+
+			// Auger control
+			keyCom(KeyEvent.VK_A,KeyEvent.VK_UP,KeyEvent.VK_DOWN,4);
+
+			// Bucket Incline
+			keyCom(KeyEvent.VK_B,KeyEvent.VK_UP,KeyEvent.VK_DOWN,5);
+
+			// Dooor open/close
+			keyCom(KeyEvent.VK_S,0);
+
+			// Stop everything
+			keyCom(KeyEvent.VK_H, "smoothHold");
+
+			//	A smooth break
+			keyCom(KeyEvent.VK_J, "jerkyHold");
+
+			// Set linear and angular velocity manually
+			keyCom(KeyEvent.VK_ENTER);
+
+			if (keyboard.keyDownOnce(KeyEvent.VK_C)) {
+				int reply = JOptionPane.showConfirmDialog(null,
+						"Toggle controller state?",
+						"Controller", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.YES_OPTION) {
+					controller = !controller;
+				}
+			}
+		}
+	}
+	
+	private byte mapVelToByte(float realVel){
+		//realVel is the desired speed in m/s
+		// max speed is approx 1.8 m/s
+		//map it to int between 0 and 255
+		
+		float tempSpeed = realVel + MAX_LIN_SPEED; // shift up to positives
+		tempSpeed = tempSpeed*255/(2*MAX_LIN_SPEED); //scale
+		byte byteSpeed = (byte) Math.min(Math.max(tempSpeed,0),255); //constrain values to be only within [0,255] - saturates values otherwise				
+		return byteSpeed;
+	}
+	
+	private byte mapAngToByte(float realAng){
+		//realVel is the desired speed in m/s
+		// max speed is approx 4.0 rad/s
+		//map it to int between 0 and 255
+		
+		float tempSpeed = realAng + MAX_ANG_SPEED; // shift up to positives
+		tempSpeed = tempSpeed*255/(2*MAX_ANG_SPEED); //scale
+		byte byteSpeed = (byte) Math.min(Math.max(tempSpeed,0),255); //constrain values to be only within [0,255] - saturates values otherwise				
+		return byteSpeed;
 	}
 	
 }

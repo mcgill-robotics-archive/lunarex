@@ -1,55 +1,108 @@
 #include <Servo.h>
 #include <ros.h>
 #include <std_msgs/Float32.h>
-//#include <math.h>
+#include <std_msgs/Bool.h>
+#include <std_msgs/UInt8.h>
+#include <geometry_msgs/Twist.h>
+
 //#include <arduino_msgs/ArduinoFeedback.h>
 
-//these are init values. Can set tthem through ang_speed and lin_speed ros topics
-float angSpeed = 0;
-float linSpeed = 0;
+// ========== ROS stuff ================
+/*
+Order of Operations: (whats gunna happen in this section of code)
+//order got messed up - need to tweak this comment
+1. define nodehandle - rose node object 
+2. Initialize arduino variables that will be set in ROS
+3. subscribe to topics (point to arduino callback functions)d
+4. define arduino callback functions that set arduino variables
+5. create publishers for feedback
+6. nh.initNode() and subscribe to subscribers and advertise publishers in Setup()
+7. nh.spinOnce() at the end of loop()
+8. use arduino variables within functions
+*/
 
 ros:: NodeHandle nh;
 
-void setAngSpeed(const std_msgs:: Float32 &ang_speed)
-{angSpeed = ang_speed.data;}
-void setLinSpeed(const std_msgs:: Float32 &lin_speed)
-{linSpeed = lin_speed.data;}
+//Init Values for all variables set by ROS topics
 
-void setSpeeds(const std_msgs:: Float32 &cmd_vel){
- linSpeed 
+//Convention: use smallBig for arduino variable, under_score for ros topic
+float angSpeed = 0;
+float linSpeed = 0;
+float dumpPos = 255; //down as default
+float suspPos = 0; //up as default
+float doorPos = 0;
+float augerSpeed = 0;
+
+//Subscriber callback functions
+//Convention: use smallBig for arduino variable, under_score for ros topic
+
+void setSpeeds(const geometry_msgs::Twist &cmd_vel){
+  linSpeed = (float) cmd_vel.linear.x;
+  angSpeed = (float) cmd_vel.angular.z;
+}
+void setDumpLA(const std_msgs::UInt8 &dump_pos){
+  dumpPos = (int) dump_pos.data;
+}
+void setSuspLA(const std_msgs::UInt8 &susp_pos){
+  suspPos = (int) susp_pos.data;
+}  
+void setDoorLA(const std_msgs::Bool &door_pos){
+  doorPos = (boolean) door_pos.data;
+}
+void setAugerSpeed(const std_msgs::UInt8 &auger_speed){
+  augerSpeed = (int) auger_speed.data;
 }
 
-//ros:: Subscriber<std_msgs::Float32> angSub("ang_speed", &setAngSpeed);
-//ros:: Subscriber<std_msgs::Float32> linSub("lin_speed", &setLinSpeed);
+//Subsribers: instantiate subscribers and specify callback functions
+// Format: ros:: Subsriber<message type> subscriberName("topic", &callbackFunction);
+ros:: Subscriber<geometry_msgs::Twist> cmdVelSub("cmd_vel", &setSpeeds);  
+ros:: Subscriber<std_msgs::UInt8> dumpLASub("dump_pos", &setDumpLA); //dumping Linear Acutator position
+ros:: Subscriber<std_msgs::UInt8> suspLASub("susp_pos", &setSuspLA); //suspension Linear Actuator position (same for both)
+ros:: Subscriber<std_msgs::Bool> doorLASub("door_pos", &setDoorLA); //door Linear Acutator position (same for both)
+ros:: Subscriber<std_msgs::UInt8> augerSpeedSub("auger_speed", &setAugerSpeed); //auger motor speed
 
-ros:: Subscriber<geometry_msgs::Twist> cmdvel("cmd_vel", &setSpeeds);
+//Publishers
+
+//repeat 2 lines below for each publisher
+//std_msgs::Float32 fb_angspeed;
+//ros:: Publisher fb_angspeed_publisher("fb_angspeed", &fb_angspeed);
 
 //arduino_msgs::ArduinoFeedback fb;
 //ros:: Publisher feedback_publisher("arduino_feedback", &fb);
 
+// =========== Pin mappings ==============
+
 Servo LF_servo, RF_servo, LR_servo, RR_servo;
+Servo augerSudoServo;
 
-int LF_motor_dir_pin = 26;
-int RF_motor_dir_pin = 27;
-int LR_motor_dir_pin = 28;
-int RR_motor_dir_pin = 29;
+//these 4 pins are arbitrary as of april 27
+int suspActuator_pin = 6;
+int dumpActuator_pin = 7;
+int augerMotor_pin = 8;
+int doorPos_pin = 13;
 
-int LF_motor_enable_pin = 22;
-int RF_motor_enable_pin = 22;
-int LR_motor_enable_pin = 22;
-int RR_motor_enable_pin = 22;
+int LF_motor_dir_pin = 27;
+int RF_motor_dir_pin = 29;
+int LR_motor_dir_pin = 31;
+int RR_motor_dir_pin = 33;
+
+int LF_motor_enable_pin = 26;
+int RF_motor_enable_pin = 28;
+int LR_motor_enable_pin = 30;
+int RR_motor_enable_pin = 32;
 
 int LF_motor_pin = 9;
 int RF_motor_pin = 10;
 int LR_motor_pin = 11;
 int RR_motor_pin = 12;
 
+//-----------Variables used to set motor speeds/enable/directions
+
 boolean LF_motor_enable = 1;
 boolean RF_motor_enable = 1;
 boolean LR_motor_enable = 1;
 boolean RR_motor_enable = 1;
 
-//temp initialization
 boolean LF_motor_dir = 1;
 boolean RF_motor_dir = 1;
 boolean LR_motor_dir = 1;
@@ -60,17 +113,16 @@ float RF_wheel_rpm = 0.0;
 float LR_wheel_rpm = 0.0;
 float RR_wheel_rpm = 0.0;
 
-float TOL = 0.5;
+//SET STRAIGHT AS DEFAULT
+float LF_servo_angle = 90.0;
+float RF_servo_angle = 90.0;
+float LR_servo_angle = 90.0;
+float RR_servo_angle = 90.0;
 
-float LF_servo_angle = 0.0;
-float RF_servo_angle = 0.0;
-float LR_servo_angle = 0.0;
-float RR_servo_angle = 0.0;
-
-float LF_old_servo_angle = 0.0;
-float RF_old_servo_angle = 0.0;
-float LR_old_servo_angle = 0.0;
-float RR_old_servo_angle = 0.0;
+float LF_old_servo_angle = 90.0;
+float RF_old_servo_angle = 90.0;
+float LR_old_servo_angle = 90.0;
+float RR_old_servo_angle = 90.0;
 
 int LF_servo_cmd = 0;
 int RF_servo_cmd = 0;
@@ -82,23 +134,28 @@ int RF_motor_cmd = 0;
 int LR_motor_cmd = 0;
 int RR_motor_cmd = 0;
 
-//all values in meters
 float motor_rpm;
+
+//-----------------constants
 float WHEEL_RADIUS = 0.1397;
 float MIN_SPEED = 0;
-//MAX_SPEED is in Revolutions per minutes
-float MAX_SPEED = 20000;
+float MAX_SPEED = 20000; // in Revolutions per minutes
 float LENGTH = 0.71;
 float WIDTH = 0.7219;
 float DIST_TO_AXIS_A = 0.5074;
-//in degrees
-int MAX_ANGLE = 35; //ratio of lin/ang = 1.5
+int MAX_ANGLE = 35; //in degrees; ratio of lin/ang = 1.5
+
 int SEC_PER_MIN = 60;
 int GEAR_RATIO = 74;
+
+float TOL = 0.5;
+float STOP_THRESH = 0.9;
 
 void setup()
 {
   Serial.begin(9600);
+  
+  // ===== Driving and Steering ====
   pinMode(LF_motor_pin, OUTPUT);
   pinMode(RF_motor_pin, OUTPUT);
   pinMode(LR_motor_pin, OUTPUT);
@@ -108,6 +165,8 @@ void setup()
   RF_servo.attach(3);
   LR_servo.attach(4);
   RR_servo.attach(5);
+  
+  augerSudoServo.attach(augerMotor_pin);
   
   pinMode(LF_motor_enable_pin, OUTPUT);
   pinMode(RF_motor_enable_pin, OUTPUT);
@@ -126,35 +185,55 @@ void setup()
   digitalWrite(RR_motor_enable_pin, RR_motor_enable);
   
   nh.initNode();
-  nh.subscribe(angSub);
-  nh.subscribe(linSub);
-  nh.advertise(feedback_publisher);
+  nh.subscribe(cmdVelSub);
+  nh.subscribe(dumpLASub);
+  nh.subscribe(suspLASub);
+  nh.subscribe(doorLASub);
+  nh.subscribe(augerSpeedSub);  
+ // nh.advertise(fb_angspeed_publisher);
 }
 
 void loop()
 { 
-  if (linSpeed == 0 && angSpeed == 0)
+  // ===== Driving and Steering ======
+  if (abs(linSpeed) <= STOP_THRESH && abs(angSpeed) <= STOP_THRESH)
   {stopAll();}
-  else if(linSpeed == 0)
+  else if(abs(linSpeed) <= STOP_THRESH)//so abs(angSpeed)>=STOPTHRESH 
   {turnOnSpot();}
-  else if(angSpeed == 0)
+  else if(abs(angSpeed) <= STOP_THRESH) //so abs(linSpeed)>=STOPTHRESH
   {goStraight();}
-  else if(angSpeed!= 0 && linSpeed!=0)
+  else 
   {doAckerman();}
   
   setWheelDirection(LF_motor_dir, RF_motor_dir, LR_motor_dir, RR_motor_dir);
   setWheelAngle(LF_servo_angle, RF_servo_angle, LR_servo_angle, RR_servo_angle);
   setWheelSpeed(LF_wheel_rpm, RF_wheel_rpm, LR_wheel_rpm, RR_wheel_rpm);
   
-  Serial.println("angles");
-  Serial.println(LF_servo_angle);
-  Serial.println(RF_servo_angle);
-  Serial.println(LR_servo_angle);
-  Serial.println(RR_servo_angle);
-  delay(1000);
-  populateFeedbackMessage();
-
-  feedback_publisher.publish(&fb);
+  LF_old_servo_angle = LF_servo_angle;  
+  RF_old_servo_angle = RF_servo_angle;  
+  LR_old_servo_angle = LR_servo_angle;  
+  RR_old_servo_angle = RR_servo_angle;
+  
+  // ===== Actuators and Auger ======
+  analogWrite(suspActuator_pin, suspPos); //should be 0-255
+  
+  // THIS CODE IS FOR BOOLEAN DUMP POSITION
+  //if (dumpPos == false) {analogWrite(dumpActuator_pin, 0);}
+  //else {analogWrite(dumpActuator_pin, 255);}
+  
+  //THIS CODE IS FOR INTEGER DUMP POSITION
+  analogWrite(dumpActuator_pin, dumpPos);
+  
+  int augerSignal = map(augerSpeed, 0, 255, 1000, 2000);
+  //alogWrite(augerMotor_pin, augerSpeed);
+  augerSudoServo.writeMicroseconds(augerSignal);
+  analogWrite(doorPos_pin, doorPos);
+  
+  // ===== OTHER  =====
+  
+  //populateFeedbackMessage();
+  // fb_angspeed.data=angSpeed;
+  // fb_angspeed_publisher.publish(&fb_angspeed);
 
   nh.spinOnce();
 }
@@ -166,10 +245,10 @@ void stopAll()
    LR_wheel_rpm = 0.0;
    RR_wheel_rpm = 0.0;
    
-   digitalWrite(LF_motor_enable_pin, LF_motor_enable);
-   digitalWrite(RF_motor_enable_pin, RF_motor_enable);
-   digitalWrite(LR_motor_enable_pin, LF_motor_enable);
-   digitalWrite(RR_motor_enable_pin, RR_motor_enable);
+   digitalWrite(LF_motor_enable_pin, LOW);
+   digitalWrite(RF_motor_enable_pin, LOW);
+   digitalWrite(LR_motor_enable_pin, LOW);
+   digitalWrite(RR_motor_enable_pin, LOW);
 }
 
 void turnOnSpot()
@@ -219,10 +298,10 @@ void goStraight()
   //set all wheel directions to straight, then impliment drive
     
     //setWheelAngle() call moved to end from here
-    LF_servo_angle = 90;
-    RF_servo_angle = 90;
-    LR_servo_angle = 90;
-    RR_servo_angle = 90;
+    LF_servo_angle = 90.0;
+    RF_servo_angle = 90.0;
+    LR_servo_angle = 90.0;
+    RR_servo_angle = 90.0;
     
     if(linSpeed>0) //changed from >= to > because '==' has a different case
     {
@@ -275,6 +354,9 @@ void doAckerman()
       RR_motor_dir = 1;
     }
     
+
+    //float ackRadius = (abs(linSpeed)/2.0)*sin(abs(angSpeed)/2.0);
+
     //float ackRadius = (abs(linSpeed)/2.0)*sin(abs(angSpeed)/2.0); //old april 9
     float ackRadius = abs(linSpeed)/abs(angSpeed);
     float innerFront = atan(LENGTH/(ackRadius - (WIDTH/2.0)))*180/PI;
@@ -282,11 +364,11 @@ void doAckerman()
     float innerBack = 0;
     float outerBack = 0;
     
-    int R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
-    int rad1 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
-    int rad2 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
-    int rad3 = R1 - WIDTH/2;
-    int rad4 = R1 + WIDTH/2;
+    float R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
+    float rad1 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
+    float rad2 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
+    float rad3 = R1 - WIDTH/2;
+    float rad4 = R1 + WIDTH/2;
     
      if(abs(innerFront)>MAX_ANGLE)    //innerfront wheel will always have to turn more, do double if this condition is met
     {
@@ -307,7 +389,7 @@ void doAckerman()
     
     float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed));  //Will return +/- 1 for CCW or CW, respectively (note this variable is distinct from LF_motor_dir, RF_motor_dir, etc)
     
-    if(dir>0)  //counter clockwise
+    if(dir>0.0)  //counter clockwise
     {
       
       LF_servo_angle = 90 - innerFront;
@@ -315,13 +397,21 @@ void doAckerman()
       LR_servo_angle = 90 + innerBack;
       RR_servo_angle = 90 + outerBack;
       
+
+      
       rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
       rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
       rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
       rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
     }
-    else if(dir<0)  //clockwise
+    else if(dir<0.0)  //clockwise
     {
+
+      LF_servo_angle = 90.0 + outerFront;
+      RF_servo_angle = 90.0 + innerFront;
+      LR_servo_angle = 90.0 - outerBack;
+      RR_servo_angle = 90.0 - outerBack;
+
       LF_servo_angle = 90 + outerFront;
       RF_servo_angle = 90 + innerFront;
       LR_servo_angle = 90 - outerBack;
@@ -352,7 +442,7 @@ void setWheelDirection(boolean LF_motor_dir, boolean RF_motor_dir, boolean LR_mo
   digitalWrite(RR_motor_dir_pin, RR_motor_dir);
 }
 
-void setWheelAngle(int LF_servo_angle, int RF_servo_angle, int LR_servo_angle, int RR_servo_angle)
+void setWheelAngle(float LF_servo_angle, float RF_servo_angle, float LR_servo_angle, float RR_servo_angle)
 {
   //motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
   
@@ -367,6 +457,8 @@ void setWheelAngle(int LF_servo_angle, int RF_servo_angle, int LR_servo_angle, i
   RF_servo_cmd = constrain(RF_servo_cmd, 1000, 2000);
   LR_servo_cmd = constrain(LR_servo_cmd, 1000, 2000);
   RR_servo_cmd = constrain(RR_servo_cmd, 1000, 2000);
+  
+   if(abs(LF_servo_angle - LF_old_servo_angle)>TOL || abs(RR_servo_angle-RR_old_servo_angle)>TOL)
   if(abs(LF_servo_angle - LF_old_servo_angle)>TOL || abs(RR_servo_angle-RR_old_servo_angle)>TOL)
   {
     LF_servo.writeMicroseconds(LF_servo_cmd);
@@ -389,39 +481,4 @@ void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_
   analogWrite(RR_motor_pin, RR_wheel_rpm);
 }
 
-  void populateFeedbackMessage(){
-  fb.linSpeed.data = linSpeed;
-  fb.angSpeed.data = angSpeed;
-  
-  fb.LF_motor_enable.data = LF_motor_enable;
-  fb.LF_motor_dir.data = LF_motor_dir;
-  fb.LF_wheel_rpm.data = LF_wheel_rpm;
-  fb.LF_motor_cmd.data = LF_motor_cmd;
 
-  fb.LF_servo_angle.data = LF_servo_angle;
-  fb.LF_servo_cmd.data = LF_servo_cmd;
-  
-  fb.RF_motor_enable.data = RF_motor_enable;
-  fb.RF_motor_dir.data = RF_motor_dir;
-  fb.RF_wheel_rpm.data = RF_wheel_rpm;
-  fb.RF_motor_cmd.data = RF_motor_cmd;
-
-  fb.RF_servo_angle.data = RF_servo_angle;
-  fb.RF_servo_cmd.data = RF_servo_cmd;
-  
-  fb.LR_motor_enable.data = LR_motor_enable;
-  fb.LR_motor_dir.data = LR_motor_dir;
-  fb.LR_wheel_rpm.data = LR_wheel_rpm;
-  fb.LR_motor_cmd.data = LR_motor_cmd;
-
-  fb.LR_servo_angle.data = LR_servo_angle;
-  fb.LR_servo_cmd.data = LR_servo_cmd;
-  
-  fb.RR_motor_enable.data = RR_motor_enable;
-  fb.RR_motor_dir.data = RR_motor_dir;
-  fb.RR_wheel_rpm.data = RR_wheel_rpm;
-  fb.RR_motor_cmd.data = RR_motor_cmd;
-
-  fb.RR_servo_angle.data = RR_servo_angle;
-  fb.RR_servo_cmd.data = RR_servo_cmd;
-}

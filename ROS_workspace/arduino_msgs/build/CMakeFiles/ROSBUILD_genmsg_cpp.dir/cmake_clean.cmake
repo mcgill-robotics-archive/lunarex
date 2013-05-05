@@ -3,6 +3,7 @@ FILE(REMOVE_RECURSE
   "../msg_gen"
   "../src/arduino_msgs/msg"
   "CMakeFiles/ROSBUILD_genmsg_cpp"
+  "../msg_gen/cpp/include/arduino_msgs/LiteArduinoFeedback.h"
   "../msg_gen/cpp/include/arduino_msgs/ArduinoFeedback.h"
 )
 

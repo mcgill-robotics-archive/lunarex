@@ -1,4 +1,8 @@
 #!/usr/bin/env  python
+# used for testing the ros server
+# NOT the real server
+
+
 import sys
 import rospy
 from std_msgs.msg import Int8

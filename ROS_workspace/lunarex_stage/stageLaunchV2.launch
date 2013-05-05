@@ -10,6 +10,7 @@
 		<param name="base_frame" value="base_link" />
 		<param name="odom_frame" value="base_link" /-->
         <remap from="/base_scan" to="/scan"/>
+	<remap from="/odom" to="/stage_odom"/>
 	</node>
 	
 
