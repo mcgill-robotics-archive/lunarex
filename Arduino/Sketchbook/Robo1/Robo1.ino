@@ -272,7 +272,7 @@ void turnOnSpot()
      LR_motor_dir = 0;
      RR_motor_dir = 1;
    }
-   else if(angSpeed < 0);
+   else if(angSpeed < 0)
    {
      LF_motor_dir = 1;
      RF_motor_dir = 0;
