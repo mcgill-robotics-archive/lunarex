@@ -216,8 +216,13 @@ def findCorners(req):
 	left_top_corner = error
 	right_top_corner = error
 
+	# X axis difference between corner 4 and 1
+	cornerDiffX = corners[3][1] - corners[0][1]
+	# Y axis difference between corner 4 and 1
+	cornerDiffY = corners[3][2] - corners[0][2]
+
 	# left corner if difference of X/Y coords of furthest corner and closest corner are SAME sign
-	if((((corners[3][1] - corners[0][1]) >= 0) and ((corners[3][2] - corners[0][2]) >= 0)) or (((corners[3][1] - corners[0][1]) <= 0) and ((corners[3][2] - corners[0][2]) <= 0))):
+	if(((cornerDiffX >= 0) and (cornerDiffY >= 0)) or ((cornerDiffX <= 0) and (cornerDiffY <= 0))):
 		print('Starting on the left')
 		left_bottom_corner = corners[0]
 		right_bottom_corner = corners[1]
@@ -225,7 +230,7 @@ def findCorners(req):
 		right_top_corner = corners[3]
 
 	# right corner if difference of X/Y coords of furthest corner and closest corner are DIFFERENT sign
-	if((((corners[3][1] - corners[0][1]) <= 0) and ((corners[3][2] - corners[0][2]) >= 0)) or (((corners[3][1] - corners[0][1]) >= 0) and ((corners[3][2] - corners[0][2]) <= 0))):
+	if(((cornerDiffX <= 0) and (cornerDiffY >= 0)) or ((cornerDiffX >= 0) and (cornerDiffY <= 0))):
 		print('Starting on the right')
 		left_bottom_corner = corners[1]
 		right_bottom_corner = corners[0]
