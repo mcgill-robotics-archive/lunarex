@@ -80,32 +80,40 @@ rospy.loginfo("Done waiting for move_base action server")
 goal = MoveBaseGoal()
 goal.target_pose.header.frame_id = "base_link"
 goal.target_pose.header.stamp = rospy.get_rostime()
-
+'''
 #PERFORM FIRST LOCALIZATION
 #--Perform rotation 
 goal.target_pose.pose.position.x = 0.0
 goal.target_pose.pose.position.y = 0.0 
 quat = tf.transformations.quaternion_from_euler(0, 0, math.pi) #was 0, 0, math.pi
 goal.target_pose.pose.orientation = Quaternion(*quat)
+print 'Sending 1st goal...'
 
 #--perform first 180deg
 client.send_goal(goal)  # Sends the goal to the action server.
 client.wait_for_result() # Waits for the server to finish performing the action.
+print 'Rotated 180 degrees 1st time.'
+print 'Sending 2nd goal...'
 
 #--perform second 180deg
 client.send_goal(goal)  
 client.wait_for_result() 
+print 'Rotated 180 degrees 2nd time.'
+print 'Sending 3rd goal...'
 
 #--TODO Add feedback stuff 
 
 #--Call corner detector service & display results
 # corner_detector_response = corner_detector_proxy(corner_detector_request)
 # display_corner_detector_output(corner_detector_response)
+'''
 
+print 'Moving forward...'
 goal.target_pose.pose.position.x = 4.0
 goal.target_pose.pose.position.y = 0.0 
-quat = tf.transformations.quaternion_from_euler(0, 0, 0) #was 0, 0, math.pi
-goal.target_pose.pose.orientation = Quaternion(*quat)
+#quat = tf.transformations.quaternion_from_euler(0, 0, 0) #was 0, 0, math.pi
+#goal.target_pose.pose.orientation = Quaternion(*quat)
+goal.target_pose.pose.orientation.w = 1.0
 
 client.send_goal(goal)  
 client.wait_for_result() 

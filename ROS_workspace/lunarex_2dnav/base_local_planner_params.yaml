@@ -20,7 +20,7 @@ TrajectoryPlannerROS:
 
 #2) GOAL TOLERANCE PARAMETERS
 
-    yaw_goal_tolerance: 0.1 # tolerance in radians for the controller in yaw/rotation when achieving its goal
+    yaw_goal_tolerance: 0.05 # tolerance in radians for the controller in yaw/rotation when achieving its goal
 
     xy_goal_tolerance: 0.15 # tolerance in meters for the controller in the x & y distance when achieving a goal
 
@@ -60,7 +60,7 @@ TrajectoryPlannerROS:
 
     publish_cost_grid_pc: true #Whether or not to publish the cost grid that the planner will use when planning. When true, a sensor_msgs/PointCloud2 will be available on the ~<name>/cost_cloud topic. Each point cloud represents the cost grid and has a field for each individual scoring function component as well as the overall cost for each cell, taking the scoring parameters into account. New in navigation 1.4.0
 
-    global_frame_id: odom # frame to set for the cost_cloud. Should be set to the same frame as the local costmap's global frame. New in navigation 1.4.0
+#    global_frame_id: odom # frame to set for the cost_cloud. Should be set to the same frame as the local costmap's global frame. New in navigation 1.4.0
 
 #5) OSCILLATION PREVENTION PARAMETERS
 
