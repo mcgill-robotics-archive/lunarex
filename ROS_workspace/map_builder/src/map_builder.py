@@ -15,8 +15,9 @@ import math
 from kinect_node.srv import *
 
 # the occupancy grid is 2.5 x 2.5 cm
+
 kinect_grid_size = 10 #cm
-occupancy_grid_size = 5 #cm
+
 
 class mapBuilder:
     def __init__(self):
@@ -29,17 +30,18 @@ class mapBuilder:
         self.occupancy_grid = []
 	self.angle = 0.0
 	self.isLocalized = False
-
+	
     def run(self):
         #rospy.spin()
-	self.rate = rospy.Rate(0.3)	#period = 3s
-	while not rospy.is_shutdown():
+	self.rate = rospy.Rate(0.7)	#period = 3s
+	while not rospy.is_shutdown() :
 	    rospy.wait_for_service('kinect_service')
 	    try:
 		# update position
-		self.x_position = self.x_position_recent
+		self.x_position = self.x_position_recent 
 		self.y_position = self.y_position_recent
-
+		
+		print "Called Kinect"
 		# call the kinect service
 		self.request = rospy.ServiceProxy('kinect_service', KinectData)
 		self.kinect_data = self.request(0)		#Send a request (containing any int) and get response
@@ -51,6 +53,8 @@ class mapBuilder:
 		'''
 	    except rospy.ServiceException, e:
 		print "Service failed: %s" % e
+	    except AttributeError:
+		pass
 	    self.rate.sleep()	# Alan, make don't omit this line... sleep is needed to make programs work - Seb
 
 
@@ -67,12 +71,13 @@ class mapBuilder:
         #    self.insertValueInOccupancyGrid(obstacle[0], obstacle[1], 100)
 
 	obstacles = self.obstacle_list.items()
-	print obstacles
+	#print obstacles
 	for i in range(len(obstacles)):
 		self.insertValueInOccupancyGrid(obstacles[i][0][0], obstacles[i][0][1], obstacles[i][1][0])
 
         self.map.data = self.occupancy_grid #Change the occupancy grid to the updated one
         self.pub.publish(self.map)
+	
 
 	#print self.obstacle_list
 
@@ -95,7 +100,8 @@ class mapBuilder:
     def getMapParameters(self):
         self.map_height = self.map.info.height  #the height of occupancy gird
         self.map_width = self.map.info.width    #the width of occupancy grid
-        self.map_resolution = self.map.info.resolution
+	self.map_size   =  self.map_width * self.map_height
+        self.map_resolution = self.map.info.resolution * 100 # map_resolution is in centimeters
 	print self.map_resolution
 
 
@@ -110,6 +116,14 @@ class mapBuilder:
 		return 	
 	if (val>80):
 		val = 100
+
+	occupancy_grid_units_per_kinect_units = math.ceil( kinect_grid_size / self.map_resolution )
+	for x in range(int(x_coord),         int(x_coord + occupancy_grid_units_per_kinect_units)):
+		for y in range(int(y_coord), int(y_coord + occupancy_grid_units_per_kinect_units)):
+
+			if (self.occupancy_grid[(y ) * self.map_width + (x)] != 100):
+				self.occupancy_grid[(y ) * self.map_width + (x)] = val
+	'''
 	if (self.occupancy_grid[(y_coord ) * self.map_width + (x_coord)] != 100):
 		self.occupancy_grid[(y_coord ) * self.map_width + (x_coord)] = val
 	#also insert the top, right and top-right diagonal that were rounded down when coordinates were added
@@ -122,7 +136,7 @@ class mapBuilder:
 	
 	if (self.occupancy_grid[(y_coord+1) * self.map_width + (x_coord+1)] != 100):
 		self.occupancy_grid[(y_coord+1 ) * self.map_width + (x_coord+1)] = val
-
+	'''
     def kinectCallback(self):
 	# the grid is a one d array
 	#print "kinectCallback called"
@@ -157,21 +171,27 @@ class mapBuilder:
 
 
 	# account for the different dimention of the kinect grid and the occupancy grid we use
-	occupancy_grid_units_per_kinect_units = kinect_grid_size / occupancy_grid_size
+	occupancy_grid_units_per_kinect_units = kinect_grid_size / self.map_resolution
 	position_vector[0] = 	int (  position_vector[0] * occupancy_grid_units_per_kinect_units   )
 	position_vector[1] = 	int (  position_vector[1] * occupancy_grid_units_per_kinect_units   )
 
 	# add the global position of the robot
-	position_vector[0] += int( 1024 + self.x_position/0.05 )
-	position_vector[1] += int( 1024 + self.y_position/0.05 )
+	position_vector[0] += int( self.map_width/2  + (self.x_position * 100 )/  (self.map_resolution)  )  # the position is in meters
+	position_vector[1] += int( self.map_height/2 + (self.y_position * 100 )/  (self.map_resolution)  )
 	#print "before addedCoordinates" , [position_vector[0],position_vector[1]]
 	#
 
 	#round down to the lower even number if not even 
-	if(position_vector[0] % 2 !=0):
-		position_vector[0]-=1
-	if(position_vector[1] % 2 !=0):
-		position_vector[1]-=1
+	
+	#if(position_vector[0] % 2 !=0):
+	#	position_vector[0]-=1
+	#if(position_vector[1] % 2 !=0):
+	#	position_vector[1]-=1
+	
+	# round it down to the next multiple of occupancy_grid_units_per_kinect_units  for the average filter
+	position_vector[0]-= int( position_vector[0] % occupancy_grid_units_per_kinect_units )
+	position_vector[1]-= int( position_vector[1] % occupancy_grid_units_per_kinect_units )
+
 	if ((position_vector[0],position_vector[1]) not in self.obstacle_list):
         	#self.obstacle_list.append([position_vector[0],position_vector[1]])
 

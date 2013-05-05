@@ -25,7 +25,7 @@ vertical_view_angle = 43 # in degrees
 horizontal_view_angle = 57 # in degrees
 vert_angle = vertical_view_angle * math.pi / 180# in rads
 horiz_angle = horizontal_view_angle * math.pi / 180 # in rads
-height_of_kinect =80 # cm
+height_of_kinect =77 # cm
 Xmid = width/2
 Zmid = height/2
  
@@ -74,7 +74,7 @@ def createMap():
 		 		sample_vectors.append(createVector(x*width/50,y*height/50, int(val)))
 	
 	# find the tilt angle
-	step_size = 0.005
+	step_size = 0.05
 	x_tilt =-math.pi/4
 	score = 0
 	best_score = 0
@@ -138,47 +138,37 @@ def createMap():
 
 
 
-	# Sobel filter is the 2D array resulting from the filter
+# Sobel filter is the 2D array resulting from the filter 
+
+#sobel_filter = [[-1 for i in range(30)] for ii in range(40)]
+#
+#    for y in range(1, len(sobel_filter )-1):
+#	for x in range(1,len(sobel_filter[0])-1):
+#		if (projection[y][x][1] == 0):
+#			continue;
+#		subset = np.matrix(  [   
+#		[ projection[y-1][x-1][0], projection[y-1][x][0], projection[y-1][x+1][0]  ],  
+#		[ projection[y][x-1][0]  ,   projection[y][x][0],   projection[y][x+1][0]  ],
+#  		[ projection[y+1][x-1][0], projection[y+1][x][0], projection[y+1][x+1][0]  ]   
+#		]  )
+#
+#		variance_x =sum(np.fabs( subset*sobel_x))
+#		varience_y =sum(np.fabs(subset*sobel_y))
+#
+#		variance = math.sqrt(variance_x**2 + varience_y**2)
+#		if (variance>200):
+#			variance = 100
+#		else:
+#			variance = 0
+#		sobel_filter[y][x] = int( variance)
+
+
+
+
+    ### reset filter, 
+    #   not really a sobel filter here...
+
     sobel_filter = [[-1 for i in range(30)] for ii in range(40)]
-
-    for y in range(1, len(sobel_filter )-1):
-	for x in range(1,len(sobel_filter[0])-1):
-		if (projection[y][x][1] == 0):
-			continue;
-		subset = np.matrix(  [   
-		[ projection[y-1][x-1][0], projection[y-1][x][0], projection[y-1][x+1][0]  ],  
-		[ projection[y][x-1][0]  ,   projection[y][x][0],   projection[y][x+1][0]  ],
-  		[ projection[y+1][x-1][0], projection[y+1][x][0], projection[y+1][x+1][0]  ]   
-		]  )
-
-		variance_x =sum(np.fabs( subset*sobel_x))
-		varience_y =sum(np.fabs(subset*sobel_y))
-
-		variance = math.sqrt(variance_x**2 + varience_y**2)
-		if (variance>200):
-			variance = 100
-		else:
-			variance = 0
-		sobel_filter[y][x] = int( variance)
-
-
-    ### reset filter
-    sobel_filter = [[-1 for i in range(30)] for ii in range(40)]
-    ###
-    #Height filter
-
-    height_threshold = 6 #cm
-    for y in range(1, len(sobel_filter )-1):
-	for x in range(1,len(sobel_filter[0])-1):
-		if (projection[y][x][1] == 0):
-			continue;
-		if (np.fabs(projection[y][x][0])>=height_threshold):
-			sobel_filter[y][x] = 100
-
-
-    ### reset filter
-    sobel_filter = [[-1 for i in range(30)] for ii in range(40)]
-    ###
 
     #Filter with Relative Height from Every Adjacent Position, 
     # it is assumed that the case with the greatest absolute value is the abstacle
@@ -189,28 +179,28 @@ def createMap():
 			continue;	
 		sobel_filter[y][x] = 0
 		if (projection[y][x-1][1] != 0 and np.fabs(projection[y][x][0] - projection[y][x-1][0])>=height_difference_threshold):
-			if(math.fabs(projection[y][x][0]) >=math.fabs(projection[y][x-1][0])):
-				sobel_filter[y][x] = 100
-			else:			
-				sobel_filter[y][x-1] = 100
+			#if(math.fabs(projection[y][x][0]) >=math.fabs(projection[y][x-1][0])):
+			sobel_filter[y][x] = 100
+			#else:			
+			sobel_filter[y][x-1] = 100
 		if (projection[y][x+1][1] != 0 and np.fabs(projection[y][x][0] - projection[y][x+1][0])>=height_difference_threshold):
 
-			if(math.fabs(projection[y][x][0]) >=math.fabs(projection[y][x+1][0])):
-				sobel_filter[y][x] = 100
-			else:			
-				sobel_filter[y][x+1] = 100
+			#if(math.fabs(projection[y][x][0]) >=math.fabs(projection[y][x+1][0])):
+			sobel_filter[y][x] = 100
+			#else:			
+			sobel_filter[y][x+1] = 100
 		if (projection[y-1][x][1] != 0 and np.fabs(projection[y][x][0] - projection[y-1][x][0])>=height_difference_threshold):
 			
-			if(math.fabs(projection[y][x][0]) >=math.fabs(projection[y-1][x][0])):
-				sobel_filter[y][x] = 100
-			else:
-				sobel_filter[y-1][x] = 100
+			#if(math.fabs(projection[y][x][0]) >=math.fabs(projection[y-1][x][0])):
+			sobel_filter[y][x] = 100
+			#else:
+			sobel_filter[y-1][x] = 100
 		if (projection[y+1][x][1] != 0 and np.fabs(projection[y][x][0] - projection[y+1][x][0])>=height_difference_threshold):
 			
-			if(math.fabs(projection[y][x][0]) >=math.fabs(projection[y+1][x][0])):
-				sobel_filter[y][x] = 100
-			else:
-				sobel_filter[y+1][x] = 100		
+			#if(math.fabs(projection[y][x][0]) >=math.fabs(projection[y+1][x][0])):
+			sobel_filter[y][x] = 100
+			#else:
+			sobel_filter[y+1][x] = 100		
 
 
     #print the fitered array 
