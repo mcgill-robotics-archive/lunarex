@@ -9,10 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import net.java.games.input.Controller;
-import joystick.JFrameWindow;
-import joystick.JInputJoystick;
-import joystick.JInputJoystickTest;
-import joystick.JoystickTest;
+import lunarex.controller.joystick.*;
+
 import lunarex.input.*;
 import lunarex.network.*;
 
