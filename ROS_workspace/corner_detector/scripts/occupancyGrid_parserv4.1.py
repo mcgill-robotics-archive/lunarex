@@ -90,7 +90,7 @@ def findCorners(req):
 	occupancyGrid = np.reshape(gridData,(mapWidth,mapHeight))
 
 	#DEFINING HOUGH MATRIX
-	Rres = mapRes/4 #CHANGE BACK TO mapRes/4 ONCE SERVICE IS WRITTEN
+	Rres = mapRes/2 #CHANGE BACK TO mapRes/4 ONCE SERVICE IS WRITTEN
 	 #r bucket resolution. Doesn't make sense to have r buckets smaller than map res.
 	Rrank = int((math.sqrt(2)*max(mapWidth, mapHeight))/Rres) #nb of R buckets
 	Tres = 1
