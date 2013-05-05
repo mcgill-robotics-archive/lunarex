@@ -107,7 +107,6 @@ print 'Sending 3rd goal...'
 # corner_detector_response = corner_detector_proxy(corner_detector_request)
 # display_corner_detector_output(corner_detector_response)
 '''
-
 print 'Moving forward...'
 goal.target_pose.pose.position.x = 4.0
 goal.target_pose.pose.position.y = 0.0 
