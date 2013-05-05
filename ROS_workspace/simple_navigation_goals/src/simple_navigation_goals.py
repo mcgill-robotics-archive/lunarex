@@ -163,7 +163,7 @@ def excavate():
 		
 	'''				
 
-def setAugerSpeed(desiredSpeed);
+def setAugerSpeed(desiredSpeed):
 	# smoothly changes auger speed from current to desired (0-255)
 	INCREMENT = 10	
 	# auger_speed needs to be global
