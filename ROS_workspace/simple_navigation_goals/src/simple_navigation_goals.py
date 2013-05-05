@@ -102,7 +102,7 @@ client.wait_for_result()
 # corner_detector_response = corner_detector_proxy(corner_detector_request)
 # display_corner_detector_output(corner_detector_response)
 
-goal.target_pose.pose.position.x = 1.0
+goal.target_pose.pose.position.x = 4.0
 goal.target_pose.pose.position.y = 0.0 
 quat = tf.transformations.quaternion_from_euler(0, 0, 0) #was 0, 0, math.pi
 goal.target_pose.pose.orientation = Quaternion(*quat)
