@@ -42,27 +42,28 @@ public class JFrameWindow extends javax.swing.JFrame {
 
         jPanelAxes = new javax.swing.JPanel();
         jLabelXYAxis = new javax.swing.JLabel();
-        progressBarLabel1 = new javax.swing.JLabel();
-        progressBarLabel2 = new javax.swing.JLabel();
-        progressBar1 = new javax.swing.JProgressBar();
-        progressBar2 = new javax.swing.JProgressBar();
+//        progressBarLabel1 = new javax.swing.JLabel();
+//        progressBarLabel2 = new javax.swing.JLabel();
+//        progressBar1 = new javax.swing.JProgressBar();
+//        progressBar2 = new javax.swing.JProgressBar();
         jPanelXYAxis = new javax.swing.JPanel();
-        progressBarLabel3 = new javax.swing.JLabel();
-        progressBar3 = new javax.swing.JProgressBar();
+//        progressBarLabel3 = new javax.swing.JLabel();
+//        progressBar3 = new javax.swing.JProgressBar();
         jPanelButtons = new javax.swing.JPanel();
-        jPanelHatSwitch = new javax.swing.JPanel();
+//        jPanelHatSwitch = new javax.swing.JPanel();
         jLabelControllerName = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JInput Joystick Test");
 
-        jPanelAxes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Axes", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 51, 204)));
+        jPanelAxes.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Linear/Angular Velocities", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 51, 204)));
 
-        jLabelXYAxis.setText("X Axis / Y Axis");
+//        jLabelXYAxis.setText("X Axis / Y Axis");
+//        jLabelXYAxis.setText("Linear/Angular Velocities");
 
-        progressBarLabel1.setText("Z Axis");
-
-        progressBarLabel2.setText("Z Rotation");
+//        progressBarLabel1.setText("Z Axis");
+//
+//        progressBarLabel2.setText("Z Rotation");
 
         jPanelXYAxis.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanelXYAxis.setPreferredSize(new java.awt.Dimension(111, 111));
@@ -78,9 +79,9 @@ public class JFrameWindow extends javax.swing.JFrame {
             .addGap(0, 109, Short.MAX_VALUE)
         );
 
-        progressBarLabel3.setText("Z Axis");
-
-        progressBar3.setMaximum(99);
+//        progressBarLabel3.setText("Z Axis");
+//
+//        progressBar3.setMaximum(99);
 
         javax.swing.GroupLayout jPanelAxesLayout = new javax.swing.GroupLayout(jPanelAxes);
         jPanelAxes.setLayout(jPanelAxesLayout);
@@ -96,33 +97,36 @@ public class JFrameWindow extends javax.swing.JFrame {
                         .addComponent(jPanelXYAxis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(67, 67, 67)
                 .addGroup(jPanelAxesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(progressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(progressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(progressBarLabel2)
-                    .addComponent(progressBarLabel1)
-                    .addComponent(progressBarLabel3)
-                    .addComponent(progressBar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(26, Short.MAX_VALUE))
+//                    .addComponent(progressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                    .addComponent(progressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                    .addComponent(progressBarLabel2)
+//                    .addComponent(progressBarLabel1)
+//                    .addComponent(progressBarLabel3)
+//                    .addComponent(progressBar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+               )
+                		.addContainerGap(26, Short.MAX_VALUE))
+//                        )
         );
         jPanelAxesLayout.setVerticalGroup(
             jPanelAxesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelAxesLayout.createSequentialGroup()
                 .addGroup(jPanelAxesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelXYAxis)
-                    .addComponent(progressBarLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelAxesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelAxesLayout.createSequentialGroup()
-                        .addComponent(progressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
-                        .addComponent(progressBarLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(progressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(16, 16, 16)
-                        .addComponent(progressBarLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(progressBar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanelXYAxis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+//                    .addComponent(progressBarLabel1))
+//                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+//                .addGroup(jPanelAxesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                    .addGroup(jPanelAxesLayout.createSequentialGroup()
+//                        .addComponent(progressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                        .addGap(13, 13, 13)
+//                        .addComponent(progressBarLabel2)
+//                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+//                        .addComponent(progressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                        .addGap(16, 16, 16)
+//                        .addComponent(progressBarLabel3)
+//                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+//                        .addComponent(progressBar3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    
+                .addComponent(jPanelXYAxis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 16, Short.MAX_VALUE))
         );
 
@@ -139,18 +143,18 @@ public class JFrameWindow extends javax.swing.JFrame {
             .addGap(0, 112, Short.MAX_VALUE)
         );
 
-        jPanelHatSwitch.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Hat Switch", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 51, 204)));
-
-        javax.swing.GroupLayout jPanelHatSwitchLayout = new javax.swing.GroupLayout(jPanelHatSwitch);
-        jPanelHatSwitch.setLayout(jPanelHatSwitchLayout);
-        jPanelHatSwitchLayout.setHorizontalGroup(
-            jPanelHatSwitchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanelHatSwitchLayout.setVerticalGroup(
-            jPanelHatSwitchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+//        jPanelHatSwitch.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Hat Switch", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(0, 51, 204)));
+//
+//        javax.swing.GroupLayout jPanelHatSwitchLayout = new javax.swing.GroupLayout(jPanelHatSwitch);
+//        jPanelHatSwitch.setLayout(jPanelHatSwitchLayout);
+//        jPanelHatSwitchLayout.setHorizontalGroup(
+//            jPanelHatSwitchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//            .addGap(0, 0, Short.MAX_VALUE)
+//        );
+//        jPanelHatSwitchLayout.setVerticalGroup(
+//            jPanelHatSwitchLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//            .addGap(0, 0, Short.MAX_VALUE)
+//        );
 
         jLabelControllerName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelControllerName.setText("Controller name");
@@ -166,7 +170,8 @@ public class JFrameWindow extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanelButtons, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanelHatSwitch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+//                        .addComponent(jPanelHatSwitch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        )
                     .addComponent(jPanelAxes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabelControllerName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -181,8 +186,9 @@ public class JFrameWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanelButtons, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanelHatSwitch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+//                    .addComponent(jPanelHatSwitch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                )
+                    .addContainerGap())
         );
 
         pack();
@@ -193,14 +199,14 @@ public class JFrameWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelXYAxis;
     private javax.swing.JPanel jPanelAxes;
     private javax.swing.JPanel jPanelButtons;
-    private javax.swing.JPanel jPanelHatSwitch;
+//    private javax.swing.JPanel jPanelHatSwitch;
     private javax.swing.JPanel jPanelXYAxis;
-    private javax.swing.JProgressBar progressBar1;
-    private javax.swing.JProgressBar progressBar2;
-    private javax.swing.JProgressBar progressBar3;
-    private javax.swing.JLabel progressBarLabel1;
-    private javax.swing.JLabel progressBarLabel2;
-    private javax.swing.JLabel progressBarLabel3;
+//    private javax.swing.JProgressBar progressBar1;
+//    private javax.swing.JProgressBar progressBar2;
+//    private javax.swing.JProgressBar progressBar3;
+//    private javax.swing.JLabel progressBarLabel1;
+//    private javax.swing.JLabel progressBarLabel2;
+//    private javax.swing.JLabel progressBarLabel3;
     // End of variables declaration//GEN-END:variables
 
     
@@ -218,17 +224,17 @@ public class JFrameWindow extends javax.swing.JFrame {
         g2d.fillOval(xPercentage, yPercentage, 10, 10);
     }
     
-    public void setZAxis(int zAxisValueInPercentage){
-        progressBar1.setValue(zAxisValueInPercentage);
-    }
-    
-    public void setZRotation(int zRotationValueInPercentage){
-        progressBar2.setValue(zRotationValueInPercentage);
-    }
-    
-    public void setZAxisGamepad(int zAxisValueInPercentage){
-        progressBar3.setValue(zAxisValueInPercentage);
-    }
+//    public void setZAxis(int zAxisValueInPercentage){
+//        progressBar1.setValue(zAxisValueInPercentage);
+//    }
+//    
+//    public void setZRotation(int zRotationValueInPercentage){
+//        progressBar2.setValue(zRotationValueInPercentage);
+//    }
+//    
+//    public void setZAxisGamepad(int zAxisValueInPercentage){
+//        progressBar3.setValue(zAxisValueInPercentage);
+//    }
     
     public void setControllerButtons(JPanel buttonsPanel){
         jPanelButtons.removeAll();
@@ -236,77 +242,77 @@ public class JFrameWindow extends javax.swing.JFrame {
         this.validate();
     }
 
-    public void setHatSwitch(float hatSwitchPosition) {
-        int circleSize = 100;
-        
-        Graphics2D g2d = (Graphics2D)jPanelHatSwitch.getGraphics();
-        g2d.clearRect(5, 15, jPanelHatSwitch.getWidth() - 10, jPanelHatSwitch.getHeight() - 22);
-        g2d.drawOval(20, 22, circleSize, circleSize);
-        
-        if(Float.compare(hatSwitchPosition, Component.POV.OFF) == 0)
-            return;
-        
-        int smallCircleSize = 10;
-        int upCircleX = 65;
-        int upCircleY = 17;
-        int leftCircleX = 15;
-        int leftCircleY = 68;
-        int betweenX = 37;
-        int betweenY = 17;
-        
-        int x = 0;
-        int y = 0;
-        
-        g2d.setColor(Color.blue);
-                        
-        if(Float.compare(hatSwitchPosition, Component.POV.UP) == 0){
-            x = upCircleX;
-            y = upCircleY;
-        }else if(Float.compare(hatSwitchPosition, Component.POV.DOWN) == 0){
-            x = upCircleX;
-            y = upCircleY + circleSize;
-        }else if(Float.compare(hatSwitchPosition, Component.POV.LEFT) == 0){
-            x = leftCircleX;
-            y = leftCircleY;
-        }else if(Float.compare(hatSwitchPosition, Component.POV.RIGHT) == 0){
-            x = leftCircleX + circleSize;
-            y = leftCircleY;
-        }else if(Float.compare(hatSwitchPosition, Component.POV.UP_LEFT) == 0){
-            x = upCircleX - betweenX;
-            y = upCircleY + betweenY;
-        }else if(Float.compare(hatSwitchPosition, Component.POV.UP_RIGHT) == 0){
-            x = upCircleX + betweenX;
-            y = upCircleY + betweenY;
-        }else if(Float.compare(hatSwitchPosition, Component.POV.DOWN_LEFT) == 0){
-            x = upCircleX - betweenX;
-            y = upCircleY + circleSize - betweenY;
-        }else if(Float.compare(hatSwitchPosition, Component.POV.DOWN_RIGHT) == 0){
-            x = upCircleX + betweenX;
-            y = upCircleY + circleSize - betweenY;
-        }
-        
-        g2d.fillOval(x, y, smallCircleSize, smallCircleSize);
-    }
-    
-    
-    public void setProgressBar1Name(String name)
-    {
-        this.progressBarLabel1.setText(name);
-    }
-    
-    public void setProgressBar2Name(String name)
-    {
-        this.progressBarLabel2.setText(name);
-    }
-    
-    public void setProgressBar3Name(String name)
-    {
-        this.progressBarLabel3.setText(name);
-    }
-    
-    
-    public void hideProgresBar3()
-    {
-        this.progressBar3.setVisible(false);
-    }
+//    public void setHatSwitch(float hatSwitchPosition) {
+//        int circleSize = 100;
+//        
+//        Graphics2D g2d = (Graphics2D)jPanelHatSwitch.getGraphics();
+//        g2d.clearRect(5, 15, jPanelHatSwitch.getWidth() - 10, jPanelHatSwitch.getHeight() - 22);
+//        g2d.drawOval(20, 22, circleSize, circleSize);
+//        
+//        if(Float.compare(hatSwitchPosition, Component.POV.OFF) == 0)
+//            return;
+//        
+//        int smallCircleSize = 10;
+//        int upCircleX = 65;
+//        int upCircleY = 17;
+//        int leftCircleX = 15;
+//        int leftCircleY = 68;
+//        int betweenX = 37;
+//        int betweenY = 17;
+//        
+//        int x = 0;
+//        int y = 0;
+//        
+//        g2d.setColor(Color.blue);
+//                        
+//        if(Float.compare(hatSwitchPosition, Component.POV.UP) == 0){
+//            x = upCircleX;
+//            y = upCircleY;
+//        }else if(Float.compare(hatSwitchPosition, Component.POV.DOWN) == 0){
+//            x = upCircleX;
+//            y = upCircleY + circleSize;
+//        }else if(Float.compare(hatSwitchPosition, Component.POV.LEFT) == 0){
+//            x = leftCircleX;
+//            y = leftCircleY;
+//        }else if(Float.compare(hatSwitchPosition, Component.POV.RIGHT) == 0){
+//            x = leftCircleX + circleSize;
+//            y = leftCircleY;
+//        }else if(Float.compare(hatSwitchPosition, Component.POV.UP_LEFT) == 0){
+//            x = upCircleX - betweenX;
+//            y = upCircleY + betweenY;
+//        }else if(Float.compare(hatSwitchPosition, Component.POV.UP_RIGHT) == 0){
+//            x = upCircleX + betweenX;
+//            y = upCircleY + betweenY;
+//        }else if(Float.compare(hatSwitchPosition, Component.POV.DOWN_LEFT) == 0){
+//            x = upCircleX - betweenX;
+//            y = upCircleY + circleSize - betweenY;
+//        }else if(Float.compare(hatSwitchPosition, Component.POV.DOWN_RIGHT) == 0){
+//            x = upCircleX + betweenX;
+//            y = upCircleY + circleSize - betweenY;
+//        }
+//        
+//        g2d.fillOval(x, y, smallCircleSize, smallCircleSize);
+//    }
+//    
+//    
+//    public void setProgressBar1Name(String name)
+//    {
+//        this.progressBarLabel1.setText(name);
+//    }
+//    
+//    public void setProgressBar2Name(String name)
+//    {
+//        this.progressBarLabel2.setText(name);
+//    }
+//    
+//    public void setProgressBar3Name(String name)
+//    {
+//        this.progressBarLabel3.setText(name);
+//    }
+//    
+//    
+//    public void hideProgresBar3()
+//    {
+//        this.progressBar3.setVisible(false);
+//    }
 }

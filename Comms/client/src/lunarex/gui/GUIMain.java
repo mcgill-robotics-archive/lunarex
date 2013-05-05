@@ -3,6 +3,7 @@ package lunarex.gui;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import javax.swing.JFrame;
@@ -23,6 +24,7 @@ public class GUIMain extends JFrame {
 	static final int HEIGHT = 800;  /*(int) (9 / 16.0 * WIDTH)*/
 	static final int LINE_SPACING = 20;
 	static final int COLUMN_WIDTH = 250;
+	static final int PERC_COLUMN_WIDTH = 50;
 	static final int FONTSIZE = 20;
 
 	//FOR NETBOOK ON MCGILL NETWORK
@@ -135,8 +137,10 @@ public class GUIMain extends JFrame {
 		sendButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				sendTextBoxesValues();
 				getFromTextBoxesAndSendVelocities();
 			}
+
 		});
 
 		ctrlPanel.add(window.getContentPane());
@@ -283,10 +287,10 @@ public class GUIMain extends JFrame {
 		
 		/*BUCKET BUTTONS*/
 		if(buttons.get(8) && bucketPos<=255-BUCKET_INCREMENT) {
-			bucketPos+=BUCKET_INCREMENT; //L2?
+			bucketPos+=BUCKET_INCREMENT; //L2
 		}
 		else if(buttons.get(9) && bucketPos >= BUCKET_INCREMENT){
-			bucketPos -= BUCKET_INCREMENT; //R2?
+			bucketPos -= BUCKET_INCREMENT; //R2
 		}
 		
 		/*VELOCITY JOYSTICKS*/
@@ -323,8 +327,9 @@ public class GUIMain extends JFrame {
 	}
 	
 	private void drawTextInfo(Graphics2D g2d,int x,int y){
-		int bucketPosPercentage = (-OUT_bucketPos)*100/255;
-		int suspPosPercentage = (255-OUT_suspension)*100/255;
+		int bucketPosPercentage = (255-bucketPos)*100/255;
+		int suspPosPercentage = (255-suspensionPos)*100/255;
+		int augerSpeedPercentage = augerSpeed*100/255;
 		
 		g2d.setColor(Color.WHITE);
 				
@@ -342,22 +347,27 @@ public class GUIMain extends JFrame {
 		g2d.drawString("----OUTGOING TO SERVER ----", x, y); 
 		y+=LINE_SPACING;
 		g2d.drawString("Angular Velocity: ", x, y);
-		g2d.drawString(""+OUT_angVel+" ("+angVel+")", x+COLUMN_WIDTH, y);
+		g2d.drawString(""+OUT_angVel, x+COLUMN_WIDTH, y);
+		g2d.drawString("("+ new DecimalFormat("#.###").format(angVel)+")", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Linear Velocity: ", x, y);
-		g2d.drawString(""+OUT_linVel+" ("+linVel+")", x+COLUMN_WIDTH, y);
+		g2d.drawString(""+OUT_linVel, x+COLUMN_WIDTH, y);
+		g2d.drawString("("+new DecimalFormat("#.###").format(linVel)+")", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Door Open? : ", x, y);
 		g2d.drawString(""+OUT_doorOpen, x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Bucket Position : ", x, y);
-		g2d.drawString(""+bucketPos+"("+bucketPosPercentage+"% Up)", x+COLUMN_WIDTH, y);
+		g2d.drawString(""+bucketPos, x+COLUMN_WIDTH, y);
+		g2d.drawString("("+bucketPosPercentage+"% Up)", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Suspension Position: ",x,y);
-		g2d.drawString(""+ suspensionPos+"("+suspPosPercentage+"% Up)", x+COLUMN_WIDTH, y);
+		g2d.drawString(""+suspensionPos, x+COLUMN_WIDTH, y);
+		g2d.drawString("("+suspPosPercentage+"% Up)", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Auger Speed: ", x, y);
-		g2d.drawString(""+ augerSpeed, x+COLUMN_WIDTH, y);
+		g2d.drawString(""+augerSpeed, x+COLUMN_WIDTH, y);
+		g2d.drawString("("+augerSpeedPercentage+"% Up)", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
 	}
 	
 	private void keyCom(int key, String stopSign) {
@@ -411,7 +421,14 @@ public class GUIMain extends JFrame {
 			getFromTextBoxesAndSendVelocities();
 		}
 	}
-	
+	/**
+	 * 	Get values from textfields & send them to server
+	 */
+
+	private void sendTextBoxesValues() {
+		getFromTextBoxesAndSendVelocities();
+		//TODO: add other send methods
+	}
 	/**
 	 * Get values from textfields & send them to sendVelInfo
 	 */
@@ -423,7 +440,7 @@ public class GUIMain extends JFrame {
 		} catch (NumberFormatException nfe) {
 		}
 	}
-	
+
 	/**
 	 * Send the params to the server
 	 * @param linVel
