@@ -8,6 +8,8 @@
   <!-- Run map_builder -->
   <node pkg="map_builder" name="map_builder" type="map_builder.py" respawn="false"/>
   
+  <include file="$(find lunarex_2dnav)/hector_launchers/hector_mapping.launch" />
+
   <!--- Run rviz -->
   <!--- node pkg="rviz" type="rviz" name="rviz" args="-d $(find hector_slam_launch)/rviz_cfg/mapping_demo.vcg"/-->
 </launch>
