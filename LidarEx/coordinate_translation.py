@@ -28,6 +28,44 @@ def closestCorner(xPos, yPos, xcor, ycor):
       corner = (xcor[i], ycor[i])
   return corner
 
+
+#xAxisPoint -- corner2
+#localOrigin -- corner 1
+#yAxisPoint -- corner4
+
+#goal_x_arena = arenaCoords[0]
+#goal_y_arena = arenaCoords[1]
+
+#corner1 must be the bottom left point
+#corner2 "bottom right"
+#corner3 "top right"
+#corner4 "top left"
+
+#all parameters are tuples
+def arena2Global(arenaCoords, corner1, corner2, corner3, corner4):
+  x1ComponentDir = 1
+  y1ComponentDir = 1
+  if(corner2[0]-corner1[0] < 0):
+    x1ComponentDir = -1
+  if(corner2[1] - corner1[1] < 0):
+    y1ComponentDir = -1
+  
+  x2ComponentDir = 1
+  y2ComponentDir = 1
+  if(corner4[0] - corner1[0] < 0):
+    x2ComponentDir = -1
+  if(corner4[1] - corner1[1] < 0):
+    y2ComponentDir = -1
+  
+  theta = math.atan2(abs(corner1[1]-corner2[1]), abs(corner1[0]-corner2[0]))
+  
+  xGlobal = corner1[0] + x1ComponentDir*arenaCoords[0]*math.cos(theta)+x2ComponentDir*arenaCoords[1]*math.sin(theta)
+
+  yGlobal = corner1[1] + y1ComponentDir*arenaCoords[0]*math.sin(theta)+y2ComponentDir*arenaCoords[1]*math.cos(theta)
+  
+  a = (xGlobal, yGlobal)
+  return a    
+
 #returns coordinates of closest
 def getYAxisPoint(xPos, yPos, xcor, ycor):
   xtemp = xcor[:]
@@ -41,7 +79,7 @@ def getYAxisPoint(xPos, yPos, xcor, ycor):
 #  return closestCorner(localOrigin[0], localOrigin[1], xtemp, ytemp)
   return closestCorner(xPos, yPos, xtemp, ytemp)
 
-def findGlobalCoords(localCoords):
+def findGlobalCoords(arenaCoords):
   x1ComponentDir = 1
   y1ComponentDir = 1
   if(xAxisPoint[0]-localOrigin[0] < 0):
@@ -58,9 +96,9 @@ def findGlobalCoords(localCoords):
   
   theta = math.atan2(abs(localOrigin[1]-xAxisPoint[1]), abs(localOrigin[0]-xAxisPoint[0]))
   
-  xGlobal = localOrigin[0] + x1ComponentDir*localCoords[0]*math.cos(theta)+x2ComponentDir*localCoords[1]*math.sin(theta)
+  xGlobal = localOrigin[0] + x1ComponentDir*arenaCoords[0]*math.cos(theta)+x2ComponentDir*arenaCoords[1]*math.sin(theta)
 
-  yGlobal = localOrigin[1] + y1ComponentDir*localCoords[0]*math.sin(theta)+y2ComponentDir*localCoords[1]*math.cos(theta)
+  yGlobal = localOrigin[1] + y1ComponentDir*arenaCoords[0]*math.sin(theta)+y2ComponentDir*arenaCoords[1]*math.cos(theta)
   
   a = (xGlobal, yGlobal)
   return a
@@ -73,14 +111,9 @@ def isInObstacleArea(globalCoords):
   corner1 = findGlobalCoords((0, 200))
   corner2 = findGlobalCoords((156, 100))
   corner3 = findGlobalCoords((156, 200))
-  print corner0
-  print corner1
-  print corner2
-  print corner3
+    
   verts = np.array([[corner0[0], corner0[1]], [corner1[0], corner1[1]], [corner2[0], corner2[1]], [corner3[0], corner3[1]]])
-  
-  #nx.make_lunarex_robot()
-
+    
   if(nx.pnpoly(globalCoords[0],globalCoords[1], verts)==1):
     return True
   return False
