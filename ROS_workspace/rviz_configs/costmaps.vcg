@@ -1,0 +1,103 @@
+Background\ ColorB=0
+Background\ ColorG=0
+Background\ ColorR=0
+Camera\ Config=43.6349 0 0 0
+Camera\ Type=rviz::FixedOrientationOrthoViewController
+Fixed\ Frame=/map
+Grid.Alpha=0.5
+Grid.Cell\ Size=1
+Grid.ColorB=0.5
+Grid.ColorG=0.5
+Grid.ColorR=0.5
+Grid.Enabled=1
+Grid.Line\ Style=0
+Grid.Line\ Width=0.03
+Grid.Normal\ Cell\ Count=0
+Grid.OffsetX=0
+Grid.OffsetY=0
+Grid.OffsetZ=0
+Grid.Plane=0
+Grid.Plane\ Cell\ Count=10
+Grid.Reference\ Frame=<Fixed Frame>
+GridCells.Alpha=1
+GridCells.ColorB=0
+GridCells.ColorG=1
+GridCells.ColorR=0.1
+GridCells.Enabled=1
+GridCells.Topic=/move_base/local_costmap/obstacles
+GridCells2.Alpha=1
+GridCells2.ColorB=1
+GridCells2.ColorG=0.666667
+GridCells2.ColorR=0
+GridCells2.Enabled=1
+GridCells2.Topic=/move_base/local_costmap/inflated_obstacles
+GridCells3.Alpha=1
+GridCells3.ColorB=1
+GridCells3.ColorG=1
+GridCells3.ColorR=1
+GridCells3.Enabled=1
+GridCells3.Topic=/move_base/local_costmap/unknown_space
+Path.Alpha=1
+Path.ColorB=0
+Path.ColorG=1
+Path.ColorR=0.1
+Path.Enabled=1
+Path.Topic=/move_base/TrajectoryPlannerROS/global_plan
+Path2.Alpha=1
+Path2.ColorB=0.498039
+Path2.ColorG=1
+Path2.ColorR=1
+Path2.Enabled=1
+Path2.Topic=/move_base/TrajectoryPlannerROS/local_plan
+Polygon.Alpha=1
+Polygon.ColorB=0
+Polygon.ColorG=0
+Polygon.ColorR=1
+Polygon.Enabled=1
+Polygon.Topic=/move_base/local_costmap/robot_footprint
+Pose.Alpha=1
+Pose.ColorB=0
+Pose.ColorG=0.1
+Pose.ColorR=1
+Pose.Enabled=1
+Pose.Head\ Length=0.3
+Pose.Head\ Radius=0.2
+Pose.Shaft\ Length=1
+Pose.Shaft\ Radius=0.1
+Pose.Shape=0
+Pose.Topic=/move_base/current_goal
+Property\ Grid\ Splitter=410,78
+Property\ Grid\ State=expanded=.Global Options,Grid.Enabled,Polygon.Enabled,GridCells.Enabled,GridCells2.Enabled,GridCells3.Enabled,Pose.Enabled,Pose.Shape Properties,Path.Enabled,Path2.Enabled;splitterratio=0.5
+QMainWindow=000000ff00000000fd00000003000000000000011d0000023afc0200000001fb000000100044006900730070006c00610079007301000000360000023a000000ee00ffffff00000001000001310000023afc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000036000000a80000006700fffffffb0000000a0056006900650077007301000000e4000000fd000000bb00fffffffb0000001200530065006c0065006300740069006f006e01000001e7000000890000006700ffffff00000003000005560000003efc0100000001fb0000000800540069006d0065010000000000000556000002bf00ffffff000002fc0000023a00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+Target\ Frame=<Fixed Frame>
+Tool\ 2D\ Nav\ GoalTopic=/move_base_simple/goal
+Tool\ 2D\ Pose\ EstimateTopic=initialpose
+[Display0]
+ClassName=rviz::GridDisplay
+Name=Grid
+[Display1]
+ClassName=rviz::PolygonDisplay
+Name=Polygon
+[Display2]
+ClassName=rviz::GridCellsDisplay
+Name=GridCells
+[Display3]
+ClassName=rviz::GridCellsDisplay
+Name=GridCells2
+[Display4]
+ClassName=rviz::GridCellsDisplay
+Name=GridCells3
+[Display5]
+ClassName=rviz::PoseDisplay
+Name=Pose
+[Display6]
+ClassName=rviz::PathDisplay
+Name=Path
+[Display7]
+ClassName=rviz::PathDisplay
+Name=Path2
+[Window]
+Height=720
+Width=1366
+X=0
+Y=0

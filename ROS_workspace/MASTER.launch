@@ -24,6 +24,6 @@
 	<!--node name="cmd_node" pkg="simple_navigation_goals" type="simple_navigation_goals.py" /-->
 
 	<!---STARTS RVIZ-->
-	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find hector_slam_launch)/rviz_cfg/mapping_demo.vcg"/>
+	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find lunarex_2dnav)/costmaps.vcg"/>
 </launch>
 

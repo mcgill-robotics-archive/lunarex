@@ -3,6 +3,7 @@
 
 define LidarEx ranger
 #define the lidar (called a ranger) so that it can be instantiated later
+
 (
   sensor(
     # laser-specific properties
@@ -17,7 +18,7 @@ define LidarEx ranger
   
   model(
 	#physical model properties
-	color "blue"
+	color "orange"
     scount 1
 
     size [ 0.060 0.060 0.087 ]	#length x width x height
@@ -29,10 +30,10 @@ define LidarEx ranger
 define lunabot position
 (
   size [1.20 0.75 0.3]  #length x width x height
-  origin [0 0 0 0] #define centre of rotation - no idea how this works
+  # origin [? ? ? ?] #define centre of rotation
   # localization_origin [0 0 0] #initial position
   
-  # the shape of the robot.  (identify points going ccw around robot, origin in bottom left)
+  # the shape of the robot. rectangular for now. (identify points going ccw around robot, origin in bottom left
   block( 
 
    # points 4
@@ -41,7 +42,7 @@ define lunabot position
    # point[1] [ 0.0 0.75 ]
    # point[0] [ 0.0 0.0 ]
     
-    #points 24
+    points 24
     #point[0]  [0.15 0.0]
     #point[1]  [0.15 0.38]
     #point[2]  [0.0 0.38]
@@ -67,37 +68,6 @@ define lunabot position
     #point[22] [0.60 0.38]
     #point[23] [0.60 0.0]
 
-	# -- Including front lidar mount
-
-		#points 24
-#	  point[0]  [0.0 0.15]
-#     point[1]  [0.38 0.15]
-#     point[2]  [0.38 0.0]
-#     point[3]  [0.62 0.0]
-#     point[4]  [0.62 0.15]
-#     point[5]  [0.96 0.15]
-#     point[6]  [0.96 0.0]
-#     point[7]  [1.22 0.0]
-#     point[8]  [1.22 0.15]
-#     point[9]  [1.29 0.15]
-#     point[10] [1.29 0.30]
-#     point[11] [1.45 0.30]
-#     point[12] [1.45 0.45]
-#     point[13] [1.29 0.45]
-#     point[14] [1.29 0.60]
-#     point[15] [1.22 0.60]
-#     point[16] [1.22 0.75]
-#     point[17] [0.96 0.75]
-#     point[18] [0.96 0.60]
-#     point[19] [0.62 0.60]
-#     point[20] [0.62 0.75]
-#     point[21] [0.38 0.75]
-#     point[22] [0.38 0.60]
-#     point[23] [0.0 0.60]
-
-	# -- Excluding front lidar mount
-
-	points 20
     point[0]  [0.0 0.15]
     point[1]  [0.38 0.15]
     point[2]  [0.38 0.0]
@@ -108,18 +78,20 @@ define lunabot position
     point[7]  [1.22 0.0]
     point[8]  [1.22 0.15]
     point[9]  [1.29 0.15]
-    point[10] [1.29 0.60]
-    point[11] [1.22 0.60]
-    point[12] [1.22 0.75]
-    point[13] [0.96 0.75]
-    point[14] [0.96 0.60]
-    point[15] [0.62 0.60]
-    point[16] [0.62 0.75]
-    point[17] [0.38 0.75]
-    point[18] [0.38 0.60]
-    point[19] [0.0 0.60]
-
-
+    point[10] [1.29 0.30]
+    point[11] [1.45 0.30]
+    point[12] [1.45 0.45]
+    point[13] [1.29 0.45]
+    point[14] [1.29 0.60]
+    point[15] [1.22 0.60]
+    point[16] [1.22 0.75]
+    point[17] [0.96 0.75]
+    point[18] [0.96 0.60]
+    point[19] [0.62 0.60]
+    point[20] [0.62 0.75]
+    point[21] [0.38 0.75]
+    point[22] [0.38 0.60]
+    point[23] [0.0 0.60]
 
     z [0 0.7] # the height of the robot
    
@@ -130,6 +102,7 @@ define lunabot position
   
   ranger_return 0
   laser_return 0	#not sure if these are necessary, make it reflect laser/ranger beams or not
+  
 )
 
 
@@ -184,9 +157,9 @@ lunabot
 (		  
   # can refer to the robot by this name
   name "lunabot"
-  pose [0.7 -2 0 90 ]	#initial position, (then rotation?), in the x-right y-up stage coordinates
+  pose [0.86 -2.62 0 90 ]	#initial position, (then rotation?), in the x-right y-up stage coordinates
   color "red" 
-  LidarEx(pose [0.65 0.35 0 0]) # call Lidar (ie place on on the lunabot) and position it relative to robot (i think its x y z theta)
+  LidarEx(pose [0.3 0 0 0]) # call Lidar (ie place on on the lunabot) and position it relative to robot (i think its x y z theta)
   #there's also this thing where the default TF is [0 0 .15 0] and so I think that it is added onto this pose, and so the resulting pose puts the lidar's z position at 0.15 relative to /base_link
  
  # ctrl "wander"  do not need this for now
