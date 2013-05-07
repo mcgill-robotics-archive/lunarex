@@ -3,7 +3,7 @@
 <launch>
 
   <!-- Run Kinect Service Server -->
-  <node pkg="kinect_node" name="kinect_srv_server" type="kinect_srv_server.py" respawn="false"/>
+  <!--node pkg="kinect_node" name="kinect_srv_server" type="kinect_srv_server.py" respawn="false"/-->
 
   <!-- Run map_builder -->
   <node pkg="map_builder" name="map_builder" type="map_builder.py" respawn="false"/>

@@ -25,11 +25,10 @@ vertical_view_angle = 43 # in degrees
 horizontal_view_angle = 57 # in degrees
 vert_angle = vertical_view_angle * math.pi / 180# in rads
 horiz_angle = horizontal_view_angle * math.pi / 180 # in rads
-<<<<<<< HEAD
-height_of_kinect =77 # cm
-=======
-height_of_kinect =94 # cm
->>>>>>> c75658e8137d304960506a79f34c60f0e1bbc9d7
+
+
+height_of_kinect =92 # cm
+
 Xmid = width/2
 Zmid = height/2
  
@@ -176,7 +175,7 @@ def createMap():
 
     #Filter with Relative Height from Every Adjacent Position, 
     # it is assumed that the case with the greatest absolute value is the abstacle
-    height_difference_threshold = 4 #cm
+    height_difference_threshold = 6 #cm
     for y in range(1, len(sobel_filter )-1):
 	for x in range(1,len(sobel_filter[0])-1):
 		if (projection[y][x][1] == 0):
