@@ -8,3 +8,5 @@ local_costmap:
   width: 20.0 
   height: 20.0 
   resolution: 0.05
+
+  map_type: costmap

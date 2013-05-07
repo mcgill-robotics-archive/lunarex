@@ -2,7 +2,12 @@ global_costmap:
   global_frame: /map
   robot_base_frame: /base_link 
   update_frequency: 1.0
-  width: 400 
-  height: 800
-  static_map: true 
-  rolling_window: false
+
+  static_map: false 
+  rolling_window: true
+
+  width: 26
+  height: 26
+  resolution: 0.025
+
+  map_type: costmap
