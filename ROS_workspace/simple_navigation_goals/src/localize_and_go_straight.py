@@ -108,7 +108,7 @@ print 'Sending 3rd goal...'
 # display_corner_detector_output(corner_detector_response)
 '''
 print 'Moving forward...'
-goal.target_pose.pose.position.x = 4.0
+goal.target_pose.pose.position.x = 5.25
 goal.target_pose.pose.position.y = 0.0 
 #quat = tf.transformations.quaternion_from_euler(0, 0, 0) #was 0, 0, math.pi
 #goal.target_pose.pose.orientation = Quaternion(*quat)

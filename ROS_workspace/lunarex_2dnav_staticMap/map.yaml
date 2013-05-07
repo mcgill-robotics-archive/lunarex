@@ -1,0 +1,6 @@
+mage: $(find lunarex_2dnav_staticMap)/emptyMap2.pgm
+resolution: 0.01
+origin: [0.0, 0.0, 0.0]
+occupied_thresh: 70
+free_thresh: 10
+negate: 0
