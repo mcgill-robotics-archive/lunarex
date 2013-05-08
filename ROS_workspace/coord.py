@@ -36,11 +36,13 @@ def arena2mobile(arenaCoords, slam_out_pose, corner1, corner2, corner3, corner4,
   return (goal_x_mobile, goal_y_mobile)
 
 def hector2global(slam_out_pose, resolution, global_map_size):
+  #meters to cells
+
   x_hector = slam_out_pose.pose.position.x
   y_hector = slam_out_pose.pose.position.y
 
-  x_temp = x_hector - global_map_size/2
-  y_temp = y_hector - global_map_size/2
+  x_temp = x_hector - global_map_size*resolution/2
+  y_temp = y_hector - global_map_size*resolution/2
 
   x_global = -1*y_temp / resolution #resolution in m/cell, see documentation on google site for logic here
   y_global = x_temp / resolution
