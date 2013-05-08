@@ -2,7 +2,7 @@
 
 #IMPORTS
 import roslib; roslib.load_manifest('simple_navigation_goals')
-# import coord  Something to this effect
+import corner_detector.coord  as coord
 
 
 #--packages
@@ -29,6 +29,9 @@ DIG_HEIGHT_CMD = 200 #what command should be sent to the suspension LAs to corre
 TRAVEL_HEIGHT_CMD = 0 # what command should be sent to the suspension LAs to correspond to travelling - is 0 all the way up?
 DIG_DURATION = 2 # number of circles to trace while digging - half a circle counts as 1 it's really the number of times the robot faces backwards
 SUSP_SLEEP_TIME = 2000 # how much time (milliseconds) to leave to allow the suspension linear actuators to actuate
+ARENA_WIDTH = 3.88
+ARENA_LENGTH = 7.38
+MINING_BOUNDARY_LOCATION = 4.44  # distance of boundary to lunabin
 
 #--state vars
 corner_detector_request = corner_detectorRequest()
@@ -191,6 +194,21 @@ def setAugerSpeed(desiredSpeed):
 			auger_Speed_pub.publish(auger_speed)
 			time.sleep(TIME_BETWEEN_AUGER_INCREMENTS) #milliseconds
 
+def goTo(x,y,theta):
+	# send a specified goal in a compact form
+	# All three parameters in Arena coordinates
+
+	nextGoal = coord.arena2mobile((x,y))
+
+	goal.target_pose.pose.position.x = nextGoal[0]
+	goal.target_pose.pose.position.y = nextGoal[1]
+	quat = tf.transformations.quaternion_from_euler(0, 0, arenaAngle2mobileAngle(theta, LR_corner, RR_corner, RF_corner, LF_corner)) #was 0, 0, math.pi
+	goal.target_pose.pose.orientation = Quaternion(*quat)
+
+	client.send_goal(goal)  # Sends the goal to the action server.
+	client.wait_for_result() # Waits for the server to finish performing the action.
+
+
 class Velocity:
     def __init__(self, x, y, z):
         self.x = x
@@ -213,10 +231,10 @@ susp_LA_pub = rospy.Publisher("susp_pos", std_msgs.msg.UInt8)	# publish suspensi
 pub_vel = rospy.Publisher("cmd_vel", geometry_msgs.msg.Twist)	# publish velocities
 
 #--Init corner detector
-# rospy.loginfo("Started waiting for corner detector service")
-# rospy.wait_for_service('corner_detector_srv')
-# rospy.loginfo("Done waiting for corner detector service")
-# corner_detector_proxy = rospy.ServiceProxy('corner_detector_srv', corner_detector)
+rospy.loginfo("Started waiting for corner detector service")
+rospy.wait_for_service('corner_detector_srv')
+rospy.loginfo("Done waiting for corner detector service")
+corner_detector_proxy = rospy.ServiceProxy('corner_detector_srv', corner_detector)
 
 #--Init actionlib
 client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -231,14 +249,17 @@ goal.target_pose.header.stamp = rospy.get_rostime()
 
 #PERFORM FIRST LOCALIZATION
 #--Perform rotation 
+#this should not use the goTo method because we want to full a full 360, and cant be sure we wont turn one way and back again
+
 goal.target_pose.pose.position.x = 0.0
 goal.target_pose.pose.position.y = 0.0 
 quat = tf.transformations.quaternion_from_euler(0, 0, math.pi) #was 0, 0, math.pi
 goal.target_pose.pose.orientation = Quaternion(*quat)
 
 #--perform first 180deg
-client.send_goal(goal)  # Sends the goal to the action server.
-client.wait_for_result() # Waits for the server to finish performing the action.
+client.send_goal(goal)  
+client.wait_for_result() 
+
 
 #--perform second 180deg
 client.send_goal(goal)  
@@ -247,16 +268,26 @@ client.wait_for_result()
 #--TODO Add feedback stuff 
 
 #--Call corner detector service & display results
-# corner_detector_response = corner_detector_proxy(corner_detector_request)
-# display_corner_detector_output(corner_detector_response)
+corner_detector_response = corner_detector_proxy(corner_detector_request)
+display_corner_detector_output(corner_detector_response)
 
-goal.target_pose.pose.position.x = 4.0
-goal.target_pose.pose.position.y = 0.0 
-quat = tf.transformations.quaternion_from_euler(0, 0, 0) #was 0, 0, math.pi
-goal.target_pose.pose.orientation = Quaternion(*quat)
 
-client.send_goal(goal)  
-client.wait_for_result() 
+LR_corner = (corner_detector_response.left_bottom_corner[0], corner_detector_response.left_bottom_corner[1])
+RR_corner =  (corner_detector_response.right_bottom_corner[0], corner_detector_response.right_bottom_corner[1])
+LF_corner = corner_detector_response.left_top_corner[0], corner_detector_response.left_top_corner[1])
+RF_corner = corner_detector_response.right_top_corner[0], corner_detector_response.right_top_corner[1])
+
+
+#Go to start of mining area
+goTo(ARENA_WIDTH/2.0, MINING_BOUNDARY_LOCATION, 0)
+
+
 
 #EXCAVATE
 excavate()
+
+#Return home and dump
+goTo(ARENA_WIDTH/2.0, 0.9, math.pi)	#need to callibrate y position so as not to bump into wall or obstacle
+goTo(ARENA_WIDTH/2.0, 0.9, math.pi)	#spin around
+
+
