@@ -23,10 +23,10 @@ from corner_detector.srv import *
 
 #GLOBAL VARS
 #--constants
-DIG_HEIGHT = 200 #what command should be sent to the suspension LAs to correspond to digging - is 255 all the way down?
-TRAVEL_HEIGHT = 0 # what command should be sent to the suspension LAs to correspond to travelling - is 0 all the way up?
+DIG_HEIGHT_CMD = 200 #what command should be sent to the suspension LAs to correspond to digging - is 255 all the way down?
+TRAVEL_HEIGHT_CMD = 0 # what command should be sent to the suspension LAs to correspond to travelling - is 0 all the way up?
 DIG_DURATION = 2 # number of circles to trace while digging - half a circle counts as 1 it's really the number of times the robot faces backwards
-
+SUSP_SLEEP_TIME = 2000 # how much time (milliseconds) to leave to allow the suspension linear actuators to actuate
 
 #--state vars
 corner_detector_request = corner_detectorRequest()
@@ -111,7 +111,9 @@ def excavate():
 	#-- go to the starting point
 	goal.target_pose.pose.position.x = START_X
 	goal.target_pose.pose.position.y = START_Y
-	goal.target_pose.pose.orientation.w = START_ANG
+	quat = tf.transformations.quaternion_from_euler(0, 0, start_ANG * math.pi/180.0) #was 0, 0, math.pi
+	goal.target_pose.pose.orientation = Quaternion(*quat)
+	
 
 	client.send_goal(goal)  # Sends the goal to the action server.
 	client.wait_for_result() # Waits for the server to finish performing the action.
@@ -120,8 +122,9 @@ def excavate():
 	setAugerSpeed(255)	#call custom method
 	
 	#-- lower suspension to appropriate height
-	susp_LA_pub.publish(DIG_HEIGHT)	# Send suspension info
-		
+	susp_LA_pub.publish(DIG_HEIGHT_CMD)	# Send suspension info
+	time.sleep(SUSP_SLEEP_TIME)	#wait to actuate
+
 	#-- Drive in circles
 	circlesCompleted = 0
 	alreadyIncremented = False
@@ -142,7 +145,8 @@ def excavate():
 	pub_vel.publish(Velocity(0.0, 0.0, 0.0), Velocity(0.0, 0.0, 0.0))
 	
 	#-- lift suspension
-	susp_LA_pub.publish(TRAVEL_HEIGHT)	# Send suspension info
+	susp_LA_pub.publish(TRAVEL_HEIGHT_CMD)	# Send suspension info
+	time.sleep(SUSP_SLEEP_TIME)	#wait to actuate
 
 	#-- stop auger
 	setAugerSpeed(0);
@@ -165,7 +169,8 @@ def excavate():
 
 def setAugerSpeed(desiredSpeed):
 	# smoothly changes auger speed from current to desired (0-255)
-	INCREMENT = 10	
+	INCREMENT = 10
+	TIME_BETWEEN_AUGER_INCREMENTS = 100 #milliseconds
 	# auger_speed needs to be global
 	
 	if auger_speed < desiredSpeed:
@@ -174,7 +179,7 @@ def setAugerSpeed(desiredSpeed):
 			auger_speed  = auger_speed + INCREMENT
 			auger_speed = min(auger_speed, 255)	#saturate
 			auger_Speed_pub.publish(auger_speed)
-			time.sleep(100) #milliseconds
+			time.sleep(TIME_BETWEEN_AUGER_INCREMENTS) #milliseconds
 			
 	elif auger_speed > desiredSpeed:
 		while auger_speed > desiredSpeed:
@@ -182,7 +187,7 @@ def setAugerSpeed(desiredSpeed):
 			auger_speed = auger_speed - INCREMENT
 			auger_speed = max(auger_speed, 0) #saturate
 			auger_Speed_pub.publish(auger_speed)
-			time.sleep(100) #milliseconds
+			time.sleep(TIME_BETWEEN_AUGER_INCREMENTS) #milliseconds
 
 class Velocity:
     def __init__(self, x, y, z):
