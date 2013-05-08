@@ -57,7 +57,7 @@ def arena2Global(arenaCoords, corner1, corner2, corner3, corner4):
   if(corner4[1] - corner1[1] < 0):
     y2ComponentDir = -1
   
-  theta = math.atan2(abs(corner1[1]-corner2[1]), abs(corner1[0]-corner2[0]))
+  theta = math.atan2(abs(corner1[1]-corner2[1]), abs(corner1[0]-corner2[0]))  #angle of bottom wall of arena w.r.t. the positive global x axis
   
   xGlobal = corner1[0] + x1ComponentDir*arenaCoords[0]*math.cos(theta)+x2ComponentDir*arenaCoords[1]*math.sin(theta)
 
