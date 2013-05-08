@@ -1,9 +1,9 @@
 #!/usr/bin/env python
+import sys
+sys.path.append("~/McGill_LunarEx_2013/ROS_workspace/")
 
 #IMPORTS
 import roslib; roslib.load_manifest('simple_navigation_goals')
-import corner_detector.coord  as coord
-
 
 #--packages
 import rospy
@@ -11,7 +11,7 @@ import tf
 import math	#for cos, sin, pi
 import actionlib  #CLIENT API: http://www.ros.org/doc/api/actionlib/html/classactionlib_1_1simple__action__client_1_1SimpleActionClient.html#a186f5d08f708c020b5f321bec998caff
 import time
-from tf.transformations import euler_from_quaternion
+import coord
 
 #--messages
 from move_base_msgs.msg import MoveBaseAction
@@ -21,7 +21,7 @@ from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import OccupancyGrid
 from nav_msgs.msg import MapMetaData
 from corner_detector.srv import *
-
+# import corner_detector.coord as coord #import must happen before roslib
 
 #GLOBAL VARS
 #--constants
@@ -36,11 +36,14 @@ MINING_BOUNDARY_LOCATION = 4.44  # distance of boundary to lunabin
 #--state vars
 corner_detector_request = corner_detectorRequest()
 corner_detector_response = 0
+
 hector_heading_deg = 0 
 hector_pos_x = 0
 hector_pos_y = 0
+#global_map_res
 
 auger_speed = 0 #current speed: 0-255
+slam_out_pose= PoseStamped()
 
 #CALLBACKS
 def map_callback(data):
@@ -50,13 +53,16 @@ def map_callback(data):
 def map_metadata_callback(data):
 	#rospy.loginfo("In map metadata callback")
 	corner_detector_request.map_meta=data	
+	global global_map_res
+	global_map_res = data.resolution
+	rospy.loginfo("got a map with resolution: "+str(global_map_res))
+	global global_map_size
+	global_map_size = data.width #ASSUMES SQUARE MAP!
+	if(data.width != data.height):
+		ROS_WARN("Global map height =/= width")
 
 def slam_out_pose_callback(data):
 	slam_out_pose=data
-	hector_headings = euler_from_quaternion([slam_out_pose.pose.orientation.x,slam_out_pose.pose.orientation.y, slam_out_pose.pose.orientation.z, slam_out_pose.pose.orientation.w])
-	hector_heading_deg = hector_headings[2]*(180.0/math.pi)
-	hector_pos_x = slam_out_pose.pose.position.x #x increases forward (vert) from the robot
-	hector_pos_y = slam_out_pose.pose.position.y #y increases left (horiz) from the robot
 
 #HELPERS
 def display_corner_detector_output(corner_detector_response):
@@ -116,7 +122,8 @@ def excavate():
 	#-- go to the starting point
 	goal.target_pose.pose.position.x = START_X
 	goal.target_pose.pose.position.y = START_Y
-	quat = tf.transformations.quaternion_from_euler(0, 0, start_ANG * math.pi/180.0) #was 0, 0, math.pi
+	arenaGoalAngle = coord.arenaAngle2mobileAngle(START_ANG * math.pi/180.0, slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner)
+	quat = tf.transformations.quaternion_from_euler(0, 0,arenaGoalAngle) 
 	goal.target_pose.pose.orientation = Quaternion(*quat)
 	
 
@@ -198,13 +205,16 @@ def goTo(x,y,theta):
 	# send a specified goal in a compact form
 	# All three parameters in Arena coordinates
 
-	nextGoal = coord.arena2mobile((x,y))
+	nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, global_map_res, global_map_size)
+	#(arenaCoords, slam_out_pose, corner1, corner2, corner3, corner4, resolution):
 
 	goal.target_pose.pose.position.x = nextGoal[0]
 	goal.target_pose.pose.position.y = nextGoal[1]
-	quat = tf.transformations.quaternion_from_euler(0, 0, arenaAngle2mobileAngle(theta, LR_corner, RR_corner, RF_corner, LF_corner)) #was 0, 0, math.pi
-	goal.target_pose.pose.orientation = Quaternion(*quat)
 
+	
+	quat = tf.transformations.quaternion_from_euler(0, 0, coord.arenaAngle2mobileAngle(theta, slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner)) #was 0, 0, math.pi
+	goal.target_pose.pose.orientation = Quaternion(*quat)
+	rospy.loginfo(str(goal))
 	client.send_goal(goal)  # Sends the goal to the action server.
 	client.wait_for_result() # Waits for the server to finish performing the action.
 
@@ -274,17 +284,16 @@ display_corner_detector_output(corner_detector_response)
 
 LR_corner = (corner_detector_response.left_bottom_corner[0], corner_detector_response.left_bottom_corner[1])
 RR_corner =  (corner_detector_response.right_bottom_corner[0], corner_detector_response.right_bottom_corner[1])
-LF_corner = corner_detector_response.left_top_corner[0], corner_detector_response.left_top_corner[1])
-RF_corner = corner_detector_response.right_top_corner[0], corner_detector_response.right_top_corner[1])
+LF_corner = (corner_detector_response.left_top_corner[0], corner_detector_response.left_top_corner[1])
+RF_corner = (corner_detector_response.right_top_corner[0], corner_detector_response.right_top_corner[1])
 
 
 #Go to start of mining area
 goTo(ARENA_WIDTH/2.0, MINING_BOUNDARY_LOCATION, 0)
 
 
-
 #EXCAVATE
-excavate()
+#excavate()
 
 #Return home and dump
 goTo(ARENA_WIDTH/2.0, 0.9, math.pi)	#need to callibrate y position so as not to bump into wall or obstacle

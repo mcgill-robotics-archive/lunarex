@@ -23,7 +23,7 @@ def slam_out_pose_callback(data):
 	print('rotation: ',[(180.0/math.pi)*i for i in angles])
 	#print(angles[2])
 
-rospy.init_node('move_base_client_py')
+rospy.init_node('get_hector_angle')
 
 rospy.Subscriber("slam_out_pose", PoseStamped, slam_out_pose_callback)
 
