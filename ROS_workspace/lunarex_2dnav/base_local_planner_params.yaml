@@ -4,11 +4,11 @@ TrajectoryPlannerROS:
 
 #1) ROBOT CONFIGURATION PARAMETERS
 
-    acc_lim_x: 0.5 #x acceleration limit of the robot in meters/sec^2
-    acc_lim_y: 0.5 #y acceleration limit of the robot in meters/sec^2
-    acc_lim_th: 0.5 #rotational acceleration limit of the robot in radians/sec^2
+    acc_lim_x: 0.8 #x acceleration limit of the robot in meters/sec^2
+    acc_lim_y: 0.8 #y acceleration limit of the robot in meters/sec^2
+    acc_lim_th: 0.8 #rotational acceleration limit of the robot in radians/sec^2
 
-    max_vel_x: 0.35  #maximum forward velocity allowed for the base in meters/sec
+    max_vel_x: 0.5  #maximum forward velocity allowed for the base in meters/sec
     min_vel_x: 0.1 #minimum forward velocity allowed for the base in meters/sec. It is useful to specify this to guarantee that velocity commands sent to a mobile base are high enough to allow the base to overcome friction.
 
     max_rotational_vel: 0.5 # maximum rotational velocity allowed for the base in radians/sec
@@ -44,7 +44,7 @@ TrajectoryPlannerROS:
 
     #meter_scoring: false #Whether the goal_distance_bias and path_distance_bias parameters should assume that goal_distance and path_distance are expressed in units of meters or cells. Cells are assumed by default. New in navigation 1.3.1
 
-    path_distance_bias: 0.25 # weighting for how much the controller should stay close to the path it was given
+    path_distance_bias: 0.15 # weighting for how much the controller should stay close to the path it was given
 
     goal_distance_bias: 0.95 # weighting for how much the controller should attempt to reach its local goal, also controls speed
 
