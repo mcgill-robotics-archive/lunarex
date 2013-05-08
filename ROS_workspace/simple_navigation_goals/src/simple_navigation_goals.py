@@ -2,6 +2,8 @@
 
 #IMPORTS
 import roslib; roslib.load_manifest('simple_navigation_goals')
+# import coord  Something to this effect
+
 
 #--packages
 import rospy

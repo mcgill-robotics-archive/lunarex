@@ -2,9 +2,27 @@ import math
 import numpy as np
 import matplotlib.nxutils as nx
 
+''' 
+Documentation of coordinate frames: https://sites.google.com/site/lunarex2013/software/coordinatetransformationreference
+'''
 
-def arena2Global(arenaCoords, corner1, corner2, corner3, corner4):
+
+def arena2mobile(arenaCoords):
+  # step1: transform arenaX and arenaY to global frame
+  # step2: get current position in Hector frame from hector mapping, and transform it to global frame
+  # step3: subtract the two sets of global coordinates, and multiply by the resolution to convert to meters
+
+  (goal_x_global, goal_y_global) = arena2global(goal_x_arena, goal_y_arena, bottomLeftCorner, bottomRightCorner, topRightCorner, topLeftCorner)
+  (current_x_global, current_y_global) = hector2global(slam_out_pose.pose.position.x, slam_out_pose.pose.position.y)
+  goal_x_mobile = (goal_x_global - current_x_global)*resolution
+  goal_y_mobile = (goal_y_global - current_y_global)*resolution
+  return (goal_x_mobile, goal_y_mobile)
+
+def arena2Global(arenaCoords, corner1, corner2, corner3, corner4, resolution):
   # corners defined in global coordinate system
+  # arenaCoords in meters
+  #output Global coords in cells
+
 
   #corner1 must be the bottom left point
   #corner2 "bottom right"
@@ -19,6 +37,10 @@ def arena2Global(arenaCoords, corner1, corner2, corner3, corner4):
   #goal_y_arena = arenaCoords[1]
 
   #all parameters are tuples
+
+  #scale by resolution
+  arenaCoords /= resolution   #resolution is m per cell
+
 
   x1ComponentDir = 1
   y1ComponentDir = 1
