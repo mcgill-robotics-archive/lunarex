@@ -1,0 +1,21 @@
+<package>
+  <description brief="command">
+
+     command
+
+  </description>
+  <author>Ernie</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/command</url>
+  <depend package="move_base_msgs"/>
+  <depend package="actionlib"/>
+  <depend package="roscpp"/>
+  <depend package="tf"/>
+  <depend package="rospy"/>
+  <depend package="corner_detector"/>
+  <depend package="map_builder"/>
+
+</package>
+
+

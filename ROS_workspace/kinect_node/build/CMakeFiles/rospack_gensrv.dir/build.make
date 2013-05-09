@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node
+CMAKE_SOURCE_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build
+CMAKE_BINARY_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build
 
 # Utility rule file for rospack_gensrv.
 
@@ -57,6 +57,6 @@ CMakeFiles/rospack_gensrv.dir/clean:
 .PHONY : CMakeFiles/rospack_gensrv.dir/clean
 
 CMakeFiles/rospack_gensrv.dir/depend:
-	cd /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles/rospack_gensrv.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles/rospack_gensrv.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/rospack_gensrv.dir/depend
 

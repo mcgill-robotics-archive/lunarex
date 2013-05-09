@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node
+CMAKE_SOURCE_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build
+CMAKE_BINARY_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build
 
 # Utility rule file for ROSBUILD_gensrv_lisp.
 
@@ -54,9 +54,9 @@ CMakeFiles/ROSBUILD_gensrv_lisp: ../srv_gen/lisp/_package_KinectData.lisp
 ../srv_gen/lisp/KinectData.lisp: /opt/ros/fuerte/share/rospy/manifest.xml
 ../srv_gen/lisp/KinectData.lisp: /opt/ros/fuerte/share/geometry_msgs/manifest.xml
 ../srv_gen/lisp/KinectData.lisp: /opt/ros/fuerte/share/sensor_msgs/manifest.xml
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../srv_gen/lisp/KinectData.lisp, ../srv_gen/lisp/_package.lisp, ../srv_gen/lisp/_package_KinectData.lisp"
-	/opt/ros/fuerte/share/roslisp/rosbuild/scripts/genmsg_lisp.py /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/srv/KinectData.srv
+	/opt/ros/fuerte/share/roslisp/rosbuild/scripts/genmsg_lisp.py /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/srv/KinectData.srv
 
 ../srv_gen/lisp/_package.lisp: ../srv_gen/lisp/KinectData.lisp
 
@@ -78,6 +78,6 @@ CMakeFiles/ROSBUILD_gensrv_lisp.dir/clean:
 .PHONY : CMakeFiles/ROSBUILD_gensrv_lisp.dir/clean
 
 CMakeFiles/ROSBUILD_gensrv_lisp.dir/depend:
-	cd /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles/ROSBUILD_gensrv_lisp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles/ROSBUILD_gensrv_lisp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/ROSBUILD_gensrv_lisp.dir/depend
 

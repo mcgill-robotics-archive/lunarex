@@ -14,7 +14,7 @@ killall roscore
 killall hokuyo_node
 
 echo "***setting Lidar port permissions.."
-sudo chmod a+rw /dev/ttyACM0
+sudo chmod a+rw /dev/ttyACM1
 
 echo "***Starting roscore"
 xterm -e roscore &
@@ -23,7 +23,7 @@ echo "***sleep a bit to wait for roscore"
 sleep 5
 
 echo "***Setting hokuyo_node port"
-rosparam set hokuyo_node/port /dev/ttyACM0 
+rosparam set hokuyo_node/port /dev/ttyACM1 
 
 echo "***set rosparam to get rid of annoying warning"
 rosparam set use_rep_117 true 

@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node
+CMAKE_SOURCE_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build
+CMAKE_BINARY_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build
 
 # Utility rule file for clean-test-results.
 
@@ -43,7 +43,7 @@ CMAKE_BINARY_DIR = /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/b
 include CMakeFiles/clean-test-results.dir/progress.make
 
 CMakeFiles/clean-test-results:
-	if ! rm -rf /home/everfor/.ros/test_results/kinect_node; then echo WARNING:\ failed\ to\ remove\ test-results\ directory ; fi
+	if ! rm -rf /home/ernie/.ros/test_results/kinect_node; then echo WARNING:\ failed\ to\ remove\ test-results\ directory ; fi
 
 clean-test-results: CMakeFiles/clean-test-results
 clean-test-results: CMakeFiles/clean-test-results.dir/build.make
@@ -58,6 +58,6 @@ CMakeFiles/clean-test-results.dir/clean:
 .PHONY : CMakeFiles/clean-test-results.dir/clean
 
 CMakeFiles/clean-test-results.dir/depend:
-	cd /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/everfor/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles/clean-test-results.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles/clean-test-results.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/clean-test-results.dir/depend
 
