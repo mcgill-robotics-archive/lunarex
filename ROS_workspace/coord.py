@@ -11,12 +11,12 @@ import tf
 Documentation of coordinate frames: https://sites.google.com/site/lunarex2013/software/coordinatetransformationreference
 '''
 
+#ANGLE TRANSFORMS
 def arenaAngle2hectorAngle(angle, LR_corner, RR_corner, LF_corner, RF_corner):
-    
-    theta = math.atan2((RR_corner[1]-LR_corner[1]), (RR_corner[0]-LR_corner[0]))  #angle of bottom wall of arena w.r.t. the positive global x axis
-    theta = theta * 180.0/math.pi + angle
-    rospy.loginfo("coord.arenaAngle2hectorAngle received: "+str(angle)+" and is returning: "+str(theta))
-    return theta
+  theta = math.atan2((RR_corner[1]-LR_corner[1]), (RR_corner[0]-LR_corner[0]))  #angle of bottom wall of arena w.r.t. the positive global x axis
+  theta = theta * 180.0/math.pi + angle
+  rospy.loginfo("coord.arenaAngle2hectorAngle received: "+str(angle)+" and is returning: "+str(theta))
+  return theta
 
 def arenaAngle2mobileAngle(arenaAngle, slam_out_pose, LR_corner, RR_corner, LF_corner, RF_corner):
   #interpret quaternion of current angle as radians on [-pi, pi]
@@ -27,6 +27,7 @@ def arenaAngle2mobileAngle(arenaAngle, slam_out_pose, LR_corner, RR_corner, LF_c
   rospy.loginfo("coord.arenaAngle2mobileAngle received: "+str(arenaAngle)+" and is returning: "+str(mobileAngle))
   return mobileAngle
 
+#POSITION TRANSFORMS
 def arena2mobile(arenaCoords, slam_out_pose, LR_corner, RR_corner, LF_corner, RF_corner, resolution, global_map_size):
   # step1: transform arenaX and arenaY to global frame  - these are goals
   # step2: get current position in Hector frame from hector mapping, and transform it to global frame
@@ -34,10 +35,11 @@ def arena2mobile(arenaCoords, slam_out_pose, LR_corner, RR_corner, LF_corner, RF
 
   (goal_x_global, goal_y_global) = arena2global(arenaCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolution)
   (current_x_global, current_y_global) = hector2global(slam_out_pose, resolution, global_map_size)
-  goal_x_mobile = (goal_x_global - current_x_global)*resolution
-  goal_y_mobile = (goal_y_global - current_y_global)*resolution
-  rospy.loginfo("coord.arena2mobile received: "+str(arenaCoords)+" and is returning: "+str(goal_x_mobile, goal_y_mobile))
-  return (goal_x_mobile, goal_y_mobile)
+  goal_x_mobile = (goal_y_global - current_y_global)*resolution
+  goal_y_mobile = -1.0*(goal_x_global - current_x_global)*resolution
+  mobile_coords = (goal_x_mobile, goal_y_mobile)
+  rospy.loginfo("coord.arena2mobile received: "+str(arenaCoords)+" and is returning: "+str(mobile_coords))
+  return mobile_coords
 
 def hector2global(slam_out_pose, resolution, global_map_size):
   #meters to cells
@@ -45,21 +47,22 @@ def hector2global(slam_out_pose, resolution, global_map_size):
   x_hector = slam_out_pose.pose.position.x
   y_hector = slam_out_pose.pose.position.y
 
-  x_temp = x_hector - global_map_size*resolution/2
+  #translate global frame origin to middle of map
+  x_temp = x_hector + global_map_size*resolution/2
   y_temp = y_hector - global_map_size*resolution/2
 
   x_global = -1*y_temp / resolution #resolution in m/cell, see documentation on google site for logic here
-  y_global = x_temp / resolution
+  y_global = x_temp / resolution 
 
-  rospy.loginfo("coord.hector2global received: x_hector="+str(x_hector)+" & y_hector="+str(y_hector)+" and is returning: "+str(x_global, y_global))
+  global_coords = (x_global, y_global)
+  rospy.loginfo("coord.hector2global received: x_hector="+str(x_hector)+" & y_hector="+str(y_hector)+" and is returning: "+str(global_coords))
 
-  return (x_global, y_global)
+  return global_coords
 
 def arena2global(arenaCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolution):
   # corners defined in global coordinate system
   # arenaCoords in meters
   #output Global coords in cells
-
 
   #corner1 must be the bottom left point
   #RR_corner "bottom right"
@@ -76,7 +79,7 @@ def arena2global(arenaCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolu
   #all parameters are tuples
 
   #scale by resolution
-  arenaCoords = (arenaCoords[0]/resolution, arenaCoords[1] / resolution)   #resolution is m per cell
+  arenaCoords_inCells = (int(arenaCoords[0]/resolution), int(arenaCoords[1] / resolution))   #resolution is m per cell
 
   x1ComponentDir = 1
   y1ComponentDir = 1
@@ -94,11 +97,11 @@ def arena2global(arenaCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolu
   
   theta = math.atan2(abs(LR_corner[1]-RR_corner[1]), abs(LR_corner[0]-RR_corner[0]))  #angle of bottom wall of arena w.r.t. the positive global x axis
   
-  xGlobal = LR_corner[0] + x1ComponentDir*arenaCoords[0]*math.cos(theta)+x2ComponentDir*arenaCoords[1]*math.sin(theta)
-  yGlobal = LR_corner[1] + y1ComponentDir*arenaCoords[0]*math.sin(theta)+y2ComponentDir*arenaCoords[1]*math.cos(theta)
+  xGlobal = LR_corner[0] + x1ComponentDir*arenaCoords_inCells[0]*math.cos(theta)+x2ComponentDir*arenaCoords_inCells[1]*math.sin(theta)
+  yGlobal = LR_corner[1] + y1ComponentDir*arenaCoords_inCells[0]*math.sin(theta)+y2ComponentDir*arenaCoords_inCells[1]*math.cos(theta)
   
   globalCoords = (xGlobal, yGlobal)
-  rospy.loginfo("coord.arena2global received: arenaCoord="+str(arenaCoords)+" and is returning: "+str(globalCoords))
+  rospy.loginfo("coord.arena2global received: arenaCoord="+str(arenaCoords)+" ,equal to arenaCoords_inCells="+str(arenaCoords_inCells)+ "; and is returning: "+str(globalCoords))
   return globalCoords    
 
 def isInObstacleArea(globalCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolution):

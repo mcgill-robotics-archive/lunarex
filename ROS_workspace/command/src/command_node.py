@@ -21,7 +21,6 @@ from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import OccupancyGrid
 from nav_msgs.msg import MapMetaData
 from corner_detector.srv import *
-# import corner_detector.coord as coord #import must happen before roslib
 
 #GLOBAL VARS
 #--constants
@@ -34,16 +33,30 @@ ARENA_LENGTH = 7.38
 MINING_BOUNDARY_LOCATION = 4.44  # distance of boundary to lunabin
 
 #--state vars
+#----corners
 corner_detector_request = corner_detectorRequest()
 corner_detector_response = 0
 
+#----pose-related
 hector_heading_deg = 0 
 hector_pos_x = 0
 hector_pos_y = 0
-#global_map_res
-
-auger_speed = 0 #current speed: 0-255
 slam_out_pose= PoseStamped()
+
+#----map
+#global_map_res, defined later
+#global_map_size, defined later
+
+#----actuators
+auger_speed = 0 #current speed: 0-255
+suspension_pos = 0
+
+#----control
+goal = MoveBaseGoal()
+#cmd-vel state var?
+
+#INFO: logging stuff to rosout
+#rospy.logerr / logwarn / loginfo
 
 #CALLBACKS
 def map_callback(data):
@@ -53,20 +66,22 @@ def map_callback(data):
 def map_metadata_callback(data):
 	#rospy.loginfo("In map metadata callback")
 	corner_detector_request.map_meta=data	
+
 	global global_map_res
 	global_map_res = data.resolution
-	rospy.loginfo("got a map with resolution: "+str(global_map_res))
+	rospy.loginfo("got a MAP with resolution: "+str(global_map_res))
+
 	global global_map_size
 	global_map_size = data.width #ASSUMES SQUARE MAP!
 	if(data.width != data.height):
-		ROS_WARN("Global map height =/= width")
+		rospy.logwarn("Global MAP height =/= width")
 
 def slam_out_pose_callback(data):
 	slam_out_pose=data
 
 #HELPERS
 def display_corner_detector_output(corner_detector_response):
-	rospy.loginfo("Corner detector output")
+	rospy.loginfo("CORNER detector output")
 	rospy.loginfo("Left bottom: "+str(corner_detector_response.left_bottom_corner))
 	rospy.loginfo("Right bottom: "+str(corner_detector_response.right_bottom_corner))
 	rospy.loginfo("Left top: "+str(corner_detector_response.left_top_corner))
@@ -110,9 +125,7 @@ def excavate():
 	AngVel = LinVel/DIG_RADIUS
 	
 	'''
-	
-
-	#-- parameters
+ 	#-- parameters
 	DIG_RADIUS = 0.875 #defines circular path for digging
 	START_X = 3.88/2 	#middle of lunarena width
 	START_Y = 7.38 - 2*DIG_RADIUS - 0.22	#offset from far wall by digCircle and safety factor
@@ -224,6 +237,9 @@ class Velocity:
         self.y = y
         self.z = z	
 
+#----------------------------------------------------------------------#
+#-----------------------START EXECUTION--------------------------------#
+#----------------------------------------------------------------------#
 
 #INIT NODE & ACTIONLIB
 #--Init node
@@ -252,7 +268,6 @@ client.wait_for_server() #Waits until the action server has started up and start
 rospy.loginfo("Done waiting for move_base action server")
 
 #--Creates a goal to send to the action server.
-goal = MoveBaseGoal()
 goal.target_pose.header.frame_id = "base_link"
 goal.target_pose.header.stamp = rospy.get_rostime()
 
@@ -269,17 +284,15 @@ goal.target_pose.pose.orientation = Quaternion(*quat)
 client.send_goal(goal)  
 client.wait_for_result() 
 
-
 #--perform second 180deg
 client.send_goal(goal)  
 client.wait_for_result() 
 
 #--TODO Add feedback stuff 
 
-#--Call corner detector service & display results
+#--Call corner detector service, display results & populate corner state vars
 corner_detector_response = corner_detector_proxy(corner_detector_request)
 display_corner_detector_output(corner_detector_response)
-
 
 LR_corner = (corner_detector_response.left_bottom_corner[0], corner_detector_response.left_bottom_corner[1])
 RR_corner =  (corner_detector_response.right_bottom_corner[0], corner_detector_response.right_bottom_corner[1])
@@ -293,7 +306,6 @@ RF_corner = (corner_detector_response.right_top_corner[0], corner_detector_respo
 
 #Go to start of mining area
 goTo(ARENA_WIDTH/2.0, MINING_BOUNDARY_LOCATION, 0)
-
 
 #EXCAVATE
 #excavate()

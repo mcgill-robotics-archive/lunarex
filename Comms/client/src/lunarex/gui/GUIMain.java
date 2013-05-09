@@ -1,19 +1,40 @@
 package lunarex.gui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.*;
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.Canvas;
+import java.awt.Checkbox;
+import java.awt.CheckboxGroup;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Label;
+import java.awt.Panel;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import joystick.JFrameWindow;
+import joystick.JInputJoystick;
+import joystick.JInputJoystickTest;
+import joystick.JoystickTest;
+import lunarex.input.KeyboardInput;
+import lunarex.network.Client;
 import net.java.games.input.Controller;
-import lunarex.controller.joystick.*;
-
-import lunarex.input.*;
-import lunarex.network.*;
 
 public class GUIMain extends JFrame {
 

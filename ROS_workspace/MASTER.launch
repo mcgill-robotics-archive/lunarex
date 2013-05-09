@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <launch>
+	<param name="use_sim_time" value="true" />
+
 	<!--STARTS STAGE-->
     <node pkg="stage" type="stageros" name="stage" output="screen" args="$(find lunarex_stage)/world/Lunarex_Stage.world">
 		<!--param name="pub_map_odom_transform" value="true"/>
