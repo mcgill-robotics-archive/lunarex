@@ -1,0 +1,81 @@
+void miningAckerman()
+{ 
+  digitalWrite(LF_motor_enable_pin, LF_motor_enable);
+  digitalWrite(RF_motor_enable_pin, RF_motor_enable);
+  digitalWrite(LR_motor_enable_pin, LR_motor_enable);
+  digitalWrite(RR_motor_enable_pin, RR_motor_enable);
+   
+   
+   if(linSpeed < 0) //changed from <= to < because '==' has a different case
+    {
+      LF_motor_dir = 0;
+      RF_motor_dir = 0;
+      LR_motor_dir = 0;
+      RR_motor_dir = 0;
+    }
+    
+    else if(linSpeed > 0)
+    {
+      LF_motor_dir = 1;
+      RF_motor_dir = 1;
+      LR_motor_dir = 1;
+      RR_motor_dir = 1;
+    }
+    
+
+    float ackRadius = abs(linSpeed)/abs(angSpeed);
+    float innerFront = 0;
+    float outerFront = 0;
+    float innerBack = atan(LENGTH/(ackRadius - (WIDTH/2.0)))*180/PI;
+    float outerBack = atan(LENGTH/(ackRadius + (WIDTH/2.0)))*180/PI;
+    
+    float R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
+    float rad1 = R1 - WIDTH/2;
+    float rad2 = R1 + WIDTH/2;
+    float rad3 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
+    float rad4 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
+    
+    
+    float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed));  //Will return +/- 1 for CCW or CW, respectively (note this variable is distinct from LF_motor_dir, RF_motor_dir, etc)
+    
+    if(dir>0.0)  //counter clockwise
+    {
+      
+      LF_servo_angle = 90 - innerFront;
+      RF_servo_angle = 90 - outerFront;
+      LR_servo_angle = 90 + innerBack;
+      RR_servo_angle = 90 + outerBack;
+      
+
+      
+      rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+      rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+      rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+      rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+    }
+    else if(dir<0.0)  //clockwise
+    {
+
+      LF_servo_angle = 90.0 + outerFront;
+      RF_servo_angle = 90.0 + innerFront;
+      LR_servo_angle = 90.0 - outerBack;
+      RR_servo_angle = 90.0 - outerBack;
+
+      LF_servo_angle = 90 + outerFront;
+      RF_servo_angle = 90 + innerFront;
+      LR_servo_angle = 90 - outerBack;
+      RR_servo_angle = 90 - innerBack;
+      
+      rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+      rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+      rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+      rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+    }
+    
+    //now for drive motor velocities
+    LF_wheel_rpm = (rad1 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    RF_wheel_rpm = (rad2 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    LR_wheel_rpm = (rad3 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    RR_wheel_rpm = (rad4 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+  }
+  
