@@ -48,11 +48,14 @@ public class GUIMain extends JFrame {
 	static final int PERC_COLUMN_WIDTH = 50;
 	static final int FONTSIZE = 20;
 
-	//FOR NETBOOK ON MCGILL NETWORK
-	//String ipAdressString = "142.157.36.7";
+	//FOR MACBOOK AIR ON MCGILL NETWORK
+	//String ipAdressString = "142.157.43.46";
 	
-	//FOR NETBOOK ON OUR NETWORK
-	String ipAdressString = "192.168.1.101";
+	//FOR MACBOOK AIR ON OUR NETWORK
+	String ipAdressString = "192.168.1.100";
+	
+	
+	
 	
 	//FOR LOCALHOST
 	//String ipAdressString = "127.0.0.1";
