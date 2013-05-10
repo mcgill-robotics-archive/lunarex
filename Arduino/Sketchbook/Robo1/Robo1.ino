@@ -81,20 +81,22 @@ int dumpActuator_pin = 7;
 int augerMotor_pin = 8;
 int doorPos_pin = 13;
 
-int LF_motor_dir_pin = 27;
-int RF_motor_dir_pin = 29;
-int LR_motor_dir_pin = 31;
-int RR_motor_dir_pin = 33;
 
-int LF_motor_enable_pin = 26;
-int RF_motor_enable_pin = 28;
-int LR_motor_enable_pin = 30;
-int RR_motor_enable_pin = 32;
+//the following 12 pins verified May 10 for the second time, due to crappy gitub
+int LF_motor_dir_pin = 32;
+int RF_motor_dir_pin = 30;
+int LR_motor_dir_pin = 28;
+int RR_motor_dir_pin = 26;
 
-int LF_motor_pin = 9;
-int RF_motor_pin = 10;
-int LR_motor_pin = 11;
-int RR_motor_pin = 12;
+int LF_motor_enable_pin = 33;
+int RF_motor_enable_pin = 31;
+int LR_motor_enable_pin = 29;
+int RR_motor_enable_pin = 27;
+
+int LF_motor_pin = 12;
+int RF_motor_pin = 11;
+int LR_motor_pin = 10;
+int RR_motor_pin = 9;
 
 //-----------Variables used to set motor speeds/enable/directions
 
