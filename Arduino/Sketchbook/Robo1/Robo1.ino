@@ -385,13 +385,6 @@ void doAckerman()
        outerBack = atan(c/(ackRadius + (WIDTH/2.0)))*180/PI;
        
     }
-    Serial.println("--");
-    Serial.println(innerFront);
-    Serial.println(outerFront);
-    Serial.println(innerBack);
-    Serial.println(outerBack);
-    Serial.println(ackRadius);
-    Serial.println(WIDTH/2.0);
     
     float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed));  //Will return +/- 1 for CCW or CW, respectively (note this variable is distinct from LF_motor_dir, RF_motor_dir, etc)
     
