@@ -212,7 +212,14 @@ def createMap():
     print str("      " )+str([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30])
     
 
-    
+    #ignore everything more than 3 m  away
+    for y in range(0, 11):
+		for x in range(1,len(sobel_filter[0])-1):
+			sobel_filter[y][x] = -1		
+
+
+
+
     return sobel_filter
 
 
