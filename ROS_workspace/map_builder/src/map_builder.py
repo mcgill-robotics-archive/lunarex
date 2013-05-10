@@ -164,8 +164,8 @@ class mapBuilder:
 
 
 	print "angle", self.angle
-	position_vector = [x,y]
-	print "addCoordinates" , position_vector
+	position_vector = [x,y] #the vector from kinect to obstacle, in kinect units
+	print "addCoordinates" , position_vector 
 	# rotate the vector to make it match the robot's heading
 	position_vector = self.rotateVector2D(position_vector , self.angle)
 
