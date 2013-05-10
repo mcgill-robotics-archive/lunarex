@@ -1,91 +1,0 @@
-10
-
-dir
-903
-http://tu-darmstadt-ros-pkg.googlecode.com/svn/trunk/hector_nist_arenas_gazebo/hector_nist_arena_elements/elements
-http://tu-darmstadt-ros-pkg.googlecode.com/svn
-
-
-
-2012-07-18T15:51:27.681415Z
-453
-meyer@fsr.tu-darmstadt.de
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-362d0299-bcd8-93f0-de3f-00335e8b5ee8
-
-manip_storage
-dir
-
-half_ramp
-dir
-
-small_wall_gap_no_tex
-dir
-
-corner_diag_120
-dir
-
-small_wall_triple_holes
-dir
-
-small_wall_no_tex
-dir
-
-wall_diag_120
-dir
-
-fiducial_barrel_high
-dir
-
-stepfield_red_diagonal
-dir
-
-fiducial_barrel
-dir
-
-wall_holes1
-dir
-
-victim_1
-dir
-
-tall_wall
-dir
-
-elevated_floor_120
-dir
-
-stepfield
-dir
-
-victim_with_box1
-dir
-
-full_ramp
-dir
-
-simple_elev_ramp
-dir
-
-spectator_120
-dir
-
-stairs_120
-dir
-
-small_wall
-dir
-

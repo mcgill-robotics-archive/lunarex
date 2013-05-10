@@ -1,43 +1,0 @@
-10
-
-dir
-903
-http://tu-darmstadt-ros-pkg.googlecode.com/svn/trunk/hector_models/hector_sensors_description/meshes
-http://tu-darmstadt-ros-pkg.googlecode.com/svn
-
-
-
-2012-10-23T13:57:54.201870Z
-659
-thorsten.graber@gmail.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-362d0299-bcd8-93f0-de3f-00335e8b5ee8
-
-asus_camera
-dir
-
-kinect_camera
-dir
-
-thermaleye_camera
-dir
-
-hokuyo_utm30lx
-dir
-
-sonar_sensor
-dir
-
