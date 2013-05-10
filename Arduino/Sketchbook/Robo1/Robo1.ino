@@ -370,11 +370,12 @@ void doAckerman()
     float innerBack = 0;
     float outerBack = 0;
     
-    float R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
-    float rad1 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
-    float rad2 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
-    float rad3 = R1 - WIDTH/2;
-    float rad4 = R1 + WIDTH/2;
+    	float R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
+	float rad1 = 0;
+	float rad2 = 0;
+	float rad3 = 0;
+	float rad4 = 0;
+   
     
      if(abs(innerFront)>MAX_ANGLE)    //innerfront wheel will always have to turn more, do double if this condition is met
     {
@@ -393,80 +394,51 @@ void doAckerman()
          LF_servo_angle = 90 - innerFront;
          RF_servo_angle = 90 - outerFront;
          LR_servo_angle = 90 + innerBack;
-          RR_servo_angle = 90 + outerBack;
+         RR_servo_angle = 90 + outerBack;
   
-      if(innerBack == 0.0)
-      {
-   	 	    R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
-   	 	    rad1 = R1 - WIDTH/2;
-   	 	    rad2 = R1 + WIDTH/2;
-   	 	    rad3 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
-  	 	    rad4 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
-	    }
+      	if(innerBack == 0.0)
+      	{
+		rad1 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
+   		rad2 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
+  		rad3 = R1 - WIDTH/2;
+    		rad4 = R1 + WIDTH/2;
+	}
 
-	    else
-      {
-          rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-          rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-		      rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-		      rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-      }
+	else
+      	{
+         	rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+          	rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+		rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+		rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+      	}
   }
   
   else if(dir<0.0)  //clockwise
   {
 
-      LF_servo_angle = 90.0 + outerFront;
-      RF_servo_angle = 90.0 + innerFront;
-      LR_servo_angle = 90.0 - outerBack;
-      RR_servo_angle = 90.0 - outerBack;
+      	LF_servo_angle = 90.0 + outerFront;
+      	RF_servo_angle = 90.0 + innerFront;
+     	LR_servo_angle = 90.0 - outerBack;
+      	RR_servo_angle = 90.0 - outerBack;
       
-	    if(innerFront == 0.0)
-	    {
-   	     	float rad1 = R1 + WIDTH/2;
-   	     	float rad2 = R1 - WIDTH/2;
-   	     	float rad3 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
-  	     	float rad4 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
-	    }
+	if(innerFront == 0.0)
+	{
+		rad1 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
+   		rad2 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
+  		rad3 = R1 + WIDTH/2;
+    		rad4 = R1 - WIDTH/2;
+	}
 
-	    else
-	    {
-		      rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-		      rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-	  	    rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-	  	    rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-	    }
+	else
+	{
+		rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+		rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+	  	rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+	  	rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+	}
   
   }
-    if(dir>0.0)  //counter clockwise
-    {
-      
-      LF_servo_angle = 90 - innerFront;
-      RF_servo_angle = 90 - outerFront;
-      LR_servo_angle = 90 + innerBack;
-      RR_servo_angle = 90 + outerBack;
-      
-
-      
-      rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-      rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-      rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-      rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-    }
-    else if(dir<0.0)  //clockwise
-    {
-
-      LF_servo_angle = 90.0 + outerFront;
-      RF_servo_angle = 90.0 + innerFront;
-      LR_servo_angle = 90.0 - outerBack;
-      RR_servo_angle = 90.0 - outerBack;
-      
-      rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-      rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-      rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-      rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-    }
-    
+   
     //now for drive motor velocities
     LF_wheel_rpm = (rad1 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
     RF_wheel_rpm = (rad2 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
@@ -651,5 +623,35 @@ void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_
   analogWrite(LR_motor_pin, LR_wheel_rpm);
   analogWrite(RR_motor_pin, RR_wheel_rpm);
 }
+
+/* if(dir>0.0)  //counter clockwise
+    {
+      
+      LF_servo_angle = 90 - innerFront;
+      RF_servo_angle = 90 - outerFront;
+      LR_servo_angle = 90 + innerBack;
+      RR_servo_angle = 90 + outerBack;
+      
+
+      
+      rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+      rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+      rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+      rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+    }
+    else if(dir<0.0)  //clockwise
+    {
+
+      LF_servo_angle = 90.0 + outerFront;
+      RF_servo_angle = 90.0 + innerFront;
+      LR_servo_angle = 90.0 - outerBack;
+      RR_servo_angle = 90.0 - outerBack;
+      
+      rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+      rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+      rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+      rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+    }
+    */
 
 
