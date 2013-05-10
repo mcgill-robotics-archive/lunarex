@@ -13,7 +13,7 @@ Order of Operations: (whats gunna happen in this section of code)
 //order got messed up - need to tweak this comment
 1. define nodehandle - rose node object 
 2. Initialize arduino variables that will be set in ROS
-3. subscribe to topics (point to arduino callback functions)d
+3. subscribe to topics (point to arduino callback functions)
 4. define arduino callback functions that set arduino variables
 5. create publishers for feedback
 6. nh.initNode() and subscribe to subscribers and advertise publishers in Setup()
@@ -149,8 +149,14 @@ int SEC_PER_MIN = 60;
 int GEAR_RATIO = 74;
 
 float TOL = 0.5;
-float STOP_THRESH = 0.9;
+float ANG_STOP_THRESH = 2.0;
+float LIN_STOP_THRESH = 0.9;
 
+int SUSP_INTERFERENCE_LIMIT = 150; //command sent to suspension actuators. values greater than this correspond to mining
+float MINING_MAX_SERVO_ANGLE_FRONT = 0;
+float MINING_MAX_SERVO_ANGLE_REAR = 30;
+float TRAVEL_MAX_SERVO_ANGLE_FRONT = 50;
+float TRAVEL_MAX_SERVO_ANGLE_REAR = 50;
 void setup()
 {
   Serial.begin(9600);
@@ -196,11 +202,11 @@ void setup()
 void loop()
 { 
   // ===== Driving and Steering ======
-  if (abs(linSpeed) <= STOP_THRESH && abs(angSpeed) <= STOP_THRESH)
+  if (abs(linSpeed) <= LIN_STOP_THRESH && abs(angSpeed) <= ANG_STOP_THRESH)
   {stopAll();}
-  else if(abs(linSpeed) <= STOP_THRESH)//so abs(angSpeed)>=STOPTHRESH 
+  else if(abs(linSpeed) <= LIN_STOP_THRESH)//so abs(angSpeed)>=ANG_STOP_THRESH 
   {turnOnSpot();}
-  else if(abs(angSpeed) <= STOP_THRESH) //so abs(linSpeed)>=STOPTHRESH
+  else if(abs(angSpeed) <= ANG_STOP_THRESH) //so abs(linSpeed)>=LIN_STOP_THRESH
   {goStraight();}
   else 
   {doAckerman();}
@@ -447,17 +453,55 @@ void setWheelAngle(float LF_servo_angle, float RF_servo_angle, float LR_servo_an
   //motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
   
   
-  LF_servo_cmd = map(LF_servo_angle,0,180,1000,2000); //still need to validate this mapping and might need to invert it for the front or back servos (which are mounted backwards)
+  //initialize limits on what commands can be sent
+  int frontServoLowerLimit_cmd = 1000;
+  int frontServoUpperLimit_cmd = 2000;
+  int rearServoLowerLimit_cmd = 1000;
+  int rearServoUpperLimit_cmd = 2000;
+  
+  LF_servo_cmd = map(LF_servo_angle,0,180,1000,2000); 
   RF_servo_cmd = map(RF_servo_angle,0,180,1000,2000);
   LR_servo_cmd = map(LR_servo_angle,0,180,1000,2000);
   RR_servo_cmd = map(RR_servo_angle,0,180,1000,2000);
-  
-  //prevent accidental continuous rotation:
+    
+  //prevent interference    //ASSUMES LEFT-RIGHT SYMMETRICAL LIMITS
+  if (suspPos > SUSP_INTERFERENCE_LIMIT){    //mining mode    
+    frontServoLowerLimit_cmd = 1500-MINING_MAX_SERVO_ANGLE_FRONT*1000.0/180.0;
+    frontServoUpperLimit_cmd = 1500+MINING_MAX_SERVO_ANGLE_FRONT*1000.0/180.0;
+    rearServoLowerLimit_cmd = 1500-MINING_MAX_SERVO_ANGLE_REAR*1000.0/180.0;
+    rearServoUpperLimit_cmd = 1500+MINING_MAX_SERVO_ANGLE_REAR*1000.0/180.0;
+  }
+  else{  //travelling mode
+    frontServoLowerLimit_cmd = 1500-TRAVEL_MAX_SERVO_ANGLE_FRONT*1000.0/180.0;
+    frontServoUpperLimit_cmd = 1500+TRAVEL_MAX_SERVO_ANGLE_FRONT*1000.0/180.0;
+    rearServoLowerLimit_cmd = 1500-TRAVEL_MAX_SERVO_ANGLE_REAR*1000.0/180.0;
+    rearServoUpperLimit_cmd = 1500+TRAVEL_MAX_SERVO_ANGLE_REAR*1000.0/180.0;
+  }
+    
+    LF_servo_cmd = constrain(LF_servo_cmd, frontServoLowerLimit_cmd, frontServoUpperLimit_cmd);
+    RF_servo_cmd = constrain(RF_servo_cmd, frontServoLowerLimit_cmd, frontServoUpperLimit_cmd);
+    LR_servo_cmd = constrain(LR_servo_cmd, rearServoLowerLimit_cmd, frontServoUpperLimit_cmd);
+    RR_servo_cmd = constrain(RR_servo_cmd, rearServoLowerLimit_cmd, frontServoUpperLimit_cmd);
+
+
+  //prevent accidental continuous rotation: (should be already accounted for above, but it cant hurt to be safe)
   LF_servo_cmd = constrain(LF_servo_cmd, 1000, 2000);
   RF_servo_cmd = constrain(RF_servo_cmd, 1000, 2000);
   LR_servo_cmd = constrain(LR_servo_cmd, 1000, 2000);
   RR_servo_cmd = constrain(RR_servo_cmd, 1000, 2000);
-  
+
+
+  //send signals to motors
+  LF_servo.writeMicroseconds(LF_servo_cmd);
+  RF_servo.writeMicroseconds(RF_servo_cmd);
+  LR_servo.writeMicroseconds(LR_servo_cmd);
+  RR_servo.writeMicroseconds(RR_servo_cmd);
+
+/* 
+
+THE FOLLOWING AVOIDS CHANGING THE PWM SIGNAL IF THE OLD SERVO ANGLE WAS THE SAME. THE PROBLEM WE WERE HAVING WAS A GROUND PLANE ISSUE - NOT THIS
+IF WE UNCOMMENT THIS BLOCK, WE NEED TO REMOVE THE writeMicroseconds COMMANDS ABOVE
+
    if(abs(LF_servo_angle - LF_old_servo_angle)>TOL || abs(RR_servo_angle-RR_old_servo_angle)>TOL)
   if(abs(LF_servo_angle - LF_old_servo_angle)>TOL || abs(RR_servo_angle-RR_old_servo_angle)>TOL)
   {
@@ -468,12 +512,23 @@ void setWheelAngle(float LF_servo_angle, float RF_servo_angle, float LR_servo_an
   }
 }
 
-void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_wheel_rpm)
-{
-  LF_motor_cmd = 11.7718918*LF_wheel_rpm - 3.81049;
-  RF_motor_cmd = 11.7718918*RF_wheel_rpm - 3.81049;
-  LR_motor_cmd = 11.7718918*LR_wheel_rpm - 3.81049;
-  RR_motor_cmd = 11.7718918*RR_wheel_rpm - 3.81049;
+*/
+}
+
+void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_wheel_rpm) {
+  //THESE CALIBRATION CONSTANTS NEED TO BE BETTER DOCUMENTED!!
+  //I think they were determined on wheels that are floating in the air to map rpm to a 0-255 command
+  //I think the process of coming up with these constants is in google drive somewhere, in the second sheet of a spreadsheet
+  //-Nick
+
+  float A = 11.7718918;
+  float B = -3.81049;
+  
+  
+  LF_motor_cmd = A*LF_wheel_rpm + B;
+  RF_motor_cmd = A*RF_wheel_rpm + B;
+  LR_motor_cmd = A*LR_wheel_rpm + B;
+  RR_motor_cmd = A*RR_wheel_rpm + B;
 
   analogWrite(LF_motor_pin, LF_wheel_rpm);
   analogWrite(RF_motor_pin, RF_wheel_rpm);

@@ -1,3 +1,5 @@
 to calibrate later
 
 point to spin before dumping
+
+constants in setWheelSpeed in robo1.ino
