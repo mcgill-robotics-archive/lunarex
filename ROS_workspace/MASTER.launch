@@ -3,7 +3,7 @@
 	<param name="use_sim_time" value="true" />
 
 	<!--STARTS STAGE-->
-    <node pkg="stage" type="stageros" name="stage" output="screen" args="$(find lunarex_stage)/world/Lunarex_Stage.world">
+    <node pkg="stage" type="stageros" name="stage" output="screen" args="$(find lunarex_stage)/world/Lunarena_withoutObstacles.world">
 		<!--param name="pub_map_odom_transform" value="true"/>
 		<param name="map_frame" value="map" />
 		<param name="base_frame" value="base_link" />
@@ -20,12 +20,15 @@
 	
 	<!--STARTS CORNER_DETECTOR-->
 	<!--WHY IS THIS NOT STARTING???-->
-	<!--node name="corner_detector" pkg="corner_detector" type="occupancyGrid_parserv4.1.py" /-->
+	<!--node name="corner_detector_asd" pkg="corner_detector" type="occupancyGrid_parserv4.1.py" /-->
 	
 	<!-- STARTS SIMPLE NAV GOALS / COMMAND NODE-->
-	<!--node name="cmd_node" pkg="simple_navigation_goals" type="simple_navigation_goals.py" /-->
+	<!--node name="command_node_asd" pkg="command" type="command_node.py" /-->
 
-	<!---STARTS RVIZ-->
-	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find lunarex_2dnav)/costmaps.vcg"/>
+	<!---STARTS COSTMAPS RVIZ-->
+	<!--node pkg="rviz" type="rviz" name="rviz_costmaps" args="-d $(find lunarex_2dnav)/costmaps.vcg"/-->
+
+	<!---STARTS HECTOR MAPPING RVIZ-->
+	<node pkg="rviz" type="rviz" name="rviz_hector" args="-d $(find hector_slam_launch)/rviz_cfg/mapping_demo.vcg"/>
 </launch>
 

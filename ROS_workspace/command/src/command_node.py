@@ -280,15 +280,13 @@ goal.target_pose.pose.position.y = 0.0
 quat = tf.transformations.quaternion_from_euler(0, 0, math.pi) #was 0, 0, math.pi
 goal.target_pose.pose.orientation = Quaternion(*quat)
 
-#--perform first 180deg
-client.send_goal(goal)  
-client.wait_for_result() 
-
-#--perform second 180deg
-client.send_goal(goal)  
-client.wait_for_result() 
-
+for i in range(1, 5):
+	#--perform 180deg
+	#client.send_goal(goal)  
+	#client.wait_for_result() 
+	rospy.loginfo("Performed 1/2 turn number: " +str(i))
 #--TODO Add feedback stuff 
+rospy.loginfo("Done rotating. Now will get corners.")
 
 #--Call corner detector service, display results & populate corner state vars
 corner_detector_response = corner_detector_proxy(corner_detector_request)

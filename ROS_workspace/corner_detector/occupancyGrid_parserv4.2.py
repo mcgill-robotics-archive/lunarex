@@ -2,8 +2,8 @@
 
 #IMPORTS
 import rosbag
-from nav_msgs.msg import OccupancyGrid
-from std_msgs.msg import Int8
+import nav_msgs.msg
+import std_msgs.msg
 import numpy as np
 import roslib.message
 import math
@@ -88,9 +88,11 @@ def findCorners(req):
 	#COLLECTING OCCUPANCY GRID
 	occupancyGrid = np.empty((mapWidth,mapHeight),dtype='int')
 	occupancyGrid = np.reshape(gridData,(mapWidth,mapHeight))
+	#occupancyGrid = np.transpose(occupancyGrid)
+	occupancyGrid = np.flipud(occupancyGrid)
 
 	#DEFINING HOUGH MATRIX
-	Rres = mapRes/4 #CHANGE BACK TO mapRes/4 ONCE SERVICE IS WRITTEN
+	Rres = mapRes/2 #CHANGE BACK TO mapRes/4 ONCE SERVICE IS WRITTEN
 	 #r bucket resolution. Doesn't make sense to have r buckets smaller than map res.
 	Rrank = int((math.sqrt(2)*max(mapWidth, mapHeight))/Rres) #nb of R buckets
 	Tres = 1
@@ -170,9 +172,22 @@ def findCorners(req):
 	print ("Corner 3: x: " + str(x3) + ", y:" + str(y3) + " => Green")  
 	print ("Corner 4: x: " + str(x4) + ", y:" + str(y4) + " => Red")  
 
+	cornersX = []
+	cornersY = []
+	
+	cornersX.append(x1)
+	cornersY.append(y1)
+	cornersX.append(x2)
+	cornersY.append(y2)
+	cornersX.append(x3)
+	cornersY.append(y3)
+	cornersX.append(x4)
+	cornersY.append(y4)
+	
 	axis([-100, mapWidth, -100, mapHeight])
 	areaPos = pi*(2)**2 # radius of dots
-	areaP = pi*(8)**2 # radius of dots
+	areaPos2 = pi**2 # radius of dots
+	areaP = pi*(10)**2 # radius of dots
 	xlabel('cells',fontdict={'fontsize':20})
 
 	# PLOT THE OCCUPANCY GRID AND CORNERS
@@ -194,11 +209,66 @@ def findCorners(req):
 				x.append(i)
 				y.append(j)
 
+	# Array of corner Tuple: (name, X, Y, distance)
+	# Populate array with corner tuples
+	corners = [('Corner 1', cornersX[0], cornersY[0], math.sqrt(((cornersX[0]-mapWidth/2)**2 + (cornersY[0]-mapHeight/2)**2))),
+	('Corner 2', cornersX[1], cornersY[1], math.sqrt(((cornersX[1]-mapWidth/2)**2 + (cornersY[1]-mapHeight/2)**2))), ('Corner 3', cornersX[2], cornersY[2], math.sqrt(((cornersX[2]-mapWidth/2)**2 + (cornersY[2]-mapHeight/2)**2))),('Corner 4', cornersX[3], cornersY[3], math.sqrt(((cornersX[3]-mapWidth/2)**2 + (cornersY[3]-mapHeight/2)**2)))]
+
+	# sort array by distance
+	corners.sort(key=lambda corner: corner[3])
+
+	# Initialize corners
+	error = ('error', 0, 0, 0)
+	left_bottom_corner = error
+	right_bottom_corner = error
+	left_top_corner = error
+	right_top_corner = error
+
+	# X axis difference between corner 4 and 1
+	cornerDiffX = corners[3][1] - corners[0][1]
+	# Y axis difference between corner 4 and 1
+	cornerDiffY = corners[3][2] - corners[0][2]
+
+	# left corner if difference of X/Y coords of furthest corner and closest corner are SAME sign
+	if(((cornerDiffX >= 0) and (cornerDiffY >= 0)) or ((cornerDiffX <= 0) and (cornerDiffY <= 0))):
+		print('Starting on the left')
+		left_bottom_corner = corners[0]
+		right_bottom_corner = corners[1]
+		left_top_corner = corners[2]
+		right_top_corner = corners[3]
+
+	# right corner if difference of X/Y coords of furthest corner and closest corner are DIFFERENT sign
+	if(((cornerDiffX <= 0) and (cornerDiffY >= 0)) or ((cornerDiffX >= 0) and (cornerDiffY <= 0))):
+		print('Starting on the right')
+		left_bottom_corner = corners[1]
+		right_bottom_corner = corners[0]
+		left_top_corner = corners[3]
+		right_top_corner = corners[2]
+
 	response = corner_detectorResponse()
-	response.lower_left = [walls[0].r*cos(math.radians(walls[0].theta))/mapRes, walls[0].r*sin(math.radians(walls[0].theta))/mapRes]
-	response.lower_right=[walls[1].r*cos(math.radians(walls[1].theta))/mapRes,walls[1].r*sin(math.radians(walls[1].theta))/mapRes]
-	response.top_right=[walls[2].r*cos(math.radians(walls[2].theta))/mapRes,walls[2].r*sin(math.radians(walls[2].theta))/mapRes]
-	response.top_left=[walls[3].r*cos(math.radians(walls[3].theta))/mapRes,walls[3].r*sin(math.radians(walls[3].theta))/mapRes]
+	response.left_bottom_corner = [int(left_bottom_corner[1]), int(left_bottom_corner[2])]
+	response.right_bottom_corner = [int(right_bottom_corner[1]), int(right_bottom_corner[2])]
+	response.left_top_corner = [int(left_top_corner[1]), int(left_top_corner[2])]
+	response.right_top_corner = [int(right_top_corner[1]), int(right_top_corner[2])]
+
+	print('Tuple: (Name, X, Y, Distance)')
+	print('Top left corner: ' + str(left_top_corner))
+	print('Top right corner: ' + str(right_top_corner))
+	print('Bottom left corner: ' + str(left_bottom_corner))
+	print('Bottom right corner: ' + str(right_bottom_corner))
+
+	grid(True)
+	scatter(x,y,s=areaPos2, marker='.', c='c', edgecolors ='none')
+	scatter(mapWidth/2,mapHeight/2,s=areaP, marker='.', c='k', edgecolors ='none')
+	scatter(x1,y1,s=areaP, marker='.', c='y', edgecolors ='none')
+	scatter(x2,y2,s=areaP, marker='.', c='b', edgecolors ='none')
+	scatter(x3,y3,s=areaP, marker='.', c='g', edgecolors ='none')
+	scatter(x4,y4,s=areaP, marker='.', c='r', edgecolors ='none')
+
+	scatter(x,y,s=areaPos, marker='.', c='c', edgecolors ='none')
+	scatter(xWalls,yWalls,s=areaPos, marker='.', c='b', edgecolors ='none')
+
+	show()
 
 	return response
 	
