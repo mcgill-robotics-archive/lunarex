@@ -217,59 +217,64 @@ def findCorners(req):
 	# sort array by distance
 	corners.sort(key=lambda corner: corner[3])
 
+	# Initialize corners
+	error = ('error', 0, 0, 0)
+	left_bottom_corner = error
+	right_bottom_corner = error
+	left_top_corner = error
+	right_top_corner = error
+
 	vector01 = array([cornersX[1] - cornersX[0], cornersY[1] - cornersY[0]])
-vector21 = array([cornersX[2] - cornersX[1], cornersY[2] - cornersY[1]])
-vector31 = array([cornersX[3] - cornersX[1], cornersY[3] - cornersY[1]])
-vector23 = array([cornersX[3] - cornersX[2], cornersY[3] - cornersY[2]])
+	vector21 = array([cornersX[2] - cornersX[1], cornersY[2] - cornersY[1]])
+	vector31 = array([cornersX[3] - cornersX[1], cornersY[3] - cornersY[1]])
+	vector23 = array([cornersX[3] - cornersX[2], cornersY[3] - cornersY[2]])
 
-#angle = arccos(dot(u,v)/norm(u)/norm(v)) #angle between u and v
+	#angle = arccos(dot(u,v)/norm(u)/norm(v)) #angle between u and v
 
-angle1 = math.degrees(arccos(dot(vector01,vector21)/norm(vector01)/norm(vector21))) #angle between v01 and v21
-angle2 = math.degrees(arccos(dot(vector01,vector31)/norm(vector01)/norm(vector31)))  #angle between v01 and v31
+	angle1 = math.degrees(arccos(dot(vector01,vector21)/norm(vector01)/norm(vector21))) #angle between v01 and v21
+	angle2 = math.degrees(arccos(dot(vector01,vector31)/norm(vector01)/norm(vector31)))  #angle between v01 and v31
 
-#print(angle1)
-#print(angle2)
+	#print(angle1)
+	#print(angle2)
 
-if(0 < angle2 and 0 < angle1):
-	print('Starting on the left')
-	left_bottom_corner = corners[0]
-	right_bottom_corner = corners[1]
-	left_top_corner = corners[2]
-	right_top_corner = corners[3]
+	if(0 < angle2 and 0 < angle1):
+		print('Starting on the left')
+		left_bottom_corner = corners[0]
+		right_bottom_corner = corners[1]
+		left_top_corner = corners[2]
+		right_top_corner = corners[3]
 
-if(0 > angle2 and 0 > angle1):
-	print('Starting on the right')
-	left_bottom_corner = corners[1]
-	right_bottom_corner = corners[0]
-	left_top_corner = corners[3]
-	right_top_corner = corners[2]	
+	if(0 > angle2 and 0 > angle1):
+		print('Starting on the right')
+		left_bottom_corner = corners[1]
+		right_bottom_corner = corners[0]
+		left_top_corner = corners[3]
+		right_top_corner = corners[2]	
+		
+	'''
 
+	# X axis difference between corner 4 and 1
+	cornerDiffX = corners[3][1] - corners[0][1]
+	# Y axis difference between corner 4 and 1
+	cornerDiffY = corners[3][2] - corners[0][2]
 
+	# left corner if difference of X/Y coords of furthest corner and closest corner are SAME sign
+	if(((cornerDiffX >= 0) and (cornerDiffY >= 0)) or ((cornerDiffX <= 0) and (cornerDiffY <= 0))):
+		print('Starting on the left')
+		left_bottom_corner = corners[0]
+		right_bottom_corner = corners[1]
+		left_top_corner = corners[2]
+		right_top_corner = corners[3]
 
-'''
+	# right corner if difference of X/Y coords of furthest corner and closest corner are DIFFERENT sign
+	if(((cornerDiffX <= 0) and (cornerDiffY >= 0)) or ((cornerDiffX >= 0) and (cornerDiffY <= 0))):
+		print('Starting on the right')
+		left_bottom_corner = corners[1]
+		right_bottom_corner = corners[0]
+		left_top_corner = corners[3]
+		right_top_corner = corners[2]
 
-# X axis difference between corner 4 and 1
-cornerDiffX = corners[3][1] - corners[0][1]
-# Y axis difference between corner 4 and 1
-cornerDiffY = corners[3][2] - corners[0][2]
-
-# left corner if difference of X/Y coords of furthest corner and closest corner are SAME sign
-if(((cornerDiffX >= 0) and (cornerDiffY >= 0)) or ((cornerDiffX <= 0) and (cornerDiffY <= 0))):
-	print('Starting on the left')
-	left_bottom_corner = corners[0]
-	right_bottom_corner = corners[1]
-	left_top_corner = corners[2]
-	right_top_corner = corners[3]
-
-# right corner if difference of X/Y coords of furthest corner and closest corner are DIFFERENT sign
-if(((cornerDiffX <= 0) and (cornerDiffY >= 0)) or ((cornerDiffX >= 0) and (cornerDiffY <= 0))):
-	print('Starting on the right')
-	left_bottom_corner = corners[1]
-	right_bottom_corner = corners[0]
-	left_top_corner = corners[3]
-	right_top_corner = corners[2]
-
-'''
+	'''
 
 	response = corner_detectorResponse()
 	response.left_bottom_corner = [int(left_bottom_corner[1]), int(left_bottom_corner[2])]
