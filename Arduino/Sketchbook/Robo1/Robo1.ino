@@ -6,7 +6,7 @@
 #include <geometry_msgs/Twist.h>
 
 //#include <arduino_msgs/ArduinoFeedback.h>
-
+        
 // ========== ROS stuff ================
 /*
 Order of Operations: (whats gunna happen in this section of code)
@@ -154,7 +154,7 @@ float TOL = 0.5;
 float ANG_STOP_THRESH = 2.0;
 float LIN_STOP_THRESH = 0.9;
 
-int SUSP_INTERFERENCE_LIMIT = 150; //command sent to suspension actuators. values greater than this correspond to mining
+int SUSP_INTERFERENCE_LIMIT = 50; //command sent to suspension actuators. values greater than this correspond to mining (0 travel, 255 full mine)
 float MINING_MAX_SERVO_ANGLE_FRONT = 0;
 float MINING_MAX_SERVO_ANGLE_REAR = 30;
 float TRAVEL_MAX_SERVO_ANGLE_FRONT = 50;
