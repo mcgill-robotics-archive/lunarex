@@ -2,7 +2,7 @@
 
 <launch>
 
-    <node pkg="stage" type="stageros" name="stageros" output="screen" args="$(find lunarex_stage)/world/Lunarex_Stage.world">
+    <node pkg="stage" type="stageros" name="stageros" output="screen" args="$(find lunarex_stage)/world/Lunarena_withoutObstacles.world">
 
 
 		<!--param name="pub_map_odom_transform" value="true"/>

@@ -57,7 +57,8 @@ def sameBuckets(l1, l2):
 	return (sameRBucket(l1.r, l2.r) and sameTBucket(l1.theta, l2.theta))
 
 #BAG SETUP
-bag = rosbag.Bag('localization_feb10.bag')
+#bag = rosbag.Bag('localization_feb10.bag')
+bag = rosbag.Bag('2013-05-10-21-38-37.bag')
 
 ##DO NOT USE THIS BAG. IT SUCKS. bag = rosbag.Bag('/home/ernie/Dropbox/LunarEx2012-2013/Software Team/ROS/Bags/2013-03-19-14-26-50.bag') #shitty
 

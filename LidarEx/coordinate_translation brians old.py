@@ -29,7 +29,7 @@ def closestCorner(xPos, yPos, xcor, ycor):
   return corner
 
 
-
+#ORDER: LR, RR, RF, LF
 def arena2Global(arenaCoords, corner1, corner2, corner3, corner4):
   # corners defined in global coordinate system
 
