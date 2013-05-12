@@ -82,6 +82,12 @@ int augerMotor_pin = 8;
 int doorPos_pin = 13;
 
 
+int LF_SERVO_PIN = 2;
+int RF_SERVO_PIN =3;
+int LR_SERVO_PIN = 4;
+int RR_SERVO_PIN = 5;
+
+
 //the following 12 pins verified May 10 for the second time, due to crappy gitub
 int LF_motor_dir_pin = 32;
 int RF_motor_dir_pin = 30;
@@ -169,10 +175,10 @@ void setup()
   pinMode(LR_motor_pin, OUTPUT);
   pinMode(RR_motor_pin, OUTPUT);
 
-  LF_servo.attach(2);
-  RF_servo.attach(3);
-  LR_servo.attach(4);
-  RR_servo.attach(5);
+  LF_servo.attach(LF_SERVO_PIN);
+  RF_servo.attach(RF_SERVO_PIN);
+  LR_servo.attach(RF_SERVO_PIN);
+  RR_servo.attach(RR_SERVO_PIN);
   
   augerSudoServo.attach(augerMotor_pin);
   
@@ -544,17 +550,20 @@ void setWheelAngle(float LF_servo_angle, float RF_servo_angle, float LR_servo_an
   
   
   //initialize limits on what commands can be sent
+  //define the variables
   int frontServoLowerLimit_cmd = 1000;
   int frontServoUpperLimit_cmd = 2000;
   int rearServoLowerLimit_cmd = 1000;
   int rearServoUpperLimit_cmd = 2000;
   
+  //convert angle in degrees to command
   LF_servo_cmd = map(LF_servo_angle,0,180,1000,2000); 
   RF_servo_cmd = map(RF_servo_angle,0,180,1000,2000);
   LR_servo_cmd = map(LR_servo_angle,0,180,1000,2000);
   RR_servo_cmd = map(RR_servo_angle,0,180,1000,2000);
     
   //prevent interference    //ASSUMES LEFT-RIGHT SYMMETRICAL LIMITS
+  
   if (suspPos > SUSP_INTERFERENCE_LIMIT){    //mining mode    
     frontServoLowerLimit_cmd = 1500-MINING_MAX_SERVO_ANGLE_FRONT*1000.0/180.0;
     frontServoUpperLimit_cmd = 1500+MINING_MAX_SERVO_ANGLE_FRONT*1000.0/180.0;

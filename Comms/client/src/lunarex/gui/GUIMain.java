@@ -28,10 +28,10 @@ import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import joystick.JFrameWindow;
-import joystick.JInputJoystick;
-import joystick.JInputJoystickTest;
-import joystick.JoystickTest;
+import lunarex.controller.joystick.JFrameWindow;
+import lunarex.controller.joystick.JInputJoystick;
+import lunarex.controller.joystick.JInputJoystickTest;
+import lunarex.controller.joystick.JoystickTest;
 import lunarex.input.KeyboardInput;
 import lunarex.network.Client;
 import net.java.games.input.Controller;
@@ -125,11 +125,12 @@ public class GUIMain extends JFrame {
 	int augerSpeed = 0; //0 to 255
 	int bucketPos = BUCKET_POS_LOW; // 0 to 255
 	int doorOpen = 0;
+	String doorStatus = "";
 	
 	/*COMMAND CONSTANTS*/
 	final int SUSPENSION_INCREMENT = 2;
 	final int AUGER_INCREMENT = 5;
-	final int BUCKET_INCREMENT = 1;
+	final int BUCKET_INCREMENT = 3;
 	
 	static final float MAX_LIN_SPEED = 2.6f; //1.8 before
 	static final float MAX_ANG_SPEED = 1.4f; //4  before
@@ -212,19 +213,24 @@ public class GUIMain extends JFrame {
 					
 					//if "Start" is pressed, set manual override and controller to true
 					if(!this.prevController&&joystick.getButtonValue(3)) {
-						manualOverride = true;
+						if(!manualOverride){
+							int reply = JOptionPane.showConfirmDialog(null,
+									"Do you really want to take over manual control?",
+									"Man Override", JOptionPane.YES_NO_OPTION);
+							if (reply == JOptionPane.YES_OPTION) {
+								manualOverride = true;
+							}
+						}
 						controller = !controller;
 					}
 					this.prevController = joystick.getButtonValue(3);
 					
 					//if not connected, press "Select" to connect to server
-					if(!this.prevConnected&&joystick.getButtonValue(0)) {
-						if(!connected){
-							client = new Client(ipAdressString,
-									Integer.parseInt(portNumberString));
-							client.start();
-						}
-						connected = !connected;
+					if(!connected&&joystick.getButtonValue(0)) {
+						client = new Client(ipAdressString,
+								Integer.parseInt(portNumberString));
+						client.start();
+						connected = true;
 					}
 					this.prevConnected = joystick.getButtonValue(0);
 					
@@ -378,8 +384,9 @@ public class GUIMain extends JFrame {
 		g2d.drawString(""+OUT_linVel, x+COLUMN_WIDTH, y);
 		g2d.drawString("("+new DecimalFormat("#.###").format(linVel)+")", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
-		g2d.drawString("Door Open? : ", x, y);
-		g2d.drawString(""+OUT_doorOpen, x+COLUMN_WIDTH, y);
+		g2d.drawString("Door Status : ", x, y);
+		doorStatus = OUT_doorOpen == 1 ? "Open" : "Closed";
+		g2d.drawString(""+doorStatus, x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Bucket Position : ", x, y);
 		g2d.drawString(""+bucketPos, x+COLUMN_WIDTH, y);
