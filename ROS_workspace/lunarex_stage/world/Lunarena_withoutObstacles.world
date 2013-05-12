@@ -119,7 +119,7 @@ arena
   bitmap "reallyEmptyLunarena.bmp" #if defined by bitmap, put it here
   # size of the arena
   size [3.88 7.38 0.50]	#according to competition rules
-  pose [0 0 0 0]
+  pose [-1.94 -3.69 0 0]
 )
 
 
