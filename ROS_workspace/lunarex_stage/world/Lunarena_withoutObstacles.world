@@ -119,7 +119,7 @@ arena
   bitmap "reallyEmptyLunarena.bmp" #if defined by bitmap, put it here
   # size of the arena
   size [3.88 7.38 0.50]	#according to competition rules
-  pose [0 0 0 0]
+  pose [1.94 3.69 0 0]
 )
 
 
@@ -127,7 +127,10 @@ lunabot
 (		  
   # can refer to the robot by this name
   name "lunabot"
-  pose [0.8 -2.3 0 0]	#initial position, (then rotation?), in the x-right y-up stage coordinates
+  #initial position, (then rotation?), in the x-right y-up stage coordinates
+  #pose [0 0 0 32]
+  pose [0.97 0.75 0 0]	#starting position 1
+  # pose [2.91 0.75 0 0]	#starting position 2
   color "red" 
   LidarEx(pose [0.3 0 0 0]) # call Lidar (ie place on on the lunabot) and position it relative to robot (i think its x y z theta)
   #there's also this thing where the default TF is [0 0 .15 0] and so I think that it is added onto this pose, and so the resulting pose puts the lidar's z position at 0.15 relative to /base_link
@@ -135,4 +138,4 @@ lunabot
  # ctrl "wander"  do not need this for now
  # it's supposed to make the robot wander around by I think it doesnt work for now. 
  # More research into 'stage controllers' is necessary.
-)#
+)

@@ -20,7 +20,7 @@ TrajectoryPlannerROS:
 
 #2) GOAL TOLERANCE PARAMETERS
 
-    yaw_goal_tolerance: 0.1 # tolerance in radians for the controller in yaw/rotation when achieving its goal
+    yaw_goal_tolerance: 0.01 # tolerance in radians for the controller in yaw/rotation when achieving its goal
 
     xy_goal_tolerance: 0.15 # tolerance in meters for the controller in the x & y distance when achieving a goal
 
@@ -50,7 +50,7 @@ TrajectoryPlannerROS:
 
     #occdist_scale: 0.01 # weighting for how much the controller should attempt to avoid obstacles
 
-    heading_lookahead: 0.35 #How far to look ahead in meters when scoring different in-place-rotation trajectories
+    heading_lookahead: 2 #How far to look ahead in meters when scoring different in-place-rotation trajectories
 
     #heading_scoring: false #Whether to score based on the robot's heading to the path or its distance from the path
 

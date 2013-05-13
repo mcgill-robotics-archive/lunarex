@@ -107,9 +107,11 @@ public class Client extends Thread {
 						input.read(buffer);
 						this.receivedData = new String(buffer);
 						// Do not need this print anymore. But keep it for testing.
-						System.out.println("Current Status: " + "\n" + "X: "
-								+ this.getX() + "\n" + "Y: " + this.getY()
-								+ "\n" + "Theta: " + this.getTheta());
+//						System.out.println("Current Status: " + "\n" + "X: "
+//								+ this.getX() + "\n" + "Y: " + this.getY()
+//								+ "\n" + "Theta: " + this.getTheta());
+						
+						System.out.println(receivedData);
 					}
 
 					if (closeConnection) {

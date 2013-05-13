@@ -32,6 +32,8 @@ ARENA_WIDTH = 3.88
 ARENA_LENGTH = 7.38
 MINING_BOUNDARY_LOCATION = 4.44  # distance of boundary to lunabin
 
+STARTING_POS_ARENA_COORDS = [(0.97, 0.75), (2.91, 0.75)]
+
 #--state vars
 #----corners
 corner_detector_request = corner_detectorRequest()
@@ -224,12 +226,24 @@ def goTo(x,y,theta):
 	goal.target_pose.pose.position.x = nextGoal[0]
 	goal.target_pose.pose.position.y = nextGoal[1]
 
-	quat = tf.transformations.quaternion_from_euler(0, 0, coord.arenaAngle2mobileAngle(theta, slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner)) #was 0, 0, math.pi
+	mobileAngle = coord.arenaAngle2mobileAngle(theta, slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner)
+	#must convert to quaternion from a rad
+	#quat = tf.transformations.quaternion_from_euler(0, 0, mobileAngle*math.pi/180.0) #was 0, 0, math.pi
+	quat = tf.transformations.quaternion_from_euler(0, 0, 0) #was 0, 0, math.pi
 	goal.target_pose.pose.orientation = Quaternion(*quat)
-	rospy.loginfo(str(goal))
+	
+	rospy.loginfo("***Requested motion***")
+	rospy.loginfo("x = " +str(goal.target_pose.pose.position.x))
+	rospy.loginfo("y = " +str(goal.target_pose.pose.position.y))
 	client.send_goal(goal)  # Sends the goal to the action server.
 	client.wait_for_result() # Waits for the server to finish performing the action.
 
+	goal.target_pose.pose.position.x = 0
+	goal.target_pose.pose.position.y = 0
+	quat = tf.transformations.quaternion_from_euler(0, 0, mobileAngle*math.pi/180.0)
+	goal.target_pose.pose.orientation = Quaternion(*quat)
+	rospy.loginfo("got to destination. Now requesting angle:")
+	rospy.loginfo("theta = " +str(mobileAngle))
 
 class Velocity:
     def __init__(self, x, y, z):
@@ -282,8 +296,8 @@ goal.target_pose.pose.orientation = Quaternion(*quat)
 
 for i in range(1, 5):
 	#--perform 180deg
-	#client.send_goal(goal)  
-	#client.wait_for_result() 
+	client.send_goal(goal)  
+	client.wait_for_result() 
 	rospy.loginfo("Performed 1/2 turn number: " +str(i))
 #--TODO Add feedback stuff 
 rospy.loginfo("Done rotating. Now will get corners.")
@@ -309,7 +323,7 @@ goTo(ARENA_WIDTH/2.0, MINING_BOUNDARY_LOCATION, 0)
 #excavate()
 
 #Return home and dump
-goTo(ARENA_WIDTH/2.0, 0.9, math.pi)	#need to callibrate y position so as not to bump into wall or obstacle
-goTo(ARENA_WIDTH/2.0, 0.9, math.pi)	#spin around
+#goTo(ARENA_WIDTH/2.0, 0.9, math.pi)	#need to callibrate y position so as not to bump into wall or obstacle
+#goTo(ARENA_WIDTH/2.0, 0.9, math.pi)	#spin around
 
 

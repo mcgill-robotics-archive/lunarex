@@ -166,12 +166,7 @@ def findCorners(req):
 
 	y4 = (walls[0].r*sin(math.radians(walls[0].theta)) + walls[3].r*sin(math.radians(walls[3].theta)))/mapRes
 	x4 = (walls[0].r*cos(math.radians(walls[0].theta)) + walls[3].r*cos(math.radians(walls[3].theta)))/mapRes
-	 
-	print ("Corner 1: x: " + str(x1) + ", y:" + str(y1) + " => Yellow ")  
-	print ("Corner 2: x: " + str(x2) + ", y:" + str(y2) + " => Blue")  
-	print ("Corner 3: x: " + str(x3) + ", y:" + str(y3) + " => Green")  
-	print ("Corner 4: x: " + str(x4) + ", y:" + str(y4) + " => Red")  
-
+	
 	cornersX = []
 	cornersY = []
 	
@@ -209,13 +204,15 @@ def findCorners(req):
 				x.append(i)
 				y.append(j)
 
-	# Array of corner Tuple: (name, X, Y, distance)
+	# corners is an Array of corner Tuples: (name, X, Y, distance)
 	# Populate array with corner tuples
-	corners = [('Corner 1', cornersX[0], cornersY[0], math.sqrt(((cornersX[0]-mapWidth/2)**2 + (cornersY[0]-mapHeight/2)**2))),
-	('Corner 2', cornersX[1], cornersY[1], math.sqrt(((cornersX[1]-mapWidth/2)**2 + (cornersY[1]-mapHeight/2)**2))), ('Corner 3', cornersX[2], cornersY[2], math.sqrt(((cornersX[2]-mapWidth/2)**2 + (cornersY[2]-mapHeight/2)**2))),('Corner 4', cornersX[3], cornersY[3], math.sqrt(((cornersX[3]-mapWidth/2)**2 + (cornersY[3]-mapHeight/2)**2)))]
+	corners = [('Corner 0', cornersX[0], cornersY[0], math.sqrt(((cornersX[0]-mapWidth/2)**2 + (cornersY[0]-mapHeight/2)**2))),
+	('Corner 1', cornersX[1], cornersY[1], math.sqrt(((cornersX[1]-mapWidth/2)**2 + (cornersY[1]-mapHeight/2)**2))), ('Corner 2', cornersX[2], cornersY[2], math.sqrt(((cornersX[2]-mapWidth/2)**2 + (cornersY[2]-mapHeight/2)**2))),('Corner 3', cornersX[3], cornersY[3], math.sqrt(((cornersX[3]-mapWidth/2)**2 + (cornersY[3]-mapHeight/2)**2)))]
 
 	# sort array by distance
-	corners.sort(key=lambda corner: corner[3])
+	corners.sort(key=lambda corner: corners[3])
+
+	print(corners)
 
 	# Initialize corners
 	error = ('error', 0, 0, 0)
@@ -224,18 +221,29 @@ def findCorners(req):
 	left_top_corner = error
 	right_top_corner = error
 
-	vector01 = array([cornersX[1] - cornersX[0], cornersY[1] - cornersY[0]])
-	vector21 = array([cornersX[2] - cornersX[1], cornersY[2] - cornersY[1]])
-	vector31 = array([cornersX[3] - cornersX[1], cornersY[3] - cornersY[1]])
-	vector23 = array([cornersX[3] - cornersX[2], cornersY[3] - cornersY[2]])
-
+	vector01 = array([corners[1][1] - corners[0][1], corners[1][2] - corners[0][2]])
+	vector02 = array([corners[2][1] - corners[0][1], corners[2][2] - corners[0][2]])
+	vector03 = array([corners[3][1] - corners[0][1], corners[3][2] - corners[0][2]])
+	
+	print(vector01)
+	print(vector02)
+ 	print(vector03)
+	
 	#angle = arccos(dot(u,v)/norm(u)/norm(v)) #angle between u and v
+	positive1 = -1
+	positive2 = -1
+	if(dot(vector01,vector02) > 0):
+		positive1=1
+	if(dot(vector01,vector03) > 0):
+		positive2=1
 
-	angle1 = math.degrees(arccos(dot(vector01,vector21)/norm(vector01)/norm(vector21))) #angle between v01 and v21
-	angle2 = math.degrees(arccos(dot(vector01,vector31)/norm(vector01)/norm(vector31)))  #angle between v01 and v31
+	print(positive1)
+	print(positive2)
+	angle1 = positive1* math.acos(dot(vector01,vector02)/norm(vector01)/norm(vector02)) #angle between v01 and v21
+	angle2 = positive2 * math.acos(dot(vector01,vector03)/norm(vector01)/norm(vector03))  #angle between v01 and v31
 
-	#print(angle1)
-	#print(angle2)
+	print(angle1)
+	print(angle2)
 
 	if(0 < angle2 and 0 < angle1):
 		print('Starting on the left')
