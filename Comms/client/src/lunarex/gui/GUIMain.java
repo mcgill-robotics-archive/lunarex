@@ -28,10 +28,10 @@ import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import lunarex.controller.joystick.JFrameWindow;
-import lunarex.controller.joystick.JInputJoystick;
-import lunarex.controller.joystick.JInputJoystickTest;
-import lunarex.controller.joystick.JoystickTest;
+import joystick.JFrameWindow;
+import joystick.JInputJoystick;
+import joystick.JInputJoystickTest;
+import joystick.JoystickTest;
 import lunarex.input.KeyboardInput;
 import lunarex.network.Client;
 import net.java.games.input.Controller;
@@ -309,10 +309,10 @@ public class GUIMain extends JFrame {
 		
 		/*DOOR BUTTONS*/
 		if(buttons.get(11)){
-			doorOpen = 1; //R1
+			doorOpen = 255; //R1. 255 is door open
 		}
 		else if(buttons.get(10)){
-			doorOpen = 0; //L1
+			doorOpen = 0; //L1. 0 is door closed
 		}
 		
 		/*BUCKET BUTTONS*/
@@ -385,7 +385,7 @@ public class GUIMain extends JFrame {
 		g2d.drawString("("+new DecimalFormat("#.###").format(linVel)+")", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Door Status : ", x, y);
-		doorStatus = OUT_doorOpen == 1 ? "Open" : "Closed";
+		doorStatus = OUT_doorOpen == 0 ? "Open" : "Closed";
 		g2d.drawString(""+doorStatus, x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Bucket Position : ", x, y);
