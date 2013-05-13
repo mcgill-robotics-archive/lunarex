@@ -99,7 +99,7 @@ class Handler(SocketServer.BaseRequestHandler):
 		    self.auger_speed = int((ord)(self.datalist[4]))
 
 
-       		    #r = rospy.Rate(10)
+       		    r = rospy.Rate(10)
                     #Publish to ros
                     if not rospy.is_shutdown():
                         try:
@@ -108,7 +108,7 @@ class Handler(SocketServer.BaseRequestHandler):
 			    susp_LA_pub.publish(self.susp_pos)	# Send suspension info
 			    door_LA_pub.publish(self.door_pos)	# Send door status
 			    auger_Speed_pub.publish(self.auger_speed)	# Send auger speed
-                	    #r.sleep()
+                	    r.sleep()
 
                             self.datalist = []  #   And prepare datalist for next input
                         except rospy.ROSInterruptException:
