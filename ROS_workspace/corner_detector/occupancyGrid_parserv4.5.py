@@ -19,6 +19,8 @@ import roslib; roslib.load_manifest('corner_detector')
 from corner_detector.srv import *
 
 BIGNUMBER = 1000
+ARENA_WIDTH = 3.88
+ARENA_HEIGHT = 7.38
 
 tThresh = 5 #absolute: 2de
 rThresh = 1.0 #absolute: 8% R difference between 2 walls max in 1 bucket
@@ -86,7 +88,7 @@ def findCorners(req):
 	occupancyGrid = np.reshape(gridData,(mapWidth,mapHeight), order='F') #C is row major order; F is col major
 	
 	#DEFINING HOUGH MATRIX
-	Rres = mapRes*4 #CHANGE BACK TO mapRes/4 ONCE SERVICE IS WRITTEN
+	Rres = mapRes #CHANGE BACK TO mapRes/4 ONCE SERVICE IS WRITTEN
 	 #r bucket resolution. Doesn't make sense to have r buckets smaller than map res.
 	Rrank = int((math.sqrt(2)*max(mapWidth, mapHeight))/Rres) #nb of R buckets
 	Tres = 1
@@ -122,17 +124,16 @@ def findCorners(req):
 
 	#sort & print best lines
 	sortedLines = sorted(lines, key=lambda l: len(l.points), reverse=True)
-	for l in sortedLines[:30]:
+	for l in sortedLines[:15]:
 		print l
 		
 	#DEFINE WALLS AND WALL BUCKETS
 	walls=[0,0,0,0] 
-	wallBuckets=[[] for i in range(0,4)]
 	walls[0]=sortedLines[0] #assume most populous line is first wall
 		
 	#FILL WALLS & WALL BUCKETS
 	wallIndex=1 #next wall to fill
-	for l in sortedLines: #order of decreasing points/line
+	for l in sortedLines[:15]: #order of decreasing points/line
 		if(walls[wallIndex%4]==0):#not filled
 			sameBucket=False
 			for w in walls:
@@ -140,12 +141,21 @@ def findCorners(req):
 					sameBucket=True
 			if(sameBucket==False):
 				walls[wallIndex]=l
-
 				wallIndex+=1	
-		for i in range(0,4):
-			if(walls[i]!=0 and sameBuckets(l, walls[i])):
-				wallBuckets[i].append(l)						
-					
+
+	if(abs(walls[0].theta - walls[1].theta) > 45):
+		#is LONG-SHORT or SHORT-LONG. Switch wall 2 and wall 1
+		temp = walls[1]
+		walls[1]=walls[2]
+		walls[2]=temp
+
+	if(abs(walls[0].theta - walls[1].theta) > 45):
+		#is still LONG-SHORT or SHORT-LONG. Switch wall 2 and wall 1
+		temp = walls[1]
+		walls[1]=walls[3]
+		walls[3]=temp
+
+
 	for i in range(0,4):
 		print ("WALL "+str(i)+": "+str(walls[i])) 
 
@@ -223,7 +233,7 @@ def findCorners(req):
 	print(vector02)
  	print(vector03)
 
-	if(0 < dot(vector01,vector02)/norm(vector01)/norm(vector02)):
+	if(0 < cross(vector01,vector02)):
 		print('Starting on the left')
 		left_bottom_corner = corners[0]
 		right_bottom_corner = corners[1]

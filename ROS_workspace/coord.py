@@ -54,6 +54,7 @@ def arena2mobile(arenaCoords, slam_out_pose, LR_corner, RR_corner, LF_corner, RF
 
   #rotate the vector from global to hector
   mobile_coords = rotateVector2D(mobile_coords, 90-quatToDegrees(slam_out_pose))
+
   rospy.loginfo("coord.arena2mobile received: "+str(arenaCoords)+" and is returning: "+str(mobile_coords))
   return mobile_coords
 
