@@ -7,14 +7,14 @@
 
 //#include <arduino_msgs/ArduinoFeedback.h>
         
-// ========== ROS stuff ================
-/*
-Order of Operations: (whats gunna happen in this section of code)
-//order got messed up - need to tweak this comment
+/* ========== ROS stuff ================
+
+Order of Operations: (what's going to happen in the ROS section of code)
+
 1. define nodehandle - rose node object 
 2. Initialize arduino variables that will be set in ROS
-3. subscribe to topics (point to arduino callback functions)
-4. define arduino callback functions that set arduino variables
+3. define arduino callback functions that set arduino variables
+4. subscribe to topics (point to arduino callback functions)
 5. create publishers for feedback
 6. nh.initNode() and subscribe to subscribers and advertise publishers in Setup()
 7. nh.spinOnce() at the end of loop()
@@ -75,18 +75,16 @@ ros:: Subscriber<std_msgs::UInt8> augerSpeedSub("auger_speed", &setAugerSpeed); 
 Servo LF_servo, RF_servo, LR_servo, RR_servo;
 Servo augerSudoServo;
 
-//these 4 pins are arbitrary as of april 27
+
 int SUSP_ACTUATOR_PIN = 6;
 int DUMP_ACTUATOR_PIN = 7;
 int AUGER_MOTOR_PIN = 8;
 int DOOR_ACTUATOR_PIN = 13;
 
-
 int LF_SERVO_PIN = 2;
 int RF_SERVO_PIN =3;
 int LR_SERVO_PIN = 4;
 int RR_SERVO_PIN = 5;
-
 
 //the following 12 pins verified May 10 for the second time, due to crappy gitub
 int LF_motor_dir_pin = 32;
@@ -106,12 +104,13 @@ int RR_motor_pin = 9;
 
 //-----------Variables used to set motor speeds/enable/directions
 
-boolean LF_motor_enable = 1;
-boolean RF_motor_enable = 1;
-boolean LR_motor_enable = 1;
-boolean RR_motor_enable = 1;
+//disable drive motors by default
+boolean LF_motor_enable = 0;
+boolean RF_motor_enable = 0;
+boolean LR_motor_enable = 0;
+boolean RR_motor_enable = 0;
 
-boolean LF_motor_dir = 0;  //disable drive motors by default
+boolean LF_motor_dir = 0;  
 boolean RF_motor_dir = 0;
 boolean LR_motor_dir = 0;
 boolean RR_motor_dir = 0;
@@ -137,16 +136,15 @@ int RF_motor_cmd = 0;
 int LR_motor_cmd = 0;
 int RR_motor_cmd = 0;
 
-float motor_rpm;
 
-//-----------------constants
+//-----------------CONSTANTS
+
 float WHEEL_RADIUS = 0.1397;
 float MIN_SPEED = 0;
-float MAX_SPEED = 20000; // in Revolutions per minutes
+float MAX_SPEED = 20000; // in RPM
 float LENGTH = 0.71;
 float WIDTH = 0.7219;
 float DIST_TO_AXIS_A = 0.5074;
-int MAX_ANGLE = 35; //in degrees; ratio of lin/ang = 1.5
 
 int SEC_PER_MIN = 60;
 int GEAR_RATIO = 74;
@@ -198,12 +196,6 @@ void setup()
   pinMode(LR_motor_dir_pin, OUTPUT);
   pinMode(RR_motor_dir_pin, OUTPUT);
   
-  //write defaults to motors:
-  digitalWrite(LF_motor_enable_pin, LF_motor_enable);
-  digitalWrite(RF_motor_enable_pin, RF_motor_enable);
-  digitalWrite(LR_motor_enable_pin, LR_motor_enable);
-  digitalWrite(RR_motor_enable_pin, RR_motor_enable);
-  
   nh.initNode();
   nh.subscribe(cmdVelSub);
   nh.subscribe(dumpLASub);
@@ -237,6 +229,7 @@ void loop()
   setWheelAngle(LF_servo_angle, RF_servo_angle, LR_servo_angle, RR_servo_angle);  
   setWheelDirection(LF_motor_dir, RF_motor_dir, LR_motor_dir, RR_motor_dir);
   setWheelSpeed(LF_wheel_rpm, RF_wheel_rpm, LR_wheel_rpm, RR_wheel_rpm);
+  toggleMotorEnable();
   
   
   // ===== Actuators and Auger ======
@@ -341,12 +334,12 @@ void goStraight()
     RR_motor_dir = 0;
   }
   
-  motor_rpm = SEC_PER_MIN*linSpeed/(2*PI*WHEEL_RADIUS);
+  float all_four_motor_rpms = SEC_PER_MIN*linSpeed/(2*PI*WHEEL_RADIUS);
   
-  LF_wheel_rpm = motor_rpm;
-  RF_wheel_rpm = motor_rpm;
-  LR_wheel_rpm = motor_rpm;
-  RR_wheel_rpm = motor_rpm;  
+  LF_wheel_rpm = all_four_motor_rpms;
+  RF_wheel_rpm = all_four_motor_rpms;
+  LR_wheel_rpm = all_four_motor_rpms;
+  RR_wheel_rpm = all_four_motor_rpms;  
 }
 
 
@@ -378,18 +371,9 @@ void doAckerman()
     RR_motor_dir = 1;
   }
 
-  // ----------
-  
-  float ackRadius = abs(linSpeed)/abs(angSpeed);
 
-  float R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
-  float rad1 = 0;
-  float rad2 = 0;
-  float rad3 = 0;
-  float rad4 = 0;
-  
-  //Ackerman steering is characterised by setting wheel angles and speeds. Do general computations first:
-  
+  //Ackerman steering is characterised by setting wheel angles and speeds. Do general computations first:  
+  float ackRadius = abs(linSpeed)/abs(angSpeed);    
   //Angle  
   float innerAngle = atan((LENGTH/2.0)/(ackRadius - (WIDTH/2.0)))*180/PI;  //servo angle for both wheels on the inside of the turn
   float outerAngle = atan((LENGTH/2.0)/(ackRadius + (WIDTH/2.0)))*180/PI; 
@@ -597,4 +581,12 @@ void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_
   analogWrite(RF_motor_pin, RF_wheel_rpm);
   analogWrite(LR_motor_pin, LR_wheel_rpm);
   analogWrite(RR_motor_pin, RR_wheel_rpm);
+}
+
+void toggleMotorEnable()
+{
+ digitalWrite(LF_motor_enable_pin, LF_motor_enable);
+ digitalWrite(RF_motor_enable_pin, RF_motor_enable);
+ digitalWrite(LR_motor_enable_pin, LR_motor_enable);
+ digitalWrite(RR_motor_enable_pin, RR_motor_enable);  
 }
