@@ -225,10 +225,11 @@ void loop()
     {goStraight();}
   else 
     {doAckerman();}                          //general combo of linear and angular
-
-  setWheelAngle(LF_servo_angle, RF_servo_angle, LR_servo_angle, RR_servo_angle);  
-  setWheelDirection(LF_motor_dir, RF_motor_dir, LR_motor_dir, RR_motor_dir);
-  setWheelSpeed(LF_wheel_rpm, RF_wheel_rpm, LR_wheel_rpm, RR_wheel_rpm);
+  
+  //push commmands to motors:
+  setWheelAngle();  
+  setWheelDirection();
+  setWheelSpeed();
   toggleMotorEnable();
   
   
@@ -295,12 +296,12 @@ void turnOnSpot()
      RR_motor_dir = 0;
    }
    
-   wheel_rpm = (DIST_TO_AXIS_A / WHEEL_RADIUS)*angSpeed*SEC_PER_MIN/(2*PI);
+   float all_four_motor_rpms = (DIST_TO_AXIS_A / WHEEL_RADIUS)*abs(angSpeed)*SEC_PER_MIN/(2.0*PI);
    
-   LF_wheel_rpm = wheel_rpm;
-   RF_wheel_rpm = wheel_rpm;
-   LR_wheel_rpm = wheel_rpm;
-   RR_wheel_rpm = wheel_rpm;    
+   LF_wheel_rpm = all_four_motor_rpms;
+   RF_wheel_rpm = all_four_motor_rpms;
+   LR_wheel_rpm = all_four_motor_rpms;
+   RR_wheel_rpm = all_four_motor_rpms;    
 }
 
 
@@ -334,7 +335,7 @@ void goStraight()
     RR_motor_dir = 0;
   }
   
-  float all_four_motor_rpms = SEC_PER_MIN*linSpeed/(2*PI*WHEEL_RADIUS);
+  float all_four_motor_rpms = SEC_PER_MIN*abs(linSpeed)/(2.0*PI*WHEEL_RADIUS);
   
   LF_wheel_rpm = all_four_motor_rpms;
   RF_wheel_rpm = all_four_motor_rpms;
@@ -373,15 +374,15 @@ void doAckerman()
 
 
   //Ackerman steering is characterised by setting wheel angles and speeds. Do general computations first:  
-  float ackRadius = abs(linSpeed)/abs(angSpeed);    
+  float ackRadius = abs(linSpeed/angSpeed);    
   //Angle  
-  float innerAngle = atan((LENGTH/2.0)/(ackRadius - (WIDTH/2.0)))*180/PI;  //servo angle for both wheels on the inside of the turn
-  float outerAngle = atan((LENGTH/2.0)/(ackRadius + (WIDTH/2.0)))*180/PI; 
+  float innerAngle = atan((LENGTH/2.0)/(ackRadius - (WIDTH/2.0)))*180.0/PI;  //servo angle for both wheels on the inside of the turn
+  float outerAngle = atan((LENGTH/2.0)/(ackRadius + (WIDTH/2.0)))*180.0/PI; 
   //Speed
-  float innerRadius = sqrt(pow(LENGTH/2.0, 2) + pow(ackRadius - WIDTH/2, 2));  //distance from inner wheels to center of rotation
-  float outerRadius = sqrt(pow(LENGTH/2.0, 2) + pow(ackRadius + WIDTH/2, 2));
-  float innerRPM = (innerRadius / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI); //speed of inner wheels
-  float outerRPM = (outerRadius / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+  float innerRadius = sqrt(pow(LENGTH/2.0, 2) + pow(ackRadius - WIDTH/2.0, 2));  //distance from inner wheels to center of rotation
+  float outerRadius = sqrt(pow(LENGTH/2.0, 2) + pow(ackRadius + WIDTH/2.0, 2));
+  float innerRPM = (innerRadius / WHEEL_RADIUS) * abs(angSpeed)*SEC_PER_MIN/(2.0*PI); //speed of inner wheels
+  float outerRPM = (outerRadius / WHEEL_RADIUS) * abs(angSpeed)*SEC_PER_MIN/(2.0*PI);
 
   // There are 4 permutations of linSpeed and angSpeed, with each corresponding to one of two cases: an instantaneously circular trajectory about a point to the left or right of the robot
   
@@ -415,90 +416,84 @@ void doAckerman()
     LR_wheel_rpm = outerRPM;
     RR_wheel_rpm = innerRPM;
   }
-  
-  
-  
-  
-  
-void miningAckerman()
-{ 
-  digitalWrite(LF_motor_enable_pin, LF_motor_enable);
-  digitalWrite(RF_motor_enable_pin, RF_motor_enable);
-  digitalWrite(LR_motor_enable_pin, LR_motor_enable);
-  digitalWrite(RR_motor_enable_pin, RR_motor_enable);
-   
-   
-  if(linSpeed < 0) //changed from <= to < because '==' has a different case
-  {
-      LF_motor_dir = 0;
-      RF_motor_dir = 0;
-      LR_motor_dir = 0;
-      RR_motor_dir = 0;
-  }
-    
-  else if(linSpeed > 0)
-  {
-      LF_motor_dir = 1;
-      RF_motor_dir = 1;
-      LR_motor_dir = 1;
-      RR_motor_dir = 1;
-  }
-    
-
-  float ackRadius = abs(linSpeed)/abs(angSpeed);
-  float innerFront = 0;
-  float outerFront = 0;
-  float innerBack = atan(LENGTH/(ackRadius - (WIDTH/2.0)))*180/PI;
-  float outerBack = atan(LENGTH/(ackRadius + (WIDTH/2.0)))*180/PI;
-
-  float R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
-  float rad1 = 0;
-  float rad2 = 0;
-  float rad3 = 0;
-  float rad4 = 0;
-    
-    
-  float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed));  //Will return +/- 1 for CCW or CW, respectively (note this variable is distinct from LF_motor_dir, RF_motor_dir, etc)
-    
-  if(dir>0.0)  //counter clockwise
-  {
-      LF_servo_angle = 90 - innerFront;
-      RF_servo_angle = 90 - outerFront;
-      LR_servo_angle = 90 + innerBack;
-      RR_servo_angle = 90 + outerBack;
-  
-   	 	rad1 = R1 - WIDTH/2;
-   	 	rad2 = R1 + WIDTH/2;
-   	 	rad3 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
-  	 	rad4 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
-  }
-  
-  else if(dir<0.0)  //clockwise
-  {
-
-      LF_servo_angle = 90.0 + outerFront;
-      RF_servo_angle = 90.0 + innerFront;
-      LR_servo_angle = 90.0 - outerBack;
-      RR_servo_angle = 90.0 - outerBack;
-      
-	   
-   	 
-   	  rad1 = R1 + WIDTH/2;
-   	  rad2 = R1 - WIDTH/2;
-   	  rad3 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
-  	  rad4 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
-  
-  }
-    
-    //now for drive motor velocities
-    LF_wheel_rpm = (rad1 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    RF_wheel_rpm = (rad2 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    LR_wheel_rpm = (rad3 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    RR_wheel_rpm = (rad4 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
 }
   
+void miningAckerman()  
+{ 
+  LF_motor_enable = 1;
+  RF_motor_enable = 1;
+  LR_motor_enable = 1;
+  RR_motor_enable = 1;
+ 
+ if(linSpeed < 0) 
+  {
+    LF_motor_dir = 0;
+    RF_motor_dir = 0;
+    LR_motor_dir = 0;
+    RR_motor_dir = 0;
+  }
+  
+  else if(linSpeed > 0)
+  {
+    LF_motor_dir = 1;
+    RF_motor_dir = 1;
+    LR_motor_dir = 1;
+    RR_motor_dir = 1;
+  }
 
-void setWheelDirection(boolean LF_motor_dir, boolean RF_motor_dir, boolean LR_motor_dir, boolean RR_motor_dir)
+
+  //Ackerman steering is characterised by setting wheel angles and speeds. Do general computations first:  
+  float ackRadius = abs(linSpeed/angSpeed);    
+  //Angle  
+  float innerAngle = atan(LENGTH/(ackRadius - (WIDTH/2.0)))*180.0/PI;  //servo angle for both wheels on the inside of the turn
+  float outerAngle = atan(LENGTH/(ackRadius + (WIDTH/2.0)))*180.0/PI; 
+  // front wheels straight ahead at 90
+  
+  //Speed
+  float innerBackRadius = sqrt(pow(LENGTH, 2) + pow(ackRadius - WIDTH/2.0, 2));  //distance from inner wheels to center of rotation
+  float outerBackRadius = sqrt(pow(LENGTH, 2) + pow(ackRadius + WIDTH/2.0, 2));
+  float innerFrontRadius = ackRadius - WIDTH/2.0;  //distance from inner wheels to center of rotation
+  float outerFrontRadius = ackRadius + WIDTH/2.0;
+  
+  float innerBackRPM = (innerBackRadius / WHEEL_RADIUS) * abs(angSpeed)*SEC_PER_MIN/(2.0*PI); //speed of inner wheels
+  float outerBackRPM = (outerBackRadius / WHEEL_RADIUS) * abs(angSpeed)*SEC_PER_MIN/(2.0*PI);
+  float innerFrontRPM = (innerFrontRadius / WHEEL_RADIUS) * abs(angSpeed)*SEC_PER_MIN/(2.0*PI); //speed of inner wheels
+  float outerFrontRPM = (outerFrontRadius / WHEEL_RADIUS) * abs(angSpeed)*SEC_PER_MIN/(2.0*PI);
+
+  // There are 4 permutations of linSpeed and angSpeed, with each corresponding to one of two cases: an instantaneously circular trajectory about a point to the left or right of the robot
+  float trajectoryCenterLocation = (angSpeed * linSpeed);  //Point on left if positive, point on right if negative   --   Magnitude is meaningless
+  
+  if (trajectoryCenterLocation > 0.0)
+  {
+    // center of rotation is on left: CCW+Forwards or CW+Backwards
+    
+    LF_servo_angle = 0;
+    RF_servo_angle = 0;
+    LR_servo_angle = 90 + innerAngle;
+    RR_servo_angle = 90 + outerAngle;
+    
+    LF_wheel_rpm = innerFrontRPM;
+    RF_wheel_rpm = outerFrontRPM;
+    LR_wheel_rpm = innerBackRPM;
+    RR_wheel_rpm = outerBackRPM;
+   
+  }
+  else
+  {
+    // center of rotation is on Right: CW+Forwards or CCW+Backwards
+    LF_servo_angle = 90.0;
+    RF_servo_angle = 90.0;
+    LR_servo_angle = 90.0 - outerAngle;
+    RR_servo_angle = 90.0 - innerAngle;
+    
+    LF_wheel_rpm = outerFrontRPM;
+    RF_wheel_rpm = innerFrontRPM;
+    LR_wheel_rpm = outerBackRPM;
+    RR_wheel_rpm = innerBackRPM;
+  }
+}
+
+void setWheelDirection()
 {
   //Account for the fact that the motors on the right are mounted in the opposite orientation:
   RF_motor_dir = !RF_motor_dir;
@@ -511,8 +506,9 @@ void setWheelDirection(boolean LF_motor_dir, boolean RF_motor_dir, boolean LR_mo
   digitalWrite(RR_motor_dir_pin, RR_motor_dir);
 }
 
-void setWheelAngle(float LF_servo_angle, float RF_servo_angle, float LR_servo_angle, float RR_servo_angle)
+void setWheelAngle()
 { 
+  // pushes values to motors
   
   //initialize limits on what commands can be sent
   //define the variables
@@ -526,6 +522,15 @@ void setWheelAngle(float LF_servo_angle, float RF_servo_angle, float LR_servo_an
   RF_servo_cmd = map(RF_servo_angle,0,180,1000,2000);
   LR_servo_cmd = map(LR_servo_angle,0,180,1000,2000);
   RR_servo_cmd = map(RR_servo_angle,0,180,1000,2000);
+  
+  
+  //Fine tune servo calibration:
+  //should not be greater than like 50 or 100
+  //The larger the number, the smaller the range of motion of the servos
+  LF_servo_cmd += 0;
+  RF_servo_cmd += 0;
+  LR_servo_cmd += 0;
+  RR_servo_cmd += 0;  
     
   //prevent interference    //ASSUMES LEFT-RIGHT SYMMETRICAL LIMITS
   
@@ -563,7 +568,7 @@ void setWheelAngle(float LF_servo_angle, float RF_servo_angle, float LR_servo_an
 
 }
 
-void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_wheel_rpm) {
+void setWheelSpeed() {
   //THESE CALIBRATION CONSTANTS NEED TO BE BETTER DOCUMENTED!!
   //I think they were determined on wheels that are floating in the air to map rpm to a 0-255 command
   //I think the process of coming up with these constants is in google drive somewhere, in the second sheet of a spreadsheet
