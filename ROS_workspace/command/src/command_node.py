@@ -225,8 +225,7 @@ def setAugerSpeed(desiredSpeed):
 def goTo(x,y,theta):
 	# send a specified goal in a compact form
 	# All three parameters in Arena coordinates
-
-	time.sleep(10)
+	rospy.loginfo("In goTO with heading: " +str(quatToDegrees(slam_out_pose)))
 
 	nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
 	#(arenaCoords, slam_out_pose, corner1, corner2, corner3, corner4, resolution):

@@ -31,5 +31,3 @@
 	<!---STARTS HECTOR MAPPING RVIZ-->
 	<!--node pkg="rviz" type="rviz" name="rviz_hector" args="-d $(find hector_slam_launch)/rviz_cfg/mapping_demo.vcg"/-->
 </launch>
-
-c
