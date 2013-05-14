@@ -1,0 +1,168 @@
+# World file for Lunarex Robot Simulation
+
+
+define LidarEx ranger
+#define the lidar (called a ranger) so that it can be instantiated later
+
+(
+  sensor(
+    # laser-specific properties
+    # http://www.hokuyo-aut.jp/02sensor/07scanner/utm_30lx.html
+	#range_max 30.0 #commented out because warning raised that it wasnt used
+	fov 180.0 #field of view in degrees
+	range [0.0 30.0]
+	
+	#sview [0 30 180] # [range_min range_max fov] #doesnt seem to work but was suggested here http://playerstage.sourceforge.net/doc/Stage-3.2.1/group__model__laser.html
+	samples 720	#max from lidar but choosing a smaller number decreases computational time  
+  )
+  
+  model(
+	#physical model properties
+	color "orange"
+    scount 1
+
+    size [ 0.060 0.060 0.087 ]	#length x width x height
+    #pose is defined when called
+  )
+)
+
+
+define lunabot position
+(
+  size [1.20 0.75 0.3]  #length x width x height
+  # origin [? ? ? ?] #define centre of rotation
+  # localization_origin [0 0 0] #initial position
+  
+  # the shape of the robot. rectangular for now. (identify points going ccw around robot, origin in bottom left
+  block( 
+
+   # points 4
+   # point[3] [ 1.20 0.0 ]
+   # point[2] [ 1.20 0.75 ]
+   # point[1] [ 0.0 0.75 ]
+   # point[0] [ 0.0 0.0 ]
+    
+    points 24
+    #point[0]  [0.15 0.0]
+    #point[1]  [0.15 0.38]
+    #point[2]  [0.0 0.38]
+    #point[3]  [0.0 0.62]
+    #point[4]  [0.15 0.62]
+    #point[5]  [0.15 0.96]
+    #point[6]  [0.0 0.96]
+    #point[7]  [0.0 1.22]
+    #point[8]  [0.15 1.22]
+    #point[9]  [0.15 1.29]
+    #point[10] [0.30 1.29]
+    #point[11] [0.30 1.45]
+    #point[12] [0.45 1.45]
+    #point[13] [0.45 1.29]
+    #point[14] [0.60 1.29]
+    #point[15] [0.60 1.22]
+    #point[16] [0.75 1.22]
+    #point[17] [0.75 0.96]
+    #point[18] [0.60 0.96]
+    #point[19] [0.60 0.62]
+    #point[20] [0.75 0.62]
+    #point[21] [0.75 0.38]
+    #point[22] [0.60 0.38]
+    #point[23] [0.60 0.0]
+
+    point[0]  [0.0 0.15]
+    point[1]  [0.38 0.15]
+    point[2]  [0.38 0.0]
+    point[3]  [0.62 0.0]
+    point[4]  [0.62 0.15]
+    point[5]  [0.96 0.15]
+    point[6]  [0.96 0.0]
+    point[7]  [1.22 0.0]
+    point[8]  [1.22 0.15]
+    point[9]  [1.29 0.15]
+    point[10] [1.29 0.30]
+    point[11] [1.45 0.30]
+    point[12] [1.45 0.45]
+    point[13] [1.29 0.45]
+    point[14] [1.29 0.60]
+    point[15] [1.22 0.60]
+    point[16] [1.22 0.75]
+    point[17] [0.96 0.75]
+    point[18] [0.96 0.60]
+    point[19] [0.62 0.60]
+    point[20] [0.62 0.75]
+    point[21] [0.38 0.75]
+    point[22] [0.38 0.60]
+    point[23] [0.0 0.60]
+
+    z [0 0.7] # the height of the robot
+   
+  )
+  color "red"
+  # Drive the robot on the basis of an angle and a speed (choice between diff car omni)
+  drive "omni"
+  
+  ranger_return 0
+  laser_return 0	#not sure if these are necessary, make it reflect laser/ranger beams or not
+  
+)
+
+
+define arena model
+(
+  # sombre, sensible, artistic
+  color "gray10"
+
+  boundary 1
+
+  # default GUI settings
+  gui_nose 0
+  gui_grid 0
+  gui_move 0
+  gui_outline 0
+  
+  # choose which sensors are attached
+  gripper_return 0
+  fiducial_return 0
+  ranger_return 1 #if 1, robot will receive data. If 0, it won't receive data.
+)
+
+speedup 1 #has to do with playback of simulation, was 10 by default i think
+
+paused 0
+
+resolution 0.01
+
+# configure the GUI window
+window
+(
+  size [369 700] # in pixels
+  scale 94  # pixels per meter, makes it slightly larger than the arena
+  center [ 0  0 ]
+  rotate [ 0  0 ]
+  			
+  show_data 1              # 1=on 0=off
+)
+
+# load an environment bitmap
+arena
+( 
+  name "Arena"
+  bitmap "obstacleLunarena2.bmp" #if defined by bitmap, put it here
+  # size of the arena
+  size [3.88 7.38 0.50]	#according to competition rules
+  pose [0 0 0 0]
+)
+
+
+lunabot
+(		  
+  # can refer to the robot by this name
+  name "lunabot"
+  pose [0.86 -2.62 0 90 ]	#initial position, (then rotation?), in the x-right y-up stage coordinates
+  color "red" 
+  LidarEx(pose [0.3 0 0 0]) # call Lidar (ie place on on the lunabot) and position it relative to robot (i think its x y z theta)
+  #there's also this thing where the default TF is [0 0 .15 0] and so I think that it is added onto this pose, and so the resulting pose puts the lidar's z position at 0.15 relative to /base_link
+ 
+ # ctrl "wander"  do not need this for now
+ # it's supposed to make the robot wander around by I think it doesnt work for now. 
+ # More research into 'stage controllers' is necessary.
+)#

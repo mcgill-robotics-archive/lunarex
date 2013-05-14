@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/868/trunk/hector_gazebo/hector_gazebo_plugins/src
+END
+diffdrive_plugin_6w.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/868/trunk/hector_gazebo/hector_gazebo_plugins/src/diffdrive_plugin_6w.cpp
+END
+gazebo_ros_sonar.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/868/trunk/hector_gazebo/hector_gazebo_plugins/src/gazebo_ros_sonar.cpp
+END
+reset_plugin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/758/trunk/hector_gazebo/hector_gazebo_plugins/src/reset_plugin.cpp
+END
+gazebo_ros_magnetic.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/868/trunk/hector_gazebo/hector_gazebo_plugins/src/gazebo_ros_magnetic.cpp
+END
+gazebo_ros_gps.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/811/trunk/hector_gazebo/hector_gazebo_plugins/src/gazebo_ros_gps.cpp
+END
+gazebo_ros_imu.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/814/trunk/hector_gazebo/hector_gazebo_plugins/src/gazebo_ros_imu.cpp
+END

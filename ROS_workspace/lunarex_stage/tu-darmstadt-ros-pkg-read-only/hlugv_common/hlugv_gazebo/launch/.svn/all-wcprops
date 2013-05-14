@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/862/trunk/hlugv_common/hlugv_gazebo/launch
+END
+spawn_hlugv_rc2012.launch
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/862/trunk/hlugv_common/hlugv_gazebo/launch/spawn_hlugv_rc2012.launch
+END
+spawn_hlugv_base.launch
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/862/trunk/hlugv_common/hlugv_gazebo/launch/spawn_hlugv_base.launch
+END
+spawn_hlugv_cam_lidar.launch
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/862/trunk/hlugv_common/hlugv_gazebo/launch/spawn_hlugv_cam_lidar.launch
+END

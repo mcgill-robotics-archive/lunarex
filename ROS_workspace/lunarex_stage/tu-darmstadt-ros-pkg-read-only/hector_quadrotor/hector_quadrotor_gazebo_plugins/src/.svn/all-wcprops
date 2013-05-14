@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/868/trunk/hector_quadrotor/hector_quadrotor_gazebo_plugins/src
+END
+quadrotor_simple_controller.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/868/trunk/hector_quadrotor/hector_quadrotor_gazebo_plugins/src/quadrotor_simple_controller.cpp
+END
+gazebo_ros_baro.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/868/trunk/hector_quadrotor/hector_quadrotor_gazebo_plugins/src/gazebo_ros_baro.cpp
+END

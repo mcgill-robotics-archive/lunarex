@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/889/trunk/hector_navigation/hector_exploration_planner
+END
+mainpage.dox
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/758/trunk/hector_navigation/hector_exploration_planner/mainpage.dox
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/758/trunk/hector_navigation/hector_exploration_planner/CMakeLists.txt
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/758/trunk/hector_navigation/hector_exploration_planner/Makefile
+END
+hector_exploration_base_global_planner_plugin.xml
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/!svn/ver/758/trunk/hector_navigation/hector_exploration_planner/hector_exploration_base_global_planner_plugin.xml
+END
+manifest.xml
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/758/trunk/hector_navigation/hector_exploration_planner/manifest.xml
+END

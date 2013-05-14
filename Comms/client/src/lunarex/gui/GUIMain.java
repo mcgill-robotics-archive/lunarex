@@ -28,10 +28,7 @@ import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import joystick.JFrameWindow;
-import joystick.JInputJoystick;
-import joystick.JInputJoystickTest;
-import joystick.JoystickTest;
+import lunarex.controller.joystick.*;
 import lunarex.input.KeyboardInput;
 import lunarex.network.Client;
 import net.java.games.input.Controller;
@@ -49,10 +46,11 @@ public class GUIMain extends JFrame {
 	static final int FONTSIZE = 20;
 
 	//FOR MACBOOK AIR ON MCGILL NETWORK
-	//String ipAdressString = "142.157.43.17";
+	String ipAdressString = "142.157.42.249";
 	
 	//FOR MACBOOK AIR ON OUR NETWORK
-	String ipAdressString = "192.168.1.101";
+	//String ipAdressString = "192.168.1.101";
+
 	
 	//FOR LOCALHOST
 	//String ipAdressString = "127.0.0.1";
@@ -396,6 +394,22 @@ public class GUIMain extends JFrame {
 		g2d.drawString("Auger Speed: ", x, y);
 		g2d.drawString(""+augerSpeed, x+COLUMN_WIDTH, y);
 		g2d.drawString("("+augerSpeedPercentage+"% Up)", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
+		y+=LINE_SPACING*2;
+		g2d.drawString("----INCOMING FROM SERVER ----", x, y); 
+		y+=LINE_SPACING;
+		g2d.drawString("slam_out_pose:", x, y);
+		y+=LINE_SPACING;
+		g2d.drawString("x: ", x, y);
+		if(client!=null&&client.receive()!=null)
+			g2d.drawString(""+client.getX(), x+COLUMN_WIDTH,y);
+		y+=LINE_SPACING;
+		g2d.drawString("y: " , x, y);
+		if(client!=null&&client.receive()!=null)
+			g2d.drawString(""+client.getY(), x+COLUMN_WIDTH,y);
+		y+=LINE_SPACING;
+		g2d.drawString("w: ", x, y);
+		if(client!=null&&client.receive()!=null)
+			g2d.drawString(""+client.getTheta(), x+COLUMN_WIDTH,y);
 	}
 	
 	private void keyCom(int key, String stopSign) {

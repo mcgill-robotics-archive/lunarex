@@ -1,0 +1,21 @@
+To start a simulation in stage -- March 2
+
+
+Sebastien + Alan
+
+roscore
+roslaunch stageLaunchV1.launch  //  in the lunarex_stage  file
+roslaunch l3.launch // hector_launchers
+// rosrun lx_server message_sender.py 
+// outputs a message under a new name ; from base_scan to scan
+
+rosrun kinect_node kinect_srv_server_prototype.py
+rosrun map_builder map_builder.py
+
+rosrun rviz rviz
+
+
+
+velocity commands example:
+
+rostopic pub /cmd_vel geometry_msgs/Twist -r 10000 '[0,0,0]' '[0,0,0.1]'  // for a rotationrostopic pub /cmd_vel geometry_msgs/Twist -r 10000 '[0,0,1]' '[0,0,0]'  // to move

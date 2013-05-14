@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/758/trunk/hlugv_common/hlugv_apps
+END
+manifest.xml
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/758/trunk/hlugv_common/hlugv_apps/manifest.xml
+END
+mainpage.dox
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/758/trunk/hlugv_common/hlugv_apps/mainpage.dox
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/758/trunk/hlugv_common/hlugv_apps/CMakeLists.txt
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/758/trunk/hlugv_common/hlugv_apps/Makefile
+END

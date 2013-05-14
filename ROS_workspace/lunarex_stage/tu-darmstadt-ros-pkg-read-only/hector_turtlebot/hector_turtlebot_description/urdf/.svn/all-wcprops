@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/758/trunk/hector_turtlebot/hector_turtlebot_description/urdf
+END
+hector_turtlebot_calibration.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/758/trunk/hector_turtlebot/hector_turtlebot_description/urdf/hector_turtlebot_calibration.xacro
+END
+hector_turtlebot_kinect.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/758/trunk/hector_turtlebot/hector_turtlebot_description/urdf/hector_turtlebot_kinect.urdf.xacro
+END
+hector_turtlebot_body.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/758/trunk/hector_turtlebot/hector_turtlebot_description/urdf/hector_turtlebot_body.urdf.xacro
+END
+hector_turtlebot.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/!svn/ver/758/trunk/hector_turtlebot/hector_turtlebot_description/urdf/hector_turtlebot.urdf.xacro
+END
+hector_turtlebot_body_simplified.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/!svn/ver/758/trunk/hector_turtlebot/hector_turtlebot_description/urdf/hector_turtlebot_body_simplified.urdf.xacro
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/812/trunk/hector_gazebo/gazebo_rtt_plugin
+END
+manifest.xml
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/812/trunk/hector_gazebo/gazebo_rtt_plugin/manifest.xml
+END
+ROS_BUILD_BLACKLIST
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/812/trunk/hector_gazebo/gazebo_rtt_plugin/ROS_BUILD_BLACKLIST
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/812/trunk/hector_gazebo/gazebo_rtt_plugin/CMakeLists.txt
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/812/trunk/hector_gazebo/gazebo_rtt_plugin/Makefile
+END
