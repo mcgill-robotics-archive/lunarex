@@ -7,9 +7,17 @@ global_costmap:
   rolling_window: true
 
   #important: set in accordance to hector_mapping map!
-  width: 26
-  height: 26
-  resolution: 0.025
+
+  #for hector map of 1024*1024 with res of 0.025
+  # 1024*0.025 = 25.6
+  #width: 26 #in meters
+  #height: 26
+  #resolution: 0.025
+
+  #for hector map of 2000*2000 with res of 0.008
+  width: 16
+  height: 16
+  resolution: 0.008
 
   map_type: costmap
 

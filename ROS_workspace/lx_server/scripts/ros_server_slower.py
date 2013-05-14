@@ -99,20 +99,20 @@ class Handler(SocketServer.BaseRequestHandler):
 		    self.auger_speed = int((ord)(self.datalist[4]))
 
 
-       		    #r = rospy.Rate(10)
-                    #Publish to ros
-                    if not rospy.is_shutdown():
-                        try:
-                            pub_vel.publish(self.linearVelocity, self.angularVelocity)  #   Send Twist message to /cmd_vel topic
-			    dump_LA_pub.publish(self.dump_pos)	# Send dumping info
-			    susp_LA_pub.publish(self.susp_pos)	# Send suspension info
-			    door_LA_pub.publish(self.door_pos)	# Send door status
-			    auger_Speed_pub.publish(self.auger_speed)	# Send auger speed
-                	    #r.sleep()
+		    if((self.currentTime-self.initialTime) > 100):
+                        if not rospy.is_shutdown():
+                            try:
+                                pub_vel.publish(self.linearVelocity, self.angularVelocity)  #   Send Twist message to /cmd_vel topic
+			        dump_LA_pub.publish(self.dump_pos)	# Send dumping info
+			        susp_LA_pub.publish(self.susp_pos)	# Send suspension info
+			        door_LA_pub.publish(self.door_pos)	# Send door status
+			        auger_Speed_pub.publish(self.auger_speed)	# Send auger speed
+                            except rospy.ROSInterruptException:
+                                print 'Error in ROS nod'
+			self.initialTime = self.currentTime
 
-                            self.datalist = []  #   And prepare datalist for next input
-                        except rospy.ROSInterruptException:
-                            print 'Error in ROS nod'
+
+		    self.datalist = []  #   Prepare datalist for next input
 
 
 		    # DO NOT DELETE! USED FOR FEEDBACK MECHANISM
@@ -131,7 +131,7 @@ class Handler(SocketServer.BaseRequestHandler):
 
     def processVel(self, linear_vel, angular_vel):
 	max_speed_linear = 1.8
-	max_speed_angular = 4.0
+	max_speed_angular = 2.0
 	#convert back from byte to float
 	linear_vel = linear_vel - 127
 	linear_vel = linear_vel*max_speed_linear/128

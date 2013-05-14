@@ -6,14 +6,14 @@
 #include <geometry_msgs/Twist.h>
 
 //#include <arduino_msgs/ArduinoFeedback.h>
-        
+
 // ========== ROS stuff ================
 /*
 Order of Operations: (whats gunna happen in this section of code)
 //order got messed up - need to tweak this comment
 1. define nodehandle - rose node object 
 2. Initialize arduino variables that will be set in ROS
-3. subscribe to topics (point to arduino callback functions)
+3. subscribe to topics (point to arduino callback functions)d
 4. define arduino callback functions that set arduino variables
 5. create publishers for feedback
 6. nh.initNode() and subscribe to subscribers and advertise publishers in Setup()
@@ -29,8 +29,8 @@ ros:: NodeHandle nh;
 float angSpeed = 0;
 float linSpeed = 0;
 float dumpPos = 255; //down as default
-float suspPos = 0; //up as default
-float doorPos = 0; //closed by default
+float suspPos = 255; //up as default
+float doorPos = 0 ;
 float augerSpeed = 0;
 
 //Subscriber callback functions
@@ -47,7 +47,7 @@ void setSuspLA(const std_msgs::UInt8 &susp_pos){
   suspPos = (int) susp_pos.data;
 }  
 void setDoorLA(const std_msgs::UInt8 &door_pos){
-   doorPos= (int) door_pos.data;
+  doorPos = (int) door_pos.data;
 }
 void setAugerSpeed(const std_msgs::UInt8 &auger_speed){
   augerSpeed = (int) auger_speed.data;
@@ -81,14 +81,6 @@ int dumpActuator_pin = 7;
 int augerMotor_pin = 8;
 int doorPos_pin = 13;
 
-
-int LF_SERVO_PIN = 2;
-int RF_SERVO_PIN =3;
-int LR_SERVO_PIN = 4;
-int RR_SERVO_PIN = 5;
-
-
-//the following 12 pins verified May 10 for the second time, due to crappy gitub
 int LF_motor_dir_pin = 32;
 int RF_motor_dir_pin = 30;
 int LR_motor_dir_pin = 28;
@@ -157,26 +149,22 @@ int SEC_PER_MIN = 60;
 int GEAR_RATIO = 74;
 
 float TOL = 0.5;
-float ANG_STOP_THRESH = 2.0;
-float LIN_STOP_THRESH = 0.9;
+float STOP_THRESH = 0.9;
 
-int SUSP_INTERFERENCE_LIMIT = 50; //command sent to suspension actuators. values greater than this correspond to mining (0 travel, 255 full mine)
-float MINING_MAX_SERVO_ANGLE_FRONT = 0;
-float MINING_MAX_SERVO_ANGLE_REAR = 30;
-float TRAVEL_MAX_SERVO_ANGLE_FRONT = 50;
-float TRAVEL_MAX_SERVO_ANGLE_REAR = 50;
 void setup()
 {
+  Serial.begin(9600);
+  
   // ===== Driving and Steering ====
   pinMode(LF_motor_pin, OUTPUT);
   pinMode(RF_motor_pin, OUTPUT);
   pinMode(LR_motor_pin, OUTPUT);
   pinMode(RR_motor_pin, OUTPUT);
 
-  LF_servo.attach(LF_SERVO_PIN);
-  RF_servo.attach(RF_SERVO_PIN);
-  LR_servo.attach(LR_SERVO_PIN);
-  RR_servo.attach(RR_SERVO_PIN);
+  LF_servo.attach(2);
+  RF_servo.attach(3);
+  LR_servo.attach(4);
+  RR_servo.attach(5);
   
   augerSudoServo.attach(augerMotor_pin);
   
@@ -208,11 +196,11 @@ void setup()
 void loop()
 { 
   // ===== Driving and Steering ======
-  if (abs(linSpeed) <= LIN_STOP_THRESH && abs(angSpeed) <= ANG_STOP_THRESH)
+  if (abs(linSpeed) <= STOP_THRESH && abs(angSpeed) <= STOP_THRESH)
   {stopAll();}
-  else if(abs(linSpeed) <= LIN_STOP_THRESH)//so abs(angSpeed)>=ANG_STOP_THRESH 
+  else if(abs(linSpeed) <= STOP_THRESH)//so abs(angSpeed)>=STOPTHRESH 
   {turnOnSpot();}
-  else if(abs(angSpeed) <= ANG_STOP_THRESH) //so abs(linSpeed)>=LIN_STOP_THRESH
+  else if(abs(angSpeed) <= STOP_THRESH) //so abs(linSpeed)>=STOPTHRESH
   {goStraight();}
   else 
   {doAckerman();}
@@ -284,7 +272,7 @@ void turnOnSpot()
      LR_motor_dir = 0;
      RR_motor_dir = 1;
    }
-   else if(angSpeed < 0)
+   else if(angSpeed < 0);
    {
      LF_motor_dir = 1;
      RF_motor_dir = 0;
@@ -376,12 +364,11 @@ void doAckerman()
     float innerBack = 0;
     float outerBack = 0;
     
-    	float R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
-	float rad1 = 0;
-	float rad2 = 0;
-	float rad3 = 0;
-	float rad4 = 0;
-   
+    float R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
+    float rad1 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
+    float rad2 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
+    float rad3 = R1 - WIDTH/2;
+    float rad4 = R1 + WIDTH/2;
     
      if(abs(innerFront)>MAX_ANGLE)    //innerfront wheel will always have to turn more, do double if this condition is met
     {
@@ -392,248 +379,17 @@ void doAckerman()
        outerBack = atan(c/(ackRadius + (WIDTH/2.0)))*180/PI;
        
     }
+    Serial.println("--");
+    Serial.println(innerFront);
+    Serial.println(outerFront);
+    Serial.println(innerBack);
+    Serial.println(outerBack);
+    Serial.println(ackRadius);
+    Serial.println(WIDTH/2.0);
     
     float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed));  //Will return +/- 1 for CCW or CW, respectively (note this variable is distinct from LF_motor_dir, RF_motor_dir, etc)
-       
-     if(dir>0.0)  //counter clockwise
-     {
-         LF_servo_angle = 90 - innerFront;
-         RF_servo_angle = 90 - outerFront;
-         LR_servo_angle = 90 + innerBack;
-         RR_servo_angle = 90 + outerBack;
-  
-      	if(innerBack == 0.0)
-      	{
-		rad1 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
-   		rad2 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
-  		rad3 = R1 - WIDTH/2;
-    		rad4 = R1 + WIDTH/2;
-	}
-
-	else
-      	{
-         	rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-          	rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-		rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-		rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-      	}
-  }
-  
-  else if(dir<0.0)  //clockwise
-  {
-
-      	LF_servo_angle = 90.0 + outerFront;
-      	RF_servo_angle = 90.0 + innerFront;
-     	LR_servo_angle = 90.0 - outerBack;
-      	RR_servo_angle = 90.0 - outerBack;
-      
-	if(innerFront == 0.0)
-	{
-		rad1 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
-   		rad2 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
-  		rad3 = R1 + WIDTH/2;
-    		rad4 = R1 - WIDTH/2;
-	}
-
-	else
-	{
-		rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-		rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-	  	rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-	  	rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-	}
-  
-  }
-   
-    //now for drive motor velocities
-    LF_wheel_rpm = (rad1 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    RF_wheel_rpm = (rad2 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    LR_wheel_rpm = (rad3 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    RR_wheel_rpm = (rad4 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-  }
-  
-void miningAckerman()
-{ 
-  digitalWrite(LF_motor_enable_pin, LF_motor_enable);
-  digitalWrite(RF_motor_enable_pin, RF_motor_enable);
-  digitalWrite(LR_motor_enable_pin, LR_motor_enable);
-  digitalWrite(RR_motor_enable_pin, RR_motor_enable);
-   
-   
-  if(linSpeed < 0) //changed from <= to < because '==' has a different case
-  {
-      LF_motor_dir = 0;
-      RF_motor_dir = 0;
-      LR_motor_dir = 0;
-      RR_motor_dir = 0;
-  }
     
-  else if(linSpeed > 0)
-  {
-      LF_motor_dir = 1;
-      RF_motor_dir = 1;
-      LR_motor_dir = 1;
-      RR_motor_dir = 1;
-  }
-    
-
-  float ackRadius = abs(linSpeed)/abs(angSpeed);
-  float innerFront = 0;
-  float outerFront = 0;
-  float innerBack = atan(LENGTH/(ackRadius - (WIDTH/2.0)))*180/PI;
-  float outerBack = atan(LENGTH/(ackRadius + (WIDTH/2.0)))*180/PI;
-
-  float R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
-  float rad1 = 0;
-  float rad2 = 0;
-  float rad3 = 0;
-  float rad4 = 0;
-    
-    
-  float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed));  //Will return +/- 1 for CCW or CW, respectively (note this variable is distinct from LF_motor_dir, RF_motor_dir, etc)
-    
-  if(dir>0.0)  //counter clockwise
-  {
-      LF_servo_angle = 90 - innerFront;
-      RF_servo_angle = 90 - outerFront;
-      LR_servo_angle = 90 + innerBack;
-      RR_servo_angle = 90 + outerBack;
-  
-   	 	rad1 = R1 - WIDTH/2;
-   	 	rad2 = R1 + WIDTH/2;
-   	 	rad3 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
-  	 	rad4 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
-  }
-  
-  else if(dir<0.0)  //clockwise
-  {
-
-      LF_servo_angle = 90.0 + outerFront;
-      RF_servo_angle = 90.0 + innerFront;
-      LR_servo_angle = 90.0 - outerBack;
-      RR_servo_angle = 90.0 - outerBack;
-      
-	   
-   	 
-   	  rad1 = R1 + WIDTH/2;
-   	  rad2 = R1 - WIDTH/2;
-   	  rad3 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
-  	  rad4 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
-  
-  }
-    
-    //now for drive motor velocities
-    LF_wheel_rpm = (rad1 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    RF_wheel_rpm = (rad2 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    LR_wheel_rpm = (rad3 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-    RR_wheel_rpm = (rad4 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-}
-  
-
-void setWheelDirection(boolean LF_motor_dir, boolean RF_motor_dir, boolean LR_motor_dir, boolean RR_motor_dir)
-{
-  RF_motor_dir = !RF_motor_dir;
-  RR_motor_dir = !RR_motor_dir;
-  
-  //forward or backwards for drive wheels
-  digitalWrite(LF_motor_dir_pin, LF_motor_dir);
-  digitalWrite(RF_motor_dir_pin, RF_motor_dir);
-  digitalWrite(LR_motor_dir_pin, LR_motor_dir);
-  digitalWrite(RR_motor_dir_pin, RR_motor_dir);
-}
-
-void setWheelAngle(float LF_servo_angle, float RF_servo_angle, float LR_servo_angle, float RR_servo_angle)
-{
-  //motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
-  
-  
-  //initialize limits on what commands can be sent
-  //define the variables
-  int frontServoLowerLimit_cmd = 1000;
-  int frontServoUpperLimit_cmd = 2000;
-  int rearServoLowerLimit_cmd = 1000;
-  int rearServoUpperLimit_cmd = 2000;
-  
-  //convert angle in degrees to command
-  LF_servo_cmd = map(LF_servo_angle,0,180,1000,2000); 
-  RF_servo_cmd = map(RF_servo_angle,0,180,1000,2000);
-  LR_servo_cmd = map(LR_servo_angle,0,180,1000,2000);
-  RR_servo_cmd = map(RR_servo_angle,0,180,1000,2000);
-    
-  //prevent interference    //ASSUMES LEFT-RIGHT SYMMETRICAL LIMITS
-  
-  if (suspPos > SUSP_INTERFERENCE_LIMIT){    //mining mode    
-    frontServoLowerLimit_cmd = 1500-MINING_MAX_SERVO_ANGLE_FRONT*1000.0/180.0;
-    frontServoUpperLimit_cmd = 1500+MINING_MAX_SERVO_ANGLE_FRONT*1000.0/180.0;
-    rearServoLowerLimit_cmd = 1500-MINING_MAX_SERVO_ANGLE_REAR*1000.0/180.0;
-    rearServoUpperLimit_cmd = 1500+MINING_MAX_SERVO_ANGLE_REAR*1000.0/180.0;
-  }
-  else{  //travelling mode
-    frontServoLowerLimit_cmd = 1500-TRAVEL_MAX_SERVO_ANGLE_FRONT*1000.0/180.0;
-    frontServoUpperLimit_cmd = 1500+TRAVEL_MAX_SERVO_ANGLE_FRONT*1000.0/180.0;
-    rearServoLowerLimit_cmd = 1500-TRAVEL_MAX_SERVO_ANGLE_REAR*1000.0/180.0;
-    rearServoUpperLimit_cmd = 1500+TRAVEL_MAX_SERVO_ANGLE_REAR*1000.0/180.0;
-  }
-    
-    LF_servo_cmd = constrain(LF_servo_cmd, frontServoLowerLimit_cmd, frontServoUpperLimit_cmd);
-    RF_servo_cmd = constrain(RF_servo_cmd, frontServoLowerLimit_cmd, frontServoUpperLimit_cmd);
-    LR_servo_cmd = constrain(LR_servo_cmd, rearServoLowerLimit_cmd, frontServoUpperLimit_cmd);
-    RR_servo_cmd = constrain(RR_servo_cmd, rearServoLowerLimit_cmd, frontServoUpperLimit_cmd);
-
-
-  //prevent accidental continuous rotation: (should be already accounted for above, but it cant hurt to be safe)
-  LF_servo_cmd = constrain(LF_servo_cmd, 1000, 2000);
-  RF_servo_cmd = constrain(RF_servo_cmd, 1000, 2000);
-  LR_servo_cmd = constrain(LR_servo_cmd, 1000, 2000);
-  RR_servo_cmd = constrain(RR_servo_cmd, 1000, 2000);
-
-
-  //send signals to motors
-  LF_servo.writeMicroseconds(LF_servo_cmd);
-  RF_servo.writeMicroseconds(RF_servo_cmd);
-  LR_servo.writeMicroseconds(LR_servo_cmd);
-  RR_servo.writeMicroseconds(RR_servo_cmd);
-
-/* 
-
-THE FOLLOWING AVOIDS CHANGING THE PWM SIGNAL IF THE OLD SERVO ANGLE WAS THE SAME. THE PROBLEM WE WERE HAVING WAS A GROUND PLANE ISSUE - NOT THIS
-IF WE UNCOMMENT THIS BLOCK, WE NEED TO REMOVE THE writeMicroseconds COMMANDS ABOVE
-
-   if(abs(LF_servo_angle - LF_old_servo_angle)>TOL || abs(RR_servo_angle-RR_old_servo_angle)>TOL)
-  if(abs(LF_servo_angle - LF_old_servo_angle)>TOL || abs(RR_servo_angle-RR_old_servo_angle)>TOL)
-  {
-    LF_servo.writeMicroseconds(LF_servo_cmd);
-    RF_servo.writeMicroseconds(RF_servo_cmd);
-    LR_servo.writeMicroseconds(LR_servo_cmd);
-    RR_servo.writeMicroseconds(RR_servo_cmd);
-  }
-}
-
-*/
-}
-
-void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_wheel_rpm) {
-  //THESE CALIBRATION CONSTANTS NEED TO BE BETTER DOCUMENTED!!
-  //I think they were determined on wheels that are floating in the air to map rpm to a 0-255 command
-  //I think the process of coming up with these constants is in google drive somewhere, in the second sheet of a spreadsheet
-  //-Nick
-
-  float A = 11.7718918;
-  float B = -3.81049;
-  
-  
-  LF_motor_cmd = A*LF_wheel_rpm + B;
-  RF_motor_cmd = A*RF_wheel_rpm + B;
-  LR_motor_cmd = A*LR_wheel_rpm + B;
-  RR_motor_cmd = A*RR_wheel_rpm + B;
-
-  analogWrite(LF_motor_pin, LF_wheel_rpm);
-  analogWrite(RF_motor_pin, RF_wheel_rpm);
-  analogWrite(LR_motor_pin, LR_wheel_rpm);
-  analogWrite(RR_motor_pin, RR_wheel_rpm);
-}
-
-/* if(dir>0.0)  //counter clockwise
+    if(dir>0.0)  //counter clockwise
     {
       
       LF_servo_angle = 90 - innerFront;
@@ -655,12 +411,74 @@ void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_
       RF_servo_angle = 90.0 + innerFront;
       LR_servo_angle = 90.0 - outerBack;
       RR_servo_angle = 90.0 - outerBack;
+
+      LF_servo_angle = 90 + outerFront;
+      RF_servo_angle = 90 + innerFront;
+      LR_servo_angle = 90 - outerBack;
+      RR_servo_angle = 90 - innerBack;
       
       rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
       rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
       rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
       rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
     }
-    */
+    
+    //now for drive motor velocities
+    LF_wheel_rpm = (rad1 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    RF_wheel_rpm = (rad2 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    LR_wheel_rpm = (rad3 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    RR_wheel_rpm = (rad4 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+  }
+  
+void setWheelDirection(boolean LF_motor_dir, boolean RF_motor_dir, boolean LR_motor_dir, boolean RR_motor_dir)
+{
+  RF_motor_dir = !RF_motor_dir;
+  RR_motor_dir = !RR_motor_dir;
+  
+  //forward or backwards for drive wheels
+  digitalWrite(LF_motor_dir_pin, LF_motor_dir);
+  digitalWrite(RF_motor_dir_pin, RF_motor_dir);
+  digitalWrite(LR_motor_dir_pin, LR_motor_dir);
+  digitalWrite(RR_motor_dir_pin, RR_motor_dir);
+}
+
+void setWheelAngle(float LF_servo_angle, float RF_servo_angle, float LR_servo_angle, float RR_servo_angle)
+{
+  //motor numbers --> upper left = 1, upper right = 2, lower left = 3, lower right = 4
+  
+  
+  LF_servo_cmd = map(LF_servo_angle,0,180,1000,2000); //still need to validate this mapping and might need to invert it for the front or back servos (which are mounted backwards)
+  RF_servo_cmd = map(RF_servo_angle,0,180,1000,2000);
+  LR_servo_cmd = map(LR_servo_angle,0,180,1000,2000);
+  RR_servo_cmd = map(RR_servo_angle,0,180,1000,2000);
+  
+  //prevent accidental continuous rotation:
+  LF_servo_cmd = constrain(LF_servo_cmd, 1000, 2000);
+  RF_servo_cmd = constrain(RF_servo_cmd, 1000, 2000);
+  LR_servo_cmd = constrain(LR_servo_cmd, 1000, 2000);
+  RR_servo_cmd = constrain(RR_servo_cmd, 1000, 2000);
+  
+   if(abs(LF_servo_angle - LF_old_servo_angle)>TOL || abs(RR_servo_angle-RR_old_servo_angle)>TOL)
+  if(abs(LF_servo_angle - LF_old_servo_angle)>TOL || abs(RR_servo_angle-RR_old_servo_angle)>TOL)
+  {
+    LF_servo.writeMicroseconds(LF_servo_cmd);
+    RF_servo.writeMicroseconds(RF_servo_cmd);
+    LR_servo.writeMicroseconds(LR_servo_cmd);
+    RR_servo.writeMicroseconds(RR_servo_cmd);
+  }
+}
+
+void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_wheel_rpm)
+{
+  LF_motor_cmd = 11.7718918*LF_wheel_rpm - 3.81049;
+  RF_motor_cmd = 11.7718918*RF_wheel_rpm - 3.81049;
+  LR_motor_cmd = 11.7718918*LR_wheel_rpm - 3.81049;
+  RR_motor_cmd = 11.7718918*RR_wheel_rpm - 3.81049;
+
+  analogWrite(LF_motor_pin, LF_wheel_rpm);
+  analogWrite(RF_motor_pin, RF_wheel_rpm);
+  analogWrite(LR_motor_pin, LR_wheel_rpm);
+  analogWrite(RR_motor_pin, RR_wheel_rpm);
+}
 
 

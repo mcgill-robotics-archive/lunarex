@@ -5,9 +5,9 @@ local_costmap:
   publish_frequency: 1.5
   static_map: false
   rolling_window: true
-  width: 20.0 
-  height: 20.0 
-  resolution: 0.05
+  width: 5.0 
+  height: 5.0 
+  resolution: 0.008
 
   map_type: costmap
 
