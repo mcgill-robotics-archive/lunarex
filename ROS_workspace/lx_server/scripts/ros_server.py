@@ -26,7 +26,8 @@ door_LA_pub = None
 auger_Speed_pub = None
 
 #Subscriber variables
-latestPose = PoseStamped()
+latestPS = PoseStamped()
+
 #global_x = 0.0
 
 #Don't need these actually
@@ -48,13 +49,15 @@ class Velocity:
         self.z = z
 
 def posCallback(data):
-        latestPose = data;
+        global latestPS
+        latestPS = data;
 #        global_x = latestPose.position.x
 #        print latestPose.position.x
 
 class Handler(SocketServer.BaseRequestHandler):
     def setup(self):
-        self.currentPos = PosData(latestPose.pose.position.x,latestPose.pose.position.y,latestPose.pose.orientation.w)
+        global latestPS
+        self.currentPos = PosData(latestPS.pose.position.x, latestPS.pose.position.y, latestPS.pose.orientation.w)
 #        print latestPose.position.x
         self.initialTime = int(time.time()*1000.0)
         self.currentTime = int(time.time()*1000.0)
@@ -117,7 +120,8 @@ class Handler(SocketServer.BaseRequestHandler):
 
 		    # DO NOT DELETE! USED FOR FEEDBACK MECHANISM
             	    if((self.currentTime-self.initialTime) > 500):
-                        self.currentPos = PosData(latestPose.pose.position.x,latestPose.pose.position.y,latestPose.pose.orientation.w)
+                        global latestPS
+                        self.currentPos = PosData(latestPS.pose.position.x, latestPS.pose.position.y, latestPS.pose.orientation.w)
                         dataPacket = json.dumps(vars(self.currentPos),sort_keys=True,indent=4)
                     	self.request.send(dataPacket)
                     	self.initialTime = self.currentTime
