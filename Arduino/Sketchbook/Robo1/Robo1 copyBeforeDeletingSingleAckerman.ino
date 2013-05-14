@@ -357,84 +357,117 @@ void goStraight()
 
 void doAckerman()
 { 
-  LF_motor_enable = 1;
-  RF_motor_enable = 1;
-  LR_motor_enable = 1;
-  RR_motor_enable = 1;
- 
- if(linSpeed < 0) 
-  {
-    LF_motor_dir = 0;
-    RF_motor_dir = 0;
-    LR_motor_dir = 0;
-    RR_motor_dir = 0;
-  }
-  
-  else if(linSpeed > 0)
-  {
-    LF_motor_dir = 1;
-    RF_motor_dir = 1;
-    LR_motor_dir = 1;
-    RR_motor_dir = 1;
-  }
-
-  // ----------
-  
-  float ackRadius = abs(linSpeed)/abs(angSpeed);
-
-  float R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
-  float rad1 = 0;
-  float rad2 = 0;
-  float rad3 = 0;
-  float rad4 = 0;
-  
-  //Ackerman steering is characterised by setting wheel angles and speeds. Do general computations first:
-  
-  //Angle  
-  float innerAngle = atan((LENGTH/2.0)/(ackRadius - (WIDTH/2.0)))*180/PI;  //servo angle for both wheels on the inside of the turn
-  float outerAngle = atan((LENGTH/2.0)/(ackRadius + (WIDTH/2.0)))*180/PI; 
-  //Speed
-  float innerRadius = sqrt(pow(LENGTH/2.0, 2) + pow(ackRadius - WIDTH/2, 2));  //distance from inner wheels to center of rotation
-  float outerRadius = sqrt(pow(LENGTH/2.0, 2) + pow(ackRadius + WIDTH/2, 2));
-  float innerRPM = (innerRadius / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI); //speed of inner wheels
-  float outerRPM = (outerRadius / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
-
-  // There are 4 permutations of linSpeed and angSpeed, with each corresponding to one of two cases: an instantaneously circular trajectory about a point to the left or right of the robot
-  
-  float trajectoryCenterLocation = (angSpeed * linSpeed);  //Point on left if positive, point on right if negative   --   Magnitude is meaningless
-  
-  if (trajectoryCenterLocation > 0.0)
-  {
-    // center of rotation is on left: CCW+Forwards or CW+Backwards
-    
-    LF_servo_angle = 90 - innerAngle;
-    RF_servo_angle = 90 - outerAngle;
-    LR_servo_angle = 90 + innerAngle;
-    RR_servo_angle = 90 + outerAngle;
-    
-    LF_wheel_rpm = innerRPM;
-    RF_wheel_rpm = outerRPM;
-    LR_wheel_rpm = innerRPM;
-    RR_wheel_rpm = outerRPM;
+  //Now that we know that the linear AND angular velocities are non-zero.
+  //Implement ackerman or double ackerman "in motion steering algorithm" depending on how sharp a turn it is. 
+  //Default single ackerman unless a front wheel angle would be above a threshold, MAX_ANGLE
+  //If single ackerman generates too high an angle, recalculate with double ackerman
+   digitalWrite(LF_motor_enable_pin, LF_motor_enable);
+  digitalWrite(RF_motor_enable_pin, RF_motor_enable);
+  digitalWrite(LR_motor_enable_pin, LR_motor_enable);
+  digitalWrite(RR_motor_enable_pin, RR_motor_enable);
    
-  }
-  else
-  {
-    // center of rotation is on Right: CW+Forwards or CCW+Backwards
-    LF_servo_angle = 90.0 + outerAngle;
-    RF_servo_angle = 90.0 + innerAngle;
-    LR_servo_angle = 90.0 - outerAngle;
-    RR_servo_angle = 90.0 - innerAngle;
+   
+   if(linSpeed < 0) //changed from <= to < because '==' has a different case
+    {
+      LF_motor_dir = 0;
+      RF_motor_dir = 0;
+      LR_motor_dir = 0;
+      RR_motor_dir = 0;
+    }
     
-    LF_wheel_rpm = outerRPM;
-    RF_wheel_rpm = innerRPM;
-    LR_wheel_rpm = outerRPM;
-    RR_wheel_rpm = innerRPM;
+    else if(linSpeed > 0)
+    {
+      LF_motor_dir = 1;
+      RF_motor_dir = 1;
+      LR_motor_dir = 1;
+      RR_motor_dir = 1;
+    }
+    
+
+    //float ackRadius = (abs(linSpeed)/2.0)*sin(abs(angSpeed)/2.0);
+
+    //float ackRadius = (abs(linSpeed)/2.0)*sin(abs(angSpeed)/2.0); //old april 9
+    float ackRadius = abs(linSpeed)/abs(angSpeed);
+    float innerFront = atan(LENGTH/(ackRadius - (WIDTH/2.0)))*180/PI;
+    float outerFront = atan(LENGTH/(ackRadius + (WIDTH/2.0)))*180/PI;
+    float innerBack = 0;
+    float outerBack = 0;
+    
+    	float R1 = sqrt(pow(ackRadius,2) - pow(DIST_TO_AXIS_A, 2));
+	float rad1 = 0;
+	float rad2 = 0;
+	float rad3 = 0;
+	float rad4 = 0;
+   
+    
+     if(abs(innerFront)>MAX_ANGLE)    //innerfront wheel will always have to turn more, do double if this condition is met
+    {
+       float c = LENGTH /2.0;
+       innerFront = atan(c/(ackRadius - (WIDTH/2.0)))*180/PI;
+       outerFront = atan(c/(ackRadius + (WIDTH/2.0)))*180/PI; 
+       innerBack = atan(c/(ackRadius - (WIDTH/2.0)))*180/PI;
+       outerBack = atan(c/(ackRadius + (WIDTH/2.0)))*180/PI;
+       
+    }
+    
+    float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed));  //Will return +/- 1 for CCW or CW, respectively (note this variable is distinct from LF_motor_dir, RF_motor_dir, etc)
+       
+     if(dir>0.0)  // center of rotation is on left: CCW+Forwards or CW+Backwards
+     {
+         LF_servo_angle = 90 - innerFront;
+         RF_servo_angle = 90 - outerFront;
+         LR_servo_angle = 90 + innerBack;
+         RR_servo_angle = 90 + outerBack;
+  
+      	if(innerBack == 0.0)
+      	{
+		rad1 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
+   		rad2 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
+  		rad3 = R1 - WIDTH/2;
+    		rad4 = R1 + WIDTH/2;
+	}
+
+	else
+      	{
+         	rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+          	rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+		rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+		rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+      	}
   }
   
+  else if(dir<0.0)  // center of rotation is on Right: CW+Forwards or CCW+Backwards
+  {
+
+      	LF_servo_angle = 90.0 + outerFront;
+      	RF_servo_angle = 90.0 + innerFront;
+     	LR_servo_angle = 90.0 - outerBack;
+      	RR_servo_angle = 90.0 - outerBack;
+      
+	if(innerFront == 0.0)
+	{
+		rad1 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
+   		rad2 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
+  		rad3 = R1 + WIDTH/2;
+    		rad4 = R1 - WIDTH/2;
+	}
+
+	else
+	{
+		rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+		rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+	  	rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+	  	rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+	}
   
-  
-  
+  }
+   
+    //now for drive motor velocities
+    LF_wheel_rpm = (rad1 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    RF_wheel_rpm = (rad2 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    LR_wheel_rpm = (rad3 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+    RR_wheel_rpm = (rad4 / WHEEL_RADIUS) * angSpeed*SEC_PER_MIN/(2*PI);
+  }
   
 void miningAckerman()
 { 
@@ -588,6 +621,7 @@ void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_
   float A = 11.7718918;
   float B = -3.81049;
   
+  
   LF_motor_cmd = A*LF_wheel_rpm + B;
   RF_motor_cmd = A*RF_wheel_rpm + B;
   LR_motor_cmd = A*LR_wheel_rpm + B;
@@ -598,3 +632,35 @@ void setWheelSpeed(int LF_wheel_rpm, int RF_wheel_rpm, int LR_wheel_rpm, int RR_
   analogWrite(LR_motor_pin, LR_wheel_rpm);
   analogWrite(RR_motor_pin, RR_wheel_rpm);
 }
+
+/* if(dir>0.0)  //counter clockwise
+    {
+      
+      LF_servo_angle = 90 - innerFront;
+      RF_servo_angle = 90 - outerFront;
+      LR_servo_angle = 90 + innerBack;
+      RR_servo_angle = 90 + outerBack;
+      
+
+      
+      rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+      rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+      rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+      rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+    }
+    else if(dir<0.0)  //clockwise
+    {
+
+      LF_servo_angle = 90.0 + outerFront;
+      RF_servo_angle = 90.0 + innerFront;
+      LR_servo_angle = 90.0 - outerBack;
+      RR_servo_angle = 90.0 - outerBack;
+      
+      rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+      rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+      rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
+      rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+    }
+    */
+
+
