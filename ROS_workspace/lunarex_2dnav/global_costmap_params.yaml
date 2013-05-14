@@ -15,12 +15,12 @@ global_costmap:
   #resolution: 0.025
 
   #for hector map of 2000*2000 with res of 0.008
-  #width: 16
-  #height: 16
+  width: 16
+  height: 16
   resolution: 0.008
 
-  width: 10
-  height: 10
+  #width: 10
+  #height: 10
 
   map_type: costmap
 

@@ -2,6 +2,8 @@
 import sys
 sys.path.append("~/McGill_LunarEx_2013/ROS_workspace/")
 sys.path.append("/home/ernie/McGill_LunarEx_2013/ROS_workspace")
+sys.path.append("/home/lunarex/McGill_LunarEx_2013/ROS_workspace")
+
 
 #IMPORTS
 import roslib; roslib.load_manifest('command')
@@ -224,6 +226,8 @@ def goTo(x,y,theta):
 	# send a specified goal in a compact form
 	# All three parameters in Arena coordinates
 
+	time.sleep(10)
+
 	nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
 	#(arenaCoords, slam_out_pose, corner1, corner2, corner3, corner4, resolution):
 
@@ -232,8 +236,8 @@ def goTo(x,y,theta):
 
 	mobileAngle = coord.arenaAngle2mobileAngle(theta, slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner)
 	#must convert to quaternion from a rad
-	#quat = tf.transformations.quaternion_from_euler(0, 0, mobileAngle*math.pi/180.0) #was 0, 0, math.pi
-	quat = tf.transformations.quaternion_from_euler(0, 0, 0) #was 0, 0, math.pi
+	quat = tf.transformations.quaternion_from_euler(0, 0, mobileAngle*math.pi/180.0) #was 0, 0, math.pi
+	#quat = tf.transformations.quaternion_from_euler(0, 0, 0) #was 0, 0, math.pi
 	goal.target_pose.pose.orientation = Quaternion(*quat)
 	
 	rospy.loginfo("***Requested motion***")
@@ -242,13 +246,13 @@ def goTo(x,y,theta):
 	client.send_goal(goal)  # Sends the goal to the action server.
 	client.wait_for_result() # Waits for the server to finish performing the action.
 
-	goal.target_pose.pose.position.x = 0
-	goal.target_pose.pose.position.y = 0
-	quat = tf.transformations.quaternion_from_euler(0, 0, mobileAngle*math.pi/180.0)
-	goal.target_pose.pose.orientation = Quaternion(*quat)
-	client.send_goal(goal)
-	rospy.loginfo("got to destination. Now requesting angle:")
-	rospy.loginfo("theta = " +str(mobileAngle))
+	# goal.target_pose.pose.position.x = 0
+	# goal.target_pose.pose.position.y = 0
+	# quat = tf.transformations.quaternion_from_euler(0, 0, mobileAngle*math.pi/180.0)
+	# goal.target_pose.pose.orientation = Quaternion(*quat)
+	# client.send_goal(goal)
+	# rospy.loginfo("got to destination. Now requesting angle:")
+	# rospy.loginfo("theta = " +str(mobileAngle))
 
 class Velocity:
     def __init__(self, x, y, z):

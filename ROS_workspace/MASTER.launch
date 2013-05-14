@@ -23,12 +23,13 @@
 	<!---node name="corner_detector_asd" pkg="corner_detector" type="occupancyGrid_parserv4.1.py" /-->
 	
 	<!-- STARTS SIMPLE NAV GOALS / COMMAND NODE-->
-	<!--node name="command_node_asd" pkg="command" type="command_node.py" /-->
+	<!--node name="command_node" pkg="command" type="command_node.py" /-->
 
 	<!---STARTS COSTMAPS RVIZ-->
-	<!--node pkg="rviz" type="rviz" name="rviz_costmaps" args="-d $(find lunarex_2dnav)/costmaps.vcg"/-->
+	<node pkg="rviz" type="rviz" name="rviz_costmaps" args="-d $(find lunarex_2dnav)/costmaps.vcg"/>
 
 	<!---STARTS HECTOR MAPPING RVIZ-->
-	<node pkg="rviz" type="rviz" name="rviz_hector" args="-d $(find hector_slam_launch)/rviz_cfg/mapping_demo.vcg"/>
+	<!--node pkg="rviz" type="rviz" name="rviz_hector" args="-d $(find hector_slam_launch)/rviz_cfg/mapping_demo.vcg"/-->
 </launch>
 
+c
