@@ -7,7 +7,7 @@ import roslib; roslib.load_manifest('corner_detector')
 import rospy
 import tf
 
-''' 
+'''
 Documentation of coordinate frames: https://sites.google.com/site/lunarex2013/software/coordinatetransformationreference
 '''
 
@@ -43,12 +43,12 @@ def arena2mobile(arenaCoords, slam_out_pose, LR_corner, RR_corner, LF_corner, RF
 
   (goal_x_global, goal_y_global) = arena2global(arenaCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolution)
   (current_x_global, current_y_global) = hector2global(slam_out_pose, resolution, global_map_size)
-  
+
   theta = math.atan2(abs(LR_corner[1]-RR_corner[1]), abs(LR_corner[0]-RR_corner[0]))  #angle of bottom wall of arena w.r.t. the positive global x axis
 
   goal_x_mobile = (goal_y_global - current_y_global)*resolution
-  goal_y_mobile = -1.0*(goal_x_global - current_x_global)*resolution
-  
+  goal_y_mobile = (current_x_global - goal_x_global)*resolution
+
   #this is a vector in global
   mobile_coords = (goal_x_mobile, goal_y_mobile)
 
@@ -69,7 +69,7 @@ def hector2global(slam_out_pose, resolution, global_map_size):
   y_temp = y_hector - global_map_size*resolution/2
 
   x_global = -1*y_temp / resolution #resolution in m/cell, see documentation on google site for logic here
-  y_global = x_temp / resolution 
+  y_global = x_temp / resolution
 
   global_coords = (x_global, y_global)
   rospy.loginfo("coord.hector2global received: x_hector="+str(x_hector)+" & y_hector="+str(y_hector)+" and is returning: "+str(global_coords))
@@ -102,14 +102,14 @@ def arena2global(arenaCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolu
     x1ComponentDir = -1
   if(RR_corner[1] < LR_corner[1]):
     y1ComponentDir = -1
-  
+
   x2ComponentDir = 1
   y2ComponentDir = 1
   if(LF_corner[0] < LR_corner[0]):
     x2ComponentDir = -1
   if(LF_corner[1] < LR_corner[1]):
     y2ComponentDir = -1
-  
+
   print("x1ComponentDir is: "+str(x1ComponentDir))
   print("x2ComponentDir is: "+str(x2ComponentDir))
   print("y1ComponentDir is: "+str(y1ComponentDir))
@@ -117,15 +117,15 @@ def arena2global(arenaCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolu
 
   print("calling atan with " +str(abs(LR_corner[1]-RR_corner[1])) +" and: " + str(abs(LR_corner[0]-RR_corner[0])))
   theta = math.atan2(abs(LR_corner[1]-RR_corner[1]), abs(LR_corner[0]-RR_corner[0]))  #angle of bottom wall of arena w.r.t. the positive global x axis
-  
+
   print(theta)
 
   xGlobal = LR_corner[0] + x1ComponentDir*arenaCoords_inCells[0]*math.cos(theta)+x2ComponentDir*arenaCoords_inCells[1]*math.sin(theta)
   yGlobal = LR_corner[1] + y1ComponentDir*arenaCoords_inCells[0]*math.sin(theta)+y2ComponentDir*arenaCoords_inCells[1]*math.cos(theta)
-  
+
   globalCoords = (xGlobal, yGlobal)
   rospy.loginfo("coord.arena2global received: arenaCoord="+str(arenaCoords)+" ,equal to arenaCoords_inCells="+str(arenaCoords_inCells)+ "; and is returning: "+str(globalCoords))
-  return globalCoords    
+  return globalCoords
 
 def isInObstacleArea(globalCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolution):
 
@@ -134,10 +134,10 @@ def isInObstacleArea(globalCoords, LR_corner, RR_corner, LF_corner, RF_corner, r
   obs_RR_corner = arena2global((0, 200), LR_corner, RR_corner, LF_corner, RF_corner, resolution)
   obs_LF_corner = arena2global((156, 100), LR_corner, RR_corner, LF_corner, RF_corner, resolution)
   obs_RF_corner = arena2global((156, 200), LR_corner, RR_corner, LF_corner, RF_corner, resolution)
-    
-  verts = np.array([[obs_LR_corner[0], obs_LR_corner[1]], [obs_RR_corner[0], obs_RR_corner[1]], [obs_LF_corner[0], obs_LF_corner[1]], [obs_RF_corner[0], obs_RF_corner[1]]])    
-  isInObstacleArea = False  
-  
+
+  verts = np.array([[obs_LR_corner[0], obs_LR_corner[1]], [obs_RR_corner[0], obs_RR_corner[1]], [obs_LF_corner[0], obs_LF_corner[1]], [obs_RF_corner[0], obs_RF_corner[1]]])
+  isInObstacleArea = False
+
   if(nx.pnpoly(globalCoords[0],globalCoords[1], verts)==1):
     isInObstacleArea=True
 

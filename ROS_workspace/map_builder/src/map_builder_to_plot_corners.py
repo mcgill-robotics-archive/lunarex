@@ -94,8 +94,15 @@ class mapBuilder:
         # self.insertValueInOccupancyGrid(566, 556, 100)
         #self.insertValueInOccupancyGrid(601, 423, 100)
 
-	self.insertValueInOccupancyGrid(1000, 1400, 100)        
-        self.pub.publish(self.map)
+	#self.insertValueInOccupancyGrid(1000, 1400, 100)        
+	self.insertValueInOccupancyGrid(631, 914,100)
+	self.insertValueInOccupancyGrid(1136, 924, 100)
+	self.insertValueInOccupancyGrid(647, 1835, 100)
+	self.insertValueInOccupancyGrid(1152, 1845, 100)
+	
+
+	self.insertValueInOccupancyGrid(871, 1456,100)
+	self.pub.publish(self.map)
 		
 
 	#print self.obstacle_list

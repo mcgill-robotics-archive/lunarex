@@ -69,6 +69,15 @@ goal = MoveBaseGoal()
 #CALLBACKS
 def corners_callback(data):
 	rospy.loginfo("In corners callback")
+	global LR_corner
+	global RR_corner
+	global LF_corner
+	global RF_corner
+	global mapRes
+	global mapWidth
+	global mapHeight
+	global startedLeft
+
 	LR_corner = data.LR_corner
 	RR_corner = data.RR_corner
 	LF_corner = data.LF_corner
@@ -79,6 +88,7 @@ def corners_callback(data):
 	startedLeft = data.left
 
 def slam_out_pose_callback(data):
+	global slam_out_pose
 	slam_out_pose=data
 
 #HELPERS
@@ -236,6 +246,7 @@ def goTo(x,y,theta):
 	goal.target_pose.pose.position.y = 0
 	quat = tf.transformations.quaternion_from_euler(0, 0, mobileAngle*math.pi/180.0)
 	goal.target_pose.pose.orientation = Quaternion(*quat)
+	client.send_goal(goal)
 	rospy.loginfo("got to destination. Now requesting angle:")
 	rospy.loginfo("theta = " +str(mobileAngle))
 
@@ -280,6 +291,9 @@ while(mapRes == -1): #means callback has not happened
 	time.sleep(2)
 
 rospy.loginfo("Got good corners.")
+
+rospy.loginfo("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
+		+ ", LF=" +str(LF_corner) + ", RF=" +str(RF_corner))
 
 #--Init actionlib
 client = actionlib.SimpleActionClient('move_base', MoveBaseAction)

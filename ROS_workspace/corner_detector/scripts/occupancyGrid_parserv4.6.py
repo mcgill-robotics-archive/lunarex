@@ -108,7 +108,7 @@ while(True):
 
 	#DEFINING HOUGH MATRIX
 	mapRes = latest_corners.resolution 
-	Rres = mapRes
+	Rres = mapRes*3
 	mapWidth = latest_corners.width
 	mapHeight = latest_corners.height
 	Rrank = int((math.sqrt(2)*max(mapWidth, mapHeight))/Rres) #nb of R buckets

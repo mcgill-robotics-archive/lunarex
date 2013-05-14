@@ -155,7 +155,7 @@ float LIN_STOP_THRESH = 0.5;    //any linear speed less than this will be interp
 
 int SUSP_INTERFERENCE_LIMIT = 50; //command sent to suspension actuators. values greater than this correspond to mining (0 travel, 255 full mine)
 float MINING_MAX_SERVO_ANGLE_FRONT = 0;
-float MINING_MAX_SERVO_ANGLE_REAR = 30;
+float MINING_MAX_SERVO_ANGLE_REAR = 40;
 float TRAVEL_MAX_SERVO_ANGLE_FRONT = 50;
 float TRAVEL_MAX_SERVO_ANGLE_REAR = 50;
 

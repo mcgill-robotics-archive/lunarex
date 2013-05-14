@@ -16,7 +16,7 @@
 	<include file="$(find lunarex_2dnav)/hector_launchers/hector_mapping.launch" />
 	
 	<!--STARTS MOVE_BASE-->
-	<!--include file="$(find lunarex_2dnav)/move_base.launch" /-->
+	<include file="$(find lunarex_2dnav)/move_base.launch" />
 	
 	<!--STARTS CORNER_DETECTOR-->
 	<!--WHY IS THIS NOT STARTING???-->
