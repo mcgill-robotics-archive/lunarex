@@ -1,6 +1,7 @@
 #REQUEST
 nav_msgs/MapMetaData map_meta
 nav_msgs/OccupancyGrid map
+std_msgs/Bool cached
 ---
 #RESPONSE
 uint32[] left_bottom_corner

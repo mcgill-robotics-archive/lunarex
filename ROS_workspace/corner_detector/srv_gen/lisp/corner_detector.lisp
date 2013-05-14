@@ -16,7 +16,12 @@
     :reader map
     :initarg :map
     :type nav_msgs-msg:OccupancyGrid
-    :initform (cl:make-instance 'nav_msgs-msg:OccupancyGrid)))
+    :initform (cl:make-instance 'nav_msgs-msg:OccupancyGrid))
+   (cached
+    :reader cached
+    :initarg :cached
+    :type std_msgs-msg:Bool
+    :initform (cl:make-instance 'std_msgs-msg:Bool)))
 )
 
 (cl:defclass corner_detector-request (<corner_detector-request>)
@@ -36,15 +41,22 @@
 (cl:defmethod map-val ((m <corner_detector-request>))
   (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader corner_detector-srv:map-val is deprecated.  Use corner_detector-srv:map instead.")
   (map m))
+
+(cl:ensure-generic-function 'cached-val :lambda-list '(m))
+(cl:defmethod cached-val ((m <corner_detector-request>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader corner_detector-srv:cached-val is deprecated.  Use corner_detector-srv:cached instead.")
+  (cached m))
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <corner_detector-request>) ostream)
   "Serializes a message object of type '<corner_detector-request>"
   (roslisp-msg-protocol:serialize (cl:slot-value msg 'map_meta) ostream)
   (roslisp-msg-protocol:serialize (cl:slot-value msg 'map) ostream)
+  (roslisp-msg-protocol:serialize (cl:slot-value msg 'cached) ostream)
 )
 (cl:defmethod roslisp-msg-protocol:deserialize ((msg <corner_detector-request>) istream)
   "Deserializes a message object of type '<corner_detector-request>"
   (roslisp-msg-protocol:deserialize (cl:slot-value msg 'map_meta) istream)
   (roslisp-msg-protocol:deserialize (cl:slot-value msg 'map) istream)
+  (roslisp-msg-protocol:deserialize (cl:slot-value msg 'cached) istream)
   msg
 )
 (cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<corner_detector-request>)))
@@ -55,26 +67,28 @@
   "corner_detector/corner_detectorRequest")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<corner_detector-request>)))
   "Returns md5sum for a message object of type '<corner_detector-request>"
-  "9720d9672632fb40037b88dcefe05516")
+  "46dc5a3ad18ff6f87ae0f778ed9484ad")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'corner_detector-request)))
   "Returns md5sum for a message object of type 'corner_detector-request"
-  "9720d9672632fb40037b88dcefe05516")
+  "46dc5a3ad18ff6f87ae0f778ed9484ad")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<corner_detector-request>)))
   "Returns full string definition for message of type '<corner_detector-request>"
-  (cl:format cl:nil "~%nav_msgs/MapMetaData map_meta~%nav_msgs/OccupancyGrid map~%~%================================================================================~%MSG: nav_msgs/MapMetaData~%# This hold basic information about the characterists of the OccupancyGrid~%~%# The time at which the map was loaded~%time map_load_time~%# The map resolution [m/cell]~%float32 resolution~%# Map width [cells]~%uint32 width~%# Map height [cells]~%uint32 height~%# The origin of the map [m, m, rad].  This is the real-world pose of the~%# cell (0,0) in the map.~%geometry_msgs/Pose origin~%================================================================================~%MSG: geometry_msgs/Pose~%# A representation of pose in free space, composed of postion and orientation. ~%Point position~%Quaternion orientation~%~%================================================================================~%MSG: geometry_msgs/Point~%# This contains the position of a point in free space~%float64 x~%float64 y~%float64 z~%~%================================================================================~%MSG: geometry_msgs/Quaternion~%# This represents an orientation in free space in quaternion form.~%~%float64 x~%float64 y~%float64 z~%float64 w~%~%================================================================================~%MSG: nav_msgs/OccupancyGrid~%# This represents a 2-D grid map, in which each cell represents the probability of~%# occupancy.~%~%Header header ~%~%#MetaData for the map~%MapMetaData info~%~%# The map data, in row-major order, starting with (0,0).  Occupancy~%# probabilities are in the range [0,100].  Unknown is -1.~%int8[] data~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.secs: seconds (stamp_secs) since epoch~%# * stamp.nsecs: nanoseconds since stamp_secs~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
+  (cl:format cl:nil "~%nav_msgs/MapMetaData map_meta~%nav_msgs/OccupancyGrid map~%std_msgs/Bool cached~%~%================================================================================~%MSG: nav_msgs/MapMetaData~%# This hold basic information about the characterists of the OccupancyGrid~%~%# The time at which the map was loaded~%time map_load_time~%# The map resolution [m/cell]~%float32 resolution~%# Map width [cells]~%uint32 width~%# Map height [cells]~%uint32 height~%# The origin of the map [m, m, rad].  This is the real-world pose of the~%# cell (0,0) in the map.~%geometry_msgs/Pose origin~%================================================================================~%MSG: geometry_msgs/Pose~%# A representation of pose in free space, composed of postion and orientation. ~%Point position~%Quaternion orientation~%~%================================================================================~%MSG: geometry_msgs/Point~%# This contains the position of a point in free space~%float64 x~%float64 y~%float64 z~%~%================================================================================~%MSG: geometry_msgs/Quaternion~%# This represents an orientation in free space in quaternion form.~%~%float64 x~%float64 y~%float64 z~%float64 w~%~%================================================================================~%MSG: nav_msgs/OccupancyGrid~%# This represents a 2-D grid map, in which each cell represents the probability of~%# occupancy.~%~%Header header ~%~%#MetaData for the map~%MapMetaData info~%~%# The map data, in row-major order, starting with (0,0).  Occupancy~%# probabilities are in the range [0,100].  Unknown is -1.~%int8[] data~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.secs: seconds (stamp_secs) since epoch~%# * stamp.nsecs: nanoseconds since stamp_secs~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%================================================================================~%MSG: std_msgs/Bool~%bool data~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'corner_detector-request)))
   "Returns full string definition for message of type 'corner_detector-request"
-  (cl:format cl:nil "~%nav_msgs/MapMetaData map_meta~%nav_msgs/OccupancyGrid map~%~%================================================================================~%MSG: nav_msgs/MapMetaData~%# This hold basic information about the characterists of the OccupancyGrid~%~%# The time at which the map was loaded~%time map_load_time~%# The map resolution [m/cell]~%float32 resolution~%# Map width [cells]~%uint32 width~%# Map height [cells]~%uint32 height~%# The origin of the map [m, m, rad].  This is the real-world pose of the~%# cell (0,0) in the map.~%geometry_msgs/Pose origin~%================================================================================~%MSG: geometry_msgs/Pose~%# A representation of pose in free space, composed of postion and orientation. ~%Point position~%Quaternion orientation~%~%================================================================================~%MSG: geometry_msgs/Point~%# This contains the position of a point in free space~%float64 x~%float64 y~%float64 z~%~%================================================================================~%MSG: geometry_msgs/Quaternion~%# This represents an orientation in free space in quaternion form.~%~%float64 x~%float64 y~%float64 z~%float64 w~%~%================================================================================~%MSG: nav_msgs/OccupancyGrid~%# This represents a 2-D grid map, in which each cell represents the probability of~%# occupancy.~%~%Header header ~%~%#MetaData for the map~%MapMetaData info~%~%# The map data, in row-major order, starting with (0,0).  Occupancy~%# probabilities are in the range [0,100].  Unknown is -1.~%int8[] data~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.secs: seconds (stamp_secs) since epoch~%# * stamp.nsecs: nanoseconds since stamp_secs~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
+  (cl:format cl:nil "~%nav_msgs/MapMetaData map_meta~%nav_msgs/OccupancyGrid map~%std_msgs/Bool cached~%~%================================================================================~%MSG: nav_msgs/MapMetaData~%# This hold basic information about the characterists of the OccupancyGrid~%~%# The time at which the map was loaded~%time map_load_time~%# The map resolution [m/cell]~%float32 resolution~%# Map width [cells]~%uint32 width~%# Map height [cells]~%uint32 height~%# The origin of the map [m, m, rad].  This is the real-world pose of the~%# cell (0,0) in the map.~%geometry_msgs/Pose origin~%================================================================================~%MSG: geometry_msgs/Pose~%# A representation of pose in free space, composed of postion and orientation. ~%Point position~%Quaternion orientation~%~%================================================================================~%MSG: geometry_msgs/Point~%# This contains the position of a point in free space~%float64 x~%float64 y~%float64 z~%~%================================================================================~%MSG: geometry_msgs/Quaternion~%# This represents an orientation in free space in quaternion form.~%~%float64 x~%float64 y~%float64 z~%float64 w~%~%================================================================================~%MSG: nav_msgs/OccupancyGrid~%# This represents a 2-D grid map, in which each cell represents the probability of~%# occupancy.~%~%Header header ~%~%#MetaData for the map~%MapMetaData info~%~%# The map data, in row-major order, starting with (0,0).  Occupancy~%# probabilities are in the range [0,100].  Unknown is -1.~%int8[] data~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.secs: seconds (stamp_secs) since epoch~%# * stamp.nsecs: nanoseconds since stamp_secs~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%================================================================================~%MSG: std_msgs/Bool~%bool data~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <corner_detector-request>))
   (cl:+ 0
      (roslisp-msg-protocol:serialization-length (cl:slot-value msg 'map_meta))
      (roslisp-msg-protocol:serialization-length (cl:slot-value msg 'map))
+     (roslisp-msg-protocol:serialization-length (cl:slot-value msg 'cached))
 ))
 (cl:defmethod roslisp-msg-protocol:ros-message-to-list ((msg <corner_detector-request>))
   "Converts a ROS message object to a list"
   (cl:list 'corner_detector-request
     (cl:cons ':map_meta (map_meta msg))
     (cl:cons ':map (map msg))
+    (cl:cons ':cached (cached msg))
 ))
 ;//! \htmlinclude corner_detector-response.msg.html
 
@@ -231,10 +245,10 @@
   "corner_detector/corner_detectorResponse")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<corner_detector-response>)))
   "Returns md5sum for a message object of type '<corner_detector-response>"
-  "9720d9672632fb40037b88dcefe05516")
+  "46dc5a3ad18ff6f87ae0f778ed9484ad")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'corner_detector-response)))
   "Returns md5sum for a message object of type 'corner_detector-response"
-  "9720d9672632fb40037b88dcefe05516")
+  "46dc5a3ad18ff6f87ae0f778ed9484ad")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<corner_detector-response>)))
   "Returns full string definition for message of type '<corner_detector-response>"
   (cl:format cl:nil "~%uint32[] left_bottom_corner~%uint32[] right_bottom_corner~%uint32[] left_top_corner~%uint32[] right_top_corner~%~%~%~%~%~%~%~%~%~%~%~%~%~%~%~%"))

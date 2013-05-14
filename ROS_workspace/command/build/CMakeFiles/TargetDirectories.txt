@@ -3,7 +3,6 @@
 /home/ernie/McGill_LunarEx_2013/ROS_workspace/command/build/CMakeFiles/ROSBUILD_gensrv_cpp.dir
 /home/ernie/McGill_LunarEx_2013/ROS_workspace/command/build/CMakeFiles/ROSBUILD_gensrv_lisp.dir
 /home/ernie/McGill_LunarEx_2013/ROS_workspace/command/build/CMakeFiles/clean-test-results.dir
-/home/ernie/McGill_LunarEx_2013/ROS_workspace/command/build/CMakeFiles/command_node.dir
 /home/ernie/McGill_LunarEx_2013/ROS_workspace/command/build/CMakeFiles/rosbuild_precompile.dir
 /home/ernie/McGill_LunarEx_2013/ROS_workspace/command/build/CMakeFiles/rosbuild_premsgsrvgen.dir
 /home/ernie/McGill_LunarEx_2013/ROS_workspace/command/build/CMakeFiles/rospack_genmsg.dir

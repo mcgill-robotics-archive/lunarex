@@ -161,19 +161,6 @@ clean-test-results/fast:
 .PHONY : clean-test-results/fast
 
 #=============================================================================
-# Target rules for targets named command_node
-
-# Build rule for target.
-command_node: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 command_node
-.PHONY : command_node
-
-# fast build rule for target.
-command_node/fast:
-	$(MAKE) -f CMakeFiles/command_node.dir/build.make CMakeFiles/command_node.dir/build
-.PHONY : command_node/fast
-
-#=============================================================================
 # Target rules for targets named rosbuild_precompile
 
 # Build rule for target.
@@ -314,7 +301,6 @@ help:
 	@echo "... ROSBUILD_gensrv_cpp"
 	@echo "... ROSBUILD_gensrv_lisp"
 	@echo "... clean-test-results"
-	@echo "... command_node"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... rosbuild_precompile"

@@ -48,12 +48,7 @@ CMakeFiles/ROSBUILD_gensrv_cpp: ../srv_gen/cpp/include/corner_detector/corner_de
 ../srv_gen/cpp/include/corner_detector/corner_detector.h: /opt/ros/fuerte/share/roscpp/rosbuild/scripts/gensrv_cpp.py
 ../srv_gen/cpp/include/corner_detector/corner_detector.h: /opt/ros/fuerte/share/roscpp/rosbuild/scripts/genmsg_cpp.py
 ../srv_gen/cpp/include/corner_detector/corner_detector.h: /opt/ros/fuerte/share/roslib/bin/gendeps
-../srv_gen/cpp/include/corner_detector/corner_detector.h: /opt/ros/fuerte/share/geometry_msgs/msg/Quaternion.msg
-../srv_gen/cpp/include/corner_detector/corner_detector.h: /opt/ros/fuerte/share/std_msgs/msg/Header.msg
-../srv_gen/cpp/include/corner_detector/corner_detector.h: /opt/ros/fuerte/share/geometry_msgs/msg/Pose.msg
-../srv_gen/cpp/include/corner_detector/corner_detector.h: /opt/ros/fuerte/share/geometry_msgs/msg/Point.msg
-../srv_gen/cpp/include/corner_detector/corner_detector.h: /opt/ros/fuerte/share/nav_msgs/msg/MapMetaData.msg
-../srv_gen/cpp/include/corner_detector/corner_detector.h: /opt/ros/fuerte/share/nav_msgs/msg/OccupancyGrid.msg
+../srv_gen/cpp/include/corner_detector/corner_detector.h: /opt/ros/fuerte/share/std_msgs/msg/Bool.msg
 ../srv_gen/cpp/include/corner_detector/corner_detector.h: ../manifest.xml
 ../srv_gen/cpp/include/corner_detector/corner_detector.h: /opt/ros/fuerte/share/roslang/manifest.xml
 ../srv_gen/cpp/include/corner_detector/corner_detector.h: /opt/ros/fuerte/share/roscpp/manifest.xml

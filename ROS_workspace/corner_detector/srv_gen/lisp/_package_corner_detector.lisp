@@ -3,6 +3,8 @@
           MAP_META
           MAP-VAL
           MAP
+          CACHED-VAL
+          CACHED
           LEFT_BOTTOM_CORNER-VAL
           LEFT_BOTTOM_CORNER
           RIGHT_BOTTOM_CORNER-VAL

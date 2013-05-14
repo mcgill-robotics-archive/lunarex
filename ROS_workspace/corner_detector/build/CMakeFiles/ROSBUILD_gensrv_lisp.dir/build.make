@@ -49,12 +49,7 @@ CMakeFiles/ROSBUILD_gensrv_lisp: ../srv_gen/lisp/_package_corner_detector.lisp
 ../srv_gen/lisp/corner_detector.lisp: ../srv/corner_detector.srv
 ../srv_gen/lisp/corner_detector.lisp: /opt/ros/fuerte/share/roslisp/rosbuild/scripts/genmsg_lisp.py
 ../srv_gen/lisp/corner_detector.lisp: /opt/ros/fuerte/share/roslib/bin/gendeps
-../srv_gen/lisp/corner_detector.lisp: /opt/ros/fuerte/share/geometry_msgs/msg/Quaternion.msg
-../srv_gen/lisp/corner_detector.lisp: /opt/ros/fuerte/share/std_msgs/msg/Header.msg
-../srv_gen/lisp/corner_detector.lisp: /opt/ros/fuerte/share/geometry_msgs/msg/Pose.msg
-../srv_gen/lisp/corner_detector.lisp: /opt/ros/fuerte/share/geometry_msgs/msg/Point.msg
-../srv_gen/lisp/corner_detector.lisp: /opt/ros/fuerte/share/nav_msgs/msg/MapMetaData.msg
-../srv_gen/lisp/corner_detector.lisp: /opt/ros/fuerte/share/nav_msgs/msg/OccupancyGrid.msg
+../srv_gen/lisp/corner_detector.lisp: /opt/ros/fuerte/share/std_msgs/msg/Bool.msg
 ../srv_gen/lisp/corner_detector.lisp: ../manifest.xml
 ../srv_gen/lisp/corner_detector.lisp: /opt/ros/fuerte/share/roslang/manifest.xml
 ../srv_gen/lisp/corner_detector.lisp: /opt/ros/fuerte/share/roscpp/manifest.xml

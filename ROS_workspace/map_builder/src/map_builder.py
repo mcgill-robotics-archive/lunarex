@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+
+import sys
+sys.path.append("~/McGill_LunarEx_2013/ROS_workspace/")
+sys.path.append("/home/seb/McGill_LunarEx_2013/ROS_workspace/")
+import coord
+
 import roslib; roslib.load_manifest('map_builder')
 import rospy
 
@@ -13,6 +19,8 @@ import math
 
 #import service data type
 from kinect_node.srv import *
+from corner_detector.srv import *
+
 
 # the occupancy grid is 2.5 x 2.5 cm
 
@@ -35,6 +43,7 @@ class mapBuilder:
         #rospy.spin()
 	self.rate = rospy.Rate(0.7)	#period = 3s
 	while not rospy.is_shutdown() :
+
 	    rospy.wait_for_service('kinect_service')
 	    try:
 		# update position
@@ -191,7 +200,15 @@ class mapBuilder:
 	# round it down to the next multiple of occupancy_grid_units_per_kinect_units  for the average filter
 	position_vector[0]-= int( position_vector[0] % occupancy_grid_units_per_kinect_units )
 	position_vector[1]-= int( position_vector[1] % occupancy_grid_units_per_kinect_units )
+	
 
+	# Check if the obstacle is in the obstacle area, don't add them
+	try:
+		if (  coord.isInObstacleArea((position_vector[0],position_vector[1]), self.LR_corner, self.RR_corner, self.LF_corner, self.RF_corner, self.map_resolution) == False):
+			return 
+	except AttributeError:
+		pass	
+	
 	if ((position_vector[0],position_vector[1]) not in self.obstacle_list):
         	#self.obstacle_list.append([position_vector[0],position_vector[1]])
 
@@ -210,7 +227,29 @@ class mapBuilder:
 	# ***** For example, it my be 25 cm at the back. We would then need to remove 50 to the position_vector[1]
 	# *****
 
+    def updateCorners():
+	rospy.loginfo("Started waiting for corner detector service")
+	rospy.wait_for_service('corner_detector_srv')
+	corner_detector_request = corner_detectorRequest()
 
+	try:
+		rospy.loginfo("Done waiting for corner detector service")
+		corner_detector_proxy = rospy.ServiceProxy('corner_detector_srv', corner_detector)
+
+		#--Call corner detector service, display results & populate corner state vars
+		corner_detector_response = corner_detector_proxy(1)
+		display_corner_detector_output(corner_detector_response)
+
+		LR_corner = (corner_detector_response.left_bottom_corner[0], corner_detector_response.left_bottom_corner[1])
+		RR_corner =  (corner_detector_response.right_bottom_corner[0], corner_detector_response.right_bottom_corner[1])
+		LF_corner = (corner_detector_response.left_top_corner[0], corner_detector_response.left_top_corner[1])
+		RF_corner = (corner_detector_response.right_top_corner[0], corner_detector_response.right_top_corner[1])
+		self.LR_corner =1
+		self.RR_corner =1
+		self.LF_corner =1
+		self.RF_corner =1
+	except rospy.ServiceException, e:
+		print "Service failed: %s" % e	
 
     #Rotate a coordinate ector
     def rotateVector2D(self, vector, angle):
@@ -218,6 +257,13 @@ class mapBuilder:
         rotated_vect.append(  vector[0]*math.cos(angle)  - vector[1]*math.sin(angle)             )
         rotated_vect.append(  vector[0]*math.sin(angle)  + vector[1]*math.cos(angle)   )
         return rotated_vect
+	
+    def display_corner_detector_output(corner_detector_response):
+	rospy.loginfo("CORNER detector output")
+	rospy.loginfo("Left bottom: "+str(corner_detector_response.left_bottom_corner))
+	rospy.loginfo("Right bottom: "+str(corner_detector_response.right_bottom_corner))
+	rospy.loginfo("Left top: "+str(corner_detector_response.left_top_corner))
+	rospy.loginfo("Right top: "+str(corner_detector_response.right_top_corner))
 
 
 if __name__ == "__main__":

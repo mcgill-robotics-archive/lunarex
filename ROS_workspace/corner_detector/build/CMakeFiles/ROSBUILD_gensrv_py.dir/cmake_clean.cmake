@@ -1,6 +1,9 @@
 FILE(REMOVE_RECURSE
+  "../src/corner_detector/msg"
   "../src/corner_detector/srv"
+  "../msg_gen"
   "../srv_gen"
+  "../msg_gen"
   "../srv_gen"
   "CMakeFiles/ROSBUILD_gensrv_py"
   "../src/corner_detector/srv/__init__.py"

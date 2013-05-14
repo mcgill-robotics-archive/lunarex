@@ -36,6 +36,7 @@ SET(CMAKE_C_INCLUDE_PATH
   "/opt/ros/fuerte/stacks/dynamic_reconfigure/srv/cpp"
   "/opt/ros/fuerte/stacks/dynamic_reconfigure/msg_gen/cpp/include"
   "/opt/ros/fuerte/stacks/dynamic_reconfigure/srv_gen/cpp/include"
+  "../msg_gen/cpp/include"
   "../srv_gen/cpp/include"
   )
 SET(CMAKE_CXX_INCLUDE_PATH ${CMAKE_C_INCLUDE_PATH})

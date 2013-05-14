@@ -52,12 +52,7 @@ CMakeFiles/ROSBUILD_gensrv_py: ../src/corner_detector/srv/__init__.py
 ../src/corner_detector/srv/_corner_detector.py: ../srv/corner_detector.srv
 ../src/corner_detector/srv/_corner_detector.py: /opt/ros/fuerte/share/rospy/rosbuild/scripts/gensrv_py.py
 ../src/corner_detector/srv/_corner_detector.py: /opt/ros/fuerte/share/roslib/bin/gendeps
-../src/corner_detector/srv/_corner_detector.py: /opt/ros/fuerte/share/geometry_msgs/msg/Quaternion.msg
-../src/corner_detector/srv/_corner_detector.py: /opt/ros/fuerte/share/std_msgs/msg/Header.msg
-../src/corner_detector/srv/_corner_detector.py: /opt/ros/fuerte/share/geometry_msgs/msg/Pose.msg
-../src/corner_detector/srv/_corner_detector.py: /opt/ros/fuerte/share/geometry_msgs/msg/Point.msg
-../src/corner_detector/srv/_corner_detector.py: /opt/ros/fuerte/share/nav_msgs/msg/MapMetaData.msg
-../src/corner_detector/srv/_corner_detector.py: /opt/ros/fuerte/share/nav_msgs/msg/OccupancyGrid.msg
+../src/corner_detector/srv/_corner_detector.py: /opt/ros/fuerte/share/std_msgs/msg/Bool.msg
 ../src/corner_detector/srv/_corner_detector.py: ../manifest.xml
 ../src/corner_detector/srv/_corner_detector.py: /opt/ros/fuerte/share/roslang/manifest.xml
 ../src/corner_detector/srv/_corner_detector.py: /opt/ros/fuerte/share/roscpp/manifest.xml

@@ -18,6 +18,7 @@
 
 #include "nav_msgs/MapMetaData.h"
 #include "nav_msgs/OccupancyGrid.h"
+#include "std_msgs/Bool.h"
 
 
 
@@ -30,12 +31,14 @@ struct corner_detectorRequest_ {
   corner_detectorRequest_()
   : map_meta()
   , map()
+  , cached()
   {
   }
 
   corner_detectorRequest_(const ContainerAllocator& _alloc)
   : map_meta(_alloc)
   , map(_alloc)
+  , cached(_alloc)
   {
   }
 
@@ -44,6 +47,9 @@ struct corner_detectorRequest_ {
 
   typedef  ::nav_msgs::OccupancyGrid_<ContainerAllocator>  _map_type;
    ::nav_msgs::OccupancyGrid_<ContainerAllocator>  map;
+
+  typedef  ::std_msgs::Bool_<ContainerAllocator>  _cached_type;
+   ::std_msgs::Bool_<ContainerAllocator>  cached;
 
 
   typedef boost::shared_ptr< ::corner_detector::corner_detectorRequest_<ContainerAllocator> > Ptr;
@@ -121,12 +127,12 @@ template<class ContainerAllocator>
 struct MD5Sum< ::corner_detector::corner_detectorRequest_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "4a6812bd49a91eb54a1ed172b05d9359";
+    return "d2e30e729c56e1e73fad43e585bf241a";
   }
 
   static const char* value(const  ::corner_detector::corner_detectorRequest_<ContainerAllocator> &) { return value(); } 
-  static const uint64_t static_value1 = 0x4a6812bd49a91eb5ULL;
-  static const uint64_t static_value2 = 0x4a1ed172b05d9359ULL;
+  static const uint64_t static_value1 = 0xd2e30e729c56e1e7ULL;
+  static const uint64_t static_value2 = 0x3fad43e585bf241aULL;
 };
 
 template<class ContainerAllocator>
@@ -146,6 +152,7 @@ struct Definition< ::corner_detector::corner_detectorRequest_<ContainerAllocator
     return "\n\
 nav_msgs/MapMetaData map_meta\n\
 nav_msgs/OccupancyGrid map\n\
+std_msgs/Bool cached\n\
 \n\
 ================================================================================\n\
 MSG: nav_msgs/MapMetaData\n\
@@ -216,6 +223,9 @@ time stamp\n\
 # 1: global frame\n\
 string frame_id\n\
 \n\
+================================================================================\n\
+MSG: std_msgs/Bool\n\
+bool data\n\
 ";
   }
 
@@ -297,6 +307,7 @@ template<class ContainerAllocator> struct Serializer< ::corner_detector::corner_
   {
     stream.next(m.map_meta);
     stream.next(m.map);
+    stream.next(m.cached);
   }
 
   ROS_DECLARE_ALLINONE_SERIALIZER;
@@ -333,7 +344,7 @@ template<>
 struct MD5Sum<corner_detector::corner_detector> {
   static const char* value() 
   {
-    return "9720d9672632fb40037b88dcefe05516";
+    return "46dc5a3ad18ff6f87ae0f778ed9484ad";
   }
 
   static const char* value(const corner_detector::corner_detector&) { return value(); } 
@@ -353,7 +364,7 @@ template<class ContainerAllocator>
 struct MD5Sum<corner_detector::corner_detectorRequest_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "9720d9672632fb40037b88dcefe05516";
+    return "46dc5a3ad18ff6f87ae0f778ed9484ad";
   }
 
   static const char* value(const corner_detector::corner_detectorRequest_<ContainerAllocator> &) { return value(); } 
@@ -373,7 +384,7 @@ template<class ContainerAllocator>
 struct MD5Sum<corner_detector::corner_detectorResponse_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "9720d9672632fb40037b88dcefe05516";
+    return "46dc5a3ad18ff6f87ae0f778ed9484ad";
   }
 
   static const char* value(const corner_detector::corner_detectorResponse_<ContainerAllocator> &) { return value(); } 

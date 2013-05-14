@@ -32,7 +32,7 @@
     <param name="map_pub_period" value="0.5" /> <!--The map publish period [s].-->
 
     <!-- Advertising service config --> 
-    <param name="advertise_map_service" value="false"/>
+    <param name="advertise_map_service" value="true"/>
     
     <param name="scan_topic" value="scan"/>
     
