@@ -20,6 +20,7 @@ from nav_msgs.srv import GetMap
 BIGNUMBER = 1000
 ARENA_WIDTH = 3.88
 ARENA_HEIGHT = 7.38
+SLEEP_TIME_SECS = 30
 
 #bucket thresholds
 tThresh = 5 #absolute: 2de
@@ -147,8 +148,6 @@ while(True):
 
 	rospy.loginfo("sort & print best lines")
 	sortedLines = sorted(lines, key=lambda l: len(l.points), reverse=True)
-	for l in sortedLines[:15]:
-		print l
 		
 	#DEFINE WALLS AND WALL BUCKETS
 	walls=[0,0,0,0] 
@@ -266,6 +265,7 @@ while(True):
 	rospy.loginfo("Returning: LR=" +str(latest_corners.LR_corner) +", RR=" +str(latest_corners.RR_corner)
 		+ ", LF=" +str(latest_corners.LF_corner) + ", RF=" +str(latest_corners.RF_corner))
 	cornersPub.publish(latest_corners)
+	time.sleep(SLEEP_TIME_SECS)
 
 # print("here")
 # rospy.spin()

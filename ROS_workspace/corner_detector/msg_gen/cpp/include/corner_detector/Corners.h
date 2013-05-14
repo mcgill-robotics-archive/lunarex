@@ -45,17 +45,17 @@ struct Corners_ {
   {
   }
 
-  typedef std::vector<uint8_t, typename ContainerAllocator::template rebind<uint8_t>::other >  _LR_corner_type;
-  std::vector<uint8_t, typename ContainerAllocator::template rebind<uint8_t>::other >  LR_corner;
+  typedef std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  _LR_corner_type;
+  std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  LR_corner;
 
-  typedef std::vector<uint8_t, typename ContainerAllocator::template rebind<uint8_t>::other >  _RR_corner_type;
-  std::vector<uint8_t, typename ContainerAllocator::template rebind<uint8_t>::other >  RR_corner;
+  typedef std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  _RR_corner_type;
+  std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  RR_corner;
 
-  typedef std::vector<uint8_t, typename ContainerAllocator::template rebind<uint8_t>::other >  _LF_corner_type;
-  std::vector<uint8_t, typename ContainerAllocator::template rebind<uint8_t>::other >  LF_corner;
+  typedef std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  _LF_corner_type;
+  std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  LF_corner;
 
-  typedef std::vector<uint8_t, typename ContainerAllocator::template rebind<uint8_t>::other >  _RF_corner_type;
-  std::vector<uint8_t, typename ContainerAllocator::template rebind<uint8_t>::other >  RF_corner;
+  typedef std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  _RF_corner_type;
+  std::vector<uint32_t, typename ContainerAllocator::template rebind<uint32_t>::other >  RF_corner;
 
   typedef float _resolution_type;
   float resolution;
@@ -98,12 +98,12 @@ template<class ContainerAllocator>
 struct MD5Sum< ::corner_detector::Corners_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "a4f1fa3bb3f9c8b6d82f1472cf657570";
+    return "939ad33e83c6aaa3351a308edd81ceb9";
   }
 
   static const char* value(const  ::corner_detector::Corners_<ContainerAllocator> &) { return value(); } 
-  static const uint64_t static_value1 = 0xa4f1fa3bb3f9c8b6ULL;
-  static const uint64_t static_value2 = 0xd82f1472cf657570ULL;
+  static const uint64_t static_value1 = 0x939ad33e83c6aaa3ULL;
+  static const uint64_t static_value2 = 0x351a308edd81ceb9ULL;
 };
 
 template<class ContainerAllocator>
@@ -120,10 +120,10 @@ template<class ContainerAllocator>
 struct Definition< ::corner_detector::Corners_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "uint8[] LR_corner\n\
-uint8[] RR_corner\n\
-uint8[] LF_corner\n\
-uint8[] RF_corner\n\
+    return "uint32[] LR_corner\n\
+uint32[] RR_corner\n\
+uint32[] LF_corner\n\
+uint32[] RF_corner\n\
 float32 resolution\n\
 uint32 width\n\
 uint32 height\n\
@@ -175,25 +175,25 @@ struct Printer< ::corner_detector::Corners_<ContainerAllocator> >
     for (size_t i = 0; i < v.LR_corner.size(); ++i)
     {
       s << indent << "  LR_corner[" << i << "]: ";
-      Printer<uint8_t>::stream(s, indent + "  ", v.LR_corner[i]);
+      Printer<uint32_t>::stream(s, indent + "  ", v.LR_corner[i]);
     }
     s << indent << "RR_corner[]" << std::endl;
     for (size_t i = 0; i < v.RR_corner.size(); ++i)
     {
       s << indent << "  RR_corner[" << i << "]: ";
-      Printer<uint8_t>::stream(s, indent + "  ", v.RR_corner[i]);
+      Printer<uint32_t>::stream(s, indent + "  ", v.RR_corner[i]);
     }
     s << indent << "LF_corner[]" << std::endl;
     for (size_t i = 0; i < v.LF_corner.size(); ++i)
     {
       s << indent << "  LF_corner[" << i << "]: ";
-      Printer<uint8_t>::stream(s, indent + "  ", v.LF_corner[i]);
+      Printer<uint32_t>::stream(s, indent + "  ", v.LF_corner[i]);
     }
     s << indent << "RF_corner[]" << std::endl;
     for (size_t i = 0; i < v.RF_corner.size(); ++i)
     {
       s << indent << "  RF_corner[" << i << "]: ";
-      Printer<uint8_t>::stream(s, indent + "  ", v.RF_corner[i]);
+      Printer<uint32_t>::stream(s, indent + "  ", v.RF_corner[i]);
     }
     s << indent << "resolution: ";
     Printer<float>::stream(s, indent + "  ", v.resolution);

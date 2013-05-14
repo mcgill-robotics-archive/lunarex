@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 sys.path.append("~/McGill_LunarEx_2013/ROS_workspace/")
+sys.path.append("/home/ernie/McGill_LunarEx_2013/ROS_workspace")
 
 #IMPORTS
 import roslib; roslib.load_manifest('command')
@@ -14,13 +15,14 @@ import time
 import coord
 
 #--messages
+from std_msgs.msg import UInt32
+from std_msgs.msg import UInt8
+from geometry_msgs.msg import Twist
 from move_base_msgs.msg import MoveBaseAction
 from move_base_msgs.msg import MoveBaseGoal
 from geometry_msgs.msg import Quaternion
 from geometry_msgs.msg import PoseStamped
-from nav_msgs.msg import OccupancyGrid
-from nav_msgs.msg import MapMetaData
-from corner_detector.srv import *
+from corner_detector.msg import Corners
 
 #GLOBAL VARS
 #--constants
@@ -33,21 +35,25 @@ ARENA_LENGTH = 7.38
 MINING_BOUNDARY_LOCATION = 4.44  # distance of boundary to lunabin
 
 STARTING_POS_ARENA_COORDS = [(0.97, 0.75), (2.91, 0.75)]
+ROTATION_TIME_SECS = 10
+LOCALIZATION_ANG_SPEED = 0.2
 
 #--state vars
 #----corners
-corner_detector_request = corner_detectorRequest()
-corner_detector_response = 0
+LR_corner = [-1, -1]
+RR_corner = [-1, -1]
+LF_corner = [-1, -1]
+RF_corner = [-1, -1]
+mapRes = -1
+mapWidth = -1
+mapHeight = -1
+startedLeft = True 
 
 #----pose-related
 hector_heading_deg = 0 
 hector_pos_x = 0
 hector_pos_y = 0
 slam_out_pose= PoseStamped()
-
-#----map
-#global_map_res, defined later
-#global_map_size, defined later
 
 #----actuators
 auger_speed = 0 #current speed: 0-255
@@ -61,33 +67,21 @@ goal = MoveBaseGoal()
 #rospy.logerr / logwarn / loginfo
 
 #CALLBACKS
-def map_callback(data):
-	#rospy.loginfo("In map callback")
-	corner_detector_request.map=data
-
-def map_metadata_callback(data):
-	#rospy.loginfo("In map metadata callback")
-	corner_detector_request.map_meta=data	
-
-	global global_map_res
-	global_map_res = data.resolution
-	rospy.loginfo("got a MAP with resolution: "+str(global_map_res))
-
-	global global_map_size
-	global_map_size = data.width #ASSUMES SQUARE MAP!
-	if(data.width != data.height):
-		rospy.logwarn("Global MAP height =/= width")
+def corners_callback(data):
+	rospy.loginfo("In corners callback")
+	LR_corner = data.LR_corner
+	RR_corner = data.RR_corner
+	LF_corner = data.LF_corner
+	RF_corner = data.RF_corner
+	mapRes = data.resolution
+	mapWidth = data.width
+	mapHeight = data.height
+	startedLeft = data.left
 
 def slam_out_pose_callback(data):
 	slam_out_pose=data
 
 #HELPERS
-def display_corner_detector_output(corner_detector_response):
-	rospy.loginfo("CORNER detector output")
-	rospy.loginfo("Left bottom: "+str(corner_detector_response.left_bottom_corner))
-	rospy.loginfo("Right bottom: "+str(corner_detector_response.right_bottom_corner))
-	rospy.loginfo("Left top: "+str(corner_detector_response.left_top_corner))
-	rospy.loginfo("Right top: "+str(corner_detector_response.right_top_corner))
 
 #SUBROUTINES
 def excavate():
@@ -220,7 +214,7 @@ def goTo(x,y,theta):
 	# send a specified goal in a compact form
 	# All three parameters in Arena coordinates
 
-	nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, global_map_res, global_map_size)
+	nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
 	#(arenaCoords, slam_out_pose, corner1, corner2, corner3, corner4, resolution):
 
 	goal.target_pose.pose.position.x = nextGoal[0]
@@ -257,64 +251,50 @@ class Velocity:
 
 #INIT NODE & ACTIONLIB
 #--Init node
-rospy.init_node('move_base_client_py')
+rospy.init_node('command')
 
 #--Subscribers
-rospy.Subscriber("map", OccupancyGrid, map_callback)
-rospy.Subscriber("map_metadata", MapMetaData, map_metadata_callback)
 rospy.Subscriber("slam_out_pose", PoseStamped, slam_out_pose_callback)
+rospy.Subscriber("corners", Corners, corners_callback)
 
 #--Publishers
-auger_Speed_pub = rospy.Publisher("auger_speed", std_msgs.msg.UInt8)
-susp_LA_pub = rospy.Publisher("susp_pos", std_msgs.msg.UInt8)	# publish suspension info
-pub_vel = rospy.Publisher("cmd_vel", geometry_msgs.msg.Twist)	# publish velocities
+auger_Speed_pub = rospy.Publisher("auger_speed", UInt8)
+susp_LA_pub = rospy.Publisher("susp_pos", UInt8)	# publish suspension info
+pub_vel = rospy.Publisher("cmd_vel", Twist)	# publish velocities
 
-#--Init corner detector
-rospy.loginfo("Started waiting for corner detector service")
-rospy.wait_for_service('corner_detector_srv')
-rospy.loginfo("Done waiting for corner detector service")
-corner_detector_proxy = rospy.ServiceProxy('corner_detector_srv', corner_detector)
+#START MOTION
+
+#Perform rotation
+rospy.loginfo("Started rotation.")
+startTime = time.time()
+currentTime = startTime
+
+while(currentTime - startTime < ROTATION_TIME_SECS):
+	pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, LOCALIZATION_ANG_SPEED))
+	currentTime = time.time()
+
+rospy.loginfo("Ended rotation. Now waiting for good corners")
+
+#Get corners
+while(mapRes == -1): #means callback has not happened
+	time.sleep(2)
+
+rospy.loginfo("Got good corners.")
 
 #--Init actionlib
-# client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-# rospy.loginfo("Started waiting for move_base action server")
-# client.wait_for_server() #Waits until the action server has started up and started listening for goals.
-# rospy.loginfo("Done waiting for move_base action server")
+client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+rospy.loginfo("Started waiting for move_base action server")
+client.wait_for_server() #Waits until the action server has started up and started listening for goals.
+rospy.loginfo("Done waiting for move_base action server")
 
 #--Creates a goal to send to the action server.
 goal.target_pose.header.frame_id = "base_link"
 goal.target_pose.header.stamp = rospy.get_rostime()
 
-#PERFORM FIRST LOCALIZATION
-#--Perform rotation 
-#this should not use the goTo method because we want to full a full 360, and cant be sure we wont turn one way and back again
-
 # goal.target_pose.pose.position.x = 0.0
 # goal.target_pose.pose.position.y = 0.0 
 # quat = tf.transformations.quaternion_from_euler(0, 0, math.pi) #was 0, 0, math.pi
 # goal.target_pose.pose.orientation = Quaternion(*quat)
-
-# for i in range(1, 5):
-# 	#--perform 180deg
-# 	client.send_goal(goal)  
-# 	client.wait_for_result() 
-# 	rospy.loginfo("Performed 1/2 turn number: " +str(i))
-#--TODO Add feedback stuff 
-rospy.loginfo("Done rotating. Now will get corners.")
-
-#--Call corner detector service, display results & populate corner state vars
-corner_detector_response = corner_detector_proxy(corner_detector_request)
-display_corner_detector_output(corner_detector_response)
-
-LR_corner = (corner_detector_response.left_bottom_corner[0], corner_detector_response.left_bottom_corner[1])
-RR_corner =  (corner_detector_response.right_bottom_corner[0], corner_detector_response.right_bottom_corner[1])
-LF_corner = (corner_detector_response.left_top_corner[0], corner_detector_response.left_top_corner[1])
-RF_corner = (corner_detector_response.right_top_corner[0], corner_detector_response.right_top_corner[1])
-
-  #corner1 must be the bottom left point
-  #corner2 "bottom right"
-  #corner3 "top right"
-  #corner4 "top left"
 
 #Go to start of mining area
 goTo(ARENA_WIDTH/2.0, MINING_BOUNDARY_LOCATION, 0)

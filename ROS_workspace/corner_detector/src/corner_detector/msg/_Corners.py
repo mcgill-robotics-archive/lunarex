@@ -6,20 +6,20 @@ import struct
 
 
 class Corners(genpy.Message):
-  _md5sum = "a4f1fa3bb3f9c8b6d82f1472cf657570"
+  _md5sum = "939ad33e83c6aaa3351a308edd81ceb9"
   _type = "corner_detector/Corners"
   _has_header = False #flag to mark the presence of a Header object
-  _full_text = """uint8[] LR_corner
-uint8[] RR_corner
-uint8[] LF_corner
-uint8[] RF_corner
+  _full_text = """uint32[] LR_corner
+uint32[] RR_corner
+uint32[] LF_corner
+uint32[] RF_corner
 float32 resolution
 uint32 width
 uint32 height
 bool left
 """
   __slots__ = ['LR_corner','RR_corner','LF_corner','RF_corner','resolution','width','height','left']
-  _slot_types = ['uint8[]','uint8[]','uint8[]','uint8[]','float32','uint32','uint32','bool']
+  _slot_types = ['uint32[]','uint32[]','uint32[]','uint32[]','float32','uint32','uint32','bool']
 
   def __init__(self, *args, **kwds):
     """
@@ -39,13 +39,13 @@ bool left
       super(Corners, self).__init__(*args, **kwds)
       #message fields cannot be None, assign default values for those that are
       if self.LR_corner is None:
-        self.LR_corner = ''
+        self.LR_corner = []
       if self.RR_corner is None:
-        self.RR_corner = ''
+        self.RR_corner = []
       if self.LF_corner is None:
-        self.LF_corner = ''
+        self.LF_corner = []
       if self.RF_corner is None:
-        self.RF_corner = ''
+        self.RF_corner = []
       if self.resolution is None:
         self.resolution = 0.
       if self.width is None:
@@ -55,10 +55,10 @@ bool left
       if self.left is None:
         self.left = False
     else:
-      self.LR_corner = ''
-      self.RR_corner = ''
-      self.LF_corner = ''
-      self.RF_corner = ''
+      self.LR_corner = []
+      self.RR_corner = []
+      self.LF_corner = []
+      self.RF_corner = []
       self.resolution = 0.
       self.width = 0
       self.height = 0
@@ -76,34 +76,22 @@ bool left
     :param buff: buffer, ``StringIO``
     """
     try:
-      _x = self.LR_corner
-      length = len(_x)
-      # - if encoded as a list instead, serialize as bytes instead of string
-      if type(_x) in [list, tuple]:
-        buff.write(struct.pack('<I%sB'%length, length, *_x))
-      else:
-        buff.write(struct.pack('<I%ss'%length, length, _x))
-      _x = self.RR_corner
-      length = len(_x)
-      # - if encoded as a list instead, serialize as bytes instead of string
-      if type(_x) in [list, tuple]:
-        buff.write(struct.pack('<I%sB'%length, length, *_x))
-      else:
-        buff.write(struct.pack('<I%ss'%length, length, _x))
-      _x = self.LF_corner
-      length = len(_x)
-      # - if encoded as a list instead, serialize as bytes instead of string
-      if type(_x) in [list, tuple]:
-        buff.write(struct.pack('<I%sB'%length, length, *_x))
-      else:
-        buff.write(struct.pack('<I%ss'%length, length, _x))
-      _x = self.RF_corner
-      length = len(_x)
-      # - if encoded as a list instead, serialize as bytes instead of string
-      if type(_x) in [list, tuple]:
-        buff.write(struct.pack('<I%sB'%length, length, *_x))
-      else:
-        buff.write(struct.pack('<I%ss'%length, length, _x))
+      length = len(self.LR_corner)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sI'%length
+      buff.write(struct.pack(pattern, *self.LR_corner))
+      length = len(self.RR_corner)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sI'%length
+      buff.write(struct.pack(pattern, *self.RR_corner))
+      length = len(self.LF_corner)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sI'%length
+      buff.write(struct.pack(pattern, *self.LF_corner))
+      length = len(self.RF_corner)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sI'%length
+      buff.write(struct.pack(pattern, *self.RF_corner))
       _x = self
       buff.write(_struct_f2IB.pack(_x.resolution, _x.width, _x.height, _x.left))
     except struct.error as se: self._check_types(se)
@@ -119,39 +107,31 @@ bool left
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sI'%length
       start = end
-      end += length
-      if python3:
-        self.LR_corner = str[start:end].decode('utf-8')
-      else:
-        self.LR_corner = str[start:end]
+      end += struct.calcsize(pattern)
+      self.LR_corner = struct.unpack(pattern, str[start:end])
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sI'%length
       start = end
-      end += length
-      if python3:
-        self.RR_corner = str[start:end].decode('utf-8')
-      else:
-        self.RR_corner = str[start:end]
+      end += struct.calcsize(pattern)
+      self.RR_corner = struct.unpack(pattern, str[start:end])
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sI'%length
       start = end
-      end += length
-      if python3:
-        self.LF_corner = str[start:end].decode('utf-8')
-      else:
-        self.LF_corner = str[start:end]
+      end += struct.calcsize(pattern)
+      self.LF_corner = struct.unpack(pattern, str[start:end])
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sI'%length
       start = end
-      end += length
-      if python3:
-        self.RF_corner = str[start:end].decode('utf-8')
-      else:
-        self.RF_corner = str[start:end]
+      end += struct.calcsize(pattern)
+      self.RF_corner = struct.unpack(pattern, str[start:end])
       _x = self
       start = end
       end += 13
@@ -169,34 +149,22 @@ bool left
     :param numpy: numpy python module
     """
     try:
-      _x = self.LR_corner
-      length = len(_x)
-      # - if encoded as a list instead, serialize as bytes instead of string
-      if type(_x) in [list, tuple]:
-        buff.write(struct.pack('<I%sB'%length, length, *_x))
-      else:
-        buff.write(struct.pack('<I%ss'%length, length, _x))
-      _x = self.RR_corner
-      length = len(_x)
-      # - if encoded as a list instead, serialize as bytes instead of string
-      if type(_x) in [list, tuple]:
-        buff.write(struct.pack('<I%sB'%length, length, *_x))
-      else:
-        buff.write(struct.pack('<I%ss'%length, length, _x))
-      _x = self.LF_corner
-      length = len(_x)
-      # - if encoded as a list instead, serialize as bytes instead of string
-      if type(_x) in [list, tuple]:
-        buff.write(struct.pack('<I%sB'%length, length, *_x))
-      else:
-        buff.write(struct.pack('<I%ss'%length, length, _x))
-      _x = self.RF_corner
-      length = len(_x)
-      # - if encoded as a list instead, serialize as bytes instead of string
-      if type(_x) in [list, tuple]:
-        buff.write(struct.pack('<I%sB'%length, length, *_x))
-      else:
-        buff.write(struct.pack('<I%ss'%length, length, _x))
+      length = len(self.LR_corner)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sI'%length
+      buff.write(self.LR_corner.tostring())
+      length = len(self.RR_corner)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sI'%length
+      buff.write(self.RR_corner.tostring())
+      length = len(self.LF_corner)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sI'%length
+      buff.write(self.LF_corner.tostring())
+      length = len(self.RF_corner)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sI'%length
+      buff.write(self.RF_corner.tostring())
       _x = self
       buff.write(_struct_f2IB.pack(_x.resolution, _x.width, _x.height, _x.left))
     except struct.error as se: self._check_types(se)
@@ -213,39 +181,31 @@ bool left
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sI'%length
       start = end
-      end += length
-      if python3:
-        self.LR_corner = str[start:end].decode('utf-8')
-      else:
-        self.LR_corner = str[start:end]
+      end += struct.calcsize(pattern)
+      self.LR_corner = numpy.frombuffer(str[start:end], dtype=numpy.uint32, count=length)
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sI'%length
       start = end
-      end += length
-      if python3:
-        self.RR_corner = str[start:end].decode('utf-8')
-      else:
-        self.RR_corner = str[start:end]
+      end += struct.calcsize(pattern)
+      self.RR_corner = numpy.frombuffer(str[start:end], dtype=numpy.uint32, count=length)
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sI'%length
       start = end
-      end += length
-      if python3:
-        self.LF_corner = str[start:end].decode('utf-8')
-      else:
-        self.LF_corner = str[start:end]
+      end += struct.calcsize(pattern)
+      self.LF_corner = numpy.frombuffer(str[start:end], dtype=numpy.uint32, count=length)
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sI'%length
       start = end
-      end += length
-      if python3:
-        self.RF_corner = str[start:end].decode('utf-8')
-      else:
-        self.RF_corner = str[start:end]
+      end += struct.calcsize(pattern)
+      self.RF_corner = numpy.frombuffer(str[start:end], dtype=numpy.uint32, count=length)
       _x = self
       start = end
       end += 13
