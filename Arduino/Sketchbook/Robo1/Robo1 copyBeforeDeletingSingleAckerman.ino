@@ -444,7 +444,7 @@ void doAckerman()
      	LR_servo_angle = 90.0 - outerBack;
       	RR_servo_angle = 90.0 - outerBack;
       
-	if(innerFront == 0.0)
+	if(innerBack == 0.0)
 	{
 		rad1 = sqrt(pow(LENGTH, 2) + pow(R1+WIDTH/2, 2));
    		rad2 = sqrt(pow(LENGTH, 2) + pow(R1-WIDTH/2, 2));
