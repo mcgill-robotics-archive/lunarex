@@ -129,8 +129,8 @@ public class GUIMain extends JFrame {
 	final int AUGER_INCREMENT = 5;
 	final int BUCKET_INCREMENT = 3;
 	
-	static final float MAX_LIN_SPEED = 2.6f; //1.8 before
-	static final float MAX_ANG_SPEED = 1.4f; //4  before
+	static final float MAX_LIN_SPEED = 1.8f; //1.8 before
+	static final float MAX_ANG_SPEED = 2.0f; //4  before
 	
 	public GUIMain() {
 		
