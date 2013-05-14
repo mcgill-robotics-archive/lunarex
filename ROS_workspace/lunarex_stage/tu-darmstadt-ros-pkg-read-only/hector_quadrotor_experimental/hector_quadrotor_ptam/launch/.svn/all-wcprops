@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/758/trunk/hector_quadrotor_experimental/hector_quadrotor_ptam/launch
+END
+ptam_hector.launch
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/758/trunk/hector_quadrotor_experimental/hector_quadrotor_ptam/launch/ptam_hector.launch
+END
+launch_simulation.launch
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/758/trunk/hector_quadrotor_experimental/hector_quadrotor_ptam/launch/launch_simulation.launch
+END

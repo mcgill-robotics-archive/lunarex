@@ -2,7 +2,9 @@ package lunarex.network;
 
 import java.net.*;
 import java.util.*;
+import java.awt.font.NumericShaper;
 import java.io.*;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -44,21 +46,33 @@ public class Client extends Thread {
 		int startingIndex = receivedData.indexOf('x') + 4;
 		int endingIndex = receivedData.indexOf(',', startingIndex);
 		String xString = receivedData.substring(startingIndex, endingIndex);
-		return Float.parseFloat(xString);
+		try{
+			return Float.parseFloat(xString);
+		} catch (NumberFormatException e){
+			return 0.0f;
+		}
 	}
-
+	
 	public float getY() {
 		int startingIndex = receivedData.indexOf('y') + 4;
 		int endingIndex = receivedData.indexOf('\n', startingIndex);
 		String yString = receivedData.substring(startingIndex, endingIndex);
-		return Float.parseFloat(yString);
+		try{
+			return Float.parseFloat(yString);
+		} catch (NumberFormatException e){
+			return 0.0f;
+		}
 	}
 
 	public float getTheta() {
 		int startingIndex = receivedData.indexOf("theta") + 8;
 		int endingIndex = receivedData.indexOf(',', startingIndex);
 		String thetaString = receivedData.substring(startingIndex, endingIndex);
-		return Float.parseFloat(thetaString);
+		try{
+			return Float.parseFloat(thetaString);
+		} catch (NumberFormatException e){
+			return 0.0f;
+		}
 	}
 
 	public void run() {
@@ -111,7 +125,7 @@ public class Client extends Thread {
 //								+ this.getX() + "\n" + "Y: " + this.getY()
 //								+ "\n" + "Theta: " + this.getTheta());
 						
-						System.out.println(receivedData);
+//						System.out.println(receivedData);
 					}
 
 					if (closeConnection) {

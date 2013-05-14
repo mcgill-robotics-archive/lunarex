@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/890/trunk/hector_quadrotor_experimental
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/758/trunk/hector_quadrotor_experimental/CMakeLists.txt
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/758/trunk/hector_quadrotor_experimental/Makefile
+END
+stack.xml
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/890/trunk/hector_quadrotor_experimental/stack.xml
+END

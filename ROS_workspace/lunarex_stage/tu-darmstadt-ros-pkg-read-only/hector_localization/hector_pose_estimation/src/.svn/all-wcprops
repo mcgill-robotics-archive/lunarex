@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/775/trunk/hector_localization/hector_pose_estimation/src
+END
+pose_estimation_node.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/775/trunk/hector_localization/hector_pose_estimation/src/pose_estimation_node.cpp
+END
+pose_estimation_nodelet.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/758/trunk/hector_localization/hector_pose_estimation/src/pose_estimation_nodelet.cpp
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/758/trunk/hector_localization/hector_pose_estimation/src/CMakeLists.txt
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/758/trunk/hector_localization/hector_pose_estimation/src/main.cpp
+END

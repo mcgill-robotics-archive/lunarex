@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/758/trunk/hlugv_common/hlugv_description/urdf
+END
+hlugv_base.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/758/trunk/hlugv_common/hlugv_description/urdf/hlugv_base.urdf.xacro
+END
+hlugv_cam_lidar.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/758/trunk/hlugv_common/hlugv_description/urdf/hlugv_cam_lidar.urdf.xacro
+END
+hlugv.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/758/trunk/hlugv_common/hlugv_description/urdf/hlugv.urdf.xacro
+END
+hlugv_wheel.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/758/trunk/hlugv_common/hlugv_description/urdf/hlugv_wheel.urdf.xacro
+END
+sensor_roll_pitch_mount.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/758/trunk/hlugv_common/hlugv_description/urdf/sensor_roll_pitch_mount.urdf.xacro
+END
+hlugv_rc2012.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/758/trunk/hlugv_common/hlugv_description/urdf/hlugv_rc2012.urdf.xacro
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/758/trunk/hector_slam/hector_imu_attitude_to_tf
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/758/trunk/hector_slam/hector_imu_attitude_to_tf/CMakeLists.txt
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/758/trunk/hector_slam/hector_imu_attitude_to_tf/Makefile
+END
+manifest.xml
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/758/trunk/hector_slam/hector_imu_attitude_to_tf/manifest.xml
+END
+mainpage.dox
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/758/trunk/hector_slam/hector_imu_attitude_to_tf/mainpage.dox
+END

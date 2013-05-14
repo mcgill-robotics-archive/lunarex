@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/868/trunk/hector_gazebo/hector_gazebo_thermal_camera/include/hector_gazebo_thermal_camera
+END
+gazebo_ros_thermal_camera.h
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/!svn/ver/868/trunk/hector_gazebo/hector_gazebo_thermal_camera/include/hector_gazebo_thermal_camera/gazebo_ros_thermal_camera.h
+END
+gazebo_ros_thermal_camera_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/svn/!svn/ver/868/trunk/hector_gazebo/hector_gazebo_thermal_camera/include/hector_gazebo_thermal_camera/gazebo_ros_thermal_camera_utils.h
+END

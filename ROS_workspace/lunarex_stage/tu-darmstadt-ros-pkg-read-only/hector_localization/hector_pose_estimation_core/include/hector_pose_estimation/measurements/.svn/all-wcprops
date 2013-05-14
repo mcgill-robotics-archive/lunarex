@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/!svn/ver/776/trunk/hector_localization/hector_pose_estimation_core/include/hector_pose_estimation/measurements
+END
+baro.h
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/775/trunk/hector_localization/hector_pose_estimation_core/include/hector_pose_estimation/measurements/baro.h
+END
+gravity.h
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/758/trunk/hector_localization/hector_pose_estimation_core/include/hector_pose_estimation/measurements/gravity.h
+END
+magnetic.h
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/776/trunk/hector_localization/hector_pose_estimation_core/include/hector_pose_estimation/measurements/magnetic.h
+END
+height.h
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/!svn/ver/775/trunk/hector_localization/hector_pose_estimation_core/include/hector_pose_estimation/measurements/height.h
+END
+gps.h
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/!svn/ver/775/trunk/hector_localization/hector_pose_estimation_core/include/hector_pose_estimation/measurements/gps.h
+END
+poseupdate.h
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/758/trunk/hector_localization/hector_pose_estimation_core/include/hector_pose_estimation/measurements/poseupdate.h
+END
+zerorate.h
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/758/trunk/hector_localization/hector_pose_estimation_core/include/hector_pose_estimation/measurements/zerorate.h
+END
+rate.h
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/!svn/ver/758/trunk/hector_localization/hector_pose_estimation_core/include/hector_pose_estimation/measurements/rate.h
+END
+heading.h
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/758/trunk/hector_localization/hector_pose_estimation_core/include/hector_pose_estimation/measurements/heading.h
+END

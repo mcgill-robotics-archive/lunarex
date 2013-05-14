@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/758/trunk/vrmagic_camera/vrmagic_multi_driver/launch
+END
+view.launch
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/758/trunk/vrmagic_camera/vrmagic_multi_driver/launch/view.launch
+END
+recordAndView.launch
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/758/trunk/vrmagic_camera/vrmagic_multi_driver/launch/recordAndView.launch
+END
+replay.launch
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/758/trunk/vrmagic_camera/vrmagic_multi_driver/launch/replay.launch
+END
+stereoView.launch
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/758/trunk/vrmagic_camera/vrmagic_multi_driver/launch/stereoView.launch
+END
+record.launch
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/758/trunk/vrmagic_camera/vrmagic_multi_driver/launch/record.launch
+END
