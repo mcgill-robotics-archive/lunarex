@@ -276,10 +276,10 @@ rospy.loginfo("Done waiting for corner detector service")
 corner_detector_proxy = rospy.ServiceProxy('corner_detector_srv', corner_detector)
 
 #--Init actionlib
-client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-rospy.loginfo("Started waiting for move_base action server")
-client.wait_for_server() #Waits until the action server has started up and started listening for goals.
-rospy.loginfo("Done waiting for move_base action server")
+# client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+# rospy.loginfo("Started waiting for move_base action server")
+# client.wait_for_server() #Waits until the action server has started up and started listening for goals.
+# rospy.loginfo("Done waiting for move_base action server")
 
 #--Creates a goal to send to the action server.
 goal.target_pose.header.frame_id = "base_link"
@@ -289,16 +289,16 @@ goal.target_pose.header.stamp = rospy.get_rostime()
 #--Perform rotation 
 #this should not use the goTo method because we want to full a full 360, and cant be sure we wont turn one way and back again
 
-goal.target_pose.pose.position.x = 0.0
-goal.target_pose.pose.position.y = 0.0 
-quat = tf.transformations.quaternion_from_euler(0, 0, math.pi) #was 0, 0, math.pi
-goal.target_pose.pose.orientation = Quaternion(*quat)
+# goal.target_pose.pose.position.x = 0.0
+# goal.target_pose.pose.position.y = 0.0 
+# quat = tf.transformations.quaternion_from_euler(0, 0, math.pi) #was 0, 0, math.pi
+# goal.target_pose.pose.orientation = Quaternion(*quat)
 
-for i in range(1, 5):
-	#--perform 180deg
-	client.send_goal(goal)  
-	client.wait_for_result() 
-	rospy.loginfo("Performed 1/2 turn number: " +str(i))
+# for i in range(1, 5):
+# 	#--perform 180deg
+# 	client.send_goal(goal)  
+# 	client.wait_for_result() 
+# 	rospy.loginfo("Performed 1/2 turn number: " +str(i))
 #--TODO Add feedback stuff 
 rospy.loginfo("Done rotating. Now will get corners.")
 

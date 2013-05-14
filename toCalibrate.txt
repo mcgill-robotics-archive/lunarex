@@ -3,3 +3,35 @@ to calibrate later
 point to spin before dumping
 
 constants in setWheelSpeed in robo1.ino
+
+
+----------NAVIGATION----------
+
+base_local_planner
+
+ acc_lim_x: 0.8 #x acceleration limit of the robot in meters/sec^2
+ acc_lim_y: 0.8 #y acceleration limit of the robot in meters/sec^2
+ acc_lim_th: 0.8 #rotational acceleration limit of the robot in radians/sec^2
+ max_vel_x: 0.5  #maximum forward velocity allowed for the base in meters/sec
+ min_vel_x: 0.1 #minimum forward velocity allowed for the base in meters/sec. It is useful to specify this to guarantee that velocity commands sent to a mobile base are high enough to allow the base to overcome friction.
+
+costmap common
+
+obstacle_range: 2.0
+raytrace_range: 0.5
+footprint: [[-0.7,-0.45], [0.70,-0.45],[0.70, 0.45],[-0.70, 0.45]]
+
+global_costmap
+
+ #important: set in accordance to hector_mapping map!
+ width: 26
+ height: 26
+ resolution: 0.025
+
+ transform_tolerance: 1.0
+
+local_costmap
+
+  width: 5.0 
+  height: 5.0 
+  resolution: 0.008

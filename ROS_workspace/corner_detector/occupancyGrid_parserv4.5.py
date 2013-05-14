@@ -70,7 +70,7 @@ def sameBuckets(l1, l2):
 
 def findCorners(req):
 	
-	print ("dealing with request")
+	rospy.loginfo("dealing with request")
 
 	startingTime = rospy.get_time()
 	#MAP META. ***IMPORTANT NOTE*** the map meta data is also available in /map topic. Check which is best.
@@ -78,7 +78,7 @@ def findCorners(req):
 	mapHeight=req.map_meta.height
 	mapRes = req.map_meta.resolution
 	
-	print("META: map width = "+str(mapWidth)+" height=" +str(mapHeight)+" and res= "+str(mapRes) )
+	rospy.loginfo("META: map width = "+str(mapWidth)+" height=" +str(mapHeight)+" and res= "+str(mapRes))
 	
 	#GRID 
 	gridData = req.map.data
@@ -94,12 +94,14 @@ def findCorners(req):
 	Tres = 1
 	Trank = 360#360/1#90/1#180/1
 
-
 	print ("***Hough matrix has***")
 	print(str(Rrank) +" R buckets of size: "+str(Rres))
 	print("and : "+str(Trank) +" theta buckets of size: " +str(Tres))
 
 	H = [[0 for T in xrange(Trank)] for R in xrange(Rrank)] 
+
+
+	rospy.loginfo("Started placing points into the matrix")
 
 	#PLACING POINTS INTO THE MATRIX
 	for i in range(0,len(occupancyGrid)):
@@ -115,6 +117,8 @@ def findCorners(req):
 						H[int(lineR/Rres)][t]=Line(lineR, t)
 					H[int(lineR/Rres)][t].points.append(Point(i,j))
 
+	rospy.loginfo("Started placing hough matrix lines into Line objects")
+
 	#PLACING HOUGH MATRIX LINES INTO LINE OBJECTS
 	lines=[]
 	for r in xrange(Rrank):
@@ -122,7 +126,7 @@ def findCorners(req):
 			if(H[r][t]!=0 and len(H[r][t].points)>0):
 				lines.append(H[r][t])
 
-	#sort & print best lines
+	rospy.loginfo("sort & print best lines")
 	sortedLines = sorted(lines, key=lambda l: len(l.points), reverse=True)
 	for l in sortedLines[:15]:
 		print l
@@ -131,6 +135,8 @@ def findCorners(req):
 	walls=[0,0,0,0] 
 	walls[0]=sortedLines[0] #assume most populous line is first wall
 		
+	rospy.loginfo("fill walls & wall buckets")	
+
 	#FILL WALLS & WALL BUCKETS
 	wallIndex=1 #next wall to fill
 	for l in sortedLines[:15]: #order of decreasing points/line
@@ -143,19 +149,56 @@ def findCorners(req):
 				walls[wallIndex]=l
 				wallIndex+=1	
 
-	if(abs(walls[0].theta - walls[1].theta) > 45):
-		#is LONG-SHORT or SHORT-LONG. Switch wall 2 and wall 1
-		temp = walls[1]
-		walls[1]=walls[2]
-		walls[2]=temp
+	rospy.loginfo("Making sure that the best 4 walls are LONG - LONG - SHORT - SHORT")
 
-	if(abs(walls[0].theta - walls[1].theta) > 45):
-		#is still LONG-SHORT or SHORT-LONG. Switch wall 2 and wall 1
-		temp = walls[1]
-		walls[1]=walls[3]
-		walls[3]=temp
+	rospy.loginfo("done getting walls. Right now we have:")
+	for i in range(0,4):
+		print ("WALL "+str(i)+": "+str(walls[i])) 
 
+	bestWallsDistance = abs(walls[0].r -  walls[1].r) 
+	if(bestWallsDistance < 1.2*ARENA_HEIGHT and bestWallsDistance > 0.8*ARENA_HEIGHT):
+		print("best walls are SHORT. Switch walls 0&1 with 2&3")
+		temp1 = walls[2]
+		temp2 = walls[3]
+		walls[2] = walls[0]
+		walls[3] = walls[1]
+		walls[0]=temp1
+		walls[1]=temp2
 
+	elif(not(bestWallsDistance < 1.2*ARENA_WIDTH and bestWallsDistance > 0.8*ARENA_WIDTH)):
+		rospy.loginfo("the best walls are not LONG LONG (nor SHORT SHORT) ")
+		
+		middleWallsDistance = abs(walls[1].r - walls[2].r)
+		if(middleWallsDistance < 1.2*ARENA_WIDTH and middleWallsDistance > 0.8*ARENA_WIDTH):
+			rospy.loginfo("two middle ones are long. so we have short - long - long - short")
+			rospy.loginfo("switching wall 0 with wall 2")
+			temp1 = walls[2]
+			walls[2] = walls[0]
+			walls[0]=temp1
+		elif(middleWallsDistance < 1.2*ARENA_HEIGHT and middleWallsDistance > 0.8*ARENA_HEIGHT):
+			rospy.loginfo("two middle ones are short. so we have long - short - short - long")
+			rospy.loginfo("switching wall 3 with wall 1")
+			temp1 = walls[3]
+			walls[3]=walls[1]
+			walls[1] = temp1
+		else:
+			rospy.loginfo("two middle ones are short-long or long-short")
+			rospy.loginfo("switching the two middle walls - wall1 and wall2")
+			temp1 = walls[2]
+			walls[2] = walls[1]
+			walls[1]=temp1
+
+			rospy.loginfo("now can either be short-short-long-long or long-long-short-short")
+			if(bestWallsDistance < 1.2*ARENA_HEIGHT and bestWallsDistance > 0.8*ARENA_HEIGHT):
+				print("best walls are SHORT. Switch walls 0&1 with 2&3")
+				temp1 = walls[2]
+				temp2 = walls[3]
+				walls[2] = walls[0]
+				walls[3] = walls[1]
+				walls[0]=temp1
+				walls[1]=temp2
+
+	rospy.loginfo("done getting walls. Now get corners")
 	for i in range(0,4):
 		print ("WALL "+str(i)+": "+str(walls[i])) 
 
