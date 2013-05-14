@@ -1,0 +1,11 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/862/trunk/hector_ugv_common/hector_ugv_gazebo/launch
+END
+spawn_hector_ugv.launch
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/862/trunk/hector_ugv_common/hector_ugv_gazebo/launch/spawn_hector_ugv.launch
+END

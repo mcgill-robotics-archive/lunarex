@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/862/trunk/hlugv_common/hlugv_description/launch
+END
+xacrodisplay_hlugv_rc2012.launch
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/862/trunk/hlugv_common/hlugv_description/launch/xacrodisplay_hlugv_rc2012.launch
+END
+xacrodisplay_hlugv_base.launch
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/862/trunk/hlugv_common/hlugv_description/launch/xacrodisplay_hlugv_base.launch
+END
+xacrodisplay_hlugv_cam_lidar.launch
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/!svn/ver/862/trunk/hlugv_common/hlugv_description/launch/xacrodisplay_hlugv_cam_lidar.launch
+END

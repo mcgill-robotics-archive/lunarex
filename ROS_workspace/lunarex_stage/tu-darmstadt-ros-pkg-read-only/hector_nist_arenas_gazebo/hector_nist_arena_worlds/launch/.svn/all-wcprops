@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_worlds/launch
+END
+start.launch
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_worlds/launch/start.launch
+END
+go2011_arena.launch
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_worlds/launch/go2011_arena.launch
+END
+maze_10m_x_14m.launch
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_worlds/launch/maze_10m_x_14m.launch
+END
+thailand_robot_championship_2012_default.launch
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_worlds/launch/thailand_robot_championship_2012_default.launch
+END
+thailand_robot_championship_2012_flat.launch
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/758/trunk/hector_nist_arenas_gazebo/hector_nist_arena_worlds/launch/thailand_robot_championship_2012_flat.launch
+END

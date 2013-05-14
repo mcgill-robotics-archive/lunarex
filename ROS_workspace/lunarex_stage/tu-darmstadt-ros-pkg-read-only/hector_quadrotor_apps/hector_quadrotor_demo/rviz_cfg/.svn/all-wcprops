@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/758/trunk/hector_quadrotor_apps/hector_quadrotor_demo/rviz_cfg
+END
+indoor_slam.vcg
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/758/trunk/hector_quadrotor_apps/hector_quadrotor_demo/rviz_cfg/indoor_slam.vcg
+END
+outdoor_flight.vcg
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/758/trunk/hector_quadrotor_apps/hector_quadrotor_demo/rviz_cfg/outdoor_flight.vcg
+END

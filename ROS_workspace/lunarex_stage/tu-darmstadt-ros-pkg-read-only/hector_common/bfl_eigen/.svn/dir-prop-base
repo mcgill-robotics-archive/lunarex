@@ -1,0 +1,12 @@
+K 10
+svn:ignore
+V 57
+bin
+build
+lib
+install
+patched
+installed
+CMakeLists.txt.*
+
+END

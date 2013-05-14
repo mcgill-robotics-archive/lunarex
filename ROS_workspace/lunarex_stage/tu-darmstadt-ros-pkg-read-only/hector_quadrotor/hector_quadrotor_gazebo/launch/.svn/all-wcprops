@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/862/trunk/hector_quadrotor/hector_quadrotor_gazebo/launch
+END
+spawn_quadrotor_with_asus.launch
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/!svn/ver/780/trunk/hector_quadrotor/hector_quadrotor_gazebo/launch/spawn_quadrotor_with_asus.launch
+END
+spawn_quadrotor_with_asus_with_laser.launch
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/!svn/ver/780/trunk/hector_quadrotor/hector_quadrotor_gazebo/launch/spawn_quadrotor_with_asus_with_laser.launch
+END
+spawn_quadrotor_with_kinect.launch
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/780/trunk/hector_quadrotor/hector_quadrotor_gazebo/launch/spawn_quadrotor_with_kinect.launch
+END
+spawn_quadrotor_with_cam.launch
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/780/trunk/hector_quadrotor/hector_quadrotor_gazebo/launch/spawn_quadrotor_with_cam.launch
+END
+spawn_quadrotor_slam.launch
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/780/trunk/hector_quadrotor/hector_quadrotor_gazebo/launch/spawn_quadrotor_slam.launch
+END
+quadrotor_empty_world.launch
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/826/trunk/hector_quadrotor/hector_quadrotor_gazebo/launch/quadrotor_empty_world.launch
+END
+spawn_quadrotor.launch
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/862/trunk/hector_quadrotor/hector_quadrotor_gazebo/launch/spawn_quadrotor.launch
+END
+spawn_quadrotor_with_downward_cam.launch
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/780/trunk/hector_quadrotor/hector_quadrotor_gazebo/launch/spawn_quadrotor_with_downward_cam.launch
+END
+spawn_quadrotor_with_laser.launch
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/780/trunk/hector_quadrotor/hector_quadrotor_gazebo/launch/spawn_quadrotor_with_laser.launch
+END

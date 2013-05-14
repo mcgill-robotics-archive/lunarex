@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/758/trunk/biorob_common/biorob_gazebo/urdf
+END
+biorob_v3_x4.gazebo.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/758/trunk/biorob_common/biorob_gazebo/urdf/biorob_v3_x4.gazebo.xacro
+END
+biorob_v3_x6.gazebo.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/758/trunk/biorob_common/biorob_gazebo/urdf/biorob_v3_x6.gazebo.xacro
+END

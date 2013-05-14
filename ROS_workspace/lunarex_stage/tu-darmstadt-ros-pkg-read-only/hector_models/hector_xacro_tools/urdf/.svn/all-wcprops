@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/758/trunk/hector_models/hector_xacro_tools/urdf
+END
+sensor_macros.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/758/trunk/hector_models/hector_xacro_tools/urdf/sensor_macros.urdf.xacro
+END
+inertia_tensors.urdf.xacro
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/758/trunk/hector_models/hector_xacro_tools/urdf/inertia_tensors.urdf.xacro
+END

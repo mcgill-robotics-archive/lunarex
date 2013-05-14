@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/758/trunk/hector_turtlebot/hector_turtlebot_apps/launch
+END
+gmapping.launch
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/758/trunk/hector_turtlebot/hector_turtlebot_apps/launch/gmapping.launch
+END
+scan_filter.launch
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/758/trunk/hector_turtlebot/hector_turtlebot_apps/launch/scan_filter.launch
+END
+amcl.launch
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/758/trunk/hector_turtlebot/hector_turtlebot_apps/launch/amcl.launch
+END
+hector_mapping.launch
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/758/trunk/hector_turtlebot/hector_turtlebot_apps/launch/hector_mapping.launch
+END
+move_base.launch
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/758/trunk/hector_turtlebot/hector_turtlebot_apps/launch/move_base.launch
+END

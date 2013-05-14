@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/758/trunk/hector_common/bfl_eigen/patch/src/wrappers/matrix
+END
+vector_wrapper.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/758/trunk/hector_common/bfl_eigen/patch/src/wrappers/matrix/vector_wrapper.h
+END
+matrix_wrapper.h
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/758/trunk/hector_common/bfl_eigen/patch/src/wrappers/matrix/matrix_wrapper.h
+END
+vector_EIGEN.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/758/trunk/hector_common/bfl_eigen/patch/src/wrappers/matrix/vector_EIGEN.cpp
+END
+matrix_EIGEN.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/758/trunk/hector_common/bfl_eigen/patch/src/wrappers/matrix/matrix_EIGEN.cpp
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/758/trunk/hector_common/bfl_eigen/patch/src/wrappers/matrix/CMakeLists.txt
+END
+vector_EIGEN.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/758/trunk/hector_common/bfl_eigen/patch/src/wrappers/matrix/vector_EIGEN.h
+END
+matrix_EIGEN.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/758/trunk/hector_common/bfl_eigen/patch/src/wrappers/matrix/matrix_EIGEN.h
+END

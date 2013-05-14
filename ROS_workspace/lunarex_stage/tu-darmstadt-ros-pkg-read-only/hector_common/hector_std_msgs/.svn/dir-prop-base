@@ -1,0 +1,11 @@
+K 10
+svn:ignore
+V 34
+bin
+build
+lib
+msg_gen
+src
+srv_gen
+
+END
