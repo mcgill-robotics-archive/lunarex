@@ -38,7 +38,7 @@ void setup() {
 
   analogWrite(7, 255);  //dumpActuator retracted 'down'
   analogWrite(8, 0);    //auger stopped
-  analogWrite(13, 255);  //door actuators retracted, 'closed'
+  analogWrite(13, 0);  //door actuators retracted, 'closed'
   analogWrite(6, 0);
   Serial.println("waiting for value...");
   Serial.flush();

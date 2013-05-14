@@ -62,10 +62,11 @@ ros:: Subscriber<std_msgs::UInt8> doorLASub("door_pos", &setDoorLA); //door Line
 ros:: Subscriber<std_msgs::UInt8> augerSpeedSub("auger_speed", &setAugerSpeed); //auger motor speed
 
 //Publishers
+float dirFlag = 0.0;
 
 //repeat 2 lines below for each publisher
-//std_msgs::Float32 fb_angspeed;
-//ros:: Publisher fb_angspeed_publisher("fb_angspeed", &fb_angspeed);
+std_msgs::Float32 flag;
+ros:: Publisher flagPub("ar_flag", &flag);
 
 //arduino_msgs::ArduinoFeedback fb;
 //ros:: Publisher feedback_publisher("arduino_feedback", &fb);
@@ -202,7 +203,8 @@ void setup()
   nh.subscribe(suspLASub);
   nh.subscribe(doorLASub);
   nh.subscribe(augerSpeedSub);  
- // nh.advertise(fb_angspeed_publisher);
+
+  nh.advertise(flagPub);
 }
 
 void loop()
@@ -246,7 +248,8 @@ void loop()
   //populateFeedbackMessage();
   // fb_angspeed.data=angSpeed;
   // fb_angspeed_publisher.publish(&fb_angspeed);
-
+  flag.data = dirFlag;
+  flagPub.publish(&flag);
   nh.spinOnce();
 }
 
@@ -394,8 +397,8 @@ void doAckerman()
     }
     
     float dir = (angSpeed * linSpeed) /abs((angSpeed * linSpeed));  //Will return +/- 1 for CCW or CW, respectively (note this variable is distinct from LF_motor_dir, RF_motor_dir, etc)
-       
-     if(dir>0.0)  //counter clockwise
+    dirFlag = dir;   
+     if(dir>0.0)  //counter clockwise + forward OR CW and backwards
      {
          LF_servo_angle = 90 - innerFront;
          RF_servo_angle = 90 - outerFront;
@@ -411,17 +414,17 @@ void doAckerman()
 	}
 
 	else
-      	{
-         	rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-          	rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-		rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-		rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-      	}
-  }
+      	  {
+         	rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2)); //lf
+          	rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2)); //rf
+		rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));  //lr
+		rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));  //rr
+        	}
+    }
   
-  else if(dir<0.0)  //clockwise
-  {
-
+    else if(dir<0.0)  //clockwise + Formards OR ccw + backwards
+    {
+      //flag.data=-1.0;
       	LF_servo_angle = 90.0 + outerFront;
       	RF_servo_angle = 90.0 + innerFront;
      	LR_servo_angle = 90.0 - outerBack;
@@ -437,10 +440,10 @@ void doAckerman()
 
 	else
 	{
-		rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-		rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
-	  	rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));
-	  	rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));
+		rad1 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2)); //lf
+		rad2 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2));  //rf
+	  	rad3 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius+WIDTH/2, 2));  //lr
+	  	rad4 = sqrt(pow(LENGTH/2, 2) + pow(ackRadius-WIDTH/2, 2)); //rr
 	}
   
   }

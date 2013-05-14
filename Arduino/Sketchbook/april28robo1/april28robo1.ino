@@ -29,8 +29,8 @@ ros:: NodeHandle nh;
 float angSpeed = 0;
 float linSpeed = 0;
 float dumpPos = 255; //down as default
-float suspPos = 0; //up as default
-float doorPos = 0;
+float suspPos = 255; //up as default
+float doorPos = 0 ;
 float augerSpeed = 0;
 
 //Subscriber callback functions
@@ -46,8 +46,8 @@ void setDumpLA(const std_msgs::UInt8 &dump_pos){
 void setSuspLA(const std_msgs::UInt8 &susp_pos){
   suspPos = (int) susp_pos.data;
 }  
-void setDoorLA(const std_msgs::Bool &door_pos){
-  doorPos = (boolean) door_pos.data;
+void setDoorLA(const std_msgs::UInt8 &door_pos){
+  doorPos = (int) door_pos.data;
 }
 void setAugerSpeed(const std_msgs::UInt8 &auger_speed){
   augerSpeed = (int) auger_speed.data;
@@ -58,7 +58,7 @@ void setAugerSpeed(const std_msgs::UInt8 &auger_speed){
 ros:: Subscriber<geometry_msgs::Twist> cmdVelSub("cmd_vel", &setSpeeds);  
 ros:: Subscriber<std_msgs::UInt8> dumpLASub("dump_pos", &setDumpLA); //dumping Linear Acutator position
 ros:: Subscriber<std_msgs::UInt8> suspLASub("susp_pos", &setSuspLA); //suspension Linear Actuator position (same for both)
-ros:: Subscriber<std_msgs::Bool> doorLASub("door_pos", &setDoorLA); //door Linear Acutator position (same for both)
+ros:: Subscriber<std_msgs::UInt8> doorLASub("door_pos", &setDoorLA); //door Linear Acutator position (same for both)
 ros:: Subscriber<std_msgs::UInt8> augerSpeedSub("auger_speed", &setAugerSpeed); //auger motor speed
 
 //Publishers
