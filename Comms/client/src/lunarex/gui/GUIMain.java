@@ -49,13 +49,10 @@ public class GUIMain extends JFrame {
 	static final int FONTSIZE = 20;
 
 	//FOR MACBOOK AIR ON MCGILL NETWORK
-	String ipAdressString = "142.157.43.17";
+	//String ipAdressString = "142.157.43.17";
 	
 	//FOR MACBOOK AIR ON OUR NETWORK
-	//String ipAdressString = "192.168.1.100";
-	
-	
-	
+	String ipAdressString = "192.168.1.101";
 	
 	//FOR LOCALHOST
 	//String ipAdressString = "127.0.0.1";
@@ -132,8 +129,8 @@ public class GUIMain extends JFrame {
 	final int AUGER_INCREMENT = 5;
 	final int BUCKET_INCREMENT = 3;
 	
-	static final float MAX_LIN_SPEED = 2.6f; //1.8 before
-	static final float MAX_ANG_SPEED = 1.4f; //4  before
+	static final float MAX_LIN_SPEED = 1.8f; //1.8 before
+	static final float MAX_ANG_SPEED = 2.0f; //4  before
 	
 	public GUIMain() {
 		
@@ -309,10 +306,10 @@ public class GUIMain extends JFrame {
 		
 		/*DOOR BUTTONS*/
 		if(buttons.get(11)){
-			doorOpen = 1; //R1
+			doorOpen = 255; //R1. 255 is door open
 		}
 		else if(buttons.get(10)){
-			doorOpen = 0; //L1
+			doorOpen = 0; //L1. 0 is door closed
 		}
 		
 		/*BUCKET BUTTONS*/
@@ -385,7 +382,7 @@ public class GUIMain extends JFrame {
 		g2d.drawString("("+new DecimalFormat("#.###").format(linVel)+")", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Door Status : ", x, y);
-		doorStatus = OUT_doorOpen == 1 ? "Open" : "Closed";
+		doorStatus = OUT_doorOpen == 0 ? "Open" : "Closed";
 		g2d.drawString(""+doorStatus, x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Bucket Position : ", x, y);
