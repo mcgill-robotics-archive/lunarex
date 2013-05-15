@@ -9,7 +9,9 @@ Servo suspActuatorLeft;
 Servo dumpActuator;
 Servo doorActuatorLeft;
 Servo doorActuatorRight;
-
+ 
+ 
+ int val = -1;
 
 
 //actual servos
@@ -33,6 +35,8 @@ void setup() {
   analogWrite(8, 0);    //auger stopped
   analogWrite(13, 255);  //door actuators retracted, 'closed'
 
+
+
           
   // servo pins valid Wed May 8 night
   
@@ -47,7 +51,7 @@ void setup() {
 void loop() {
   // if there's any serial available, read it:
   while (Serial.available() > 0) {
-    int val = Serial.parseInt();
+    val = Serial.parseInt();
     Serial.println(val);
 
     rf.writeMicroseconds(val);
