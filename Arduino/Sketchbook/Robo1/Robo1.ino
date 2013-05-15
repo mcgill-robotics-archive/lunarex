@@ -223,8 +223,16 @@ void loop()
     {turnOnSpot();}
   else if(abs(angSpeed) <= ANG_STOP_THRESH)   //Linear but no angular
     {goStraight();}
-  else 
-    {doAckerman();}                          //general combo of linear and angular
+  else                  //general combo of linear and angular
+  {
+  if (suspPos > SUSP_INTERFERENCE_LIMIT)
+  {
+    miningAckerman();
+  else
+    doAckerman();
+  }
+  
+
   
   //push commmands to motors:
   setWheelAngle();  
@@ -547,11 +555,10 @@ void setWheelAngle()
     rearServoUpperLimit_cmd = 1500+TRAVEL_MAX_SERVO_ANGLE_REAR*1000.0/180.0;
   }
     
-    LF_servo_cmd = constrain(LF_servo_cmd, frontServoLowerLimit_cmd, frontServoUpperLimit_cmd);
-    RF_servo_cmd = constrain(RF_servo_cmd, frontServoLowerLimit_cmd, frontServoUpperLimit_cmd);
-    LR_servo_cmd = constrain(LR_servo_cmd, rearServoLowerLimit_cmd, frontServoUpperLimit_cmd);
-    RR_servo_cmd = constrain(RR_servo_cmd, rearServoLowerLimit_cmd, frontServoUpperLimit_cmd);
-
+  LF_servo_cmd = constrain(LF_servo_cmd, frontServoLowerLimit_cmd, frontServoUpperLimit_cmd);
+  RF_servo_cmd = constrain(RF_servo_cmd, frontServoLowerLimit_cmd, frontServoUpperLimit_cmd);
+  LR_servo_cmd = constrain(LR_servo_cmd, rearServoLowerLimit_cmd, rearServoUpperLimit_cmd);
+  RR_servo_cmd = constrain(RR_servo_cmd, rearServoLowerLimit_cmd, rearServoUpperLimit_cmd);
 
   //prevent accidental continuous rotation: (should be already accounted for above, but it cant hurt to be safe)
   LF_servo_cmd = constrain(LF_servo_cmd, 1000, 2000);

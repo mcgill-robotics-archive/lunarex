@@ -1,0 +1,22 @@
+Nav tests
+--------
+
+
+
+
+Trial 1:
+
+stage intitial heading arena 90
+goal is (2,1,0)
+
+Trial 2
+
+goal is (2,1,45)
+	moves to same spot with heading of 45
+
+Trial 3
+
+stage initial heading arena 120
+
+goal is (2,1,45)
+	moves to goal position and then 45 degrees off of that
