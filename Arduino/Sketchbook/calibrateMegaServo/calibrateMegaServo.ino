@@ -17,7 +17,7 @@ void setup() {
 //these are just sent to defaults so we dont get in the way of the servos  
   analogWrite(6, 0);  //suspension actuators extended ('up')
   analogWrite(7, 255);  //dumpActuator retracted 'down'
-  analogWrite(8, 0);    //auger stopped
+  //analogWrite(8, 10);    //auger stopped
   analogWrite(13, 0);  //door actuators retracted, 'closed'
 
           
@@ -27,7 +27,7 @@ void setup() {
   rr.attach(5);
   lr.attach(4);
   lf.attach(2);
-
+  lf.attach(8);
   
 }
 
