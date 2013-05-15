@@ -87,7 +87,7 @@ rospy.init_node('corner_detector')
 
 print("Started waiting for hector mapping map service")
 rospy.wait_for_service('dynamic_map')
-print("Done waiting for corner detector service")
+print("Done waiting for hector mapping map service")
 
 cornersPub = rospy.Publisher("corners", Corners)
 
@@ -95,7 +95,6 @@ ranOnce = False
 
 while(True):
 	try:
-
 		corner_detector_proxy = rospy.ServiceProxy('dynamic_map', GetMap)
 		latest_map = corner_detector_proxy()
 		gridData = latest_map.map.data

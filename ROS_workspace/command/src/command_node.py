@@ -32,13 +32,18 @@ DIG_HEIGHT_CMD = 200 #what command should be sent to the suspension LAs to corre
 TRAVEL_HEIGHT_CMD = 0 # what command should be sent to the suspension LAs to correspond to travelling - is 0 all the way up?
 DIG_DURATION = 2 # number of circles to trace while digging - half a circle counts as 1 it's really the number of times the robot faces backwards
 SUSP_SLEEP_TIME = 2000 # how much time (milliseconds) to leave to allow the suspension linear actuators to actuate
+
 ARENA_WIDTH = 3.88
 ARENA_LENGTH = 7.38
 MINING_BOUNDARY_LOCATION = 4.44  # distance of boundary to lunabin
 
+MC_WIDTH = 2.33
+MC_LENGTH = 7.55
+
 STARTING_POS_ARENA_COORDS = [(0.97, 0.75), (2.91, 0.75)]
 ROTATION_TIME_SECS = 30
 LOCALIZATION_ANG_SPEED = 0.3
+VELOCITY_PUB_TIME_MSECS = 100 #how often to send cmd_vels
 
 #--state vars
 #----corners
@@ -258,67 +263,73 @@ class Velocity:
 #-----------------------START EXECUTION--------------------------------#
 #----------------------------------------------------------------------#
 
-#INIT NODE & ACTIONLIB
-#--Init node
-rospy.init_node('command')
+try:
+	#INIT NODE & ACTIONLIB
+	#--Init node
+	rospy.init_node('command')
 
-#--Subscribers
-rospy.Subscriber("slam_out_pose", PoseStamped, slam_out_pose_callback)
-rospy.Subscriber("corners", Corners, corners_callback)
+	#--Subscribers
+	rospy.Subscriber("slam_out_pose", PoseStamped, slam_out_pose_callback)
+	rospy.Subscriber("corners", Corners, corners_callback)
 
-#--Publishers
-auger_Speed_pub = rospy.Publisher("auger_speed", UInt8)
-susp_LA_pub = rospy.Publisher("susp_pos", UInt8)	# publish suspension info
-pub_vel = rospy.Publisher("cmd_vel", Twist)	# publish velocities
+	#--Publishers
+	auger_Speed_pub = rospy.Publisher("auger_speed", UInt8)
+	susp_LA_pub = rospy.Publisher("susp_pos", UInt8)	# publish suspension info
+	pub_vel = rospy.Publisher("cmd_vel", Twist)	# publish velocities
 
-#START MOTION
+	#START MOTION
 
-#Perform rotation
-print("Started rotation.")
-startTime = time.time()
-currentTime = startTime
+	#Perform rotation
+	print("Started rotation.")
+	rotationStartTime = int(time.time()*1000.0)
+	currentTime = rotationStartTime
+	lastPubTime = rotationStartTime
 
-while(currentTime - startTime < ROTATION_TIME_SECS):
-	pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, LOCALIZATION_ANG_SPEED))
-	currentTime = time.time()
+	while(currentTime - rotationStartTime < ROTATION_TIME_SECS*1000.0):
+		currentTime = int(time.time()*1000.0)
+		if(currentTime - lastPubTime > VELOCITY_PUB_TIME_MSECS):
+			pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, LOCALIZATION_ANG_SPEED))
+			lastPubTime = int(time.time()*1000.0)
 
-print("Ended rotation. Now waiting for good corners")
+	print("Ended rotation. Now waiting for good corners")
 
-#Get corners
-while(mapRes == -1): #means callback has not happened
-	time.sleep(2)
+	#Get corners
+	while(mapRes == -1): #means callback has not happened
+		time.sleep(2)
 
-print("Got good corners.")
+	print("Got good corners.")
 
-print("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
-		+ ", LF=" +str(LF_corner) + ", RF=" +str(RF_corner))
+	print("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
+			+ ", LF=" +str(LF_corner) + ", RF=" +str(RF_corner))
 
-#--Init actionlib
-client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-print("Started waiting for move_base action server")
-client.wait_for_server() #Waits until the action server has started up and started listening for goals.
-print("Done waiting for move_base action server")
+	#--Init actionlib
+	client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+	print("Started waiting for move_base action server")
+	client.wait_for_server() #Waits until the action server has started up and started listening for goals.
+	print("Done waiting for move_base action server")
 
-#--Creates a goal to send to the action server.
-goal.target_pose.header.frame_id = "base_link"
-goal.target_pose.header.stamp = rospy.get_rostime()
+	#--Creates a goal to send to the action server.
+	goal.target_pose.header.frame_id = "base_link"
+	goal.target_pose.header.stamp = rospy.get_rostime()
 
-#goal.target_pose.pose.position.x = 2.0
-#goal.target_pose.pose.position.y = 1.0 
-#quat = tf.transformations.quaternion_from_euler(0, 0, 45*math.pi/180.0 ) #was 0, 0, math.pi
-#goal.target_pose.pose.orientation = Quaternion(*quat)
+	#goal.target_pose.pose.position.x = 2.0
+	#goal.target_pose.pose.position.y = 1.0 
+	#quat = tf.transformations.quaternion_from_euler(0, 0, 45*math.pi/180.0 ) #was 0, 0, math.pi
+	#goal.target_pose.pose.orientation = Quaternion(*quat)
 
-#client.send_goal(goal)  # Sends the goal to the action server.
-#client.wait_for_result() # 
+	#client.send_goal(goal)  # Sends the goal to the action server.
+	#client.wait_for_result() # 
 
-#Go to start of mining area
-goTo(ARENA_WIDTH/2.0 + 1, MINING_BOUNDARY_LOCATION, 0)
+	#Go to start of mining area
+	goTo(MC_WIDTH / 2.0, MC_LENGTH * 0.66, 0)
 
-#EXCAVATE
-#excavate()
+	#EXCAVATE
+	#excavate()
 
-#Return home and dump
-goTo(ARENA_WIDTH/2.0, 0.9, math.pi)	#need to callibrate y position so as not to bump into wall or obstacle
-goTo(ARENA_WIDTH/2.0, 0.9, math.pi)	#spin around
+	#Return home and dump
+	goTo(MC_WIDTH/2.0, 0.9, 0)	#need to callibrate y position so as not to bump into wall or obstacle
 
+	#goTo(ARENA_WIDTH/2.0, 0.9, math.pi)	#spin around
+except KeyboardInterrupt:
+	sys.exit(0)
 

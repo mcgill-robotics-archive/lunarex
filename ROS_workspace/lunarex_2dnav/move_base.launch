@@ -17,6 +17,8 @@
     <param name="oscillation_distance" value="0.5" /> <!--DEFAULT-->
     <param name="planner_frequency" value="0.5" />
 
+    <!--remap from="map" to="global_map" /-->
+
     <rosparam file="$(find lunarex_2dnav)/costmap_common_params.yaml" command="load" ns="global_costmap" />
     <rosparam file="$(find lunarex_2dnav)/costmap_common_params.yaml" command="load" ns="local_costmap" />
     <rosparam file="$(find lunarex_2dnav)/global_costmap_params.yaml" command="load" />

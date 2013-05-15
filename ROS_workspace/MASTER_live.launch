@@ -2,11 +2,6 @@
 <launch>
 	<param name="use_sim_time" value="true" />
 
-	<node pkg="hokuyo_node" type="hokuyo_node" name="hokuyo_node">
-		<param name="use_rep_117" value="true" />
-		<param name=
-	</node>	
-
 	<!--STARTS HECTOR MAPPING & TF BETWEEN BASE_LINK AND LASER-->
 	<include file="$(find lunarex_2dnav)/hector_launchers/hector_mapping.launch" />
 	
