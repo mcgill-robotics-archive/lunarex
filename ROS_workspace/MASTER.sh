@@ -1,5 +1,5 @@
 killall roscore
-
+ 
 xterm -e roscore &
 
 sleep 3
