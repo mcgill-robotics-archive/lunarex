@@ -46,7 +46,7 @@ public class GUIMain extends JFrame {
 	static final int FONTSIZE = 20;
 
 	//FOR MACBOOK AIR ON MCGILL NETWORK
-	String ipAdressString = "142.157.42.249";
+	String ipAdressString = "142.157.42.13";
 	
 	//FOR MACBOOK AIR ON OUR NETWORK
 	//String ipAdressString = "192.168.1.101";
@@ -380,7 +380,7 @@ public class GUIMain extends JFrame {
 		g2d.drawString("("+new DecimalFormat("#.###").format(linVel)+")", x+COLUMN_WIDTH+PERC_COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Door Status : ", x, y);
-		doorStatus = OUT_doorOpen == 0 ? "Open" : "Closed";
+		doorStatus = OUT_doorOpen != 0 ? "Open" : "Closed";
 		g2d.drawString(""+doorStatus, x+COLUMN_WIDTH, y);
 		y+=LINE_SPACING;
 		g2d.drawString("Bucket Position : ", x, y);
