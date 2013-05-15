@@ -108,7 +108,7 @@ while(True):
 
 	#DEFINING HOUGH MATRIX
 	mapRes = latest_corners.resolution 
-	Rres = mapRes*3
+	Rres = mapRes*2
 	mapWidth = latest_corners.width
 	mapHeight = latest_corners.height
 	Rrank = int((math.sqrt(2)*max(mapWidth, mapHeight))/Rres) #nb of R buckets
@@ -173,6 +173,24 @@ while(True):
 
 	rospy.loginfo("Making sure that the best 4 walls are LONG - LONG - SHORT - SHORT")
 
+	#Ordering the walls by theta. Want a-a-b-b regardless of whether a or b corresponds to short or long
+	smallestThetaDifference = 360
+	smallestThetaDifferenceIndex = 1
+	for i in range(1, 4):
+		tempDiff = abs(walls[i].theta - walls[0].theta)
+		if(tempDiff>180):
+			tempDiff = abs(tempDiff - 360)
+		#print("tempDiff for index: "+str(i) +" is: "+str(tempDiff))
+		if(tempDiff < smallestThetaDifference):
+			smallestThetaDifference = tempDiff
+			smallestThetaDifferenceIndex = i
+
+	#print("smallestThetaDifferenceIndex is "+str(smallestThetaDifferenceIndex))
+	#switch wall 1 with wall that has theta closest to wall0
+	tempWall = walls[smallestThetaDifferenceIndex]
+	walls[smallestThetaDifferenceIndex] = walls[1]
+	walls[1] = tempWall
+
 	bestWallsDistance = abs(walls[0].r -  walls[1].r) 
 	if(bestWallsDistance < 1.2*ARENA_HEIGHT and bestWallsDistance > 0.8*ARENA_HEIGHT):
 		print("best walls are SHORT. Switch walls 0&1 with 2&3")
@@ -183,6 +201,7 @@ while(True):
 		walls[0]=temp1
 		walls[1]=temp2
 
+	'''
 	elif(not(bestWallsDistance < 1.2*ARENA_WIDTH and bestWallsDistance > 0.8*ARENA_WIDTH)):
 		rospy.loginfo("the best walls are not LONG LONG (nor SHORT SHORT) ")
 		
@@ -215,6 +234,7 @@ while(True):
 				walls[3] = walls[1]
 				walls[0]=temp1
 				walls[1]=temp2
+	'''			
 
 	rospy.loginfo("done getting walls. they are:")
 	for i in range(0,4):

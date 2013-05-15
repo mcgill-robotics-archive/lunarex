@@ -37,8 +37,8 @@ ARENA_LENGTH = 7.38
 MINING_BOUNDARY_LOCATION = 4.44  # distance of boundary to lunabin
 
 STARTING_POS_ARENA_COORDS = [(0.97, 0.75), (2.91, 0.75)]
-ROTATION_TIME_SECS = 35
-LOCALIZATION_ANG_SPEED = 0.1
+ROTATION_TIME_SECS = 30
+LOCALIZATION_ANG_SPEED = 0.3
 
 #--state vars
 #----corners
@@ -70,7 +70,7 @@ goal = MoveBaseGoal()
 
 #CALLBACKS
 def corners_callback(data):
-	rospy.loginfo("In corners callback")
+	print("In corners callback")
 	global LR_corner
 	global RR_corner
 	global LF_corner
@@ -225,7 +225,7 @@ def setAugerSpeed(desiredSpeed):
 def goTo(x,y,theta):
 	# send a specified goal in a compact form
 	# All three parameters in Arena coordinates
-	rospy.loginfo("In goTO with heading: " +str(coord.quatToDegrees(slam_out_pose)))
+	print("In goTO with heading: " +str(coord.quatToDegrees(slam_out_pose)))
 
 	nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
 	#(arenaCoords, slam_out_pose, corner1, corner2, corner3, corner4, resolution):
@@ -240,13 +240,14 @@ def goTo(x,y,theta):
 
 	goal.target_pose.pose.orientation = Quaternion(*quat)
 	
-	rospy.loginfo("***Requested motion***")
-	rospy.loginfo("x = " +str(goal.target_pose.pose.position.x))
-	rospy.loginfo("y = " +str(goal.target_pose.pose.position.y))
-	rospy.loginfo("theta = " +str(mobileAngle))
+	print("***Requested motion***")
+	print("x = " +str(goal.target_pose.pose.position.x))
+	print("y = " +str(goal.target_pose.pose.position.y))
+	print("theta = " +str(mobileAngle))
 	client.send_goal(goal)  # Sends the goal to the action server.
-	client.wait_for_result() # Waits for the server to finish performing the action.
-
+	result = client.wait_for_result() # Waits for the server to finish performing the action.
+	#rospy.Duration.from_sec(5.0)
+	print("goal result is: " +str(result))
 class Velocity:
     def __init__(self, x, y, z):
         self.x = x
@@ -273,7 +274,7 @@ pub_vel = rospy.Publisher("cmd_vel", Twist)	# publish velocities
 #START MOTION
 
 #Perform rotation
-rospy.loginfo("Started rotation.")
+print("Started rotation.")
 startTime = time.time()
 currentTime = startTime
 
@@ -281,22 +282,22 @@ while(currentTime - startTime < ROTATION_TIME_SECS):
 	pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, LOCALIZATION_ANG_SPEED))
 	currentTime = time.time()
 
-rospy.loginfo("Ended rotation. Now waiting for good corners")
+print("Ended rotation. Now waiting for good corners")
 
 #Get corners
 while(mapRes == -1): #means callback has not happened
 	time.sleep(2)
 
-rospy.loginfo("Got good corners.")
+print("Got good corners.")
 
-rospy.loginfo("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
+print("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
 		+ ", LF=" +str(LF_corner) + ", RF=" +str(RF_corner))
 
 #--Init actionlib
 client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-rospy.loginfo("Started waiting for move_base action server")
+print("Started waiting for move_base action server")
 client.wait_for_server() #Waits until the action server has started up and started listening for goals.
-rospy.loginfo("Done waiting for move_base action server")
+print("Done waiting for move_base action server")
 
 #--Creates a goal to send to the action server.
 goal.target_pose.header.frame_id = "base_link"
@@ -311,7 +312,7 @@ goal.target_pose.header.stamp = rospy.get_rostime()
 #client.wait_for_result() # 
 
 #Go to start of mining area
-goTo(ARENA_WIDTH/2.0, MINING_BOUNDARY_LOCATION, 0)
+goTo(ARENA_WIDTH/2.0 + 1, MINING_BOUNDARY_LOCATION, 0)
 
 #EXCAVATE
 #excavate()

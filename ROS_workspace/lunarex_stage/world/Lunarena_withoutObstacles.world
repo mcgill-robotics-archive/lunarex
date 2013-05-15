@@ -95,7 +95,7 @@ define arena model
   ranger_return 1 #if 1, robot will receive data. If 0, it won't receive data.
 )
 
-speedup 4 #has to do with playback of simulation, was 10 by default i think
+speedup 1 #has to do with playback of simulation, was 10 by default i think
 
 paused 0
 

@@ -1,17 +1,27 @@
 <launch>
-  <master auto="start"/>
-
-  <!-- Run the map server sadsad -->
-  <!--<node name="map_server" pkg="map_server" type="map_server" args="$(find lunarex_2dnav)/emptyMap2.pgm 0.01"></node>-->
-
-  <!--- Run AMCL -->
-  <!--<include file="$(find amcl)/examples/amcl_omni.launch" />-->
-
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-   <rosparam file="$(find lunarex_2dnav)/costmap_common_params.yaml" command="load" ns="global_costmap" />
-   <rosparam file="$(find lunarex_2dnav)/costmap_common_params.yaml" command="load" ns="local_costmap" />
-   <rosparam file="$(find lunarex_2dnav)/global_costmap_params.yaml" command="load" />
+   
+    <!--MOVE BASE PARAMS: http://www.ros.org/wiki/move_base -->
+
+    <param name="base_global_planner" value="navfn/NavfnROS" /> <!--DEFAULT-->
+    <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS" /> <!--DEFAULT-->
+    <!-- recovery behaviors, leave default -->
+    <param name="controller_frequency" value="5.0" /> <!--DEFAULT IS 20.0-->
+    <param name="planner_patience" value="5.0" /> <!--DEFAULT-->
+    <param name="controller_patience" value="15.0" /> <!--DEFAULT-->
+    <param name="conservative_reset_dist" value="2.0" /> <!--DEFAULT IS 3.0-->
+    <param name="recovery_behavior_enabled" value="true" /> <!--DEFAULT-->
+    <param name="clearing_rotation_allowed" value="true" /> <!--DEFAULT-->
+    <param name="shutdown_costmaps" value="false" /> <!--DEFAULT-->
+    <param name="oscillation_timeout" value="10.0" /> 
+    <param name="oscillation_distance" value="0.5" /> <!--DEFAULT-->
+    <param name="planner_frequency" value="0.5" />
+
+    <rosparam file="$(find lunarex_2dnav)/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find lunarex_2dnav)/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find lunarex_2dnav)/global_costmap_params.yaml" command="load" />
     <rosparam file="$(find lunarex_2dnav)/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find lunarex_2dnav)/base_local_planner_params.yaml" command="load" />
   </node>
+
 </launch>
