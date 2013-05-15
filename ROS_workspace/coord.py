@@ -35,6 +35,11 @@ def quatToDegrees(slam_out_pose):
   angles = tf.transformations.euler_from_quaternion([slam_out_pose.pose.orientation.x,slam_out_pose.pose.orientation.y, slam_out_pose.pose.orientation.z, slam_out_pose.pose.orientation.w])
   return angles[2]*(180.0/math.pi)
 
+def quatToRadians(slam_out_pose):
+  angles = tf.transformations.euler_from_quaternion([slam_out_pose.pose.orientation.x,slam_out_pose.pose.orientation.y, slam_out_pose.pose.orientation.z, slam_out_pose.pose.orientation.w])
+  return angles[2]
+
+
 #POSITION TRANSFORMS
 def arena2mobile(arenaCoords, slam_out_pose, LR_corner, RR_corner, LF_corner, RF_corner, resolution, global_map_size):
   # step1: transform arenaX and arenaY to global frame  - these are goals
@@ -44,16 +49,14 @@ def arena2mobile(arenaCoords, slam_out_pose, LR_corner, RR_corner, LF_corner, RF
   (goal_x_global, goal_y_global) = arena2global(arenaCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolution)
   (current_x_global, current_y_global) = hector2global(slam_out_pose, resolution, global_map_size)
 
-  theta = math.atan2(abs(LR_corner[1]-RR_corner[1]), abs(LR_corner[0]-RR_corner[0]))  #angle of bottom wall of arena w.r.t. the positive global x axis
-
-  goal_x_mobile = (goal_y_global - current_y_global)*resolution
-  goal_y_mobile = (current_x_global - goal_x_global)*resolution
+  goal_x_mobile = (goal_x_global - current_x_global)*resolution
+  goal_y_mobile = (goal_y_global - current_y_global)*resolution
 
   #this is a vector in global
   mobile_coords = (goal_x_mobile, goal_y_mobile)
 
   #rotate the vector from global to hector
-  mobile_coords = rotateVector2D(mobile_coords, 90-quatToDegrees(slam_out_pose))
+  mobile_coords = rotateVector2D(mobile_coords, -quatToRadians(slam_out_pose))
 
   rospy.loginfo("coord.arena2mobile received: "+str(arenaCoords)+" and is returning: "+str(mobile_coords))
   return mobile_coords
@@ -64,12 +67,10 @@ def hector2global(slam_out_pose, resolution, global_map_size):
   x_hector = slam_out_pose.pose.position.x
   y_hector = slam_out_pose.pose.position.y
 
-  #translate global frame origin to middle of map
-  x_temp = x_hector + global_map_size*resolution/2
-  y_temp = y_hector - global_map_size*resolution/2
+  #translate global frame origin to middle of mapt
 
-  x_global = -1*y_temp / resolution #resolution in m/cell, see documentation on google site for logic here
-  y_global = x_temp / resolution
+  x_global = global_map_size / 2 + x_hector / resolution #resolution in m/cell, see documentation on google site for logic here
+  y_global = global_map_size / 2 + y_hector / resolution
 
   global_coords = (x_global, y_global)
   rospy.loginfo("coord.hector2global received: x_hector="+str(x_hector)+" & y_hector="+str(y_hector)+" and is returning: "+str(global_coords))
@@ -148,7 +149,12 @@ def isInObstacleArea(globalCoords, LR_corner, RR_corner, LF_corner, RF_corner, r
 
  #Rotate a coordinate ector
 def rotateVector2D(vector, angle):
+  print "--"
+  print "rotating vector"
+  print "input vector: " + str(vector)
+  print "rotation angle: " + str(angle)
   rotated_vect = []
   rotated_vect.append(  vector[0]*math.cos(angle)  - vector[1]*math.sin(angle)             )
   rotated_vect.append(  vector[0]*math.sin(angle)  + vector[1]*math.cos(angle)   )
+  print "output vector: " + str(rotated_vect)
   return rotated_vect

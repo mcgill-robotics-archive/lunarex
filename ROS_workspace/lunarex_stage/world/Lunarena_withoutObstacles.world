@@ -95,7 +95,7 @@ define arena model
   ranger_return 1 #if 1, robot will receive data. If 0, it won't receive data.
 )
 
-speedup 8 #has to do with playback of simulation, was 10 by default i think
+speedup 4 #has to do with playback of simulation, was 10 by default i think
 
 paused 0
 
@@ -130,7 +130,9 @@ lunabot
   #initial position, (then rotation?), in the x-right y-up stage coordinates
   #pose [0 0 0 32]
   #pose [0.97 0.75 0 0]	#starting position 1
-   pose [2.91 0.75 0 0]	#starting position 2
+  # pose [2.91 0.75 0 120]	#starting position 2
+   pose [2.5 1.3 0 0] #starting position 2
+  
   color "red" 
   LidarEx(pose [0.3 0 0 0]) # call Lidar (ie place on on the lunabot) and position it relative to robot (i think its x y z theta)
   #there's also this thing where the default TF is [0 0 .15 0] and so I think that it is added onto this pose, and so the resulting pose puts the lidar's z position at 0.15 relative to /base_link

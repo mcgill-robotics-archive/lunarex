@@ -18,10 +18,6 @@
 	<!--STARTS MOVE_BASE-->
 	<include file="$(find lunarex_2dnav)/move_base.launch" />
 	
-	<!--STARTS CORNER_DETECTOR-->
-	<!--WHY IS THIS NOT STARTING???-->
-	<!---node name="corner_detector_asd" pkg="corner_detector" type="occupancyGrid_parserv4.1.py" /-->
-	
 	<!-- STARTS SIMPLE NAV GOALS / COMMAND NODE-->
 	<!--node name="command_node" pkg="command" type="command_node.py" /-->
 

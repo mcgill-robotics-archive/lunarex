@@ -101,7 +101,7 @@ class mapBuilder:
 	#self.insertValueInOccupancyGrid(1152, 1845, 100)
 	
 
-	self.insertValueInOccupancyGrid(871, 1456,100)
+	self.insertValueInOccupancyGrid(888, 1472,100)
 	self.pub.publish(self.map)
 		
 
