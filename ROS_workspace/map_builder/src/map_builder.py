@@ -5,6 +5,10 @@ sys.path.append("~/McGill_LunarEx_2013/ROS_workspace/")
 sys.path.append("/home/seb/McGill_LunarEx_2013/ROS_workspace/")
 import coord
 
+#
+from corner_detector.msg import Corners
+
+
 import roslib; roslib.load_manifest('map_builder')
 import rospy
 
@@ -32,12 +36,22 @@ class mapBuilder:
         rospy.init_node("map_builder")
         rospy.Subscriber("map", OccupancyGrid, self.mapCallback)   #subscribe to "/map" to get map from hector_mapping
         rospy.Subscriber("slam_out_pose", PoseStamped, self.poseCallback)   #get the position of the robot
-        self.pub = rospy.Publisher("global_map", OccupancyGrid)
+	rospy.Subscriber("corners", Corners, self.corners_callback)        
+	self.pub = rospy.Publisher("global_map", OccupancyGrid)
         self.obstacle_list = {}
         self.map = None
         self.occupancy_grid = []
 	self.angle = 0.0
 	self.isLocalized = False
+
+	self.LR_corner = (0,0)
+	self.RR_corner = (0,0)
+	self.LF_corner = (0,0)
+	self.RF_corner = (0,0)
+	self.mapRes = 0
+	self.mapWidth = 0
+	self.mapHeight = 0
+	self.startedLeft = 0
 	
     def run(self):
         #rospy.spin()
@@ -203,11 +217,13 @@ class mapBuilder:
 	
 
 	# Check if the obstacle is in the obstacle area, don't add them
-	try:
-		if (  coord.isInObstacleArea((position_vector[0],position_vector[1]), self.LR_corner, self.RR_corner, self.LF_corner, self.RF_corner, self.map_resolution) == False):
-			return 
-	except AttributeError:
-		pass	
+	#try:
+	if (  coord.isInObstacleArea((position_vector[0],position_vector[1]), self.LR_corner, self.RR_corner, self.LF_corner, self.RF_corner, self.map_resolution/100) == False):
+		#print "Not in obstacle area"
+		#print position_vector[0], position_vector[1]	
+		return 
+	#except AttributeError:
+	#	pass	
 	
 	if ((position_vector[0],position_vector[1]) not in self.obstacle_list):
         	#self.obstacle_list.append([position_vector[0],position_vector[1]])
@@ -227,29 +243,49 @@ class mapBuilder:
 	# ***** For example, it my be 25 cm at the back. We would then need to remove 50 to the position_vector[1]
 	# *****
 
-    def updateCorners():
-	rospy.loginfo("Started waiting for corner detector service")
-	rospy.wait_for_service('corner_detector_srv')
-	corner_detector_request = corner_detectorRequest()
+#    def updateCorners():
+#	rospy.loginfo("Started waiting for corner detector service")
+#	rospy.wait_for_service('corner_detector_srv')
+#	corner_detector_request = corner_detectorRequest()
+#
+#	try:
+#		rospy.loginfo("Done waiting for corner detector service")
+#		corner_detector_proxy = rospy.ServiceProxy('corner_detector_srv', corner_detector)
+#
+#		#--Call corner detector service, display results & populate corner state vars
+#		corner_detector_response = corner_detector_proxy(1)
+#		display_corner_detector_output(corner_detector_response)
+#
+#		LR_corner = (corner_detector_response.left_bottom_corner[0], corner_detector_response.left_bottom_corner[1])
+#		RR_corner =  (corner_detector_response.right_bottom_corner[0], corner_detector_response.right_bottom_corner[1])
+#		LF_corner = (corner_detector_response.left_top_corner[0], corner_detector_response.left_top_corner[1])
+#		RF_corner = (corner_detector_response.right_top_corner[0], corner_detector_response.right_top_corner[1])
+#		self.LR_corner =1
+#		self.RR_corner =1
+#		self.LF_corner =1
+#		self.RF_corner =1
+#	except rospy.ServiceException, e:
+#		print "Service failed: %s" % e	
+ 
+    def corners_callback(self, data):
+	rospy.loginfo("In corners callback")
+	self.LR_corner
+	self.RR_corner
+	self.LF_corner
+	self.RF_corner
+	self.mapRes
+	self.mapWidth
+	self.mapHeight
+	self.startedLeft
 
-	try:
-		rospy.loginfo("Done waiting for corner detector service")
-		corner_detector_proxy = rospy.ServiceProxy('corner_detector_srv', corner_detector)
-
-		#--Call corner detector service, display results & populate corner state vars
-		corner_detector_response = corner_detector_proxy(1)
-		display_corner_detector_output(corner_detector_response)
-
-		LR_corner = (corner_detector_response.left_bottom_corner[0], corner_detector_response.left_bottom_corner[1])
-		RR_corner =  (corner_detector_response.right_bottom_corner[0], corner_detector_response.right_bottom_corner[1])
-		LF_corner = (corner_detector_response.left_top_corner[0], corner_detector_response.left_top_corner[1])
-		RF_corner = (corner_detector_response.right_top_corner[0], corner_detector_response.right_top_corner[1])
-		self.LR_corner =1
-		self.RR_corner =1
-		self.LF_corner =1
-		self.RF_corner =1
-	except rospy.ServiceException, e:
-		print "Service failed: %s" % e	
+	self.LR_corner = data.LR_corner
+	self.RR_corner = data.RR_corner
+	self.LF_corner = data.LF_corner
+	self.RF_corner = data.RF_corner
+	self.mapRes = data.resolution
+	self.mapWidth = data.width
+	self.mapHeight = data.height
+	self.startedLeft = data.left
 
     #Rotate a coordinate ector
     def rotateVector2D(self, vector, angle):

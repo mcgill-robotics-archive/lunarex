@@ -130,10 +130,10 @@ def arena2global(arenaCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolu
 def isInObstacleArea(globalCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolution):
 
   #Obstacle area corners in global coordinate system
-  obs_LR_corner = arena2global((0, 2), LR_corner, RR_corner, LF_corner, RF_corner, resolution)
-  obs_RR_corner = arena2global((4, 2), LR_corner, RR_corner, LF_corner, RF_corner, resolution)
-  obs_LF_corner = arena2global((0, 4), LR_corner, RR_corner, LF_corner, RF_corner, resolution)
-  obs_RF_corner = arena2global((4, 4), LR_corner, RR_corner, LF_corner, RF_corner, resolution)
+  obs_LR_corner = arena2global((0, 2/resolution), LR_corner, RR_corner, LF_corner, RF_corner, resolution)
+  obs_RR_corner = arena2global((4/resolution, 2/resolution), LR_corner, RR_corner, LF_corner, RF_corner, resolution)
+  obs_LF_corner = arena2global((0, 4/resolution), LR_corner, RR_corner, LF_corner, RF_corner, resolution)
+  obs_RF_corner = arena2global((4/resolution, 4/resolution), LR_corner, RR_corner, LF_corner, RF_corner, resolution)
 
   verts = np.array([[obs_LR_corner[0], obs_LR_corner[1]], [obs_RR_corner[0], obs_RR_corner[1]], [obs_LF_corner[0], obs_LF_corner[1]], [obs_RF_corner[0], obs_RF_corner[1]]])
   print verts
