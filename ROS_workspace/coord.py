@@ -135,7 +135,7 @@ def isInObstacleArea(globalCoords, LR_corner, RR_corner, LF_corner, RF_corner, r
   obs_LF_corner = arena2global((0, 4), LR_corner, RR_corner, LF_corner, RF_corner, resolution)
   obs_RF_corner = arena2global((4, 4), LR_corner, RR_corner, LF_corner, RF_corner, resolution)
 
-  verts = np.array([[obs_LR_corner[0], obs_LR_corner[1]], [obs_RR_corner[0], obs_RR_corner[1]], [obs_LF_corner[0], obs_LF_corner[1]], [obs_RF_corner[0], obs_RF_corner[1]]])
+  verts = np.array([[obs_LR_corner[0], obs_LR_corner[1]], [obs_RR_corner[0], obs_RR_corner[1]], [obs_RF_corner[0], obs_RF_corner[1]], [obs_LF_corner[0], obs_LF_corner[1]]])
   print verts
   print resolution
   isInObstacleArea = False
