@@ -1,35 +1,36 @@
-def getDistances():
+import rospy
+from sensor_msgs.msg import LaserScan
+
+def getDistances(data):
 
 	#should extract distances from /scan and return them
 	
+	# http://www.ros.org/doc/api/sensor_msgs/html/msg/LaserScan.html
+	# get distance values for 0, 90, 180 deg.
 
 	#dummy defaults
-	leftDistance = -1
-	frontDistance = -1
-	rightDistance = -1
+	rightDistance = data.ranges[0]
+	frontDistance = data.ranges[len(data.ranges)/2]
+	leftDistance = data.ranges[-1]
+
+	rospy.loginfo( "lfr: "str(leftDistance) + ' ' + str(frontDistance) + ' ' + str(rightDistance)	)
 
 	return leftDistance, frontDistance, rightDistance
 
+def scanCallback(data):
+	rospy.loginfo("Scan received")	
+	leftDistance, frontDistance, rightDistance = getDistances(data)
+	quadrant = determineQuadrant(leftDistance, frontDistance, rightDistance)
+	rospy.loginfo(str(quadrant))
 
-def moveAwayFromWalls():
+def determineQuadrant(leftDistance, frontDistance, rightDistance):
 	'''
 		Assume we start in the bottom left corner for this description. The code is general and would work in either corner
 		Our orientation could be in one of 4 quadrants
 		Describe these quadrants with regular math conventions, ie 0 deg. is positive arena x, quandrant number increases CCW
 
 		if we start in the bottom right, then the quadrants are mirrord about the y-axis ie quadrant 3 is in the corner, increasing CW
-
-
-
 	'''
-
-	leftDistance, frontDistance, rightDistance = getDistances()
-
-
-	# http://www.ros.org/doc/api/sensor_msgs/html/msg/LaserScan.html
-	# get distance values for 0, 90, 180 deg.
-
-
 
 	THRESHOLD = 3.0 # meter
 
@@ -58,7 +59,6 @@ def moveAwayFromWalls():
 
 
 if (__name__ == "__main__"):
-	for ang in range(360)
-		quad = moveAwayFromWalls(i)
-		print "angle = " + str(i)
-		print "quadrant = " + str(quad)
+	rospy.init_node('initialHeadingCalculator')
+	rospy.Subscriber("scan", LaserScan, scanCallback)
+	rospy.spin()		
