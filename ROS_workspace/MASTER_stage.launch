@@ -13,7 +13,7 @@
 	</node>
 
 	<!--STARTS HECTOR MAPPING & TF BETWEEN BASE_LINK AND LASER-->
-	<include file="$(find lunarex_2dnav)/hector_launchers/hector_mapping.launch" />
+	<include file="$(find lunarex_2dnav)/hector_launchers/hector_mapping_stage.launch" />
 	
 	<!--STARTS MOVE_BASE-->
 	<include file="$(find lunarex_2dnav)/move_base.launch" />
