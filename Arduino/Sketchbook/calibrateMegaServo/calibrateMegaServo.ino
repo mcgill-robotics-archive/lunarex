@@ -1,3 +1,4 @@
+
 //Accepts a number between 800 and 2200 via serial and sends it to the servo
 //I've explained the mapping of these numbers to angles at the bottom
 
@@ -16,9 +17,9 @@ void setup() {
 
 //these are just sent to defaults so we dont get in the way of the servos  
   analogWrite(6, 0);  //suspension actuators extended ('up')
-  analogWrite(7, 255);  //dumpActuator retracted 'down'
+  analogWrite(7, 0);  //dumpActuator retracted 'down'
   //analogWrite(8, 10);    //auger stopped
-  analogWrite(13, 0);  //door actuators retracted, 'closed'
+  analogWrite(13, 255);  //door actuators retracted, 'closed'
 
           
   // servo pins valid Wed May 8 night
@@ -27,7 +28,7 @@ void setup() {
   rr.attach(5);
   lr.attach(4);
   lf.attach(2);
-  lf.attach(8);
+
   
 }
 
@@ -36,11 +37,21 @@ void loop() {
   while (Serial.available() > 0) {
     int val = Serial.parseInt();
     Serial.println(val);
-
-    rf.writeMicroseconds(val);
-    rr.writeMicroseconds(val);
-    lr.writeMicroseconds(val);
-    lf.writeMicroseconds(val);
+    
+    int RF_OFFSET = 0;
+    int RR_OFFSET = 0;    
+    int LR_OFFSET = 0;
+    int LF_OFFSET = 0;    
+    
+    int rf_cmd = val+RF_OFFSET;
+    int rr_cmd = val+RR_OFFSET;
+    int lr_cmd = val+LR_OFFSET;
+    int lf_cmd = val+LF_OFFSET;
+    
+    rf.writeMicroseconds(rf_cmd);
+    rr.writeMicroseconds(rr_cmd);
+    lr.writeMicroseconds(lr_cmd);
+    lf.writeMicroseconds(lf_cmd);
     
   }
   delay(200);
