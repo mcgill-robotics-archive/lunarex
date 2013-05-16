@@ -225,11 +225,14 @@ void loop()
     {goStraight();}
   else                  //general combo of linear and angular
   {
-  if (suspPos > SUSP_INTERFERENCE_LIMIT)
-  {
-    miningAckerman();
-  else
-    doAckerman();
+    if (suspPos > SUSP_INTERFERENCE_LIMIT)
+    {
+      miningAckerman();
+    }
+    else
+    {  
+      doAckerman();
+    }
   }
   
   
