@@ -159,7 +159,7 @@ float MINING_MAX_SERVO_ANGLE_REAR = 40;
 float TRAVEL_MAX_SERVO_ANGLE_FRONT = 50;
 float TRAVEL_MAX_SERVO_ANGLE_REAR = 50;
 
-int WATCHDOG_TIMEOUT = 45; //reset linspeed+angspeed to zero after at least this many seconds  (max number to choose here is about 45-50 seconds)
+int WATCHDOG_TIMEOUT = 5; //reset linspeed+angspeed to zero after at least this many seconds  (max number to choose here is about 45-50 seconds)
 
 
 
