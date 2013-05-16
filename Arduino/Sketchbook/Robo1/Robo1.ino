@@ -159,7 +159,7 @@ float MINING_MAX_SERVO_ANGLE_REAR = 40;
 float TRAVEL_MAX_SERVO_ANGLE_FRONT = 50;
 float TRAVEL_MAX_SERVO_ANGLE_REAR = 50;
 
-
+int WATCHDOG_TIMEOUT = 45; //reset linspeed+angspeed to zero after at least this many seconds  (max number to choose here is about 45-50 seconds)
 
 
 
@@ -213,7 +213,7 @@ void setup()
 
 
 
-unsigned int count = 0;
+unsigned int count = 0;  //count loops for timeout
 void loop()
 { 
   // ===== Driving and Steering ======
@@ -225,14 +225,6 @@ void loop()
     {goStraight();}
   else                  //general combo of linear and angular
   {
-<<<<<<< HEAD
-  if (suspPos > SUSP_INTERFERENCE_LIMIT)
-  {
-    miningAckerman();
-  }
-  else{
-    doAckerman();
-=======
     if (suspPos > SUSP_INTERFERENCE_LIMIT)
     {
       miningAckerman();
@@ -241,9 +233,8 @@ void loop()
     {  
       doAckerman();
     }
->>>>>>> fe06619571a6c738357466777d58506e97474634
   }
-  }
+  
   
   
   
@@ -275,16 +266,20 @@ void loop()
 
   nh.spinOnce();
 
-  count += 1
-  if count == 65000  //unsigned int goes up to 65,535
+  count += 1;
+  if (count >= WATCHDOG_TIMEOUT*1333)  //unsigned int goes up to 65,535  //approximately 1333 loops per second
+  {
+    count = 0;
+  }
+  
+  if (count == 0)  //unsigned int goes up to 65,535  //approximately 1300 loops per second
   {
     angSpeed = 0;
     linSpeed = 0;
-    count = 0;
     //signal to operator how long this loop takes:
-    if dumpPos == 0
+    if (dumpPos == 0)
     {
-      dumpPos = 255;
+      dumpPos = 100;
     }
     else
     {
