@@ -1,5 +1,12 @@
 def getDistances():
 
+	#should extract distances from /scan and return them
+	
+
+	#dummy defaults
+	leftDistance = -1
+	frontDistance = -1
+	rightDistance = -1
 
 	return leftDistance, frontDistance, rightDistance
 
@@ -50,3 +57,8 @@ def moveAwayFromWalls():
 	return quadrant
 
 
+if (__name__ == "__main__"):
+	for ang in range(360)
+		quad = moveAwayFromWalls(i)
+		print "angle = " + str(i)
+		print "quadrant = " + str(quad)

@@ -142,8 +142,8 @@ int RR_motor_cmd = 0;
 float WHEEL_RADIUS = 0.1397;
 float MIN_SPEED = 0;
 float MAX_SPEED = 20000; // in RPM
-float LENGTH = 0.71;
-float WIDTH = 0.7219;
+float LENGTH = 0.8;   //.6858 is 27 inches   -measured .8 when up
+float WIDTH = 0.7219;    //.6604 is 26 inches -measured .73 when up
 float DIST_TO_AXIS_A = 0.5074;
 
 int SEC_PER_MIN = 60;
@@ -213,7 +213,7 @@ void setup()
 
 
 
-
+unsigned int count = 0;
 void loop()
 { 
   // ===== Driving and Steering ======
@@ -231,6 +231,8 @@ void loop()
   else
     doAckerman();
   }
+  
+  
   
 
   
@@ -259,6 +261,25 @@ void loop()
   // fb_angspeed_publisher.publish(&fb_angspeed);
 
   nh.spinOnce();
+
+  count += 1
+  if count == 65000  //unsigned int goes up to 65,535
+  {
+    angSpeed = 0;
+    linSpeed = 0;
+    count = 0;
+    //signal to operator how long this loop takes:
+    if dumpPos == 0
+    {
+      dumpPos = 255;
+    }
+    else
+    {
+      dumpPos = 0;
+    }
+  }
+    
+
 }
 
 
