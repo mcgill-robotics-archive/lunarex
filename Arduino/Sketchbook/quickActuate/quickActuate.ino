@@ -26,8 +26,8 @@ void setup() {
 
 void loop() {
   
-  analogWrite(6, 0);  //suspension actuators extended ('up') =0    retracted ('down') = 255
-  analogWrite(7, 0);  //dumpActuator retracted 'down' = 255,    up would be 0
+  analogWrite(6, 200);  //suspension actuators extended ('up') =0    retracted ('down') = 255
+  analogWrite(7, 255);  //dumpActuator retracted 'down' = 255,    up would be 0
   analogWrite(8, 0);    //auger stopped
   analogWrite(13, 0);  //door actuators retracted, 'closed' = 0      'open' = 255
   

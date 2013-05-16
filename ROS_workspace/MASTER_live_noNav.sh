@@ -22,11 +22,8 @@ rosparam set hokuyo_node/port /dev/ttyACM$1
 echo "set use_rep_117 to get rid of annoying warning"
 rosparam set use_rep_117 true 
 
-echo "setting frame id of hokuyo to base_laser_link"
-rosparam set hokuyo_node/frame_id /base_laser_link
-
 echo "Running hokuyo_node"
-xterm -e roslaunch hokuyo_node hokuyo_node & 
+xterm -e rosrun hokuyo_node hokuyo_node & 
 
 echo "***Starting rosserial and binding to /dev/ttyACM(PORT)"
 xterm -e rosrun rosserial_python serial_node.py /dev/ttyACM$2 &
@@ -35,19 +32,19 @@ echo "setting sim time to FALSE"
 rosparam set use_sim_time false
 
 echo "starting hector"
-xterm -e roslaunch lunarex_2dnav/hector_launchers/hector_mapping_live.launch &
-#xterm -e roslaunch lunarex_2dnav/hector_launchers/simple_hector.launch &
+#xterm -e roslaunch lunarex_2dnav/hector_launchers/hector_mapping_live_noNav.launch &
+xterm -e roslaunch lunarex_2dnav/hector_launchers/simple_hector.launch &
 
 sleep 2
 
 echo "Starting command node"
-xterm -e rosrun command command_node.py &
+xterm -e rosrun command command_node_noNav.py &
 
-echo "Starting move_base"
-xterm -e roslaunch lunarex_2dnav/move_base.launch &
+#echo "Starting move_base"
+#xterm -e roslaunch lunarex_2dnav/move_base.launch &
 
-echo "recording ros bag"
-xterm -e rosbag record corners tf &
+#echo "recording ros bag"
+#xterm -e rosbag record corners tf &
 
 #must be the same as in command node! ROTATION_TIME_SECS
 sleep 60

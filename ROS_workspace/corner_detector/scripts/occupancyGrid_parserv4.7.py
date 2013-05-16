@@ -109,10 +109,12 @@ while(True):
 
 		#DEFINING HOUGH MATRIX
 		mapRes = latest_corners.resolution
-		if( not ranOnce): 
-			Rres = mapRes*3
-		else:
-			Rres = mapRes
+		# if( not ranOnce): 
+		# 	Rres = mapRes*4
+		# else:
+		# 	Rres = mapRes
+
+		Rres = mapRes
 
 		mapWidth = latest_corners.width
 		mapHeight = latest_corners.height
@@ -162,7 +164,7 @@ while(True):
 
 		#FILL WALLS & WALL BUCKETS
 		wallIndex=1 #next wall to fill
-		for l in sortedLines[:15]: #order of decreasing points/line
+		for l in sortedLines[:100]: #order of decreasing points/line
 			if(walls[wallIndex%4]==0):#not filled
 				sameBucket=False
 				for w in walls:
@@ -260,6 +262,3 @@ while(True):
 		ranOnce = True	
 	except:
 		pass
-
-# print("here")
-# rospy.spin()

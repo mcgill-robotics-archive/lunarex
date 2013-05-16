@@ -77,34 +77,13 @@ class mapBuilder:
 
     	self.map.data = self.occupancy_grid #Change the occupancy grid to the updated one
         #with np.flip
-        #self.insertValueInOccupancyGrid(286, 630, 100)
-        #self.insertValueInOccupancyGrid(283, 476, 100)
-        #self.insertValueInOccupancyGrid(579, 631, 100)
-        #self.insertValueInOccupancyGrid(576, 476, 100)
-        
-        #without flip
-        # self.insertValueInOccupancyGrid(276, 396, 100)
-        # self.insertValueInOccupancyGrid(273, 551, 100)
-        # self.insertValueInOccupancyGrid(569, 401, 100)
-        # self.insertValueInOccupancyGrid(566, 556, 100)
-        
-        # self.insertValueInOccupancyGrid(396, 276, 100)
-        # self.insertValueInOccupancyGrid(551, 273, 100)
-        # self.insertValueInOccupancyGrid(401, 569, 100)
-        # self.insertValueInOccupancyGrid(566, 556, 100)
-        #self.insertValueInOccupancyGrid(601, 423, 100)
-
-	#self.insertValueInOccupancyGrid(1000, 1400, 100)        
-	#self.insertValueInOccupancyGrid(631, 914,100)
-	#self.insertValueInOccupancyGrid(1136, 924, 100)
-	#self.insertValueInOccupancyGrid(647, 1835, 100)
-	#self.insertValueInOccupancyGrid(1152, 1845, 100)
 	
-
-	self.insertValueInOccupancyGrid(888, 1472,100)
+	self.insertValueInOccupancyGrid(795, 927,100)
+	self.insertValueInOccupancyGrid(1168, 1234,100)
+	self.insertValueInOccupancyGrid(2035, 2101,100)
+	self.insertValueInOccupancyGrid(2408, 2408,100)
 	self.pub.publish(self.map)
 		
-
 	#print self.obstacle_list
 
     #Retrieve position data

@@ -1,10 +1,12 @@
 obstacle_range: 2.0
 raytrace_range: 0.5
-footprint: [[-0.67,-0.43], [0.67,-0.43],[0.67, 0.43],[-0.67, 0.43]]
+#footprint: [[-0.67,-0.43], [0.67,-0.43],[0.67, 0.43],[-0.67, 0.43]]
+footprint: [[-0.3,-0.1], [0.3,-0.1],[0.3, 0.1],[-0.3, 0.1]]
 #robot_radius: ir_of_robot
 
 #explanation of inflation radius: http://www.ros.org/wiki/costmap_2d
-inflation_radius: 0.7 #this needs to be set to greater than inscribed & circumscribed, which are found from footprint: http://answers.ros.org/question/62277/inscribed-and-circumscribed-radii-of-the-robot-used-despite-footprint-being-set/?answer=62444#post-id-62444
+#inflation_radius: 0.7 #this needs to be set to greater than inscribed & circumscribed, which are found from footprint: http://answers.ros.org/question/62277/inscribed-and-circumscribed-radii-of-the-robot-used-despite-footprint-being-set/?answer=62444#post-id-62444
+inflation_radius: 0.45
 
 cost_scaling_factor: 30.0
 #observation_sources: point_cloud_sensor

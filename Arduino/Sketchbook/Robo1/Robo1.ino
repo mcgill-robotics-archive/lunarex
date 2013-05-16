@@ -228,8 +228,10 @@ void loop()
   if (suspPos > SUSP_INTERFERENCE_LIMIT)
   {
     miningAckerman();
-  else
+  }
+  else{
     doAckerman();
+  }
   }
   
 
@@ -261,8 +263,6 @@ void loop()
   nh.spinOnce();
 }
 
-
-
 void stopAll()
 {
   LF_wheel_rpm = 0.0;
@@ -275,8 +275,6 @@ void stopAll()
   LR_motor_enable = 0;
   RR_motor_enable = 0;
 }
-
-
 
 void turnOnSpot()
 {

@@ -46,9 +46,6 @@
     -->
   </node>
   
-  <node pkg="tf" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0 0 0 0 0 0 /base_link /base_laser_link 10" />   
-
-  <node pkg="tf" type="static_transform_publisher" name="base_to_odom_broadcaster" args="0 0 0 0 0 0 /base_link /odom 10" />   
-
+  <node pkg="tf" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0 0 0 0 0 0 /base_link /laser 20" />   
 </launch>
   

@@ -20,9 +20,6 @@ import coord
 from std_msgs.msg import UInt32
 from std_msgs.msg import UInt8
 from geometry_msgs.msg import Twist
-from move_base_msgs.msg import MoveBaseAction
-from move_base_msgs.msg import MoveBaseGoal
-from geometry_msgs.msg import Quaternion
 from geometry_msgs.msg import PoseStamped
 from corner_detector.msg import Corners
 
@@ -42,8 +39,12 @@ MC_LENGTH = 7.55
 
 STARTING_POS_ARENA_COORDS = [(0.97, 0.75), (2.91, 0.75)]
 ROTATION_TIME_SECS = 60
-LOCALIZATION_ANG_SPEED = 1.6
+LOCALIZATION_ANG_SPEED = 1.4
 VELOCITY_PUB_TIME_MSECS = 100 #how often to send cmd_vels
+GOAL_DISTANCE_TOLERANCE = 0.2 #in m
+GOAL_ANGLE_TOLERANCE =  1 #in degrees 
+NAV_ANGULAR_ROTATION = 1.4
+NAV_LINEAR_SPEED = 1.5
 
 #--state vars
 #----corners
@@ -67,7 +68,6 @@ auger_speed = 0 #current speed: 0-255
 suspension_pos = 0
 
 #----control
-goal = MoveBaseGoal()
 #cmd-vel state var?
 
 #INFO: logging stuff to rosout
@@ -230,55 +230,43 @@ def setAugerSpeed(desiredSpeed):
 def goTo(x,y,theta):
 	# send a specified goal in a compact form
 	# All three parameters in Arena coordinates
-	attemptNumber = 1
 
-	print("In goTO attempt number " + str(attemptNumber) +"with heading: " +str(coord.quatToDegrees(slam_out_pose)))
+	print("In goTO with heading: " +str(coord.quatToDegrees(slam_out_pose)))
 
 	nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
-	#(arenaCoords, slam_out_pose, corner1, corner2, corner3, corner4, resolution):
-
-	goal.target_pose.pose.position.x = nextGoal[0]
-	goal.target_pose.pose.position.y = nextGoal[1]
-
-	mobileAngle = coord.arenaAngle2mobileAngle(theta, slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner)
-	#must convert to quaternion from a rad
-	quat = tf.transformations.quaternion_from_euler(0, 0, mobileAngle*math.pi/180.0) #was 0, 0, math.pi
-	#quat = tf.transformations.quaternion_from_euler(0, 0, 0) #was 0, 0, math.pi
 	
-	goal.target_pose.pose.orientation = Quaternion(*quat)
-	print("***Requested motion***")
-	print("x = " +str(goal.target_pose.pose.position.x))
-	print("y = " +str(goal.target_pose.pose.position.y))
-	print("theta = " +str(mobileAngle))
+	print("Next goal is: " + str(nextGoal))
 
-	client.send_goal(goal)  # Sends the goal to the action server.
-	result = client.wait_for_result(rospy.Duration.from_sec(30.0)) # Waits for the server to finish performing the action.
-	#rospy.Duration.from_sec(5.0)
-	print("goal result is: " +str(result))
+	nextGoalAngle = math.atan2(nextGoal[1], nextGoal[0]) * 180.0/math.pi
+	currentAngle = coord.quatToDegrees(slam_out_pose)
+	
+	print currentAngle, nextGoalAngle
 
-	while(result == False):
-		attemptNumber +=1
-		print("In goTO attempt number " + str(attemptNumber) +"with heading: " +str(coord.quatToDegrees(slam_out_pose)))
+	currentTime = int(time.time()*1000.0)
+	pubTime = currentTime
+	while( abs(currentAngle - nextGoalAngle) > GOAL_ANGLE_TOLERANCE):
+		currentTime = int(time.time()*1000.0)
+		currentAngle = coord.quatToDegrees(slam_out_pose)
+		#if(currentAngle > nextGoalAngle):
+		if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
+			pubTime = int(time.time()*1000.0)
+			pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, NAV_ANGULAR_ROTATION))
 
-		nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
-		#(arenaCoords, slam_out_pose, corner1, corner2, corner3, corner4, resolution):
+	nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
+	nextGoalDistance = math.sqrt(nextGoal[0]*nextGoal[0] + nextGoal[1]*nextGoal[1])
 
-		goal.target_pose.pose.position.x = nextGoal[0]
-		goal.target_pose.pose.position.y = nextGoal[1]
-
-		mobileAngle = coord.arenaAngle2mobileAngle(theta, slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner)
-		#must convert to quaternion from a rad
-		quat = tf.transformations.quaternion_from_euler(0, 0, mobileAngle*math.pi/180.0) #was 0, 0, math.pi
-		#quat = tf.transformations.quaternion_from_euler(0, 0, 0) #was 0, 0, math.pi
-		
-		goal.target_pose.pose.orientation = Quaternion(*quat)
-		print("***Requested motion***")
-		print("x = " +str(goal.target_pose.pose.position.x))
-		print("y = " +str(goal.target_pose.pose.position.y))
-		print("theta = " +str(mobileAngle))
-
-		client.send_goal(goal)  # Sends the goal to the action server.
-		result = client.wait_for_result(rospy.Duration.from_sec(30.0)) # Waits for the server to finish performing the action.
+	currentTime = int(time.time()*1000.0)
+	pubTime = currentTime
+	while(nextGoalDistance > GOAL_DISTANCE_TOLERANCE):
+		print nextGoalDistance
+		#add rate to avoid overloading rosserial
+		currentTime = int(time.time()*1000.0)
+	
+		if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
+			pubTime = int(time.time()*1000.0)
+			pub_vel.publish(Velocity(NAV_LINEAR_SPEED, 0, 0), Velocity(0, 0, 0))
+			nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
+			nextGoalDistance = math.sqrt(nextGoal[0]*nextGoal[0] + nextGoal[1]*nextGoal[1])
 
 class Velocity:
     def __init__(self, x, y, z):
@@ -290,76 +278,55 @@ class Velocity:
 #-----------------------START EXECUTION--------------------------------#
 #----------------------------------------------------------------------#
 
-try:
-	#INIT NODE & ACTIONLIB
-	#--Init node
-	rospy.init_node('command')
+#INIT NODE & ACTIONLIB
+#--Init node
+rospy.init_node('command')
 
-	#--Subscribers
-	rospy.Subscriber("slam_out_pose", PoseStamped, slam_out_pose_callback)
-	rospy.Subscriber("corners", Corners, corners_callback)
+#--Subscribers
+rospy.Subscriber("slam_out_pose", PoseStamped, slam_out_pose_callback)
+rospy.Subscriber("corners", Corners, corners_callback)
 
-	#--Publishers
-	auger_Speed_pub = rospy.Publisher("auger_speed", UInt8)
-	susp_LA_pub = rospy.Publisher("susp_pos", UInt8)	# publish suspension info
-	pub_vel = rospy.Publisher("cmd_vel", Twist)	# publish velocities
+#--Publishers
+auger_Speed_pub = rospy.Publisher("auger_speed", UInt8)
+susp_LA_pub = rospy.Publisher("susp_pos", UInt8)	# publish suspension info
+pub_vel = rospy.Publisher("cmd_vel", Twist)	# publish velocities
 
-	#START MOTION
+#START MOTION
 
-	#Perform rotation
-	print("Started rotation.")
-	rotationStartTime = int(time.time()*1000.0)
-	currentTime = rotationStartTime
-	lastPubTime = rotationStartTime
+#Perform rotation
+print("Started rotation.")
+rotationStartTime = int(time.time()*1000.0)
+currentTime = rotationStartTime
+lastPubTime = rotationStartTime
 
-	while(currentTime - rotationStartTime < ROTATION_TIME_SECS*1000.0):
-		currentTime = int(time.time()*1000.0)
-		if(currentTime - lastPubTime > VELOCITY_PUB_TIME_MSECS):
-			pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, LOCALIZATION_ANG_SPEED))
-			lastPubTime = int(time.time()*1000.0)
+while(currentTime - rotationStartTime < ROTATION_TIME_SECS*1000.0):
+	currentTime = int(time.time()*1000.0)
+	if(currentTime - lastPubTime > VELOCITY_PUB_TIME_MSECS):
+		pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, LOCALIZATION_ANG_SPEED))
+		lastPubTime = int(time.time()*1000.0)
 
-	pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, 0))
+#perform stop
+pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, 0))
 
-	print("Ended rotation. Now waiting for good corners")
+print("Ended rotation. Now waiting for good corners")
 
-	#Get corners
-	while(mapRes == -1): #means callback has not happened
-		print("mapRes still default")
-		time.sleep(2)
+#Get corners
+while(mapRes == -1): #means callback has not happened
+	print("mapRes still default")
+	time.sleep(2)
 
-	print("Got good corners.")
+print("Got good corners.")
 
-	print("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
-			+ ", LF=" +str(LF_corner) + ", RF=" +str(RF_corner))
+print("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
+		+ ", LF=" +str(LF_corner) + ", RF=" +str(RF_corner))
 
-	#--Init actionlib
-	client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-	print("Started waiting for move_base action server")
-	client.wait_for_server() #Waits until the action server has started up and started listening for goals.
-	print("Done waiting for move_base action server")
+goTo(3.40, 4.38, 0)
 
-	#--Creates a goal to send to the action server.
-	goal.target_pose.header.frame_id = "base_link"
-	goal.target_pose.header.stamp = rospy.get_rostime()
+#EXCAVATE
+#excavate()
 
-	#goal.target_pose.pose.position.x = 2.0
-	#goal.target_pose.pose.position.y = 1.0 
-	#quat = tf.transformations.quaternion_from_euler(0, 0, 45*math.pi/180.0 ) #was 0, 0, math.pi
-	#goal.target_pose.pose.orientation = Quaternion(*quat)
-
-	#client.send_goal(goal)  # Sends the goal to the action server.
-	#client.wait_for_result() # 
-
-	#Go to start of mining area
-	goTo(MC_WIDTH / 2.0, MC_LENGTH * 0.66, 0)
-
-	#EXCAVATE
-	#excavate()
-
-	#Return home and dump
-	goTo(MC_WIDTH/2.0, 0.9, 0)	#need to callibrate y position so as not to bump into wall or obstacle
-
-	#goTo(ARENA_WIDTH/2.0, 0.9, math.pi)	#spin around
-except KeyboardInterrupt:
-	sys.exit(0)
+#Return home and dump
+#goTo(MC_WIDTH/2.0, 0.9, 0)	#need to callibrate y position so as not to bump into wall or obstacle
+goTO(1.7, 4.5)
+#goTo(ARENA_WIDTH/2.0, 0.9, math.pi)	#spin around
 

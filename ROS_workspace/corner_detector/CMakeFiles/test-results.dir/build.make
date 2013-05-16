@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector
+CMAKE_SOURCE_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/corner_detector
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector
+CMAKE_BINARY_DIR = /home/lunarex/McGill_LunarEx_2013/ROS_workspace/corner_detector
 
 # Utility rule file for test-results.
 
@@ -58,6 +58,6 @@ CMakeFiles/test-results.dir/clean:
 .PHONY : CMakeFiles/test-results.dir/clean
 
 CMakeFiles/test-results.dir/depend:
-	cd /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector/CMakeFiles/test-results.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/lunarex/McGill_LunarEx_2013/ROS_workspace/corner_detector && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lunarex/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/lunarex/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/lunarex/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/lunarex/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/lunarex/McGill_LunarEx_2013/ROS_workspace/corner_detector/CMakeFiles/test-results.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/test-results.dir/depend
 
