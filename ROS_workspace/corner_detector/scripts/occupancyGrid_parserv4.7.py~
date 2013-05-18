@@ -151,7 +151,13 @@ while(True):
 
 		print("Started placing hough matrix lines into Line objects")
 
-
+		# seb's algorithm to remove points and create even distribution		
+		
+		# create a lists of all points:
+		seb_points = []
+		#for i in range(len(points)):
+		#	seb_points.append([points[i].x, points[i].y])
+		#print seb_points
 
 		#PLACING HOUGH MATRIX LINES INTO LINE OBJECTS
 		lines=[]

@@ -42,6 +42,10 @@ latest_map = None
 gridData = None
 getNewMap = True
 #CALLBACKS
+
+
+
+import random
 	
 class Line(object):
  	def __init__(self, r, theta):
@@ -134,20 +138,28 @@ while(True):
 		H = [[0 for T in xrange(Trank)] for R in xrange(Rrank)] 
 
 		print("Started placing points into the matrix")
-
+		
+		#sqrt_of_one_over_probability_to_keep_point = 50  #### must be an integer  #### 1/5 chance
+		
+		seb_modulus_number = 9   #  tha magic number  ----- 1/ (seb_modulus_number)^2 is roughly the proportion of points used 
+				
 		#PLACING POINTS INTO THE MATRIX
 		for i in range(0,len(occupancyGrid)):
-			for j in range(0,len(occupancyGrid[i])):
-				if(occupancyGrid[i][j]==100):
-					for t in range(0, Trank):	
-						lineR = i*mapRes*math.cos(math.radians(t)) + j*mapRes*math.sin(math.radians(t))
-						if(lineR<0):
-							t+=180
-							t=t%360
-							lineR=abs(lineR)
-						if(H[int(lineR/Rres)][t])==0:
-							H[int(lineR/Rres)][t]=Line(lineR, t)
-						H[int(lineR/Rres)][t].points.append(Point(i,j))
+			if(i % seb_modulus_number ==0):  ### seb modification
+				factor = i % ( seb_modulus_number-1 )   ### seb modification
+				for j in range(0,len(occupancyGrid[i])):
+					if((j+factor) % seb_modulus_number ==0):  ### seb modification
+			
+						if(occupancyGrid[i][j]==100):
+							for t in range(0, Trank):	
+								lineR = i*mapRes*math.cos(math.radians(t)) + j*mapRes*math.sin(math.radians(t))			
+								if(lineR<0):
+									t+=180
+									t=t%360
+									lineR=abs(lineR)
+								if(H[int(lineR/Rres)][t])==0:
+									H[int(lineR/Rres)][t]=Line(lineR, t)
+								H[int(lineR/Rres)][t].points.append(Point(i,j))
 
 		print("Started placing hough matrix lines into Line objects")
 
