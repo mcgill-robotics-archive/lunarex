@@ -1,9 +1,7 @@
 '''
-This code is obsolete and only used to check if the quadrant detection works
+Meant to be a service that determines if the robot is facing a corner or not based on a single lidar scan
 
 '''
-
-
 
 import rospy
 from sensor_msgs.msg import LaserScan
@@ -26,7 +24,7 @@ def getDistances(data):
 
 	return leftDistance, frontDistance, rightDistance
 
-def scanCallback(data):
+def findHeading(data):
 	leftDistance, frontDistance, rightDistance = getDistances(data)
 	quadrant = determineQuadrant(leftDistance, frontDistance, rightDistance)
 	rospy.loginfo(str(quadrant))
@@ -66,7 +64,12 @@ def determineQuadrant(leftDistance, frontDistance, rightDistance):
 	return quadrant
 
 
+def findInitialHeadingServer():
+	rospy.init_node('findInitialHeadingServer')
+    s = rospy.Service('findInitialHeading', findInitialHeading.srv.findInitialHeading, findHeading)
+    rospy.spin()
+
 if (__name__ == "__main__"):
-	rospy.init_node('initialHeadingCalculator')
-	rospy.Subscriber("scan", LaserScan, scanCallback)
-	rospy.spin()		
+	#rospy.init_node('initialHeadingCalculator')
+	#rospy.Subscriber("scan", LaserScan, scanCallback)
+	#rospy.spin()		

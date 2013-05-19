@@ -47,10 +47,10 @@ public class GUIMain extends JFrame {
 
 	//FOR MACBOOK AIR ON MCGILL NETWORK
 
-	String ipAdressString = "142.157.43.34";
+	//String ipAdressString = "142.157.43.34";
 	
 	//FOR MACBOOK AIR ON OUR NETWORK
-	//String ipAdressString = "192.168.1.100";
+	String ipAdressString = "192.168.1.103";
 
 	
 	//FOR LOCALHOST

@@ -46,6 +46,8 @@ NAV_ANGULAR_ROTATION = 0.2
 NAV_LINEAR_SPEED = 0.2
 Y_THRESH_FOR_REORIENTATION = 0.1
 
+INITIAL_DRIVE_TIME_MSECS = 5000;
+
 #excavation stuff
 DIG_RADIUS = 0.8 #defines circular path for digging
 START_X = ARENA_WIDTH/2 	#middle of lunarena width
@@ -155,7 +157,10 @@ def excavate():
 
 	print("setting auger speed to 255")
 	#-- turn on auger
-	setAugerSpeed(255)	#call custom method
+	
+	# COMMENT OUT AUGER COMMAND FOR SAFETY!!!
+
+	#setAugerSpeed(255)	#call custom method
 	
 	#-- lower suspension to appropriate height
 	susp_LA_pub.publish(DIG_HEIGHT_CMD)	# Send suspension info
@@ -337,6 +342,63 @@ def backup(arenaY):
 			
 			print("nextGoal during backward movement is: x=" +str(nextGoal[0]) +"and y=" +str(nextGoal[1]))
 
+def moveAwayFromWalls():
+	'''
+	call service to get initial discrete heading and drive accordingly
+	if can't go forward or backward, turn a bit and try again
+	'''
+
+	rospy.wait_for_service('findInitialHeading')
+	headingService = rospy.ServiceProxy('findInitialHeading', Find)
+
+	haventMovedYet = True
+	while haventMovedYet:
+		try:
+		  quadrant = findInitialHeading()
+		except rospy.ServiceException, e:
+		  print "Service did not process request: %s"%str(e)
+		  return
+		if quadrant == 1:
+			#drive forwards
+			angSpeed = 0
+			linSpeed = 0.2
+			haventMovedYet = False
+		elif quadrant == 2:
+			angSpeed = -LOCALIZATION_ANG_SPEED	#cw
+			linSpeed = 0
+		elif quadrant == 3:
+			#drive backwards
+			angSpeed = 0
+			linSpeed = -0.2
+			haventMovedYet = False
+		elif quadrant == 4:	
+			angSpeed = LOCALIZATION_ANG_SPEED #ccw
+			linSpeed = 0.2
+		else:
+			print "BAD HEADING: " + str(quadrant)
+			angSpeed = 0
+			linSpeed = 0
+
+		currentTime = int(time.time()*1000.0)
+		startTime = currentTime
+		pubTime = currentTime
+		while (currentTime - startTime) < INITIAL_DRIVE_TIME_MSECS:
+			currentTime = int(time.time()*1000.0)
+			if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):	#publish at 10 hz
+				pubTime = int(time.time()*1000.0)	#reset pubtine to current time
+				pub_vel.publish(Velocity(linspeed, 0, 0), Velocity(0, 0, angSpeed))
+def elapsedTime(option = None):	#optional arguments could change things
+	currentTime = int(time.time())
+	elapsedSeconds = currentTime - runStartTime
+	elapsedPercent = elapsedSeconds/6.0
+	remainingSeconds = 600 - elapsedSeconds
+	if option == 'percent':
+		return elapsedPercent
+	elif option == 'remaining'
+		return remainingSeconds
+	else:
+		return elapsedSeconds
+
 class Velocity:
     def __init__(self, x, y, z):
         self.x = x
@@ -347,7 +409,8 @@ class Velocity:
 #-----------------------START EXECUTION--------------------------------#
 #----------------------------------------------------------------------#
 
-#INIT NODE & ACTIONLIB
+runStartTime = int(time.time())	# seconds
+
 #--Init node
 rospy.init_node('command')
 
@@ -361,6 +424,10 @@ susp_LA_pub = rospy.Publisher("susp_pos", UInt8)	# publish suspension info
 dump_LA_pub = rospy.Publisher("dump_pos", UInt8)
 pub_vel = rospy.Publisher("cmd_vel", Twist)	# publish velocities
 door_LA_pub = rospy.Publisher("door_pos", UInt8)
+
+#--Get Initial heading and get outa there
+
+moveAwayFromWalls()
 
 #START MOTION
 
