@@ -287,7 +287,7 @@ def goTo(x,y,theta):
 			"nextGoalAngleHector = " +str(nextGoalAngleHector))
 
 		spinToHectorAngle(nextGoalAngleHector)
-
+		print "just turned, current angle is: " + str(coord.quatToDegrees(slam_out_pose))
 		#MOVE FORWARD TOWARDS GOAL
 		nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
 		
@@ -475,7 +475,7 @@ mapHeight = 2000
 print("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
 		+ ", LF=" +str(LF_corner) + ", RF=" +str(RF_corner))
 
-while True	# dig indefinately	
+while True:	# dig indefinately	
 	
 	#EXCAVATE	
 	goTo(START_X, START_Y, 0)
