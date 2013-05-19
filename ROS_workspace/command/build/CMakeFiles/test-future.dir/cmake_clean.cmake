@@ -1,4 +1,7 @@
 FILE(REMOVE_RECURSE
+  "../src/command/srv"
+  "../srv_gen"
+  "../srv_gen"
   "CMakeFiles/test-future"
 )
 

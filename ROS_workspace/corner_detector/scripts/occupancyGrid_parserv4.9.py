@@ -106,11 +106,6 @@ while(True):
 	#COLLECTING OCCUPANCY GRID
 	occupancyGrid = np.empty((latest_corners.width,latest_corners.height),dtype='int')
 	occupancyGrid = np.reshape(gridData,(latest_corners.width,latest_corners.height), order='F') #C is row major order; F is col major
-
-
-
-
-
 	
 	#DEFINING HOUGH MATRIX
 	mapRes = latest_corners.resolution
@@ -119,7 +114,7 @@ while(True):
 	# else:
 	# 	Rres = mapRes
 
-	Rres = mapRes
+	Rres = mapRes*3
 
 	mapWidth = latest_corners.width
 	mapHeight = latest_corners.height
@@ -151,7 +146,6 @@ while(True):
 						H[int(lineR/Rres)][t]=Line(lineR, t)
 					H[int(lineR/Rres)][t].points.append(Point(i,j))
 
-	print(pointCount)
 	print("Started placing hough matrix lines into Line objects")
 
 	#PLACING HOUGH MATRIX LINES INTO LINE OBJECTS
@@ -172,17 +166,20 @@ while(True):
 	bestTheta = BIGNUMBER
 	wallDone = [True, False, False, False]
 	for l in sortedLines[:NUMBER_OF_POTENTIAL_WALLS]: #order of decreasing points/line
- 		if(wallDone[1]==False and 
- 			abs(l.theta - walls[0].theta < 10) and abs(l.r-walls[0].r > 3)):
+ 		if(not wallDone[1] and 
+ 			abs(l.theta - walls[0].theta) < 10 and abs(l.r-walls[0].r) > 3):
  			walls[1] = l
  			wallDone[1] = True
- 		if(wallDone[2]==False and 
+ 		if(not wallDone[2] and 
  			(abs(l.theta - (walls[0].theta - 90)) < 10 or 
- 				abs(l.theta - ((walls[0].theta + 90) % 360) < 10)):
- 				wallDone[2]=True
- 				walls[2]==l
- 		if(wallDone[2]==True and wallDone[3]==False)
-
+ 				abs(l.theta - ((walls[0].theta + 90) % 360)) < 10)):
+			wallDone[2]=True
+ 			walls[2]=l
+ 		if wallDone[2] and (not wallDone[3]) and (abs(l.theta - walls[2].theta) < 10 and abs(l.r-walls[2].r) > 3):
+ 			walls[3]=l
+ 			wallDone[3]=True
+ 		if(wallDone[1] and wallDone[2] and wallDone[3]):
+ 			break
 
 	print("done getting walls. Right now we have:")
 	for i in range(0,4):

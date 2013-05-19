@@ -1,5 +1,9 @@
 FILE(REMOVE_RECURSE
+  "../src/command/srv"
+  "../srv_gen"
+  "../srv_gen"
   "CMakeFiles/ROSBUILD_gensrv_cpp"
+  "../srv_gen/cpp/include/command/QuadrantRequest.h"
 )
 
 # Per-language clean rules from dependency scanning.

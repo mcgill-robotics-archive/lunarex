@@ -19,8 +19,6 @@ SET(CMAKE_C_INCLUDE_PATH
   "/opt/ros/fuerte/stacks/geometry/tf/srv_gen/cpp/include"
   "/opt/ros/fuerte/stacks/bullet/include"
   "/opt/ros/fuerte/stacks/geometry/angles/include"
-  "/home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector/msg_gen/cpp/include"
-  "/home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector/srv_gen/cpp/include"
   "/opt/ros/fuerte/stacks/hector_slam/hector_mapping/msg_gen/cpp/include"
   "/usr/include/eigen3"
   "/opt/ros/fuerte/stacks/laser_pipeline/laser_geometry/include"
@@ -41,6 +39,7 @@ SET(CMAKE_C_INCLUDE_PATH
   "/opt/ros/fuerte/stacks/dynamic_reconfigure/msg_gen/cpp/include"
   "/opt/ros/fuerte/stacks/dynamic_reconfigure/srv_gen/cpp/include"
   "/home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/srv_gen/cpp/include"
+  "../srv_gen/cpp/include"
   )
 SET(CMAKE_CXX_INCLUDE_PATH ${CMAKE_C_INCLUDE_PATH})
 SET(CMAKE_Fortran_INCLUDE_PATH ${CMAKE_C_INCLUDE_PATH})

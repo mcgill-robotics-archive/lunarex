@@ -21,6 +21,7 @@ from std_msgs.msg import UInt8
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import PoseStamped
 from corner_detector.msg import Corners
+from command.srv import QuadrantRequest
 
 #GLOBAL VARS
 #--constants
@@ -347,14 +348,15 @@ def moveAwayFromWalls():
 	call service to get initial discrete heading and drive accordingly
 	if can't go forward or backward, turn a bit and try again
 	'''
-
-	rospy.wait_for_service('findInitialHeading')
-	headingService = rospy.ServiceProxy('findInitialHeading', Find)
+	print("waiting for initial heading service")
+	rospy.wait_for_service('findInitialHeadingService')
+	headingService = rospy.ServiceProxy('findInitialHeadingService', QuadrantRequest)
 
 	haventMovedYet = True
 	while haventMovedYet:
 		try:
-		  quadrant = findInitialHeading()
+		  quadrant = headingService().quadrant
+		  print quadrant
 		except rospy.ServiceException, e:
 		  print "Service did not process request: %s"%str(e)
 		  return
@@ -386,7 +388,8 @@ def moveAwayFromWalls():
 			currentTime = int(time.time()*1000.0)
 			if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):	#publish at 10 hz
 				pubTime = int(time.time()*1000.0)	#reset pubtine to current time
-				pub_vel.publish(Velocity(linspeed, 0, 0), Velocity(0, 0, angSpeed))
+				pub_vel.publish(Velocity(linSpeed, 0, 0), Velocity(0, 0, angSpeed))
+
 def elapsedTime(option = None):	#optional arguments could change things
 	currentTime = int(time.time())
 	elapsedSeconds = currentTime - runStartTime
@@ -394,7 +397,7 @@ def elapsedTime(option = None):	#optional arguments could change things
 	remainingSeconds = 600 - elapsedSeconds
 	if option == 'percent':
 		return elapsedPercent
-	elif option == 'remaining'
+	elif option == 'remaining':
 		return remainingSeconds
 	else:
 		return elapsedSeconds
@@ -427,6 +430,7 @@ door_LA_pub = rospy.Publisher("door_pos", UInt8)
 
 #--Get Initial heading and get outa there
 
+print("Moving away from walls")
 moveAwayFromWalls()
 
 #START MOTION

@@ -42,9 +42,63 @@ CMAKE_BINARY_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/command/build
 # Include the progress variables for this target.
 include CMakeFiles/ROSBUILD_gensrv_cpp.dir/progress.make
 
-CMakeFiles/ROSBUILD_gensrv_cpp:
+CMakeFiles/ROSBUILD_gensrv_cpp: ../srv_gen/cpp/include/command/QuadrantRequest.h
+
+../srv_gen/cpp/include/command/QuadrantRequest.h: ../srv/QuadrantRequest.srv
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/roscpp/rosbuild/scripts/gensrv_cpp.py
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/roscpp/rosbuild/scripts/genmsg_cpp.py
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/roslib/bin/gendeps
+../srv_gen/cpp/include/command/QuadrantRequest.h: ../manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/roslib/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/std_msgs/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/actionlib_msgs/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/geometry_msgs/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/navigation/move_base_msgs/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/roslang/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/roscpp/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/rospy/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/rostest/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/actionlib/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/bullet/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/sensor_msgs/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/rosconsole/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/geometry/angles/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/roswtf/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/message_filters/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/geometry/tf/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/nav_msgs/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/visualization_msgs/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/common_rosdeps/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/laser_pipeline/laser_geometry/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/orocos_kinematics_dynamics/orocos_kdl/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/orocos_kinematics_dynamics/python_orocos_kdl/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/orocos_kinematics_dynamics/kdl/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/geometry/tf_conversions/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/hector_slam/hector_mapping/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/diagnostic_msgs/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/diagnostics/diagnostic_updater/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/diagnostics/self_test/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/share/rosservice/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/dynamic_reconfigure/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/driver_common/driver_base/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/laser_drivers/hokuyo_node/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /home/ernie/McGill_LunarEx_2013/ROS_workspace/map_builder/manifest.xml
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/navigation/move_base_msgs/msg_gen/generated
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/geometry/tf/msg_gen/generated
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/geometry/tf/srv_gen/generated
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/hector_slam/hector_mapping/msg_gen/generated
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/dynamic_reconfigure/msg_gen/generated
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/dynamic_reconfigure/srv_gen/generated
+../srv_gen/cpp/include/command/QuadrantRequest.h: /opt/ros/fuerte/stacks/driver_common/driver_base/msg_gen/generated
+../srv_gen/cpp/include/command/QuadrantRequest.h: /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/srv_gen/generated
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/ernie/McGill_LunarEx_2013/ROS_workspace/command/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../srv_gen/cpp/include/command/QuadrantRequest.h"
+	/opt/ros/fuerte/share/roscpp/rosbuild/scripts/gensrv_cpp.py /home/ernie/McGill_LunarEx_2013/ROS_workspace/command/srv/QuadrantRequest.srv
 
 ROSBUILD_gensrv_cpp: CMakeFiles/ROSBUILD_gensrv_cpp
+ROSBUILD_gensrv_cpp: ../srv_gen/cpp/include/command/QuadrantRequest.h
 ROSBUILD_gensrv_cpp: CMakeFiles/ROSBUILD_gensrv_cpp.dir/build.make
 .PHONY : ROSBUILD_gensrv_cpp
 
