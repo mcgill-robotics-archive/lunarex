@@ -1,5 +1,7 @@
 import rospy
 from sensor_msgs.msg import LaserScan
+import roslib; roslib.load_manifest('command')
+
 
 def getDistances(data):
 
@@ -13,12 +15,11 @@ def getDistances(data):
 	frontDistance = data.ranges[len(data.ranges)/2]
 	leftDistance = data.ranges[-1]
 
-	rospy.loginfo( "lfr: "str(leftDistance) + ' ' + str(frontDistance) + ' ' + str(rightDistance)	)
+	rospy.loginfo( "lfr: " +str(leftDistance) + ' ' + str(frontDistance) + ' ' + str(rightDistance))
 
 	return leftDistance, frontDistance, rightDistance
 
 def scanCallback(data):
-	rospy.loginfo("Scan received")	
 	leftDistance, frontDistance, rightDistance = getDistances(data)
 	quadrant = determineQuadrant(leftDistance, frontDistance, rightDistance)
 	rospy.loginfo(str(quadrant))
@@ -29,7 +30,7 @@ def determineQuadrant(leftDistance, frontDistance, rightDistance):
 		Our orientation could be in one of 4 quadrants
 		Describe these quadrants with regular math conventions, ie 0 deg. is positive arena x, quandrant number increases CCW
 
-		if we start in the bottom right, then the quadrants are mirrord about the y-axis ie quadrant 3 is in the corner, increasing CW
+		if we start in the bottom right, then  quadrant 3 is in the corner, increasing CcW
 	'''
 
 	THRESHOLD = 3.0 # meter

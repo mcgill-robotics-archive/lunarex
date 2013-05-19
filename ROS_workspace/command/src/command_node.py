@@ -4,7 +4,6 @@ sys.path.append("~/McGill_LunarEx_2013/ROS_workspace/")
 sys.path.append("/home/ernie/McGill_LunarEx_2013/ROS_workspace")
 sys.path.append("/home/lunarex/McGill_LunarEx_2013/ROS_workspace")
 
-
 #IMPORTS
 import roslib; roslib.load_manifest('command')
 

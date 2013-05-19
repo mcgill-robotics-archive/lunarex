@@ -16,8 +16,8 @@ Documentation of coordinate frames: https://sites.google.com/site/lunarex2013/so
 def arenaAngle2hectorAngle(arenaAngle, LR_corner, RR_corner, LF_corner, RF_corner):
   theta = math.atan2(abs(LR_corner[1]-RR_corner[1]), abs(LR_corner[0]-RR_corner[0])) #angle of bottom wall of arena w.r.t. the positive global x axis
   theta = theta * 180.0/math.pi
-  hectorAngle = arenaAngle + 90 - theta
-  rospy.loginfo("coord.arenaAngle2hectorAngle received: "+str(arenaAngle)+" and is returning: "+str(hectorAngle))
+  hectorAngle = arenaAngle - theta
+  # print("coord.arenaAngle2hectorAngle received: "+str(arenaAngle)+" and is returning: "+str(hectorAngle))
   return hectorAngle
 
 #takes in degrees, returns degres
@@ -26,9 +26,9 @@ def arenaAngle2mobileAngle(arenaAngle, slam_out_pose, LR_corner, RR_corner, LF_c
   current_hector_heading = quatToDegrees(slam_out_pose)
   goal_hector_heading = arenaAngle2hectorAngle(arenaAngle, LR_corner, RR_corner, LF_corner, RF_corner)
   mobileAngle = goal_hector_heading - current_hector_heading
-  rospy.loginfo("coord.arenaAngle2mobileAngle received: "+str(arenaAngle)+" and is returning: "+str(mobileAngle))
+  # print("coord.arenaAngle2mobileAngle received: "+str(arenaAngle)+" and is returning: "+str(mobileAngle))
   #mobileAngle = mobileAngle * math.pi/180.0
-  #rospy.loginfo("which is " +str(mobileAngle) + "in radians")
+  #print("which is " +str(mobileAngle) + "in radians")
   return mobileAngle
 
 def quatToDegrees(slam_out_pose):
@@ -58,7 +58,7 @@ def arena2mobile(arenaCoords, slam_out_pose, LR_corner, RR_corner, LF_corner, RF
   #rotate the vector from global to hector
   mobile_coords = rotateVector2D(mobile_coords, -quatToRadians(slam_out_pose))
 
-  rospy.loginfo("coord.arena2mobile received: "+str(arenaCoords)+" and is returning: "+str(mobile_coords))
+  # print("coord.arena2mobile received: "+str(arenaCoords)+" and is returning: "+str(mobile_coords))
   return mobile_coords
 
 def hector2global(slam_out_pose, resolution, global_map_size):
@@ -73,7 +73,7 @@ def hector2global(slam_out_pose, resolution, global_map_size):
   y_global = global_map_size / 2 + y_hector / resolution
 
   global_coords = (x_global, y_global)
-  rospy.loginfo("coord.hector2global received: x_hector="+str(x_hector)+" & y_hector="+str(y_hector)+" and is returning: "+str(global_coords))
+  # print("coord.hector2global received: x_hector="+str(x_hector)+" & y_hector="+str(y_hector)+" and is returning: "+str(global_coords))
 
   return global_coords
 
@@ -94,9 +94,6 @@ def arena2global(arenaCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolu
   #scale by resolution
   arenaCoords_inCells = (int(arenaCoords[0]/resolution), int(arenaCoords[1] / resolution))   #resolution is m per cell
 
-  print("corners received")
-  print(str(LR_corner) + str(RR_corner) + str(LF_corner) + str(RF_corner))
-
   x1ComponentDir = 1
   y1ComponentDir = 1
   if(RR_corner[0] < LR_corner[0]):
@@ -111,21 +108,13 @@ def arena2global(arenaCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolu
   if(LF_corner[1] < LR_corner[1]):
     y2ComponentDir = -1
 
-  print("x1ComponentDir is: "+str(x1ComponentDir))
-  print("x2ComponentDir is: "+str(x2ComponentDir))
-  print("y1ComponentDir is: "+str(y1ComponentDir))
-  print("y2ComponentDir is: "+str(y2ComponentDir))
-
-  print("calling atan with " +str(abs(LR_corner[1]-RR_corner[1])) +" and: " + str(abs(LR_corner[0]-RR_corner[0])))
   theta = math.atan2(abs(LR_corner[1]-RR_corner[1]), abs(LR_corner[0]-RR_corner[0]))  #angle of bottom wall of arena w.r.t. the positive global x axis
-
-  print(theta)
 
   xGlobal = LR_corner[0] + x1ComponentDir*arenaCoords_inCells[0]*math.cos(theta)+x2ComponentDir*arenaCoords_inCells[1]*math.sin(theta)
   yGlobal = LR_corner[1] + y1ComponentDir*arenaCoords_inCells[0]*math.sin(theta)+y2ComponentDir*arenaCoords_inCells[1]*math.cos(theta)
 
   globalCoords = (xGlobal, yGlobal)
-  rospy.loginfo("coord.arena2global received: arenaCoord="+str(arenaCoords)+" ,equal to arenaCoords_inCells="+str(arenaCoords_inCells)+ "; and is returning: "+str(globalCoords))
+  # print("coord.arena2global received: arenaCoord="+str(arenaCoords)+" ,equal to arenaCoords_inCells="+str(arenaCoords_inCells)+ "; and is returning: "+str(globalCoords))
   return globalCoords
 
 def isInObstacleArea(globalCoords, LR_corner, RR_corner, LF_corner, RF_corner, resolution):
@@ -144,17 +133,12 @@ def isInObstacleArea(globalCoords, LR_corner, RR_corner, LF_corner, RF_corner, r
   if(nx.pnpoly(globalCoords[0],globalCoords[1], verts)==1):
     isInObstacleArea=True
 
-  rospy.loginfo("coord.isInObstacleArea received: globalCoords="+str(globalCoords)+" and is returning: "+str(isInObstacleArea))
+  # print("coord.isInObstacleArea received: globalCoords="+str(globalCoords)+" and is returning: "+str(isInObstacleArea))
   return isInObstacleArea
 
  #Rotate a coordinate ector
 def rotateVector2D(vector, angle):
-  print "--"
-  print "rotating vector"
-  print "input vector: " + str(vector)
-  print "rotation angle: " + str(angle)
   rotated_vect = []
   rotated_vect.append(  vector[0]*math.cos(angle)  - vector[1]*math.sin(angle)             )
   rotated_vect.append(  vector[0]*math.sin(angle)  + vector[1]*math.cos(angle)   )
-  print "output vector: " + str(rotated_vect)
   return rotated_vect

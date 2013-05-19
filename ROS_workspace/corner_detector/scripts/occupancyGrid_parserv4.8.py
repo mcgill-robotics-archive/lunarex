@@ -111,11 +111,6 @@ while(True):
 		occupancyGrid = np.empty((latest_corners.width,latest_corners.height),dtype='int')
 		occupancyGrid = np.reshape(gridData,(latest_corners.width,latest_corners.height), order='F') #C is row major order; F is col major
 
-
-
-
-
-		
 		#DEFINING HOUGH MATRIX
 		mapRes = latest_corners.resolution
 		# if( not ranOnce): 
@@ -163,9 +158,7 @@ while(True):
 
 		print("Started placing hough matrix lines into Line objects")
 
-
-
-		#PLACING HOUGH MATRIX LINES INTO LINE OBJECTS
+ #PLACING HOUGH MATRIX LINES INTO LINE OBJECTS
 		lines=[]
 		for r in xrange(Rrank):
 			for t in xrange(Trank):
