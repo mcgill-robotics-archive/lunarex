@@ -114,7 +114,7 @@ while(True):
 	# else:
 	# 	Rres = mapRes
 
-	Rres = mapRes*3
+	Rres = mapRes*2
 
 	mapWidth = latest_corners.width
 	mapHeight = latest_corners.height
@@ -178,7 +178,7 @@ while(True):
 	wallDone = [True, False, False, False]
 	for l in sortedLines[:NUMBER_OF_POTENTIAL_WALLS]: #order of decreasing points/line
  		if(not wallDone[1] and 
- 			(abs(l.theta - walls[0].theta) < 10 and abs(l.r-walls[0].r) > 3):
+ 			(abs(l.theta - walls[0].theta) < 10 and abs(l.r-walls[0].r) > 3)):
  			walls[1] = l
  			wallDone[1] = True
  		if(not wallDone[2] and 

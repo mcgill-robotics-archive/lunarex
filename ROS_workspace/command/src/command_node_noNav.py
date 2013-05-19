@@ -38,7 +38,7 @@ MC_WIDTH = 2.33
 MC_LENGTH = 7.55
 
 STARTING_POS_ARENA_COORDS = [(0.97, 0.75), (2.91, 0.75)]
-ROTATION_TIME_SECS = 20
+ROTATION_TIME_SECS = 25
 LOCALIZATION_ANG_SPEED = 0.2
 VELOCITY_PUB_TIME_MSECS = 100 #how often to send cmd_vels
 GOAL_DISTANCE_TOLERANCE = 0.05 #in m
@@ -47,12 +47,12 @@ NAV_ANGULAR_ROTATION = 0.2
 NAV_LINEAR_SPEED = 0.2
 Y_THRESH_FOR_REORIENTATION = 0.1
 
-INITIAL_DRIVE_TIME_MSECS = 5000;
+INITIAL_DRIVE_TIME_MSECS = 5000
 
 #excavation stuff
 DIG_RADIUS = 0.8 #defines circular path for digging
 START_X = ARENA_WIDTH/2 	#middle of lunarena width
-START_Y = ARENA_LENGTH - 2*DIG_RADIUS - 0.4	#offset from far wall by digCircle and safety factor
+START_Y = ARENA_LENGTH - 2*DIG_RADIUS - 0.9	#offset from far wall by digCircle and safety factor
 START_ANG = -90.0 	#set the heading to face right
 DIG_SPEED = 0.2 #m/s linear component of velocity - free to choose it to maximize flow rate and avoid choking; ang speed with accomodate
 FINAL_LAP_TIME_START = 3*60 #If less than this many seconds remaining, keep digging
@@ -330,21 +330,23 @@ def dump():
 	dump_LA_pub.publish(BUCKET_UP_CMD)
 
 def backup(arenaY):
-	nextGoal = coord.arena2mobile((0,arenaY), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
-	nextGoalDistance = goal[1]	#dont want to move horizontally, so send 0 as x and ignore output for x
-
+	print("Backing up to: " +str(arenaY))
+	nextGoal = coord.arena2mobile((ARENA_WIDTH/2.0,arenaY), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
+	nextGoalDistance = nextGoal[0]	#dont want to move horizontally, so send 0 as y and ignore output for y
+	print("bakup distance is: " +str(nextGoalDistance))
 	currentTime = int(time.time()*1000.0)
 	pubTime = currentTime
-	while(nextGoalDistance > GOAL_DISTANCE_TOLERANCE):
+	while(abs(nextGoalDistance) > GOAL_DISTANCE_TOLERANCE):
 		#add rate to avoid overloading rosserial
 		
-		nextGoal = coord.arena2mobile((0,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
+		nextGoal = coord.arena2mobile((ARENA_WIDTH/2.0,arenaY), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
 
 		currentTime = int(time.time()*1000.0)
 		if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
+			print("publishing negative x vel to backup")
 			pubTime = int(time.time()*1000.0)
 			pub_vel.publish(Velocity(-NAV_LINEAR_SPEED, 0, 0), Velocity(0, 0, 0))
-			nextGoalDistance = nextGoal[1]
+			nextGoalDistance = nextGoal[0]
 			
 			print("nextGoal during backward movement is: x=" +str(nextGoal[0]) +"and y=" +str(nextGoal[1]))
 
@@ -435,8 +437,8 @@ door_LA_pub = rospy.Publisher("door_pos", UInt8)
 
 #--Get Initial heading and get outa there
 
-print("Moving away from walls")
-moveAwayFromWalls()
+#print("Moving away from walls")
+#moveAwayFromWalls()
 
 #START MOTION
 
@@ -458,29 +460,20 @@ pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, 0))
 print("Ended rotation. Now waiting for good corners")
 
 # #Get corners
-# while(mapRes == -1): #means callback has not happened
-# 	print("mapRes still default")
-# 	time.sleep(2)
+while(mapRes == -1): #means callback has not happened
+	time.sleep(2)
 
 print("Got good corners.")
-
-LR_corner=[684, 843]
-RR_corner=[1169, 835]
-LF_corner=[701, 1764]
-RF_corner=[1185, 1755]
-mapRes = 0.008
-mapWidth = 2000
-mapHeight = 2000
 
 print("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
 		+ ", LF=" +str(LF_corner) + ", RF=" +str(RF_corner))
 
-while True:	# dig indefinately	
+#while True:	# dig indefinately	
 	
-	#EXCAVATE	
-	goTo(START_X, START_Y, 0)
-	excavate()
+#EXCAVATE	
+#goTo(START_X, START_Y, 0)
+#excavate()
 
-	#Return home and dump
-	goTo(MC_WIDTH/2.0, 0.9, 90)	#need to calibrate y position so as not to bump into wall or obstacle
-	dump()
+#Return home and dump
+goTo(ARENA_WIDTH/2.0, 0.9, 90)	#need to calibrate y position so as not to bump into wall or obstacle
+dump()
