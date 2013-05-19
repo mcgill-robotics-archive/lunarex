@@ -130,34 +130,45 @@ while(True):
 
 	print("Started placing points into the matrix")
 
+	seb_modulus_number = 3   #  tha magic number  ----- 1/ (seb_modulus_number)^2 is roughly the proportion of points used 
+
 	pointCount = 0
 	#PLACING POINTS INTO THE MATRIX
 	for i in range(0,len(occupancyGrid)):
-		for j in range(0,len(occupancyGrid[i])):
-			if(occupancyGrid[i][j]==100):
-				pointCount +=1
-				for t in range(0, Trank):	
-					lineR = i*mapRes*math.cos(math.radians(t)) + j*mapRes*math.sin(math.radians(t))
-					if(lineR<0):
-						t+=180
-						t=t%360
-						lineR=abs(lineR)
-					if(H[int(lineR/Rres)][t])==0:
-						H[int(lineR/Rres)][t]=Line(lineR, t)
-					H[int(lineR/Rres)][t].points.append(Point(i,j))
+		if(i % seb_modulus_number ==0):  ### seb modification
+			factor = i % ( seb_modulus_number-1 )   ### seb modification
+			for j in range(0,len(occupancyGrid[i])):
+				if((j+factor) % seb_modulus_number ==0):  ### seb modification
+					if(occupancyGrid[i][j]==100):
+						pointCount +=1
+						for t in range(0, Trank):	
+							lineR = i*mapRes*math.cos(math.radians(t)) + j*mapRes*math.sin(math.radians(t))
+							if(lineR<0):
+								t+=180
+								t=t%360
+								lineR=abs(lineR)
+							if(H[int(lineR/Rres)][t])==0:
+								H[int(lineR/Rres)][t]=Line(lineR, t)
+							H[int(lineR/Rres)][t].points.append(Point(i,j))
 
 	print("Started placing hough matrix lines into Line objects")
 
+	print("PointCount = " +str(pointCount))
+
 	#PLACING HOUGH MATRIX LINES INTO LINE OBJECTS
 	lines=[]
+	pointThresh = pointCount / 50
 	for r in xrange(Rrank):
 		for t in xrange(Trank):
-			if(H[r][t]!=0 and len(H[r][t].points)>0):
+			if(H[r][t]!=0 and len(H[r][t].points)>pointThresh):
 				lines.append(H[r][t])
 
 	print("sort & print best lines")
 	sortedLines = sorted(lines, key=lambda l: len(l.points), reverse=True)
 		
+	for l in sortedLines[:NUMBER_OF_POTENTIAL_WALLS]:
+		print l
+
 	#DEFINE WALLS AND WALL BUCKETS
 	walls=[sortedLines[0],sortedLines[1],sortedLines[2],sortedLines[3]] 
 		
@@ -167,7 +178,7 @@ while(True):
 	wallDone = [True, False, False, False]
 	for l in sortedLines[:NUMBER_OF_POTENTIAL_WALLS]: #order of decreasing points/line
  		if(not wallDone[1] and 
- 			abs(l.theta - walls[0].theta) < 10 and abs(l.r-walls[0].r) > 3):
+ 			(abs(l.theta - walls[0].theta) < 10 and abs(l.r-walls[0].r) > 3):
  			walls[1] = l
  			wallDone[1] = True
  		if(not wallDone[2] and 
@@ -187,23 +198,23 @@ while(True):
 
 	print("Making sure that the best 4 walls are LONG - LONG - SHORT - SHORT")
 
-	#Ordering the walls by theta. Want a-a-b-b regardless of whether a or b corresponds to short or long
-	smallestThetaDifference = 360
-	smallestThetaDifferenceIndex = 1
-	for i in range(1, 4):
-		tempDiff = abs(walls[i].theta - walls[0].theta)
-		if(tempDiff>180):
-			tempDiff = abs(tempDiff - 360)
-		#print("tempDiff for index: "+str(i) +" is: "+str(tempDiff))
-		if(tempDiff < smallestThetaDifference):
-			smallestThetaDifference = tempDiff
-			smallestThetaDifferenceIndex = i
+	# #Ordering the walls by theta. Want a-a-b-b regardless of whether a or b corresponds to short or long
+	# smallestThetaDifference = 360
+	# smallestThetaDifferenceIndex = 1
+	# for i in range(1, 4):
+	# 	tempDiff = abs(walls[i].theta - walls[0].theta)
+	# 	if(tempDiff>180):
+	# 		tempDiff = abs(tempDiff - 360)
+	# 	#print("tempDiff for index: "+str(i) +" is: "+str(tempDiff))
+	# 	if(tempDiff < smallestThetaDifference):
+	# 		smallestThetaDifference = tempDiff
+	# 		smallestThetaDifferenceIndex = i
 
-	#print("smallestThetaDifferenceIndex is "+str(smallestThetaDifferenceIndex))
-	#switch wall 1 with wall that has theta closest to wall0
-	tempWall = walls[smallestThetaDifferenceIndex]
-	walls[smallestThetaDifferenceIndex] = walls[1]
-	walls[1] = tempWall
+	# #print("smallestThetaDifferenceIndex is "+str(smallestThetaDifferenceIndex))
+	# #switch wall 1 with wall that has theta closest to wall0
+	# tempWall = walls[smallestThetaDifferenceIndex]
+	# walls[smallestThetaDifferenceIndex] = walls[1]
+	# walls[1] = tempWall
 
 	bestWallsDistance = abs(walls[0].r -  walls[1].r) 
 	if(bestWallsDistance < 1.2*ARENA_HEIGHT and bestWallsDistance > 0.8*ARENA_HEIGHT):
@@ -261,8 +272,13 @@ while(True):
 		latest_corners.LF_corner = [int(corners[3][1]), int(corners[3][2])]
 		latest_corners.RF_corner = [int(corners[2][1]), int(corners[2][2])]
 
-	print("Returning: LR=" +str(latest_corners.LR_corner) +", RR=" +str(latest_corners.RR_corner)
-		+ ", LF=" +str(latest_corners.LF_corner) + ", RF=" +str(latest_corners.RF_corner))
+	#print("Returning: LR=" +str(latest_corners.LR_corner) +", RR=" +str(latest_corners.RR_corner)
+	#	+ ", LF=" +str(latest_corners.LF_corner) + ", RF=" +str(latest_corners.RF_corner))
+	print("self.insertValueInOccupancyGrid("+str(latest_corners.LR_corner[0])+","+str(latest_corners.LR_corner[1])+",100)")
+	print("self.insertValueInOccupancyGrid("+str(latest_corners.RR_corner[0])+","+str(latest_corners.RR_corner[1])+",100)")
+	print("self.insertValueInOccupancyGrid("+str(latest_corners.LF_corner[0])+","+str(latest_corners.LF_corner[1])+",100)")
+	print("self.insertValueInOccupancyGrid("+str(latest_corners.RF_corner[0])+","+str(latest_corners.RF_corner[1])+",100)")
+
 	cornersPub.publish(latest_corners)
 	if(ranOnce):
 		time.sleep(SLEEP_TIME_SECS)
