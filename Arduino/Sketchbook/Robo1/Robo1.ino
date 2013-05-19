@@ -220,7 +220,8 @@ void loop()
   if (abs(linSpeed) <= LIN_STOP_THRESH && abs(angSpeed) <= ANG_STOP_THRESH)    //No linear; No Angular
     {stopAll();}
   else if(abs(linSpeed) <= LIN_STOP_THRESH)    //Angular but no linear
-    {turnOnSpot();}
+    if (suspPos < SUSP_INTERFERENCE_LIMIT) // only in travelling mode
+      {{turnOnSpot();}}
   else if(abs(angSpeed) <= ANG_STOP_THRESH)   //Linear but no angular
     {goStraight();}
   else                  //general combo of linear and angular
