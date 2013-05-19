@@ -1,0 +1,17 @@
+Software todo
+
+set up video feed
+optimize corner_detector
+improve comms feedback
+	look into SSH datarates
+	measure data rates in general
+in custom nav, choose direction of rotation based on minimizing amount of turning
+
+
+
+while loop to keep updating goal
+dump method
+wrapper to do whole con-ops a couple times
+	ideally use a timer to plan based on elapsed time
+test and implement intial backup method
+put timeouts in while loops

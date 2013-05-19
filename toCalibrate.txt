@@ -5,6 +5,27 @@ point to spin before dumping
 constants in setWheelSpeed in robo1.ino
 
 
+
+
+
+-----------
+
+init rotation time
+init rotation speed
+frequencies
+nag angle next goal threshold
+goto tolerances
+arduino code m/s speed calibration 
+add high level iteration in goTo
+package up function spinToAngle(hectorAngle)
+	implement direction of spinning choice here
+auger increment speed
+geometry of mining circle to fit in mining area and cater to constraint
+choose distances to lunabin
+
+backup speed (currently nav speed)
+
+
 ----------NAVIGATION----------
 
 base_local_planner
