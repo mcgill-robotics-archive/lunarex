@@ -55,6 +55,9 @@ START_X = ARENA_WIDTH/2 	#middle of lunarena width
 START_Y = ARENA_LENGTH - 2*DIG_RADIUS - 0.4	#offset from far wall by digCircle and safety factor
 START_ANG = -90.0 	#set the heading to face right
 DIG_SPEED = 0.2 #m/s linear component of velocity - free to choose it to maximize flow rate and avoid choking; ang speed with accomodate
+FINAL_LAP_TIME_START = 3*60 #If less than this many seconds remaining, keep digging
+FINAL_LAP_TIME_END = 60 #approx time remaining to get back and dump
+
 
 #dumping
 BUCKET_LIFT_TIME = 5
@@ -160,7 +163,6 @@ def excavate():
 	#-- turn on auger
 	
 	# COMMENT OUT AUGER COMMAND FOR SAFETY!!!
-
 	#setAugerSpeed(255)	#call custom method
 	
 	#-- lower suspension to appropriate height
@@ -187,6 +189,9 @@ def excavate():
 		if hector_heading_deg > -110 and hector_heading_deg < -90 and not alreadyIncremented:
 			circlesCompleted += 1
 			alreadyIncremented = True
+			if elapsedTime('remaining') < FINAL_LAP_TIME_START and elapsedTime('remaining') > FINAL_LAP_TIME_END:
+				circlesCompleted -=1
+				#if theres not enough time to do 2 trips, but enough time to keep digging - keep digging
 		if hector_heading_deg > -50 and hector_heading_deg < 0:
 			alreadyIncremented = False	#reset
 
@@ -470,14 +475,12 @@ mapHeight = 2000
 print("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
 		+ ", LF=" +str(LF_corner) + ", RF=" +str(RF_corner))
 
-#goTo(ARENA_WIDTH/2.0, ARENA_LENGTH*0.66, 0)
-goTo(START_X, START_Y, 0)
+while True	# dig indefinately	
+	
+	#EXCAVATE	
+	goTo(START_X, START_Y, 0)
+	excavate()
 
-#EXCAVATE
-excavate()
-
-#Return home and dump
-
-goTo(MC_WIDTH/2.0, 0.9, 90)	#need to calibrate y position so as not to bump into wall or obstacle
-
-dump()
+	#Return home and dump
+	goTo(MC_WIDTH/2.0, 0.9, 90)	#need to calibrate y position so as not to bump into wall or obstacle
+	dump()
