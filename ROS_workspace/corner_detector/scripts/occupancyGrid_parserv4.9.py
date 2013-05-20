@@ -21,11 +21,10 @@ BIGNUMBER = 1000
 ARENA_WIDTH = 3.88
 ARENA_HEIGHT = 7.38
 SLEEP_TIME_SECS = 30
-NUMBER_OF_POTENTIAL_WALLS = 50
+NUMBER_OF_POTENTIAL_WALLS = 100
 
-#bucket thresholds
-tThresh = 5 #absolute: 2de
-rThresh = 1.0 #absolute: 8% R difference between 2 walls max in 1 bucket
+WALL_THETA_THRESH = 3
+WALL_R_THRESH = 0.4
 
 #TOPIC PUBLISHED
 latest_corners = Corners()
@@ -48,14 +47,6 @@ class Line(object):
  	def __init__(self, r, theta):
 		self.theta = float(theta)
 		self.r = float(r)  
-		
-		#y=mx+b representation
-		if(math.sin(math.radians(theta))==0):
-			self.m = BIGNUMBER
-			self.b=BIGNUMBER
-		else:
-			self.m = -(math.cos(math.radians(theta))/math.sin(math.radians(theta)))
-			self.b = r/math.sin(math.radians(theta))
 		self.points = []
 		
 	def __str__(self):
@@ -66,23 +57,6 @@ class Point(object):
 	def __init__(self, x, y):
 		self.x = x
 		self.y = y
-
-def sameRBucket(a, b): #are a & b within rThresh% of eachother?
-	if((a==0 and b<rThresh and b>-rThresh) or (b==0 and a<rThresh and a>-rThresh)):
-		 return True
-	if(abs(b-a) < rThresh):
-		return True
-	return False
-
-def sameTBucket(t1, t2): #are t1&t2 within tThresh of eachother?
-	if(abs(t1-t2)<=tThresh):
-		return True
-	if(t1+360-t2 <= tThresh or t2+360-t1<=tThresh):
-		return True
-	return False	
-
-def sameBuckets(l1, l2):
-	return (sameRBucket(l1.r, l2.r) and sameTBucket(l1.theta, l2.theta))
 	
 rospy.init_node('corner_detector')
 
@@ -114,7 +88,7 @@ while(True):
 	# else:
 	# 	Rres = mapRes
 
-	Rres = mapRes*2
+	Rres = mapRes*4
 
 	mapWidth = latest_corners.width
 	mapHeight = latest_corners.height
@@ -138,13 +112,13 @@ while(True):
 				pointCount +=1
 				for t in range(0, Trank):	
 					lineR = i*mapRes*math.cos(math.radians(t)) + j*mapRes*math.sin(math.radians(t))
-						if(lineR<0):
-							t+=180
-							t=t%360
-							lineR=abs(lineR)
-						if(H[int(lineR/Rres)][t])==0:
-							H[int(lineR/Rres)][t]=Line(lineR, t)
-						H[int(lineR/Rres)][t].points.append(Point(i,j))
+					if(lineR<0):
+						t+=180
+						t=t%360
+						lineR=abs(lineR)
+					if(H[int(lineR/Rres)][t])==0:
+						H[int(lineR/Rres)][t]=Line(lineR, t)
+					H[int(lineR/Rres)][t].points.append(Point(i,j))
 
 	print("Started placing hough matrix lines into Line objects")
 
@@ -165,27 +139,65 @@ while(True):
 		print l
 
 	#DEFINE WALLS AND WALL BUCKETS
-	walls=[sortedLines[0],sortedLines[1],sortedLines[2],sortedLines[3]] 
-		
+	walls=[sortedLines[0],-1,-1,-1] 
+	bestWallsAreLong = True	
+
  	print("fill walls & wall buckets")
 
 	bestTheta = BIGNUMBER
 	wallDone = [True, False, False, False]
-	for l in sortedLines[:NUMBER_OF_POTENTIAL_WALLS]: #order of decreasing points/line
- 		if(not wallDone[1] and 
- 			(abs(l.theta - walls[0].theta) < 10 and abs(l.r-walls[0].r) > 3)):
- 			walls[1] = l
- 			wallDone[1] = True
- 		if(not wallDone[2] and 
- 			(abs(l.theta - (walls[0].theta - 90)) < 10 or 
- 				abs(l.theta - ((walls[0].theta + 90) % 360)) < 10)):
-			wallDone[2]=True
- 			walls[2]=l
- 		if wallDone[2] and (not wallDone[3]) and (abs(l.theta - walls[2].theta) < 10 and abs(l.r-walls[2].r) > 3):
- 			walls[3]=l
- 			wallDone[3]=True
- 		if(wallDone[1] and wallDone[2] and wallDone[3]):
- 			break
+	for i in range(0, 2):
+		for l in sortedLines[:NUMBER_OF_POTENTIAL_WALLS]: #order of decreasing points/line
+	 		print("Evaluating line: " +str(l))
+	 		if(not wallDone[1]):
+	 			if(abs(l.theta - walls[0].theta) < WALL_THETA_THRESH or abs(abs(l.theta - walls[0].theta) - 180) < WALL_THETA_THRESH):
+	 			#we have a parallel wall. Is it within arena width or length?
+	 				tempR = l.r
+	 				if(l.theta > 180):
+	 					tempR = - tempR
+	 				if(walls[0].theta > 180):
+	 					tempR = - tempR
+	 				rDiff = abs(walls[0].r - tempR)
+	 				if(rDiff > ARENA_WIDTH-WALL_R_THRESH and rDiff < ARENA_WIDTH+WALL_R_THRESH):
+	 					#wall[0] & l are the long walls
+	 					print("Line " +str(l)+ "getting set as wall1")
+	 					walls[1]=l
+	 					wallDone[1]=True
+	 					bestWallsAreLong= True
+	 				elif(rDiff > ARENA_HEIGHT-WALL_R_THRESH and rDiff < ARENA_HEIGHT+WALL_R_THRESH):
+	 					#wall[0] & l are the short walls
+	 					print("Line " +str(l)+ "getting set as wall1")
+	 					walls[1]=l
+	 					wallDone[1]=True
+	 					bestWallsAreLong = False
+	 		if(not wallDone[2]):
+	 			if(abs(l.theta - walls[0].theta) > 90 - WALL_THETA_THRESH and abs(l.theta - walls[0].theta) < 90 + WALL_THETA_THRESH
+	 				or (abs(l.theta - walls[0].theta) > 270 - WALL_THETA_THRESH and abs(l.theta - walls[0].theta) < 270 + WALL_THETA_THRESH)):
+	 				#both thetas on same 1/2 circle case
+					wallDone[2]=True
+	 				walls[2]=l
+					print("Line " +str(l) +"getting set as wall2")
+	 		elif wallDone[2] and not wallDone[3] :
+	 			if(abs(l.theta - walls[2].theta) < WALL_THETA_THRESH or abs(abs(l.theta - walls[2].theta) - 180) < WALL_THETA_THRESH):
+	 				tempR = l.r
+	 				if(l.theta > 180):
+	 					tempR = - tempR
+	 				if(walls[2].theta > 180):
+	 					tempR = - tempR
+					rDiff = abs(walls[2].r - tempR)
+					if(rDiff > ARENA_WIDTH-WALL_R_THRESH and rDiff < ARENA_WIDTH+WALL_R_THRESH):
+						#wall[0] & l are the long walls
+						walls[3]=l
+						wallDone[3]=True
+						print("Line " +str(l) +"getting set as wall3")
+					elif(rDiff > ARENA_HEIGHT-WALL_R_THRESH and rDiff < ARENA_HEIGHT+WALL_R_THRESH):
+						#wall[0] & l are the short walls
+						walls[3]=l
+						wallDone[3]=True
+						print("Line " +str(l) +"getting set as wall3")
+
+	 		if(wallDone[1] and wallDone[2] and wallDone[3]):
+	 			break
 
 	print("done getting walls. Right now we have:")
 	for i in range(0,4):
@@ -193,26 +205,7 @@ while(True):
 
 	print("Making sure that the best 4 walls are LONG - LONG - SHORT - SHORT")
 
-	# #Ordering the walls by theta. Want a-a-b-b regardless of whether a or b corresponds to short or long
-	# smallestThetaDifference = 360
-	# smallestThetaDifferenceIndex = 1
-	# for i in range(1, 4):
-	# 	tempDiff = abs(walls[i].theta - walls[0].theta)
-	# 	if(tempDiff>180):
-	# 		tempDiff = abs(tempDiff - 360)
-	# 	#print("tempDiff for index: "+str(i) +" is: "+str(tempDiff))
-	# 	if(tempDiff < smallestThetaDifference):
-	# 		smallestThetaDifference = tempDiff
-	# 		smallestThetaDifferenceIndex = i
-
-	# #print("smallestThetaDifferenceIndex is "+str(smallestThetaDifferenceIndex))
-	# #switch wall 1 with wall that has theta closest to wall0
-	# tempWall = walls[smallestThetaDifferenceIndex]
-	# walls[smallestThetaDifferenceIndex] = walls[1]
-	# walls[1] = tempWall
-
-	bestWallsDistance = abs(walls[0].r -  walls[1].r) 
-	if(bestWallsDistance < 1.2*ARENA_HEIGHT and bestWallsDistance > 0.8*ARENA_HEIGHT):
+	if(not bestWallsAreLong):
 		print("best walls are SHORT. Switch walls 0&1 with 2&3")
 		temp1 = walls[2]
 		temp2 = walls[3]
@@ -244,7 +237,6 @@ while(True):
 	('Corner 1', x2, y2, math.sqrt(((x2-mapWidth/2)**2 + (y2-mapHeight/2)**2))),
 	('Corner 2', x3, y3, math.sqrt(((x3-mapWidth/2)**2 + (y3-mapHeight/2)**2))),
 	('Corner 3', x4, y4, math.sqrt(((x4-mapWidth/2)**2 + (y4-mapHeight/2)**2)))]
-
 	# sort array by distance
 	corners.sort(key=lambda corner: corner[3])
 
