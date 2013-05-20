@@ -261,10 +261,10 @@ while(True):
 
 	#print("Returning: LR=" +str(latest_corners.LR_corner) +", RR=" +str(latest_corners.RR_corner)
 	#	+ ", LF=" +str(latest_corners.LF_corner) + ", RF=" +str(latest_corners.RF_corner))
-	print("self.insertValueInOccupancyGrid("+str(latest_corners.LR_corner[0])+","+str(latest_corners.LR_corner[1])+",100)")
-	print("self.insertValueInOccupancyGrid("+str(latest_corners.RR_corner[0])+","+str(latest_corners.RR_corner[1])+",100)")
-	print("self.insertValueInOccupancyGrid("+str(latest_corners.LF_corner[0])+","+str(latest_corners.LF_corner[1])+",100)")
-	print("self.insertValueInOccupancyGrid("+str(latest_corners.RF_corner[0])+","+str(latest_corners.RF_corner[1])+",100)")
+	print("\tself.insertValueInOccupancyGrid("+str(latest_corners.LR_corner[0])+","+str(latest_corners.LR_corner[1])+",100)")
+	print("\tself.insertValueInOccupancyGrid("+str(latest_corners.RR_corner[0])+","+str(latest_corners.RR_corner[1])+",100)")
+	print("\tself.insertValueInOccupancyGrid("+str(latest_corners.LF_corner[0])+","+str(latest_corners.LF_corner[1])+",100)")
+	print("\tself.insertValueInOccupancyGrid("+str(latest_corners.RF_corner[0])+","+str(latest_corners.RF_corner[1])+",100)")
 
 	cornersPub.publish(latest_corners)
 	if(ranOnce):
