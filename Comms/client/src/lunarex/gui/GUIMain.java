@@ -30,10 +30,7 @@ import javax.swing.JOptionPane;
 
 import net.java.games.input.Controller;
 
-import joystick.JFrameWindow;
-import joystick.JInputJoystick;
-import joystick.JInputJoystickTest;
-import joystick.JoystickTest;
+import lunarex.controller.joystick.*;
 
 import lunarex.input.KeyboardInput;
 import lunarex.network.Client;
@@ -413,7 +410,7 @@ public class GUIMain extends JFrame {
 		if(client!=null&&client.receive()!=null)
 			g2d.drawString(""+client.getY(), x+COLUMN_WIDTH,y);
 		y+=LINE_SPACING;
-		g2d.drawString("w: ", x, y);
+		g2d.drawString("theta: ", x, y);
 		if(client!=null&&client.receive()!=null)
 			g2d.drawString(""+client.getTheta(), x+COLUMN_WIDTH,y);
 	}
