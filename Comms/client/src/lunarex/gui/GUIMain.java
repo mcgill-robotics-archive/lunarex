@@ -28,10 +28,15 @@ import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import lunarex.controller.joystick.*;
+import net.java.games.input.Controller;
+
+import joystick.JFrameWindow;
+import joystick.JInputJoystick;
+import joystick.JInputJoystickTest;
+import joystick.JoystickTest;
+
 import lunarex.input.KeyboardInput;
 import lunarex.network.Client;
-import net.java.games.input.Controller;
 
 public class GUIMain extends JFrame {
 
@@ -50,7 +55,7 @@ public class GUIMain extends JFrame {
 	//String ipAdressString = "142.157.43.34";
 	
 	//FOR MACBOOK AIR ON OUR NETWORK
-	String ipAdressString = "192.168.1.103";
+	String ipAdressString = "192.168.1.118";
 
 	
 	//FOR LOCALHOST
