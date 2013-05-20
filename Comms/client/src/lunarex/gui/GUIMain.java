@@ -400,7 +400,7 @@ public class GUIMain extends JFrame {
 		y+=LINE_SPACING*2;
 		g2d.drawString("----INCOMING FROM SERVER ----", x, y); 
 		y+=LINE_SPACING;
-		g2d.drawString("slam_out_pose:", x, y);
+		g2d.drawString("SLAM_OUT_POSE:", x, y);
 		y+=LINE_SPACING;
 		g2d.drawString("x: ", x, y);
 		if(client!=null&&client.receive()!=null)
@@ -413,6 +413,42 @@ public class GUIMain extends JFrame {
 		g2d.drawString("theta: ", x, y);
 		if(client!=null&&client.receive()!=null)
 			g2d.drawString(""+client.getTheta(), x+COLUMN_WIDTH,y);
+		y+=LINE_SPACING;
+		y+=LINE_SPACING;
+		g2d.drawString("CORNERS:", x, y);
+		y+=LINE_SPACING;
+		g2d.drawString("LR_corner: ", x, y);
+		if(client!=null&&client.receive()!=null)
+			g2d.drawString(""+client.getCornerStatus("LR_corner"), x+COLUMN_WIDTH,y);
+		y+=LINE_SPACING;
+		g2d.drawString("RR_corner: ", x, y);
+		if(client!=null&&client.receive()!=null)
+			g2d.drawString(""+client.getCornerStatus("RR_corner"), x+COLUMN_WIDTH,y);
+		y+=LINE_SPACING;
+		g2d.drawString("LF_corner: ", x, y);
+		if(client!=null&&client.receive()!=null)
+			g2d.drawString(""+client.getCornerStatus("LF_corner"), x+COLUMN_WIDTH,y);
+		y+=LINE_SPACING;
+		g2d.drawString("RF_corner: ", x, y);
+		if(client!=null&&client.receive()!=null)
+			g2d.drawString(""+client.getCornerStatus("RF_corner"), x+COLUMN_WIDTH,y);
+		y+=LINE_SPACING;
+		g2d.drawString("mapRes: ", x, y);
+		if(client!=null&&client.receive()!=null)
+			g2d.drawString(""+client.getRes(), x+COLUMN_WIDTH,y);
+		y+=LINE_SPACING;
+		g2d.drawString("mapWidth: ", x, y);
+		if(client!=null&&client.receive()!=null)
+			g2d.drawString(""+client.getWidth(), x+COLUMN_WIDTH,y);
+		y+=LINE_SPACING;
+		g2d.drawString("mapHeight: ", x, y);
+		if(client!=null&&client.receive()!=null)
+			g2d.drawString(""+client.getHeight(), x+COLUMN_WIDTH,y);
+		y+=LINE_SPACING;
+		g2d.drawString("startedLeft: ", x, y);
+		if(client!=null&&client.receive()!=null)
+			g2d.drawString(""+client.getStartedLeft(), x+COLUMN_WIDTH,y);
+		y+=LINE_SPACING;
 	}
 	
 	private void keyCom(int key, String stopSign) {

@@ -14,6 +14,7 @@ import roslib; roslib.load_manifest('lx_server')
 import rospy
 from std_msgs.msg import *
 from geometry_msgs.msg import *		#mainly use Twist to publish velocities
+from corner_detector.msg import Corners
 
 HOST=''
 PORT=5902
@@ -28,6 +29,15 @@ auger_Speed_pub = None
 
 #Subscriber variables
 latestPS = PoseStamped()
+latestCorner = Corners()
+latest_corners.LR_corner = [-1, -1]
+latest_corners.RR_corner = [-1, -1]
+latest_corners.LF_corner = [-1, -1]
+latest_corners.RF_corner = [-1, -1]
+latest_corners.resolution = -1
+latest_corners.width = -1
+latest_corners.height = -1
+latest_corners.left = True 
 
 #global_x = 0.0
 
@@ -36,11 +46,19 @@ COM='/dev/ttyACM0'
 BAUD=115200
 
 #Data package sent fomr this server to the client
-class PosData:
-    def __init__(self,x,y,theta):
+class Data:
+    def __init__(self,x,y,theta, LR_corner, RR_corner, LF_corner, RF_corner, mapRes, mapWidth, mapHeight, startedLeft):
         self.x=x
         self.y=y
         self.theta=theta
+        self.LR_corner = LR_corner
+        self.RR_corner = RR_corner
+        self.LF_corner = LF_corner
+        self.RF_corner = RF_corner
+        self.mapRes = resolution
+        self.mapWidth = width
+        self.mapHeight = height
+        self.startedLeft = left
 
 #Velocity message
 class Velocity:
@@ -53,10 +71,15 @@ def posCallback(data):
         global latestPS
         latestPS = data;
 
+def corners_callback(data):
+        global latestCorner
+        latestCorner = data
+
 class Handler(SocketServer.BaseRequestHandler):
     def setup(self):
         global latestPS
-        self.currentPos = PosData(latestPS.pose.position.x, latestPS.pose.position.y, latestPS.pose.orientation.w)
+        global latestCorner
+        self.currentData = Data(latestPS.pose.position.x, latestPS.pose.position.y, coord.quatToDegrees(latestPS),latestCorner.LR_corner, latestCorner.RR_corner, latestCorner. LF_corner, latestCorner.RF_corner, latestCorner.mapRes, latestCorner.mapWidth, latestCorner.mapHeight,latestCorner.startedLeft)
 
         self.initialTime = int(time.time()*1000.0)
         self.currentTime = int(time.time()*1000.0)
@@ -73,7 +96,6 @@ class Handler(SocketServer.BaseRequestHandler):
 
         while(True):
 
-#            self.currentPos = PosData(latestPose.position.x,latestPose.position.y,latestPose.orientation.w)
             self.currentTime = int(time.time()*1000.0)
             try:
                 self.datalist = self.request.recv(6)
@@ -120,8 +142,9 @@ class Handler(SocketServer.BaseRequestHandler):
 		    # DO NOT DELETE! USED FOR FEEDBACK MECHANISM
             	    if((self.currentTime-self.initialTime) > 500):
                         global latestPS
-                        self.currentPos = PosData(latestPS.pose.position.x, latestPS.pose.position.y, coord.quatToDegrees(latestPS))
-                        dataPacket = json.dumps(vars(self.currentPos),sort_keys=True,indent=4)
+                        global latestCorner
+                        self.currentData = Data(latestPS.pose.position.x, latestPS.pose.position.y, coord.quatToDegrees(latestPS),latestCorner.LR_corner, latestCorner.RR_corner, latestCorner. LF_corner, latestCorner.RF_corner, latestCorner.mapRes, latestCorner.mapWidth, latestCorner.mapHeight,latestCorner.startedLeft)
+                        dataPacket = json.dumps(vars(self.currentData),sort_keys=True,indent=4)
                     	self.request.send(dataPacket)
                     	self.initialTime = self.currentTime
 #                        print latestPose.position.x
@@ -167,11 +190,12 @@ if __name__ == "__main__":
 
     #Initiate ros node and create publisher
     pub_vel = rospy.Publisher("cmd_vel", geometry_msgs.msg.Twist)	# publish velocities
-    dump_LA_pub = rospy.Publisher("dump_pos", std_msgs.msg.UInt8)	# pulish dumping info
+    dump_LA_pub = rospy.Publisher("dump_pos", std_msgs.msg.UInt8)	# publish dumping info
     susp_LA_pub = rospy.Publisher("susp_pos", std_msgs.msg.UInt8)	# publish suspension info
     door_LA_pub = rospy.Publisher("door_pos", std_msgs.msg.UInt8)
     auger_Speed_pub = rospy.Publisher("auger_speed", std_msgs.msg.UInt8)
     rospy.Subscriber("slam_out_pose", PoseStamped, posCallback)
+    rospy.Subscriber("corners", Corners, corners_callback)
     rospy.init_node(NODE_NAME)
 
     # terminate with Ctrl-C

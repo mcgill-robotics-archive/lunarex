@@ -74,7 +74,57 @@ public class Client extends Thread {
 			return 0.0f;
 		}
 	}
+	public String getCornerStatus(String corner) { 
+		int startingIndex = receivedData.indexOf(corner) + 12;
+		int endingIndex = receivedData.indexOf(',', startingIndex);
+		String cornerString = receivedData.substring(startingIndex, endingIndex);
+		return cornerString;
+	}
+	
+	public float getRes() {
+		int startingIndex = receivedData.indexOf("mapRes") + 9;
+		int endingIndex = receivedData.indexOf(',', startingIndex);
+		String s = receivedData.substring(startingIndex, endingIndex);
+		try{
+			return Float.parseFloat(s);
+		} catch (NumberFormatException e){
+			return 0.0f;
+		}
+	}
 
+	public int getWidth() {
+		int startingIndex = receivedData.indexOf("mapWidth") + 11;
+		int endingIndex = receivedData.indexOf(',', startingIndex);
+		String s = receivedData.substring(startingIndex, endingIndex);
+		try{
+			return Integer.parseInt(s);
+		} catch (NumberFormatException e){
+			return 0;
+		}
+	}
+	
+	public int getHeight() {
+		int startingIndex = receivedData.indexOf("mapHeight") + 12;
+		int endingIndex = receivedData.indexOf(',', startingIndex);
+		String s = receivedData.substring(startingIndex, endingIndex);
+		try{
+			return Integer.parseInt(s);
+		} catch (NumberFormatException e){
+			return 0;
+		}
+	}
+	
+	public boolean getStartedLeft() {
+		int startingIndex = receivedData.indexOf("startedLeft") + 14;
+		int endingIndex = receivedData.indexOf(',', startingIndex);
+		String s = receivedData.substring(startingIndex, endingIndex);
+		try{
+			return Boolean.parseBoolean(s);
+		} catch (NumberFormatException e){
+			return false;
+		}
+	}
+	
 	public void run() {
 		try {
 			System.out.println("Connecting to " + this.IP + " on port "
