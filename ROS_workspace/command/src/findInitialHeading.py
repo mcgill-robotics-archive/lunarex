@@ -17,7 +17,7 @@ def scanCallback(data):
 def getQuadrant(self):
 	while(latestScan == 0):
 		print("waiting for a scan")
-		time.sleep(2)
+		time.sleep(1)
 	'''
 		Assume we start in the bottom left corner for this description. The code is general and would work in either corner
 		Our orientation could be in one of 4 quadrants
@@ -29,9 +29,9 @@ def getQuadrant(self):
 	frontDistance = latestScan.ranges[len(latestScan.ranges)/2]
 	leftDistance = latestScan.ranges[-1]
 
-	print( "lfr: " +str(leftDistance) + ' ' + str(frontDistance) + ' ' + str(rightDistance))
+	#print( "lfr: " +str(leftDistance) + ' ' + str(frontDistance) + ' ' + str(rightDistance))
 
-	THRESHOLD = 3.0 # meter
+	THRESHOLD = 5.5 # meter
 
 	if (frontDistance > THRESHOLD):
 		#facing away from walls, Quadtant 1

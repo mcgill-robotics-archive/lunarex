@@ -469,8 +469,11 @@ void miningAckerman()
     LR_motor_dir = 1;
     RR_motor_dir = 1;
   }
-
-
+  //scale for slow mining
+  //linSpeed /= 5;
+  //angSpeed /= 5;
+  angSpeed = constrain(angSpeed, -2*linSpeed, 2*linSpeed);  //ackerman radius always greater than 0.5
+  
   //Ackerman steering is characterised by setting wheel angles and speeds. Do general computations first:  
   float ackRadius = abs(linSpeed/angSpeed);    
   //Angle  
@@ -604,7 +607,7 @@ void setWheelSpeed() {
 
   float A = 11.7718918;
   float B = -3.81049;
-  
+  /*
   if (suspPos > SUSP_INTERFERENCE_LIMIT)  //go slower in mining mode
   {
     LF_motor_cmd = LF_motor_cmd/5;
@@ -612,7 +615,7 @@ void setWheelSpeed() {
     RR_motor_cmd = RR_motor_cmd/5;
     LR_motor_cmd = LR_motor_cmd/5;
   }
-  
+  */
   
   LF_motor_cmd = A*LF_wheel_rpm + B;
   RF_motor_cmd = A*RF_wheel_rpm + B;

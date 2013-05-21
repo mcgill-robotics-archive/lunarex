@@ -46,7 +46,12 @@
     :reader left
     :initarg :left
     :type cl:boolean
-    :initform cl:nil))
+    :initform cl:nil)
+   (area
+    :reader area
+    :initarg :area
+    :type cl:integer
+    :initform 0))
 )
 
 (cl:defclass Corners (<Corners>)
@@ -96,6 +101,11 @@
 (cl:defmethod left-val ((m <Corners>))
   (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader corner_detector-msg:left-val is deprecated.  Use corner_detector-msg:left instead.")
   (left m))
+
+(cl:ensure-generic-function 'area-val :lambda-list '(m))
+(cl:defmethod area-val ((m <Corners>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader corner_detector-msg:area-val is deprecated.  Use corner_detector-msg:area instead.")
+  (area m))
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <Corners>) ostream)
   "Serializes a message object of type '<Corners>"
   (cl:let ((__ros_arr_len (cl:length (cl:slot-value msg 'LR_corner))))
@@ -152,6 +162,10 @@
   (cl:write-byte (cl:ldb (cl:byte 8 16) (cl:slot-value msg 'height)) ostream)
   (cl:write-byte (cl:ldb (cl:byte 8 24) (cl:slot-value msg 'height)) ostream)
   (cl:write-byte (cl:ldb (cl:byte 8 0) (cl:if (cl:slot-value msg 'left) 1 0)) ostream)
+  (cl:write-byte (cl:ldb (cl:byte 8 0) (cl:slot-value msg 'area)) ostream)
+  (cl:write-byte (cl:ldb (cl:byte 8 8) (cl:slot-value msg 'area)) ostream)
+  (cl:write-byte (cl:ldb (cl:byte 8 16) (cl:slot-value msg 'area)) ostream)
+  (cl:write-byte (cl:ldb (cl:byte 8 24) (cl:slot-value msg 'area)) ostream)
 )
 (cl:defmethod roslisp-msg-protocol:deserialize ((msg <Corners>) istream)
   "Deserializes a message object of type '<Corners>"
@@ -218,6 +232,10 @@
     (cl:setf (cl:ldb (cl:byte 8 16) (cl:slot-value msg 'height)) (cl:read-byte istream))
     (cl:setf (cl:ldb (cl:byte 8 24) (cl:slot-value msg 'height)) (cl:read-byte istream))
     (cl:setf (cl:slot-value msg 'left) (cl:not (cl:zerop (cl:read-byte istream))))
+    (cl:setf (cl:ldb (cl:byte 8 0) (cl:slot-value msg 'area)) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 8) (cl:slot-value msg 'area)) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 16) (cl:slot-value msg 'area)) (cl:read-byte istream))
+    (cl:setf (cl:ldb (cl:byte 8 24) (cl:slot-value msg 'area)) (cl:read-byte istream))
   msg
 )
 (cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<Corners>)))
@@ -228,16 +246,16 @@
   "corner_detector/Corners")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<Corners>)))
   "Returns md5sum for a message object of type '<Corners>"
-  "939ad33e83c6aaa3351a308edd81ceb9")
+  "6fa23f0f1b0bdbc6a195e1d2ebdf4067")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'Corners)))
   "Returns md5sum for a message object of type 'Corners"
-  "939ad33e83c6aaa3351a308edd81ceb9")
+  "6fa23f0f1b0bdbc6a195e1d2ebdf4067")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<Corners>)))
   "Returns full string definition for message of type '<Corners>"
-  (cl:format cl:nil "uint32[] LR_corner~%uint32[] RR_corner~%uint32[] LF_corner~%uint32[] RF_corner~%float32 resolution~%uint32 width~%uint32 height~%bool left~%~%"))
+  (cl:format cl:nil "uint32[] LR_corner~%uint32[] RR_corner~%uint32[] LF_corner~%uint32[] RF_corner~%float32 resolution~%uint32 width~%uint32 height~%bool left~%uint32 area~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'Corners)))
   "Returns full string definition for message of type 'Corners"
-  (cl:format cl:nil "uint32[] LR_corner~%uint32[] RR_corner~%uint32[] LF_corner~%uint32[] RF_corner~%float32 resolution~%uint32 width~%uint32 height~%bool left~%~%"))
+  (cl:format cl:nil "uint32[] LR_corner~%uint32[] RR_corner~%uint32[] LF_corner~%uint32[] RF_corner~%float32 resolution~%uint32 width~%uint32 height~%bool left~%uint32 area~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <Corners>))
   (cl:+ 0
      4 (cl:reduce #'cl:+ (cl:slot-value msg 'LR_corner) :key #'(cl:lambda (ele) (cl:declare (cl:ignorable ele)) (cl:+ 4)))
@@ -248,6 +266,7 @@
      4
      4
      1
+     4
 ))
 (cl:defmethod roslisp-msg-protocol:ros-message-to-list ((msg <Corners>))
   "Converts a ROS message object to a list"
@@ -260,4 +279,5 @@
     (cl:cons ':width (width msg))
     (cl:cons ':height (height msg))
     (cl:cons ':left (left msg))
+    (cl:cons ':area (area msg))
 ))
