@@ -215,7 +215,8 @@ void setup()
 
 unsigned int count = 0;  //count loops for timeout
 void loop()
-{ 
+{
+  
   // ===== Driving and Steering ======
   if (abs(linSpeed) <= LIN_STOP_THRESH && abs(angSpeed) <= ANG_STOP_THRESH)    //No linear; No Angular
     {stopAll();}
@@ -471,8 +472,7 @@ void miningAckerman()
     RR_motor_dir = 1;
   }
   //scale for slow mining
-  //linSpeed /= 5;
-  //angSpeed /= 5;
+  
   angSpeed = constrain(angSpeed, -2*linSpeed, 2*linSpeed);  //ackerman radius always greater than 0.5
   
   //Ackerman steering is characterised by setting wheel angles and speeds. Do general computations first:  
