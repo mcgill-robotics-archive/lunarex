@@ -600,20 +600,18 @@ void setWheelAngle()
 }
 
 void setWheelSpeed() {
-  //THESE CALIBRATION CONSTANTS NEED TO BE BETTER DOCUMENTED!!
-  //I think they were determined on wheels that are floating in the air to map rpm to a 0-255 command
-  //I think the process of coming up with these constants is in google drive somewhere, in the second sheet of a spreadsheet
-  //-Nick
+//this calibration was done on May 21 by Nick and JS in google drive: MAxonMappingFunction
+//trendline done in externalspreadsheet
 
-  float A = 0.0847;
-  float B = 0.3161;
+  float A = 11.798;
+  float B = -3.6778;
   /*
   if (suspPos > SUSP_INTERFERENCE_LIMIT)  //go slower in mining mode
   {
-    LF_motor_cmd = LF_motor_cmd/5;
-    RF_motor_cmd = RF_motor_cmd/5;
-    RR_motor_cmd = RR_motor_cmd/5;
-    LR_motor_cmd = LR_motor_cmd/5;
+    LF_motor_cmd = LF_motor_cmd/4;
+    RF_motor_cmd = RF_motor_cmd/4;
+    RR_motor_cmd = RR_motor_cmd/4;
+    LR_motor_cmd = LR_motor_cmd/4;
   }
   */
   
