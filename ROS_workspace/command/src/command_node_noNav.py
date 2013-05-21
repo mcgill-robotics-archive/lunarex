@@ -443,13 +443,13 @@ hector_reset_pub = rospy.Publisher("syscommand", String)
 
 #--Get Initial heading and get outa there
 
-print("Moving away from walls")
-moveAwayFromWalls()
+# print("Moving away from walls")
+# moveAwayFromWalls()
 
-print("resetting hector")
-reset = String()
-reset.data = "reset"
-hector_reset_pub.publish(reset)
+# print("resetting hector")
+# reset = String()
+# reset.data = "reset"
+# hector_reset_pub.publish(reset)
 
 print("Rotating for "+str(ROTATION_TIME_SECS)+"secs to aquire map")
 currentTime = int(time.time()*1000.0)

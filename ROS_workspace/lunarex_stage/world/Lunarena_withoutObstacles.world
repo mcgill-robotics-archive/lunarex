@@ -128,7 +128,7 @@ lunabot
   # can refer to the robot by this name
   name "lunabot"
   #initial position, (then rotation?), in the x-right y-up stage coordinates
-  pose [0.97 0.75 0 220]	#starting position 1
+  pose [0.97 0.75 0 0]	#starting position 1
   #pose [2.91 0.75 0 80]	#starting position 2
   
   color "red" 
@@ -138,4 +138,4 @@ lunabot
  # ctrl "wander"  do not need this for now
  # it's supposed to make the robot wander around by I think it doesnt work for now. 
  # More research into 'stage controllers' is necessary.
-0
+)
