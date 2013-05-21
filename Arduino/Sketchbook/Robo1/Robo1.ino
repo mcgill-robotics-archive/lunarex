@@ -156,8 +156,8 @@ float LIN_STOP_THRESH = 0.1;    //any linear speed less than this will be interp
 int SUSP_INTERFERENCE_LIMIT = 50; //command sent to suspension actuators. values greater than this correspond to mining (0 travel, 255 full mine)
 float MINING_MAX_SERVO_ANGLE_FRONT = 0;
 float MINING_MAX_SERVO_ANGLE_REAR = 40;
-float TRAVEL_MAX_SERVO_ANGLE_FRONT = 50;
-float TRAVEL_MAX_SERVO_ANGLE_REAR = 50;
+float TRAVEL_MAX_SERVO_ANGLE_FRONT = 80;
+float TRAVEL_MAX_SERVO_ANGLE_REAR = 80;
 
 int WATCHDOG_TIMEOUT = 5; //reset linspeed+angspeed to zero after at least this many seconds  (max number to choose here is about 45-50 seconds)
 
@@ -220,8 +220,12 @@ void loop()
   if (abs(linSpeed) <= LIN_STOP_THRESH && abs(angSpeed) <= ANG_STOP_THRESH)    //No linear; No Angular
     {stopAll();}
   else if(abs(linSpeed) <= LIN_STOP_THRESH)    //Angular but no linear
+    {
     if (suspPos < SUSP_INTERFERENCE_LIMIT) // only in travelling mode
-      {{turnOnSpot();}}
+      {
+        turnOnSpot();
+      }
+    }
   else if(abs(angSpeed) <= ANG_STOP_THRESH)   //Linear but no angular
     {goStraight();}
   else                  //general combo of linear and angular
@@ -245,7 +249,7 @@ void loop()
   setWheelAngle();  
   setWheelDirection();
   setWheelSpeed();
-  toggleMotorEnable();
+  applyMotorEnable();
   
   
   // ===== Actuators and Auger ======
@@ -277,15 +281,6 @@ void loop()
   {
     angSpeed = 0;
     linSpeed = 0;
-    //signal to operator how long this loop takes:
-    if (dumpPos == 0)
-    {
-      dumpPos = 100;
-    }
-    else
-    {
-      dumpPos = 0;
-    }
   }
     
 
@@ -474,8 +469,11 @@ void miningAckerman()
     LR_motor_dir = 1;
     RR_motor_dir = 1;
   }
-
-
+  //scale for slow mining
+  //linSpeed /= 5;
+  //angSpeed /= 5;
+  angSpeed = constrain(angSpeed, -2*linSpeed, 2*linSpeed);  //ackerman radius always greater than 0.5
+  
   //Ackerman steering is characterised by setting wheel angles and speeds. Do general computations first:  
   float ackRadius = abs(linSpeed/angSpeed);    
   //Angle  
@@ -607,21 +605,30 @@ void setWheelSpeed() {
   //I think the process of coming up with these constants is in google drive somewhere, in the second sheet of a spreadsheet
   //-Nick
 
-  float A = 11.7718918;
-  float B = -3.81049;
+  float A = 0.0847;
+  float B = 0.3161;
+  /*
+  if (suspPos > SUSP_INTERFERENCE_LIMIT)  //go slower in mining mode
+  {
+    LF_motor_cmd = LF_motor_cmd/5;
+    RF_motor_cmd = RF_motor_cmd/5;
+    RR_motor_cmd = RR_motor_cmd/5;
+    LR_motor_cmd = LR_motor_cmd/5;
+  }
+  */
   
   LF_motor_cmd = A*LF_wheel_rpm + B;
   RF_motor_cmd = A*RF_wheel_rpm + B;
   LR_motor_cmd = A*LR_wheel_rpm + B;
   RR_motor_cmd = A*RR_wheel_rpm + B;
 
-  analogWrite(LF_motor_pin, LF_wheel_rpm);
-  analogWrite(RF_motor_pin, RF_wheel_rpm);
-  analogWrite(LR_motor_pin, LR_wheel_rpm);
-  analogWrite(RR_motor_pin, RR_wheel_rpm);
+  analogWrite(LF_motor_pin, LF_motor_cmd);
+  analogWrite(RF_motor_pin, RF_motor_cmd);
+  analogWrite(LR_motor_pin, LR_motor_cmd);
+  analogWrite(RR_motor_pin, RR_motor_cmd);
 }
 
-void toggleMotorEnable()
+void applyMotorEnable()
 {
  digitalWrite(LF_motor_enable_pin, LF_motor_enable);
  digitalWrite(RF_motor_enable_pin, RF_motor_enable);

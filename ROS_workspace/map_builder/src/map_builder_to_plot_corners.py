@@ -77,10 +77,12 @@ class mapBuilder:
 
     	self.map.data = self.occupancy_grid #Change the occupancy grid to the updated one
         #with np.flip
-	self.insertValueInOccupancyGrid(684, 843, 100)
-	self.insertValueInOccupancyGrid(1169, 835, 100)
-	self.insertValueInOccupancyGrid(701, 1764, 100)
-	self.insertValueInOccupancyGrid(1185, 1755, 100)
+	self.insertValueInOccupancyGrid(828,729,100)
+	self.insertValueInOccupancyGrid(1200,1027,100)
+	self.insertValueInOccupancyGrid(226,1421,100)
+	self.insertValueInOccupancyGrid(599,1719,100)
+
+
 	self.pub.publish(self.map)
 		
 	#print self.obstacle_list

@@ -7,6 +7,7 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="LunarEx_Client/src/lunarex/controller/JInputJoystickTest"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jinput.jar"/>
+	<classpathentry kind="src" path="/test"/>
+	<classpathentry kind="lib" path="/test/jinput.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
