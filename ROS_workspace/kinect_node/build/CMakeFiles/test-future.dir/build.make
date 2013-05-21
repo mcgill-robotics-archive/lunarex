@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node
+CMAKE_SOURCE_DIR = /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build
+CMAKE_BINARY_DIR = /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build
 
 # Utility rule file for test-future.
 
@@ -57,6 +57,6 @@ CMakeFiles/test-future.dir/clean:
 .PHONY : CMakeFiles/test-future.dir/clean
 
 CMakeFiles/test-future.dir/depend:
-	cd /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles/test-future.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles/test-future.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/test-future.dir/depend
 

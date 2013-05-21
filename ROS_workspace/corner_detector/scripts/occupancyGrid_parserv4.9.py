@@ -146,7 +146,7 @@ while(True):
 
 	bestTheta = BIGNUMBER
 	wallDone = [True, False, False, False]
-	for i in range(0, 2):
+	while(not( wallDone[1] or wallDone[2] or wallDone[3])):
 		for l in sortedLines[:NUMBER_OF_POTENTIAL_WALLS]: #order of decreasing points/line
 	 		print("Evaluating line: " +str(l))
 	 		if(not wallDone[1]):
@@ -198,6 +198,8 @@ while(True):
 
 	 		if(wallDone[1] and wallDone[2] and wallDone[3]):
 	 			break
+		WALL_R_THRESH      = WALL_R_THRESH * 1.5
+		WALL_THETA_THRESH  = WALL_THETA_THRESH * 1.5
 
 	print("done getting walls. Right now we have:")
 	for i in range(0,4):
@@ -265,6 +267,18 @@ while(True):
 	print("\tself.insertValueInOccupancyGrid("+str(latest_corners.RR_corner[0])+","+str(latest_corners.RR_corner[1])+",100)")
 	print("\tself.insertValueInOccupancyGrid("+str(latest_corners.LF_corner[0])+","+str(latest_corners.LF_corner[1])+",100)")
 	print("\tself.insertValueInOccupancyGrid("+str(latest_corners.RF_corner[0])+","+str(latest_corners.RF_corner[1])+",100)")
+
+	# get the area
+	long_wall = [latest_corners.LR_corner[0] - latest_corners.LF_corner[0], latest_corners.LR_corner[1] - latest_corners.LF_corner[1]]
+	len_long_wall = math.sqrt(long_wall[0]**2 + long_wall[1]**2) * mapRes
+	short_wall = [latest_corners.LR_corner[0] - latest_corners.RR_corner[0], latest_corners.LR_corner[1] - latest_corners.RR_corner[1]]
+	len_short_wall = math.sqrt(short_wall[0]**2 + short_wall[1]**2) * mapRes
+	area = len_long_wall * len_short_wall
+
+	latest_corners.area = int(area)
+
+	print "AREA = " + str(latest_corners.area)
+
 
 	cornersPub.publish(latest_corners)
 	if(ranOnce):

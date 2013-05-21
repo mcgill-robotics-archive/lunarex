@@ -15,4 +15,6 @@
           HEIGHT
           LEFT-VAL
           LEFT
+          AREA-VAL
+          AREA
 ))
