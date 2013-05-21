@@ -27,9 +27,9 @@ void setup() {
 void loop() {
   
   analogWrite(6, 255);  //suspension actuators extended ('up') =0    retracted ('down') = 255
-  analogWrite(7, 0);  //dumpActuator retracted 'down' = 255,    up would be 0
+  analogWrite(7, 255);  //dumpActuator retracted 'down' = 255,    up would be 0
   analogWrite(8, 0);    //auger stopped
-  analogWrite(13, 255);  //door actuators retracted, 'closed' = 0      'open' = 255
+  analogWrite(13, 0);  //door actuators retracted, 'closed' = 0      'open' = 255
   
   int val = 1500 ;   //1000 is left, 1500 straight, 2000 right
   rf.writeMicroseconds(val);
