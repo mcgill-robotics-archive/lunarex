@@ -159,7 +159,7 @@ float MINING_MAX_SERVO_ANGLE_REAR = 40;
 float TRAVEL_MAX_SERVO_ANGLE_FRONT = 80;
 float TRAVEL_MAX_SERVO_ANGLE_REAR = 80;
 
-int WATCHDOG_TIMEOUT = 5; //reset linspeed+angspeed to zero after at least this many seconds  (max number to choose here is about 45-50 seconds)
+int WATCHDOG_TIMEOUT = 15; //reset linspeed+angspeed to zero after at least this many seconds  (max number to choose here is about 45-50 seconds)
 
 
 
@@ -403,6 +403,7 @@ void doAckerman()
 
 
   //Ackerman steering is characterised by setting wheel angles and speeds. Do general computations first:  
+  angSpeed = constrain(angSpeed, -2*linSpeed, 2*linSpeed);
   float ackRadius = abs(linSpeed/angSpeed);    
   //Angle  
   float innerAngle = atan((LENGTH/2.0)/(ackRadius - (WIDTH/2.0)))*180.0/PI;  //servo angle for both wheels on the inside of the turn
@@ -620,7 +621,11 @@ void setWheelSpeed() {
   LR_motor_cmd = A*LR_wheel_rpm + B;
   RR_motor_cmd = A*RR_wheel_rpm + B;
 
-  
+  LF_motor_cmd = constrain(LF_motor_cmd, 0, 255);
+  RF_motor_cmd = constrain(RF_motor_cmd, 0, 255);
+  LR_motor_cmd = constrain(LR_motor_cmd, 0, 255);
+  RR_motor_cmd = constrain(RR_motor_cmd, 0, 255);
+
 
   analogWrite(LF_motor_pin, LF_motor_cmd);
   analogWrite(RF_motor_pin, RF_motor_cmd);
