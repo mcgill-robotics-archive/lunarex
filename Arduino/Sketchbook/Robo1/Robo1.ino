@@ -150,8 +150,8 @@ int SEC_PER_MIN = 60;
 int GEAR_RATIO = 74;
 
 float TOL = 0.5;
-float ANG_STOP_THRESH = 0.2;    //any angular speed less than this will be interpreted as zero
-float LIN_STOP_THRESH = 0.1;    //any linear speed less than this will be interpreted as zero
+float ANG_STOP_THRESH = 0.05;    //any angular speed less than this will be interpreted as zero
+float LIN_STOP_THRESH = 0.05;    //any linear speed less than this will be interpreted as zero
 
 int SUSP_INTERFERENCE_LIMIT = 50; //command sent to suspension actuators. values greater than this correspond to mining (0 travel, 255 full mine)
 float MINING_MAX_SERVO_ANGLE_FRONT = 0;
@@ -619,6 +619,8 @@ void setWheelSpeed() {
   RF_motor_cmd = A*RF_wheel_rpm + B;
   LR_motor_cmd = A*LR_wheel_rpm + B;
   RR_motor_cmd = A*RR_wheel_rpm + B;
+
+  
 
   analogWrite(LF_motor_pin, LF_motor_cmd);
   analogWrite(RF_motor_pin, RF_motor_cmd);
