@@ -32,10 +32,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector
+CMAKE_SOURCE_DIR = /home/seb/McGill_LunarEx_2013/ROS_workspace/corner_detector
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector
+CMAKE_BINARY_DIR = /home/seb/McGill_LunarEx_2013/ROS_workspace/corner_detector
 
 # Utility rule file for ROSBUILD_genmsg_py.
 
@@ -45,9 +45,9 @@ include CMakeFiles/ROSBUILD_genmsg_py.dir/progress.make
 CMakeFiles/ROSBUILD_genmsg_py: src/corner_detector/msg/__init__.py
 
 src/corner_detector/msg/__init__.py: src/corner_detector/msg/_Corners.py
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/seb/McGill_LunarEx_2013/ROS_workspace/corner_detector/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating src/corner_detector/msg/__init__.py"
-	/opt/ros/fuerte/share/rospy/rosbuild/scripts/genmsg_py.py --initpy /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector/msg/Corners.msg
+	/opt/ros/fuerte/share/rospy/rosbuild/scripts/genmsg_py.py --initpy /home/seb/McGill_LunarEx_2013/ROS_workspace/corner_detector/msg/Corners.msg
 
 src/corner_detector/msg/_Corners.py: msg/Corners.msg
 src/corner_detector/msg/_Corners.py: /opt/ros/fuerte/share/rospy/rosbuild/scripts/genmsg_py.py
@@ -88,9 +88,9 @@ src/corner_detector/msg/_Corners.py: /opt/ros/fuerte/stacks/hector_slam/hector_m
 src/corner_detector/msg/_Corners.py: /opt/ros/fuerte/stacks/dynamic_reconfigure/msg_gen/generated
 src/corner_detector/msg/_Corners.py: /opt/ros/fuerte/stacks/dynamic_reconfigure/srv_gen/generated
 src/corner_detector/msg/_Corners.py: /opt/ros/fuerte/stacks/driver_common/driver_base/msg_gen/generated
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/seb/McGill_LunarEx_2013/ROS_workspace/corner_detector/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating src/corner_detector/msg/_Corners.py"
-	/opt/ros/fuerte/share/rospy/rosbuild/scripts/genmsg_py.py --noinitpy /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector/msg/Corners.msg
+	/opt/ros/fuerte/share/rospy/rosbuild/scripts/genmsg_py.py --noinitpy /home/seb/McGill_LunarEx_2013/ROS_workspace/corner_detector/msg/Corners.msg
 
 ROSBUILD_genmsg_py: CMakeFiles/ROSBUILD_genmsg_py
 ROSBUILD_genmsg_py: src/corner_detector/msg/__init__.py
@@ -107,6 +107,6 @@ CMakeFiles/ROSBUILD_genmsg_py.dir/clean:
 .PHONY : CMakeFiles/ROSBUILD_genmsg_py.dir/clean
 
 CMakeFiles/ROSBUILD_genmsg_py.dir/depend:
-	cd /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/ernie/McGill_LunarEx_2013/ROS_workspace/corner_detector/CMakeFiles/ROSBUILD_genmsg_py.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/seb/McGill_LunarEx_2013/ROS_workspace/corner_detector && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/seb/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/seb/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/seb/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/seb/McGill_LunarEx_2013/ROS_workspace/corner_detector /home/seb/McGill_LunarEx_2013/ROS_workspace/corner_detector/CMakeFiles/ROSBUILD_genmsg_py.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/ROSBUILD_genmsg_py.dir/depend
 

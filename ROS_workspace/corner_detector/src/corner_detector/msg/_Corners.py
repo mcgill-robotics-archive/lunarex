@@ -6,7 +6,7 @@ import struct
 
 
 class Corners(genpy.Message):
-  _md5sum = "939ad33e83c6aaa3351a308edd81ceb9"
+  _md5sum = "6fa23f0f1b0bdbc6a195e1d2ebdf4067"
   _type = "corner_detector/Corners"
   _has_header = False #flag to mark the presence of a Header object
   _full_text = """uint32[] LR_corner
@@ -17,9 +17,11 @@ float32 resolution
 uint32 width
 uint32 height
 bool left
+uint32 area
+
 """
-  __slots__ = ['LR_corner','RR_corner','LF_corner','RF_corner','resolution','width','height','left']
-  _slot_types = ['uint32[]','uint32[]','uint32[]','uint32[]','float32','uint32','uint32','bool']
+  __slots__ = ['LR_corner','RR_corner','LF_corner','RF_corner','resolution','width','height','left','area']
+  _slot_types = ['uint32[]','uint32[]','uint32[]','uint32[]','float32','uint32','uint32','bool','uint32']
 
   def __init__(self, *args, **kwds):
     """
@@ -29,7 +31,7 @@ bool left
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       LR_corner,RR_corner,LF_corner,RF_corner,resolution,width,height,left
+       LR_corner,RR_corner,LF_corner,RF_corner,resolution,width,height,left,area
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -54,6 +56,8 @@ bool left
         self.height = 0
       if self.left is None:
         self.left = False
+      if self.area is None:
+        self.area = 0
     else:
       self.LR_corner = []
       self.RR_corner = []
@@ -63,6 +67,7 @@ bool left
       self.width = 0
       self.height = 0
       self.left = False
+      self.area = 0
 
   def _get_types(self):
     """
@@ -93,7 +98,7 @@ bool left
       pattern = '<%sI'%length
       buff.write(struct.pack(pattern, *self.RF_corner))
       _x = self
-      buff.write(_struct_f2IB.pack(_x.resolution, _x.width, _x.height, _x.left))
+      buff.write(_struct_f2IBI.pack(_x.resolution, _x.width, _x.height, _x.left, _x.area))
     except struct.error as se: self._check_types(se)
     except TypeError as te: self._check_types(te)
 
@@ -134,8 +139,8 @@ bool left
       self.RF_corner = struct.unpack(pattern, str[start:end])
       _x = self
       start = end
-      end += 13
-      (_x.resolution, _x.width, _x.height, _x.left,) = _struct_f2IB.unpack(str[start:end])
+      end += 17
+      (_x.resolution, _x.width, _x.height, _x.left, _x.area,) = _struct_f2IBI.unpack(str[start:end])
       self.left = bool(self.left)
       return self
     except struct.error as e:
@@ -166,7 +171,7 @@ bool left
       pattern = '<%sI'%length
       buff.write(self.RF_corner.tostring())
       _x = self
-      buff.write(_struct_f2IB.pack(_x.resolution, _x.width, _x.height, _x.left))
+      buff.write(_struct_f2IBI.pack(_x.resolution, _x.width, _x.height, _x.left, _x.area))
     except struct.error as se: self._check_types(se)
     except TypeError as te: self._check_types(te)
 
@@ -208,12 +213,12 @@ bool left
       self.RF_corner = numpy.frombuffer(str[start:end], dtype=numpy.uint32, count=length)
       _x = self
       start = end
-      end += 13
-      (_x.resolution, _x.width, _x.height, _x.left,) = _struct_f2IB.unpack(str[start:end])
+      end += 17
+      (_x.resolution, _x.width, _x.height, _x.left, _x.area,) = _struct_f2IBI.unpack(str[start:end])
       self.left = bool(self.left)
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
 
 _struct_I = genpy.struct_I
-_struct_f2IB = struct.Struct("<f2IB")
+_struct_f2IBI = struct.Struct("<f2IBI")
