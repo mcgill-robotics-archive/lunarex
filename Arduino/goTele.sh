@@ -24,12 +24,12 @@ echo "***Sleep while roscore starts"
 sleep 5
 
 echo "***Starting rosserial and binding to /dev/ttyACM(PORT)"
-xterm -e "rosrun rosserial_python serial_node.py /dev/ttyACM$1 & read -sn 1 -p """ &
+xterm -e "rosrun rosserial_python serial_node.py /dev/ttyACM$1 & read -sn 1 -p "i"" &
 
 sleep 2
 
 echo "***Starting the server***"
-xterm -e "rosrun lx_server ros_server_slower.py & read -sn 1 -p """ &
+xterm -e "rosrun lx_server ros_server_slower.py & read -sn 1 -p "i"" &
 
 
 sleep 2

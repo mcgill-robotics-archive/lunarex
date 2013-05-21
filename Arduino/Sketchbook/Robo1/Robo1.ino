@@ -605,8 +605,8 @@ void setWheelSpeed() {
   //I think the process of coming up with these constants is in google drive somewhere, in the second sheet of a spreadsheet
   //-Nick
 
-  float A = 11.7718918;
-  float B = -3.81049;
+  float A = 0.0847;
+  float B = 0.3161;
   /*
   if (suspPos > SUSP_INTERFERENCE_LIMIT)  //go slower in mining mode
   {
