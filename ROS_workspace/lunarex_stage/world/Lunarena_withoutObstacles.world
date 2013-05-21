@@ -128,11 +128,8 @@ lunabot
   # can refer to the robot by this name
   name "lunabot"
   #initial position, (then rotation?), in the x-right y-up stage coordinates
-  #pose [0 0 0 32]
-  #pose [0.97 0.75 0 180]	#starting position 1
-  #pose [1.2 0.9 0 360]  #starting position 1
-  pose [2.5 0.9 0 315]	#starting position 2
-  # pose [2.5 1.3 0 0] #starting position 2
+  pose [0.97 0.75 0 220]	#starting position 1
+  #pose [2.91 0.75 0 80]	#starting position 2
   
   color "red" 
   LidarEx(pose [0.3 0 0 0]) # call Lidar (ie place on on the lunabot) and position it relative to robot (i think its x y z theta)

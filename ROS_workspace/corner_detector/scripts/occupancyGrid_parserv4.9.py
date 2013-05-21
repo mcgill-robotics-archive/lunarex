@@ -68,7 +68,8 @@ cornersPub = rospy.Publisher("corners", Corners)
 
 ranOnce = False
 
-while(True):
+while(not ranOnce):
+	ranOnce=True
 	corner_detector_proxy = rospy.ServiceProxy('dynamic_map', GetMap)
 	latest_map = corner_detector_proxy()
 	gridData = latest_map.map.data
@@ -88,7 +89,7 @@ while(True):
 	# else:
 	# 	Rres = mapRes
 
-	Rres = mapRes*4
+	Rres = mapRes*5
 
 	mapWidth = latest_corners.width
 	mapHeight = latest_corners.height
