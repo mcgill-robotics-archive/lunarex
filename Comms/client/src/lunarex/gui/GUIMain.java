@@ -28,15 +28,13 @@ import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import net.java.games.input.Controller;
-
-import joystick.JFrameWindow;
-import joystick.JInputJoystick;
-import joystick.JInputJoystickTest;
-import joystick.JoystickTest;
-
+import lunarex.controller.joystick.JFrameWindow;
+import lunarex.controller.joystick.JInputJoystick;
+import lunarex.controller.joystick.JInputJoystickTest;
+import lunarex.controller.joystick.JoystickTest;
 import lunarex.input.KeyboardInput;
 import lunarex.network.Client;
+import net.java.games.input.Controller;
 
 public class GUIMain extends JFrame {
 
@@ -55,7 +53,7 @@ public class GUIMain extends JFrame {
 	//String ipAdressString = "142.157.43.34";
 	
 	//FOR MACBOOK AIR ON OUR NETWORK
-	String ipAdressString = "192.168.1.109";
+	String ipAdressString = "192.168.1.118";
 
 	
 	//FOR LOCALHOST
@@ -115,7 +113,7 @@ public class GUIMain extends JFrame {
 	byte OUT_angVel, OUT_linVel, OUT_suspension, OUT_augerSpeed, OUT_doorOpen, OUT_bucketPos; 
 	
 	final int SUSPENSION_POS_HIGH = 0;
-	final int SUSPENSION_POS_LOW = 255;
+	final int SUSPENSION_POS_LOW = 230; //mining position
 	final int BUCKET_POS_HIGH = 0;
 	final int BUCKET_POS_LOW = 255;
 	

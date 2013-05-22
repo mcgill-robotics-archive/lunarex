@@ -150,8 +150,8 @@ int SEC_PER_MIN = 60;
 int GEAR_RATIO = 74;
 
 float TOL = 0.5;
-float ANG_STOP_THRESH = 0.2;    //any angular speed less than this will be interpreted as zero
-float LIN_STOP_THRESH = 0.1;    //any linear speed less than this will be interpreted as zero
+float ANG_STOP_THRESH = 0.05;    //any angular speed less than this will be interpreted as zero
+float LIN_STOP_THRESH = 0.05;    //any linear speed less than this will be interpreted as zero
 
 int SUSP_INTERFERENCE_LIMIT = 50; //command sent to suspension actuators. values greater than this correspond to mining (0 travel, 255 full mine)
 float MINING_MAX_SERVO_ANGLE_FRONT = 0;
@@ -159,7 +159,7 @@ float MINING_MAX_SERVO_ANGLE_REAR = 40;
 float TRAVEL_MAX_SERVO_ANGLE_FRONT = 80;
 float TRAVEL_MAX_SERVO_ANGLE_REAR = 80;
 
-int WATCHDOG_TIMEOUT = 5; //reset linspeed+angspeed to zero after at least this many seconds  (max number to choose here is about 45-50 seconds)
+int WATCHDOG_TIMEOUT = 15; //reset linspeed+angspeed to zero after at least this many seconds  (max number to choose here is about 45-50 seconds)
 
 
 
@@ -215,7 +215,8 @@ void setup()
 
 unsigned int count = 0;  //count loops for timeout
 void loop()
-{ 
+{
+  
   // ===== Driving and Steering ======
   if (abs(linSpeed) <= LIN_STOP_THRESH && abs(angSpeed) <= ANG_STOP_THRESH)    //No linear; No Angular
     {stopAll();}
@@ -403,6 +404,7 @@ void doAckerman()
 
 
   //Ackerman steering is characterised by setting wheel angles and speeds. Do general computations first:  
+  angSpeed = constrain(angSpeed, -2*linSpeed, 2*linSpeed);
   float ackRadius = abs(linSpeed/angSpeed);    
   //Angle  
   float innerAngle = atan((LENGTH/2.0)/(ackRadius - (WIDTH/2.0)))*180.0/PI;  //servo angle for both wheels on the inside of the turn
@@ -470,8 +472,7 @@ void miningAckerman()
     RR_motor_dir = 1;
   }
   //scale for slow mining
-  //linSpeed /= 5;
-  //angSpeed /= 5;
+  
   angSpeed = constrain(angSpeed, -2*linSpeed, 2*linSpeed);  //ackerman radius always greater than 0.5
   
   //Ackerman steering is characterised by setting wheel angles and speeds. Do general computations first:  
@@ -600,20 +601,18 @@ void setWheelAngle()
 }
 
 void setWheelSpeed() {
-  //THESE CALIBRATION CONSTANTS NEED TO BE BETTER DOCUMENTED!!
-  //I think they were determined on wheels that are floating in the air to map rpm to a 0-255 command
-  //I think the process of coming up with these constants is in google drive somewhere, in the second sheet of a spreadsheet
-  //-Nick
+//this calibration was done on May 21 by Nick and JS in google drive: MAxonMappingFunction
+//trendline done in externalspreadsheet
 
-  float A = 0.0847;
-  float B = 0.3161;
+  float A = 11.798;
+  float B = -3.6778;
   /*
   if (suspPos > SUSP_INTERFERENCE_LIMIT)  //go slower in mining mode
   {
-    LF_motor_cmd = LF_motor_cmd/5;
-    RF_motor_cmd = RF_motor_cmd/5;
-    RR_motor_cmd = RR_motor_cmd/5;
-    LR_motor_cmd = LR_motor_cmd/5;
+    LF_motor_cmd = LF_motor_cmd/4;
+    RF_motor_cmd = RF_motor_cmd/4;
+    RR_motor_cmd = RR_motor_cmd/4;
+    LR_motor_cmd = LR_motor_cmd/4;
   }
   */
   
@@ -621,6 +620,12 @@ void setWheelSpeed() {
   RF_motor_cmd = A*RF_wheel_rpm + B;
   LR_motor_cmd = A*LR_wheel_rpm + B;
   RR_motor_cmd = A*RR_wheel_rpm + B;
+
+  LF_motor_cmd = constrain(LF_motor_cmd, 0, 255);
+  RF_motor_cmd = constrain(RF_motor_cmd, 0, 255);
+  LR_motor_cmd = constrain(LR_motor_cmd, 0, 255);
+  RR_motor_cmd = constrain(RR_motor_cmd, 0, 255);
+
 
   analogWrite(LF_motor_pin, LF_motor_cmd);
   analogWrite(RF_motor_pin, RF_motor_cmd);
