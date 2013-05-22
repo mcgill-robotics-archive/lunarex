@@ -3,7 +3,7 @@ import sys
 sys.path.append("~/McGill_LunarEx_2013/ROS_workspace/")
 sys.path.append("/home/ernie/McGill_LunarEx_2013/ROS_workspace")
 sys.path.append("/home/lunarex/McGill_LunarEx_2013/ROS_workspace")
-
+sys.path.append("/home/seb/McGill_LunarEx_2013/ROS_workspace/")
 #IMPORTS
 import roslib; roslib.load_manifest('command')
 
@@ -14,10 +14,12 @@ import math	#for cos, sin, pi
 import actionlib  #CLIENT API: http://www.ros.org/doc/api/actionlib/html/classactionlib_1_1simple__action__client_1_1SimpleActionClient.html#a186f5d08f708c020b5f321bec998caff
 import time
 import coord
+import os
 
 #--messages
 from std_msgs.msg import UInt32
 from std_msgs.msg import UInt8
+from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import PoseStamped
 from corner_detector.msg import Corners
@@ -38,16 +40,19 @@ MC_WIDTH = 2.33
 MC_LENGTH = 7.55
 
 STARTING_POS_ARENA_COORDS = [(0.97, 0.75), (2.91, 0.75)]
-ROTATION_TIME_SECS = 25
+ROTATION_TIME_SECS = 40
 LOCALIZATION_ANG_SPEED = 0.2
 VELOCITY_PUB_TIME_MSECS = 100 #how often to send cmd_vels
 GOAL_DISTANCE_TOLERANCE = 0.05 #in m
 GOAL_ANGLE_TOLERANCE =  1 #in degrees 
 NAV_ANGULAR_ROTATION = 0.2
-NAV_LINEAR_SPEED = 0.2
+NAV_LINEAR_SPEED = 0.3
 Y_THRESH_FOR_REORIENTATION = 0.1
 
-INITIAL_DRIVE_TIME_MSECS = 5000
+INITIAL_DRIVE_LINTIME_MSECS = 1500
+INITIAL_DRIVE_EXTRA_ANGTIME_MSECS = 1200
+INITIAL_DRIVE_ANG_SPEED = 0.5
+INITIAL_DRIVE_LIN_SPEED = 0.5
 
 #excavation stuff
 DIG_RADIUS = 0.8 #defines circular path for digging
@@ -57,7 +62,6 @@ START_ANG = -90.0 	#set the heading to face right
 DIG_SPEED = 0.2 #m/s linear component of velocity - free to choose it to maximize flow rate and avoid choking; ang speed with accomodate
 FINAL_LAP_TIME_START = 3*60 #If less than this many seconds remaining, keep digging
 FINAL_LAP_TIME_END = 60 #approx time remaining to get back and dump
-
 
 #dumping
 BUCKET_LIFT_TIME = 5
@@ -305,7 +309,7 @@ def goTo(x,y,theta):
 			if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
 				pubTime = int(time.time()*1000.0)
 				pub_vel.publish(Velocity(NAV_LINEAR_SPEED, 0, 0), Velocity(0, 0, 0))
- 				print("nextGoal during forward movement is: x=" +str(nextGoal[0]) +"and y=" +str(nextGoal[1]))
+ 				#print("nextGoal during forward movement is: x=" +str(nextGoal[0]) +"and y=" +str(nextGoal[1]))
 
 			#if the y of goal is too big, turn to goal. should only have x component
 			if(abs(nextGoal[1]) > Y_THRESH_FOR_REORIENTATION):
@@ -359,43 +363,44 @@ def moveAwayFromWalls():
 	rospy.wait_for_service('findInitialHeadingService')
 	headingService = rospy.ServiceProxy('findInitialHeadingService', QuadrantRequest)
 
-	haventMovedYet = True
-	while haventMovedYet:
-		try:
+	quadrant = headingService().quadrant
+	initialQuadrant = quadrant
+
+	#rotate til good quadrant
+	currentTime = int(time.time()*1000.0)
+	lastPubTime = currentTime
+	while not (quadrant == 1):
+		currentTime = int(time.time()*1000.0)
+		if(currentTime - lastPubTime > VELOCITY_PUB_TIME_MSECS):
+			pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, INITIAL_DRIVE_ANG_SPEED))
+			lastPubTime = int(time.time()*1000.0)
+ 		
+ 		try:
 		  quadrant = headingService().quadrant
 		  print quadrant
 		except rospy.ServiceException, e:
 		  print "Service did not process request: %s"%str(e)
 		  return
-		if quadrant == 1:
-			#drive forwards
-			angSpeed = 0
-			linSpeed = 0.2
-			haventMovedYet = False
-		elif quadrant == 2:
-			angSpeed = -LOCALIZATION_ANG_SPEED	#cw
-			linSpeed = 0
-		elif quadrant == 3:
-			#drive backwards
-			angSpeed = 0
-			linSpeed = -0.2
-			haventMovedYet = False
-		elif quadrant == 4:	
-			angSpeed = LOCALIZATION_ANG_SPEED #ccw
-			linSpeed = 0.2
-		else:
-			print "BAD HEADING: " + str(quadrant)
-			angSpeed = 0
-			linSpeed = 0
 
+	# if(not (initialQuadrant == 1)):
+	#     #in good quadrant. Rotate for INITIAL_DRIVE_EXTRA_ANGTIME_MSECS
+	# 	currentTime = int(time.time()*1000.0)
+	# 	startTime = currentTime
+	# 	pubTime = currentTime
+	# 	while (currentTime - startTime) < INITIAL_DRIVE_EXTRA_ANGTIME_MSECS:
+	# 		currentTime = int(time.time()*1000.0)
+	# 		if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):	#publish at 10 hz
+	# 			pubTime = int(time.time()*1000.0)	#reset pubtine to current time
+	# 			pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, INITIAL_DRIVE_ANG_SPEED))
+
+	currentTime = int(time.time()*1000.0)
+	startTime = currentTime
+	pubTime = currentTime
+	while (currentTime - startTime) < INITIAL_DRIVE_LINTIME_MSECS:
 		currentTime = int(time.time()*1000.0)
-		startTime = currentTime
-		pubTime = currentTime
-		while (currentTime - startTime) < INITIAL_DRIVE_TIME_MSECS:
-			currentTime = int(time.time()*1000.0)
-			if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):	#publish at 10 hz
-				pubTime = int(time.time()*1000.0)	#reset pubtine to current time
-				pub_vel.publish(Velocity(linSpeed, 0, 0), Velocity(0, 0, angSpeed))
+		if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):	#publish at 10 hz
+			pubTime = int(time.time()*1000.0)	#reset pubtine to current time
+			pub_vel.publish(Velocity(INITIAL_DRIVE_ANG_SPEED, 0, 0), Velocity(0, 0, 0))
 
 def elapsedTime(option = None):	#optional arguments could change things
 	currentTime = int(time.time())
@@ -434,20 +439,23 @@ susp_LA_pub = rospy.Publisher("susp_pos", UInt8)	# publish suspension info
 dump_LA_pub = rospy.Publisher("dump_pos", UInt8)
 pub_vel = rospy.Publisher("cmd_vel", Twist)	# publish velocities
 door_LA_pub = rospy.Publisher("door_pos", UInt8)
+hector_reset_pub = rospy.Publisher("syscommand", String)
 
 #--Get Initial heading and get outa there
 
-#print("Moving away from walls")
-#moveAwayFromWalls()
+# print("Moving away from walls")
+# moveAwayFromWalls()
 
-#START MOTION
+# print("resetting hector")
+# reset = String()
+# reset.data = "reset"
+# hector_reset_pub.publish(reset)
 
-#Perform rotation
-print("Started rotation.")
-rotationStartTime = int(time.time()*1000.0)
-currentTime = rotationStartTime
-lastPubTime = rotationStartTime
+print("Rotating for "+str(ROTATION_TIME_SECS)+"secs to aquire map")
+currentTime = int(time.time()*1000.0)
+rotationStartTime = currentTime
 
+lastPubTime=currentTime
 while(currentTime - rotationStartTime < ROTATION_TIME_SECS*1000.0):
 	currentTime = int(time.time()*1000.0)
 	if(currentTime - lastPubTime > VELOCITY_PUB_TIME_MSECS):
@@ -459,21 +467,25 @@ pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, 0))
 
 print("Ended rotation. Now waiting for good corners")
 
-# #Get corners
-while(mapRes == -1): #means callback has not happened
-	time.sleep(2)
+pid, fd = os.forkpty()
 
-print("Got good corners.")
+print pid
+if(pid==0):
+	os.system("xterm -e rosrun corner_detector occupancyGrid_parserv4.9.py")
+else:
+	#Get corners
+	while(mapRes == -1): #means callback has not happened
+		time.sleep(2)
 
-print("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
-		+ ", LF=" +str(LF_corner) + ", RF=" +str(RF_corner))
+	print("Got good corners.")
 
-#while True:	# dig indefinately	
-	
-#EXCAVATE	
-#goTo(START_X, START_Y, 0)
-#excavate()
+	print("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
+			+ ", LF=" +str(LF_corner) + ", RF=" +str(RF_corner))
+		
+	#EXCAVATE	
+	goTo(START_X, START_Y, 0)
+	excavate()
 
-#Return home and dump
-goTo(ARENA_WIDTH/2.0, 0.9, 90)	#need to calibrate y position so as not to bump into wall or obstacle
-dump()
+	#Return home and dump
+	goTo(ARENA_WIDTH/2.0, 0.9, 90)	#need to calibrate y position so as not to bump into wall or obstacle
+	dump()

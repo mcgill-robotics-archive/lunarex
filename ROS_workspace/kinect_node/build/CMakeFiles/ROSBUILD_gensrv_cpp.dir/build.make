@@ -32,17 +32,31 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node
+CMAKE_SOURCE_DIR = /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build
+CMAKE_BINARY_DIR = /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build
 
 # Utility rule file for ROSBUILD_gensrv_cpp.
 
 # Include the progress variables for this target.
 include CMakeFiles/ROSBUILD_gensrv_cpp.dir/progress.make
 
+CMakeFiles/ROSBUILD_gensrv_cpp: ../srv_gen/cpp/include/kinect_node/kinectSafeDistance.h
 CMakeFiles/ROSBUILD_gensrv_cpp: ../srv_gen/cpp/include/kinect_node/KinectData.h
+
+../srv_gen/cpp/include/kinect_node/kinectSafeDistance.h: ../srv/kinectSafeDistance.srv
+../srv_gen/cpp/include/kinect_node/kinectSafeDistance.h: /opt/ros/fuerte/share/roscpp/rosbuild/scripts/gensrv_cpp.py
+../srv_gen/cpp/include/kinect_node/kinectSafeDistance.h: /opt/ros/fuerte/share/roscpp/rosbuild/scripts/genmsg_cpp.py
+../srv_gen/cpp/include/kinect_node/kinectSafeDistance.h: /opt/ros/fuerte/share/roslib/bin/gendeps
+../srv_gen/cpp/include/kinect_node/kinectSafeDistance.h: ../manifest.xml
+../srv_gen/cpp/include/kinect_node/kinectSafeDistance.h: /opt/ros/fuerte/share/roslang/manifest.xml
+../srv_gen/cpp/include/kinect_node/kinectSafeDistance.h: /opt/ros/fuerte/share/rospy/manifest.xml
+../srv_gen/cpp/include/kinect_node/kinectSafeDistance.h: /opt/ros/fuerte/share/geometry_msgs/manifest.xml
+../srv_gen/cpp/include/kinect_node/kinectSafeDistance.h: /opt/ros/fuerte/share/sensor_msgs/manifest.xml
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../srv_gen/cpp/include/kinect_node/kinectSafeDistance.h"
+	/opt/ros/fuerte/share/roscpp/rosbuild/scripts/gensrv_cpp.py /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/srv/kinectSafeDistance.srv
 
 ../srv_gen/cpp/include/kinect_node/KinectData.h: ../srv/KinectData.srv
 ../srv_gen/cpp/include/kinect_node/KinectData.h: /opt/ros/fuerte/share/roscpp/rosbuild/scripts/gensrv_cpp.py
@@ -53,11 +67,12 @@ CMakeFiles/ROSBUILD_gensrv_cpp: ../srv_gen/cpp/include/kinect_node/KinectData.h
 ../srv_gen/cpp/include/kinect_node/KinectData.h: /opt/ros/fuerte/share/rospy/manifest.xml
 ../srv_gen/cpp/include/kinect_node/KinectData.h: /opt/ros/fuerte/share/geometry_msgs/manifest.xml
 ../srv_gen/cpp/include/kinect_node/KinectData.h: /opt/ros/fuerte/share/sensor_msgs/manifest.xml
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating ../srv_gen/cpp/include/kinect_node/KinectData.h"
-	/opt/ros/fuerte/share/roscpp/rosbuild/scripts/gensrv_cpp.py /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/srv/KinectData.srv
+	/opt/ros/fuerte/share/roscpp/rosbuild/scripts/gensrv_cpp.py /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/srv/KinectData.srv
 
 ROSBUILD_gensrv_cpp: CMakeFiles/ROSBUILD_gensrv_cpp
+ROSBUILD_gensrv_cpp: ../srv_gen/cpp/include/kinect_node/kinectSafeDistance.h
 ROSBUILD_gensrv_cpp: ../srv_gen/cpp/include/kinect_node/KinectData.h
 ROSBUILD_gensrv_cpp: CMakeFiles/ROSBUILD_gensrv_cpp.dir/build.make
 .PHONY : ROSBUILD_gensrv_cpp
@@ -71,6 +86,6 @@ CMakeFiles/ROSBUILD_gensrv_cpp.dir/clean:
 .PHONY : CMakeFiles/ROSBUILD_gensrv_cpp.dir/clean
 
 CMakeFiles/ROSBUILD_gensrv_cpp.dir/depend:
-	cd /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/ernie/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles/ROSBUILD_gensrv_cpp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build /home/seb/McGill_LunarEx_2013/ROS_workspace/kinect_node/build/CMakeFiles/ROSBUILD_gensrv_cpp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/ROSBUILD_gensrv_cpp.dir/depend
 

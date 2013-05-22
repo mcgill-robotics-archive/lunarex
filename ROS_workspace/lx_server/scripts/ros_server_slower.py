@@ -130,8 +130,8 @@ class Handler(SocketServer.BaseRequestHandler):
                 pass
 
     def processVel(self, linear_vel, angular_vel):
-	max_speed_linear = 1.8
-	max_speed_angular = 2.0
+	max_speed_linear = 0.33
+	max_speed_angular = 0.65
 	#convert back from byte to float
 	linear_vel = linear_vel - 127
 	linear_vel = linear_vel*max_speed_linear/128
