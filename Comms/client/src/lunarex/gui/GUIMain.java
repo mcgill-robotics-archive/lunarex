@@ -113,7 +113,7 @@ public class GUIMain extends JFrame {
 	byte OUT_angVel, OUT_linVel, OUT_suspension, OUT_augerSpeed, OUT_doorOpen, OUT_bucketPos; 
 	
 	final int SUSPENSION_POS_HIGH = 0;
-	final int SUSPENSION_POS_LOW = 230; //mining position
+	final int SUSPENSION_POS_LOW = 245; //mining position
 	final int BUCKET_POS_HIGH = 0;
 	final int BUCKET_POS_LOW = 255;
 	

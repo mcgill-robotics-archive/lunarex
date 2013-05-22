@@ -29,7 +29,7 @@ ros:: NodeHandle nh;
 float angSpeed = 0;
 float linSpeed = 0;
 float dumpPos = 255; //down as default
-float suspPos = 0; //up as default
+float suspPos = 235; //up as default - 0, down is 255
 float doorPos = 0; //closed by default
 float augerSpeed = 0;
 
@@ -404,7 +404,7 @@ void doAckerman()
 
 
   //Ackerman steering is characterised by setting wheel angles and speeds. Do general computations first:  
-  angSpeed = constrain(angSpeed, -2*linSpeed, 2*linSpeed);
+  angSpeed = constrain(angSpeed, -2*abs(linSpeed), 2*abs(linSpeed));
   float ackRadius = abs(linSpeed/angSpeed);    
   //Angle  
   float innerAngle = atan((LENGTH/2.0)/(ackRadius - (WIDTH/2.0)))*180.0/PI;  //servo angle for both wheels on the inside of the turn
@@ -473,7 +473,7 @@ void miningAckerman()
   }
   //scale for slow mining
   
-  angSpeed = constrain(angSpeed, -2*linSpeed, 2*linSpeed);  //ackerman radius always greater than 0.5
+  angSpeed = constrain(angSpeed, -2*abs(linSpeed), 2*abs(linSpeed));  //ackerman radius always greater than 0.5
   
   //Ackerman steering is characterised by setting wheel angles and speeds. Do general computations first:  
   float ackRadius = abs(linSpeed/angSpeed);    
