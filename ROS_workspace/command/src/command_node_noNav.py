@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import os
 sys.path.append("~/McGill_LunarEx_2013/ROS_workspace/")
 sys.path.append("/home/ernie/McGill_LunarEx_2013/ROS_workspace")
 sys.path.append("/home/lunarex/McGill_LunarEx_2013/ROS_workspace")
@@ -18,6 +19,7 @@ import coord
 #--messages
 from std_msgs.msg import UInt32
 from std_msgs.msg import UInt8
+from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import PoseStamped
 from corner_detector.msg import Corners
@@ -33,7 +35,6 @@ SUSP_SLEEP_TIME = 2 # how much time (secs) to leave to allow the suspension line
 ARENA_WIDTH = 3.88
 ARENA_LENGTH = 7.38
 MINING_BOUNDARY_LOCATION = 4.44  # distance of boundary to lunabin
-sleep 50
 MC_WIDTH = 2.33
 MC_LENGTH = 7.55
 
@@ -87,6 +88,8 @@ slam_out_pose= PoseStamped()
 auger_speed = 0 #current speed: 0-255
 suspension_pos = 0
 
+start = False
+
 #----control
 #cmd-vel state var?
 
@@ -117,6 +120,18 @@ def corners_callback(data):
 def slam_out_pose_callback(data):
 	global slam_out_pose
 	slam_out_pose=data
+
+def start_callback(data):
+	global start
+	start = data
+	print(type(data))
+	print("In start callback")
+
+def manual_override_callback(data):
+	print("in manual override callback")
+	if(data.data == True):
+		print("killing command node due to manual over-r")
+		os._exit(0)
 
 #HELPERS
 
@@ -418,15 +433,14 @@ class Velocity:
 #----------------------------------------------------------------------#
 #-----------------------START EXECUTION--------------------------------#
 #----------------------------------------------------------------------#
-
-runStartTime = int(time.time())	# seconds
-
 #--Init node
 rospy.init_node('command')
 
 #--Subscribers
 rospy.Subscriber("slam_out_pose", PoseStamped, slam_out_pose_callback)
 rospy.Subscriber("corners", Corners, corners_callback)
+rospy.Subscriber("start", Bool, start_callback)
+rospy.Subscriber("manual_override", Bool, manual_override_callback)
 
 #--Publishers
 auger_Speed_pub = rospy.Publisher("auger_speed", UInt8)
@@ -441,6 +455,14 @@ door_LA_pub = rospy.Publisher("door_pos", UInt8)
 #moveAwayFromWalls()
 
 #START MOTION
+print("WAITING FOR START FLAG")
+
+while(not start):
+	time.sleep(1)
+
+runStartTime = int(time.time())	# seconds
+
+print("STARTING COMMAND NODE")
 
 #Perform rotation
 print("Started rotation.")
