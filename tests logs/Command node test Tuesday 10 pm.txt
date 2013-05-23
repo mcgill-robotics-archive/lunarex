@@ -1,0 +1,9 @@
+Command node test Tuesday 10 pm
+
+for each -- > how many successes and fails
+
+pose [0.97 0.75 0 0] ::  worked 3 times
+pose [0.97 0.75 0 45] :: worked once
+pose [0.97 0.75 0 90] :: hect_fucked once, worked once
+pose [0.97 0.75 0 135]  :: does not work due to bad starting position
+pose [0.97 0.75 0 200]  :: does not work --> circle and dumping routines were in the wrong direction, 							goto seemed to work well

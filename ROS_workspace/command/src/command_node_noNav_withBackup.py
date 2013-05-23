@@ -246,24 +246,36 @@ def setAugerSpeed(desiredSpeed):
 			time.sleep(TIME_BETWEEN_AUGER_INCREMENTS) 
 
 def spinToHectorAngle(nextGoalAngleHector):
+	#print "Spinning to hector angle: " + str(nextGoalAngleHector)
 	currentAngle = coord.quatToDegrees(slam_out_pose)
-
+	print "currentAngle: " + str(currentAngle)
 	currentTime = int(time.time()*1000.0)
 	pubTime = currentTime
-	while( abs(currentAngle - nextGoalAngleHector) > GOAL_ANGLE_TOLERANCE):
-		currentTime = int(time.time()*1000.0)
+	spinSpeed = NAV_ANGULAR_ROTATION
+	counter = 0
+	while( abs(currentAngle - nextGoalAngleHector) > GOAL_ANGLE_TOLERANCE and counter<=2):
 		currentAngle = coord.quatToDegrees(slam_out_pose)
+		currentTime = int(time.time()*1000.0)
 
-		#add selection of best direction in which to rotate
 
-		#publish at 10Hz
-		if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
-			pubTime = int(time.time()*1000.0)
-			if(((nextGoalAngleHector + 180) % 360) - ((currentAngle + 180) % 360) > 0):
-				pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, NAV_ANGULAR_ROTATION))
-			else:
-				pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, -NAV_ANGULAR_ROTATION))
+		# need to turn clockwise
+		while ((nextGoalAngleHector + 180) % 360) - ((currentAngle + 180) % 360)<0: 
+			currentAngle = coord.quatToDegrees(slam_out_pose)
+			currentTime = int(time.time()*1000.0)
+			if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
+				pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, -spinSpeed))
+				pubTime = int(time.time()*1000.0)
+		spinSpeed /= 2
 
+		 # need to turn counter clockwise
+		while ((nextGoalAngleHector + 180) % 360) - ((currentAngle + 180) % 360)>0: 
+			currentAngle = coord.quatToDegrees(slam_out_pose)
+			currentTime = int(time.time()*1000.0)
+			if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
+				pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, spinSpeed))
+				pubTime = int(time.time()*1000.0)
+		spinSpeed /= 2
+		counter+=1
 
 def goTo(x,y,theta):
 	# send a specified goal in a compact form

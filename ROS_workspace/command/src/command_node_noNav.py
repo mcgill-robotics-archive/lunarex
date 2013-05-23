@@ -43,8 +43,8 @@ ROTATION_TIME_SECS = 50
 LOCALIZATION_ANG_SPEED = 0.15
 VELOCITY_PUB_TIME_MSECS = 100 #how often to send cmd_vels
 GOAL_DISTANCE_TOLERANCE = 0.05 #in m
-GOAL_ANGLE_TOLERANCE =  1 #in degrees 
-NAV_ANGULAR_ROTATION = 0.15
+GOAL_ANGLE_TOLERANCE =  0.5 #in degrees 
+NAV_ANGULAR_ROTATION = 0.3
 NAV_LINEAR_SPEED = 0.2
 Y_THRESH_FOR_REORIENTATION = 0.1
 
@@ -93,7 +93,7 @@ start = False
 #----control
 #cmd-vel state var?
 
-#INFO: logging stuff to rosout
+#INFO: logging studataff to rosout
 #rospy.logerr / logwarn / loginfo
 
 #CALLBACKS
@@ -260,23 +260,48 @@ def setAugerSpeed(desiredSpeed):
 			time.sleep(TIME_BETWEEN_AUGER_INCREMENTS) 
 
 def spinToHectorAngle(nextGoalAngleHector):
+	#print "Spinning to hector angle: " + str(nextGoalAngleHector)
 	currentAngle = coord.quatToDegrees(slam_out_pose)
-
+	print "currentAngle: " + str(currentAngle)
 	currentTime = int(time.time()*1000.0)
 	pubTime = currentTime
-	while( abs(currentAngle - nextGoalAngleHector) > GOAL_ANGLE_TOLERANCE):
-		currentTime = int(time.time()*1000.0)
+	spinSpeed = NAV_ANGULAR_ROTATION
+	counter = 0
+	while( abs(currentAngle - nextGoalAngleHector) > GOAL_ANGLE_TOLERANCE and counter<=2):
 		currentAngle = coord.quatToDegrees(slam_out_pose)
+		currentTime = int(time.time()*1000.0)
 
-		#add selection of best direction in which to rotate
 
-		#publish at 10Hz
-		if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
-			pubTime = int(time.time()*1000.0)
-			if(((nextGoalAngleHector + 180) % 360) - ((currentAngle + 180) % 360) > 0):
-				pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, NAV_ANGULAR_ROTATION))
-			else:
-				pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, -NAV_ANGULAR_ROTATION))
+		# need to turn clockwise
+		while ((nextGoalAngleHector + 180) % 360) - ((currentAngle + 180) % 360)<0: 
+			currentAngle = coord.quatToDegrees(slam_out_pose)
+			currentTime = int(time.time()*1000.0)
+			if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
+				pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, -spinSpeed))
+				pubTime = int(time.time()*1000.0)
+		spinSpeed /= 2
+
+		 # need to turn counter clockwise
+		while ((nextGoalAngleHector + 180) % 360) - ((currentAngle + 180) % 360)>0: 
+			currentAngle = coord.quatToDegrees(slam_out_pose)
+			currentTime = int(time.time()*1000.0)
+			if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
+				pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, spinSpeed))
+				pubTime = int(time.time()*1000.0)
+		spinSpeed /= 2
+		counter+=1
+
+		# #publish at 10Hz
+		# if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
+		# 	pubTime = int(time.time()*1000.0)
+		# 	angDiff = ((nextGoalAngleHector + 180) % 360) - ((currentAngle + 180) % 360)
+		# 	#print "Spinning to hector angle. AngDiff = " + str(angDiff)
+		# 	if( angDiff > 0):
+		# 		# spin ccw
+		# 		pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, NAV_ANGULAR_ROTATION))
+		# 	else:
+		# 		#spin cw
+		# 		pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, -NAV_ANGULAR_ROTATION))
 
 
 def goTo(x,y,theta):
@@ -311,6 +336,7 @@ def goTo(x,y,theta):
 
 		currentTime = int(time.time()*1000.0)
 		pubTime = currentTime
+
 		while(nextGoal[0] > GOAL_DISTANCE_TOLERANCE):
 			#add rate to avoid overloading rosserial
 			nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
@@ -493,9 +519,35 @@ print("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
 #while True:	# dig indefinately	
 	
 #EXCAVATE	
-goTo(START_X, START_Y, 0)
-excavate()
+goTo(START_X, START_Y, 90)
+
+goTo(1.5, 5, 90)
+time.sleep(2)
+goTo(1, 2, 90)
+time.sleep(2)
+goTo(2.5, 5, 90)
+time.sleep(2)
+goTo(1, 5, 90)
+time.sleep(2)
+goTo(2.5, 6, 90)
+time.sleep(2)
+goTo(1, 6, 90)
+
+
+
+
+#excavate()
 
 #Return home and dump
 goTo(ARENA_WIDTH/2.0, 0.9, 90)	#need to calibrate y position so as not to bump into wall or obstacle
 dump()
+
+# Test rotation function
+# args = [0, 90, -90, 45.99, -170, 45.132, 0, 0.9, -180, 180.000]
+
+# for i in args:
+#  	spinToHectorAngle(i)
+# 	print "Done rotation. Should be at " + str(i)
+# 	time.sleep(2)
+
+

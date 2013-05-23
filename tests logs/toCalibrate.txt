@@ -1,0 +1,5 @@
+Command node test Tuesday 10 pm
+
+
+
+pose [0.97 0.75 0 0] :: 
