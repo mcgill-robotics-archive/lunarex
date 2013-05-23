@@ -68,16 +68,13 @@ class Handler(SocketServer.BaseRequestHandler):
         print str(self.request.getpeername())+" connected"
 
     def handle(self):
-
         while(True):
-
-#            self.currentPos = PosData(latestPose.position.x,latestPose.position.y,latestPose.orientation.w)
+            self.currentPos = PosData(latestPose.position.x,latestPose.position.y,latestPose.orientation.w)
             self.currentTime = int(time.time()*1000.0)
             try:
                 self.datalist = self.request.recv(6)
-
                 #Only if data is received will publisher work
-		if self.datalist[0] != "":
+        if self.datalist[0] != "":
             #Create velocity message
             linear_vel = (float)((ord)(self.datalist[1])) #cast bytes to float
             angular_vel = (float)((ord)(self.datalist[2]))
