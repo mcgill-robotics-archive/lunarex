@@ -36,7 +36,7 @@ import lunarex.input.KeyboardInput;
 import lunarex.network.Client;
 import net.java.games.input.Controller;
 
-public class GUIMain extends JFrame {
+public class GUIMain_afterFirstCompetitionAttempt extends JFrame {
 
 	private static final long serialVersionUID = 1190876640530075607L;
 	
@@ -56,7 +56,7 @@ public class GUIMain extends JFrame {
 	//String ipAdressString = "192.168.1.200";
 
 	//ERNEST IN SHERATON
-	String ipAdressString = "192.168.1.104";
+	String ipAdressString = "10.71.0.220";
 	
 	//FOR LOCALHOST
 	//String ipAdressString = "127.0.0.1";
@@ -136,7 +136,7 @@ public class GUIMain extends JFrame {
 	static final float MAX_LIN_SPEED = 1.8f; //1.8 before
 	static final float MAX_ANG_SPEED = 2.0f; //4  before
 	
-	public GUIMain() {
+	public GUIMain_afterFirstCompetitionAttempt() {
 		
 		window.dispose();
 		setIgnoreRepaint(true);
@@ -244,8 +244,7 @@ public class GUIMain extends JFrame {
 				populateOUTArray();
 
 				//send the array of bytes to the client
-				if (client != null && manualOverride) {
-					System.out.println("in manual override");
+				if (client != null) {
 					client.send(outByte);						
 				}		
 			
@@ -272,7 +271,7 @@ public class GUIMain extends JFrame {
 
 				// Let the OS have a little time...
 				try {
-					Thread.sleep(10);   //lets change this and check with wireshark
+					Thread.sleep(10);
 				} catch (InterruptedException e) {
 				}
 
