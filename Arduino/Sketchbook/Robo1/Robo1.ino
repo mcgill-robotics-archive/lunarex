@@ -153,7 +153,7 @@ float TOL = 0.5;
 float ANG_STOP_THRESH = 0.05;    //any angular speed less than this will be interpreted as zero
 float LIN_STOP_THRESH = 0.05;    //any linear speed less than this will be interpreted as zero
 
-int SUSP_INTERFERENCE_LIMIT = 50; //command sent to suspension actuators. values greater than this correspond to mining (0 travel, 255 full mine)
+int SUSP_INTERFERENCE_LIMIT = 100; //command sent to suspension actuators. values greater than this correspond to mining (0 travel, 255 full mine)
 float MINING_MAX_SERVO_ANGLE_FRONT = 0;
 float MINING_MAX_SERVO_ANGLE_REAR = 40;
 float TRAVEL_MAX_SERVO_ANGLE_FRONT = 80;
