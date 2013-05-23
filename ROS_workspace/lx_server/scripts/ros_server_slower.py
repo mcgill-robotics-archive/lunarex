@@ -128,7 +128,7 @@ class Handler(SocketServer.BaseRequestHandler):
 
     	return linear_vel, angular_vel
 
-        def byteToBool(self, in_byte):
+    def byteToBool(self, in_byte):
     	if (int)(in_byte) == 1:
     	    return True
     	return False
