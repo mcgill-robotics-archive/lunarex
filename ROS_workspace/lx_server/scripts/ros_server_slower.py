@@ -118,8 +118,8 @@ class Handler(SocketServer.BaseRequestHandler):
         max_speed_linear = 0.33
         max_speed_angular = 0.65
         if susp_pos > 100:   # large values correspond to mining
-            max_speed_linear /=2
-            max_speed_angular /=2
+            max_speed_linear /=3
+            max_speed_angular /=3
     	#convert back from byte to float
     	linear_vel = linear_vel - 127
     	linear_vel = linear_vel*max_speed_linear/128
