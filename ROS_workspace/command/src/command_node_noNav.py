@@ -27,26 +27,37 @@ from command.srv import QuadrantRequest
 
 #GLOBAL VARS
 #--constants
-DIG_HEIGHT_CMD = 200 #what command should be sent to the suspension LAs to correspond to digging - is 255 all the way down?
+
+#----actuator commands
+DIG_HEIGHT_CMD = 240 #what command should be sent to the suspension LAs to correspond to digging - is 255 all the way down?
 TRAVEL_HEIGHT_CMD = 0 # what command should be sent to the suspension LAs to correspond to travelling - is 0 all the way up?
 DIG_DURATION = 2 # number of circles to trace while digging - half a circle counts as 1 it's really the number of times the robot faces backwards
 SUSP_SLEEP_TIME = 2 # how much time (secs) to leave to allow the suspension linear actuators to actuate
 
+#----arena dimensions
 ARENA_WIDTH = 3.88
 ARENA_LENGTH = 7.38
 MINING_BOUNDARY_LOCATION = 4.44  # distance of boundary to lunabin
-MC_WIDTH = 2.33
-MC_LENGTH = 7.55
 
-STARTING_POS_ARENA_COORDS = [(0.97, 0.75), (2.91, 0.75)]
-ROTATION_TIME_SECS = 50
+#----hector speeds
+ROTATION_TIME_SECS = 30
 LOCALIZATION_ANG_SPEED = 0.15
+
+#----arduino rate
 VELOCITY_PUB_TIME_MSECS = 100 #how often to send cmd_vels
+
+#----goTo constants
 GOAL_DISTANCE_TOLERANCE = 0.05 #in m
 GOAL_ANGLE_TOLERANCE =  0.5 #in degrees 
-NAV_ANGULAR_ROTATION = 0.3
+NAV_ANGULAR_ROTATION = 0.2
+
 NAV_LINEAR_SPEED = 0.2
+NAV_LINEAR_SPEED_MINING = 0.0762
+NAV_LINEAR_SPEED_NON_MINING = 0.2
+
 Y_THRESH_FOR_REORIENTATION = 0.1
+Y_THRESH_FOR_REORIENTATION_MINING = 0.4
+Y_THRESH_FOR_REORIENTATION_NON_MINING = 0.1
 
 INITIAL_DRIVE_TIME_MSECS = 5000
 
@@ -59,8 +70,14 @@ DIG_SPEED = 0.2 #m/s linear component of velocity - free to choose it to maximiz
 FINAL_LAP_TIME_START = 3*60 #If less than this many seconds remaining, keep digging
 FINAL_LAP_TIME_END = 60 #approx time remaining to get back and dump
 
+AUGER_MAX_SPEED = 150
+AUGER_MIN_SPEED = 0
 
 #dumping
+DUMP_BACKUP_TIME = 4
+DUMP_BACKUP_SPEED = 0.1
+
+
 BUCKET_LIFT_TIME = 5
 BUCKET_UP_CMD = 0
 BUCKET_DOWN_CMD = 255
@@ -89,12 +106,6 @@ auger_speed = 0 #current speed: 0-255
 suspension_pos = 0
 
 start = False
-
-#----control
-#cmd-vel state var?
-
-#INFO: logging studataff to rosout
-#rospy.logerr / logwarn / loginfo
 
 #CALLBACKS
 def corners_callback(data):
@@ -131,110 +142,7 @@ def manual_override_callback(data):
 	print("in manual override callback")
 	if(data.data == True):
 		print("killing command node due to manual over-r")
-		os._exit(0)
-
-#HELPERS
-
-#SUBROUTINES
-def excavate():
-	'''
-	 This excavate subroutine involves a circular digging pattern:
-	 
-	 1. go to the starting point
-	 2. turn on the auger
-	 3. lower suspension to appropriate height
-	 4. drive through circular waypoints for a discrete parametrizable number of times
-	 5. lift suspension
-	 6. stop auger
-	'''
-	
-	'''
-	Geometry of the digging circle
-	------------------------------
-
-	Mining area dimensions:
-	(convention: x is the width, y is the length - lunabin on wall defined by y = 0)
-	x width = 3.88 m
-	y height = 2.94 m
-
-	Want to leave a buffer, so mining circle should not be greater than 2.5 m in diameter
-	This leaves 22 cm from the wall and 22 cm from the edge of the obstacle area.
-
-	This circle should be traced by the outside of the robot. Considering the centre of the robot, subtract half the width on each side of the circle -> subtract the whole width
-		2.5 - 0.75 = 1.75m
-		Therefore DIG_RADIUS should be 1.75/2 = 0.875 m
-		This is also the ackerman radius
-
-	Arclength is defined as Length = R*theta
-	Differentiate both sides, linear velocity = R*Angular velocity
-
-	R is given above (DIG_RADIUS). We want to be able to calibrate linear velocity (along with suspension height) to maximize flow rate and avoid choking the auger. Therefore angular velocity is a function of the other two parameters:
-
-	AngVel = LinVel/DIG_RADIUS
-	
-	'''
-
-	print("setting auger speed to 255")
-	#-- turn on auger
-	
-	# COMMENT OUT AUGER COMMAND FOR SAFETY!!!
-	#setAugerSpeed(255)	#call custom method
-	
-	#-- lower suspension to appropriate height
-	susp_LA_pub.publish(DIG_HEIGHT_CMD)	# Send suspension info
-	time.sleep(SUSP_SLEEP_TIME)	#wait to actuate
-
-	#-- Drive in circles
-	circlesCompleted = 0
-	alreadyIncremented = False
-	
-	currentTime = int(time.time()*1000.0)
-	pubTime = currentTime
-	while circlesCompleted < DIG_DURATION:	#abort once circlesCompleted == DIG_DURATION			
-		linVelObject = Velocity(DIG_SPEED, 0.0, 0.0)		#create the object
-		angVelObject = Velocity(0.0, 0.0, DIG_SPEED/DIG_RADIUS)	#see docstring for geometry explanation		
-		
-		currentTime = int(time.time()*1000.0)
-		if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
-			pubTime = int(time.time()*1000.0)
-			pub_vel.publish(linVelObject, angVelObject)  #   Send Twist message to /cmd_vel topic
-
-		#--Count number of circles
-		hector_heading_deg = coord.quatToDegrees(slam_out_pose)
-		if hector_heading_deg > -110 and hector_heading_deg < -90 and not alreadyIncremented:
-			circlesCompleted += 1
-			alreadyIncremented = True
-			if elapsedTime('remaining') < FINAL_LAP_TIME_START and elapsedTime('remaining') > FINAL_LAP_TIME_END:
-				circlesCompleted -=1
-				#if theres not enough time to do 2 trips, but enough time to keep digging - keep digging
-		if hector_heading_deg > -50 and hector_heading_deg < 0:
-			alreadyIncremented = False	#reset
-
-	#-- Stop locomotion
-	pub_vel.publish(Velocity(0.0, 0.0, 0.0), Velocity(0.0, 0.0, 0.0))
-	
-	#-- lift suspension
-	susp_LA_pub.publish(TRAVEL_HEIGHT_CMD)	# Send suspension info
-	time.sleep(SUSP_SLEEP_TIME)	#wait to actuate
-
-	#-- stop auger
-	setAugerSpeed(0);
-
-	'''
-	Obsolete algorithms for digging circle
-
-	# drive through circular waypoints for a discrete parametrizable number of times
-	#for theta in range(0,DIG_DURATION*2*math.pi, 0.1)	#range(start, end, step)
-	#	goal.target_pose.pose.position.x = digCenterX + DIG_RADIUS*math.cos(theta)
-	#	goal.target_pose.pose.position.y = digCenterY + DIG_RADIUS*math.sin(theta)
-	#	time.sleep(500) #milliseconds
-		#WILL THIS LOOP HANG UP THE WHOLE ROBOT WHILE DIGGING???
-
-	#alternative circling loop
-		# send new goal once first goal is reached
-		#this wouldnt send constant velocity though - disadvantage
-		
-	'''				
+		os._exit(0)		
 
 def setAugerSpeed(desiredSpeed):
 	# smoothly changes auger speed from current to desired (0-255)
@@ -291,25 +199,27 @@ def spinToHectorAngle(nextGoalAngleHector):
 		spinSpeed /= 2
 		counter+=1
 
-		# #publish at 10Hz
-		# if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
-		# 	pubTime = int(time.time()*1000.0)
-		# 	angDiff = ((nextGoalAngleHector + 180) % 360) - ((currentAngle + 180) % 360)
-		# 	#print "Spinning to hector angle. AngDiff = " + str(angDiff)
-		# 	if( angDiff > 0):
-		# 		# spin ccw
-		# 		pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, NAV_ANGULAR_ROTATION))
-		# 	else:
-		# 		#spin cw
-		# 		pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, -NAV_ANGULAR_ROTATION))
+#called from the first mining area goal
+def excavateStraight():
+	goals = [(1.0, 6.0, 0), (2.7, 5.5, -90)]
+	for g in goals:
+		goTo(g[0], g[1], g[2], True)
 
-
-def goTo(x,y,theta):
+def goTo(x,y,theta, mining):
 	# send a specified goal in a compact form
 	# All three parameters in Arena coordinates
-
 	print("*******In goTO with heading: " +str(coord.quatToDegrees(slam_out_pose)))
 	print("Going to arena pos: x=" +str(x) +" y=" +str(y) +"theta = " +str(theta))
+
+	print("Mining flag is: " +str(mining))
+
+	#set speeds & thresholds according to mode of operation
+	if(mining):
+		NAV_LINEAR_SPEED = NAV_LINEAR_SPEED_MINING
+		Y_THRESH_FOR_REORIENTATION = Y_THRESH_FOR_REORIENTATION_MINING
+	else:
+		NAV_LINEAR_SPEED = NAV_LINEAR_SPEED_NON_MINING
+		Y_THRESH_FOR_REORIENTATION = Y_THRESH_FOR_REORIENTATION_NON_MINING	
 
 	nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
 	
@@ -326,7 +236,20 @@ def goTo(x,y,theta):
 		print("nextGoalAngleMobile = " +str(nextGoalAngleMobile) + "currentAngle = " +str(currentAngle) + 
 			"nextGoalAngleHector = " +str(nextGoalAngleHector))
 
+		#go high before turning
+		#turn auger OFF
+		if(mining):
+			susp_LA_pub.publish(TRAVEL_HEIGHT_CMD)	
+			time.sleep(SUSP_SLEEP_TIME)	#wait to actuate
+			setAugerSpeed(AUGER_MIN_SPEED)
+
 		spinToHectorAngle(nextGoalAngleHector)
+
+		#back to mining height if in mining mode. start AUGER
+		if(mining):
+			susp_LA_pub.publish(DIG_HEIGHT_CMD)
+			setAugerSpeed(AUGER_MAX_SPEED)
+
 		print "just turned, current angle is: " + str(coord.quatToDegrees(slam_out_pose))
 		#MOVE FORWARD TOWARDS GOAL
 		nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
@@ -346,19 +269,27 @@ def goTo(x,y,theta):
 			if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
 				pubTime = int(time.time()*1000.0)
 				pub_vel.publish(Velocity(NAV_LINEAR_SPEED, 0, 0), Velocity(0, 0, 0))
- 				print("nextGoal during forward movement is: x=" +str(nextGoal[0]) +"and y=" +str(nextGoal[1]))
+ 				#("nextGoal during forward movement is: x=" +str(nextGoal[0]) +"and y=" +str(nextGoal[1]))
 
 			#if the y of goal is too big, turn to goal. should only have x component
 			if(abs(nextGoal[1]) > Y_THRESH_FOR_REORIENTATION):
-				print("breaking")
+				print("breaking out: Y_THRESH exceeeded: y is " +str(abs(nextGoal[1])))
 				nextGoalDistance = math.sqrt(nextGoal[0]*nextGoal[0] + nextGoal[1]*nextGoal[1])
 				break
 
 	#AT GOAL. NOW FACE REQUEST ARENA ANGLE
 	finalHectorAngle = coord.arenaAngle2hectorAngle(theta, LR_corner, RR_corner, RF_corner, LF_corner)
+
+	#go high before turning
+	#turn auger OFF
+	if(mining):
+		susp_LA_pub.publish(TRAVEL_HEIGHT_CMD)	
+		time.sleep(SUSP_SLEEP_TIME)	#wait to actuate
+		setAugerSpeed(AUGER_MIN_SPEED)
+
 	spinToHectorAngle(finalHectorAngle)
 
-def dump():
+def dumpWithGoTo():
 	backup(0.6)
 	dump_LA_pub.publish(BUCKET_UP_CMD)
 	time.sleep(BUCKET_LIFT_TIME)
@@ -369,6 +300,28 @@ def dump():
 
 	goTo(ARENA_WIDTH/2.0, 0.9, 90)	#spin around
 	dump_LA_pub.publish(BUCKET_UP_CMD)
+
+#has to be called from x = ARENA_WIDTH/2.0, y = 1
+def dump():
+	print("dumping")
+
+	print("bucket high")
+	dump_LA_pub.publish(BUCKET_UP_CMD)
+	time.sleep(BUCKET_LIFT_TIME)
+
+	print("Started backup.")
+	dumpStartTime = int(time.time()*1000.0)
+	currentTime = dumpStartTime
+	lastPubTime = dumpStartTime
+
+	while(currentTime - dumpStartTime < DUMP_BACKUP_TIME*1000.0):
+		currentTime = int(time.time()*1000.0)
+		if(currentTime - lastPubTime > VELOCITY_PUB_TIME_MSECS):
+			pub_vel.publish(Velocity(-DUMP_BACKUP_SPEED, 0, 0), Velocity(0, 0, 0))
+			lastPubTime = int(time.time()*1000.0)
+
+	print("open door")
+	dump_LA_pub.publish(DOOR_OPEN_CMD)
 
 def backup(arenaY):
 	print("Backing up to: " +str(arenaY))
@@ -481,10 +434,10 @@ door_LA_pub = rospy.Publisher("door_pos", UInt8)
 #moveAwayFromWalls()
 
 #START MOTION
-print("WAITING FOR START FLAG")
+# print("WAITING FOR START FLAG")
 
-while(not start):
-	time.sleep(1)
+# while(not start):
+# 	time.sleep(1)
 
 runStartTime = int(time.time())	# seconds
 
@@ -516,38 +469,17 @@ print("Got good corners.")
 print("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
 		+ ", LF=" +str(LF_corner) + ", RF=" +str(RF_corner))
 
-#while True:	# dig indefinately	
-	
-#EXCAVATE	
-goTo(START_X, START_Y, 90)
+#go to good startin pos in starting area
+goTo(2.7, 1.0, 90, False)	
 
-goTo(1.5, 5, 90)
-time.sleep(2)
-goTo(1, 2, 90)
-time.sleep(2)
-goTo(2.5, 5, 90)
-time.sleep(2)
-goTo(1, 5, 90)
-time.sleep(2)
-goTo(2.5, 6, 90)
-time.sleep(2)
-goTo(1, 6, 90)
+#go first position in mining area
+goTo(2.7, 6.0, 90, False)
 
+excavateStraight()
 
+#come back
+goTo(ARENA_WIDTH/2.0, 1.0, 90, False)
 
-
-#excavate()
-
-#Return home and dump
-goTo(ARENA_WIDTH/2.0, 0.9, 90)	#need to calibrate y position so as not to bump into wall or obstacle
 dump()
-
-# Test rotation function
-# args = [0, 90, -90, 45.99, -170, 45.132, 0, 0.9, -180, 180.000]
-
-# for i in args:
-#  	spinToHectorAngle(i)
-# 	print "Done rotation. Should be at " + str(i)
-# 	time.sleep(2)
 
 
