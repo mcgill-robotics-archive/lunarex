@@ -115,23 +115,23 @@ class Handler(SocketServer.BaseRequestHandler):
                 pass
 
     def processVel(self, linear_vel, angular_vel, susp_pos):
-    max_speed_linear = 0.33
-    max_speed_angular = 0.65
-    if susp_pos > 100   # large values correspond to mining
-        max_speed_linear /=2
-        max_speed_angular /=2
-	#convert back from byte to float
-	linear_vel = linear_vel - 127
-	linear_vel = linear_vel*max_speed_linear/128
-	angular_vel = angular_vel - 127
-	angular_vel = angular_vel*max_speed_angular/128
+        max_speed_linear = 0.33
+        max_speed_angular = 0.65
+        if susp_pos > 100   # large values correspond to mining
+            max_speed_linear /=2
+            max_speed_angular /=2
+    	#convert back from byte to float
+    	linear_vel = linear_vel - 127
+    	linear_vel = linear_vel*max_speed_linear/128
+    	angular_vel = angular_vel - 127
+    	angular_vel = angular_vel*max_speed_angular/128
 
-	return linear_vel, angular_vel
+    	return linear_vel, angular_vel
 
-    def byteToBool(self, in_byte):
-	if (int)(in_byte) == 1:
-	    return True
-	return False
+        def byteToBool(self, in_byte):
+    	if (int)(in_byte) == 1:
+    	    return True
+    	return False
 
 
     def finish(self):
