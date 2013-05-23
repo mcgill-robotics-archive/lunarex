@@ -75,16 +75,18 @@ class Handler(SocketServer.BaseRequestHandler):
                 self.datalist = self.request.recv(6)
                 #Only if data is received will publisher work
                 if self.datalist[0] != "":
-                    #Create velocity message
-                    linear_vel = (float)((ord)(self.datalist[1])) #cast bytes to float
-                    angular_vel = (float)((ord)(self.datalist[2]))
-                    linear_vel, angular_vel = self.processVel(linear_vel, angular_vel)	# Process the input velocity, convert byte to m/s
-                    self.linearVelocity = Velocity(linear_vel, 0.0, 0.0)     #   Linear Velocity object from datalist[1]
-                    self.angularVelocity = Velocity(0.0, 0.0, angular_vel)    #   Angular Velocity object from datalist[2]
                     self.dump_pos = int((ord)(self.datalist[5]))
                     self.susp_pos = int((ord)(self.datalist[3]))
                     self.door_pos = int((ord)(self.datalist[0]))
                     self.auger_speed = int((ord)(self.datalist[4]))
+
+                    #Create velocity message
+                    linear_vel = (float)((ord)(self.datalist[1])) #cast bytes to float
+                    angular_vel = (float)((ord)(self.datalist[2]))
+                    linear_vel, angular_vel = self.processVel(linear_vel, angular_vel, self.susp_pos)	# Process the input velocity, convert byte to m/s
+                    self.linearVelocity = Velocity(linear_vel, 0.0, 0.0)     #   Linear Velocity object from datalist[1]
+                    self.angularVelocity = Velocity(0.0, 0.0, angular_vel)    #   Angular Velocity object from datalist[2]
+                    
 
                     if((self.currentTime-self.initialTime) > 100):
                         if not rospy.is_shutdown():
@@ -112,9 +114,12 @@ class Handler(SocketServer.BaseRequestHandler):
             except IOError:
                 pass
 
-    def processVel(self, linear_vel, angular_vel):
-	max_speed_linear = 0.33
-	max_speed_angular = 0.65
+    def processVel(self, linear_vel, angular_vel, susp_pos):
+    max_speed_linear = 0.33
+    max_speed_angular = 0.65
+    if susp_pos > 100   # large values correspond to mining
+        max_speed_linear /=2
+        max_speed_angular /=2
 	#convert back from byte to float
 	linear_vel = linear_vel - 127
 	linear_vel = linear_vel*max_speed_linear/128

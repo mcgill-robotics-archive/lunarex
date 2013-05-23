@@ -56,7 +56,7 @@ public class GUIMain extends JFrame {
 	//String ipAdressString = "192.168.1.200";
 
 	//ERNEST IN SHERATON
-	String ipAdressString = "192.168.1.104";
+	String ipAdressString = "192.168.1.101";
 	
 	//FOR LOCALHOST
 	//String ipAdressString = "127.0.0.1";
