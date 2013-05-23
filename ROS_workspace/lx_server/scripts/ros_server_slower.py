@@ -74,43 +74,43 @@ class Handler(SocketServer.BaseRequestHandler):
             try:
                 self.datalist = self.request.recv(6)
                 #Only if data is received will publisher work
-            if self.datalist[0] != "":
-            #Create velocity message
-            linear_vel = (float)((ord)(self.datalist[1])) #cast bytes to float
-            angular_vel = (float)((ord)(self.datalist[2]))
-            linear_vel, angular_vel = self.processVel(linear_vel, angular_vel)	# Process the input velocity, convert byte to m/s
-            self.linearVelocity = Velocity(linear_vel, 0.0, 0.0)     #   Linear Velocity object from datalist[1]
-            self.angularVelocity = Velocity(0.0, 0.0, angular_vel)    #   Angular Velocity object from datalist[2]
-            self.dump_pos = int((ord)(self.datalist[5]))
-            self.susp_pos = int((ord)(self.datalist[3]))
-            self.door_pos = int((ord)(self.datalist[0]))
-            self.auger_speed = int((ord)(self.datalist[4]))
+                if self.datalist[0] != "":
+                    #Create velocity message
+                    linear_vel = (float)((ord)(self.datalist[1])) #cast bytes to float
+                    angular_vel = (float)((ord)(self.datalist[2]))
+                    linear_vel, angular_vel = self.processVel(linear_vel, angular_vel)	# Process the input velocity, convert byte to m/s
+                    self.linearVelocity = Velocity(linear_vel, 0.0, 0.0)     #   Linear Velocity object from datalist[1]
+                    self.angularVelocity = Velocity(0.0, 0.0, angular_vel)    #   Angular Velocity object from datalist[2]
+                    self.dump_pos = int((ord)(self.datalist[5]))
+                    self.susp_pos = int((ord)(self.datalist[3]))
+                    self.door_pos = int((ord)(self.datalist[0]))
+                    self.auger_speed = int((ord)(self.datalist[4]))
 
-            if((self.currentTime-self.initialTime) > 100):
-                if not rospy.is_shutdown():
-                    try:
-                        pub_vel.publish(self.linearVelocity, self.angularVelocity)  #   Send Twist message to /cmd_vel topic
-                        dump_LA_pub.publish(self.dump_pos)	# Send dumping info
-                        susp_LA_pub.publish(self.susp_pos)	# Send suspension info
-                        door_LA_pub.publish(self.door_pos)	# Send door status
-                        auger_Speed_pub.publish(self.auger_speed)	# Send auger speed
-                    except rospy.ROSInterruptException:
-                        print 'Error in ROS nod'
+                    if((self.currentTime-self.initialTime) > 100):
+                        if not rospy.is_shutdown():
+                            try:
+                                pub_vel.publish(self.linearVelocity, self.angularVelocity)  #   Send Twist message to /cmd_vel topic
+                                dump_LA_pub.publish(self.dump_pos)	# Send dumping info
+                                susp_LA_pub.publish(self.susp_pos)	# Send suspension info
+                                door_LA_pub.publish(self.door_pos)	# Send door status
+                                auger_Speed_pub.publish(self.auger_speed)	# Send auger speed
+                            except rospy.ROSInterruptException:
+                                print 'Error in ROS nod'
                         self.initialTime = self.currentTime
-                        self.datalist = []  #   Prepare datalist for next input
+                    self.datalist = []  #   Prepare datalist for next input
 
-                        # DO NOT DELETE! USED FOR FEEDBACK MECHANISM
-                        if((self.currentTime-self.initialTime) > 500):
-                            self.currentPos = PosData(latestPose.position.x,latestPose.position.y,latestPose.orientation.w)
-                            dataPacket = json.dumps(vars(self.currentPos),sort_keys=True,indent=4)
-                            self.request.send(dataPacket)
-                            self.initialTime = self.currentTime
-                            # print latestPose.position.x
-                            # print global_x
-                            # print latestPose.position.y
-                            # print dataPacket
-                    except IOError:
-                        pass
+                    # DO NOT DELETE! USED FOR FEEDBACK MECHANISM
+                    if((self.currentTime-self.initialTime) > 500):
+                        self.currentPos = PosData(latestPose.position.x,latestPose.position.y,latestPose.orientation.w)
+                        dataPacket = json.dumps(vars(self.currentPos),sort_keys=True,indent=4)
+                        self.request.send(dataPacket)
+                        self.initialTime = self.currentTime
+                        # print latestPose.position.x
+                        # print global_x
+                        # print latestPose.position.y
+                        # print dataPacket
+            except IOError:
+                pass
 
     def processVel(self, linear_vel, angular_vel):
 	max_speed_linear = 0.33
