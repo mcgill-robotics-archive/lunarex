@@ -74,7 +74,7 @@ class Handler(SocketServer.BaseRequestHandler):
             try:
                 self.datalist = self.request.recv(6)
                 #Only if data is received will publisher work
-        if self.datalist[0] != "":
+            if self.datalist[0] != "":
             #Create velocity message
             linear_vel = (float)((ord)(self.datalist[1])) #cast bytes to float
             angular_vel = (float)((ord)(self.datalist[2]))
