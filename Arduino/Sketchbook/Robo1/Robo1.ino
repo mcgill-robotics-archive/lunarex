@@ -29,7 +29,7 @@ ros:: NodeHandle nh;
 float angSpeed = 0;
 float linSpeed = 0;
 float dumpPos = 255; //down as default
-float suspPos = 235; //up as default - 0, down is 255
+float suspPos = 150; //up as default - 0, down is 255
 float doorPos = 0; //closed by default
 float augerSpeed = 0;
 
