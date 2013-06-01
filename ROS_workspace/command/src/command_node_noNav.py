@@ -508,7 +508,7 @@ goTo(3.5, 5.5, 90, False, False)
 
 #excavateStraight()
 #send excavation goals
-goals = [(1.0, 5.5, 0), (3.2, 5.5, -90)]
+goals = [(1.0, 5.5, 0), (3.5, 5.5, -90)]
 for g in goals:
 	goTo(g[0], g[1], g[2], True, False)
 
