@@ -29,10 +29,10 @@ from command.srv import QuadrantRequest
 #--constants
 
 #----actuator commands
-DIG_HEIGHT_CMD = 240 #what command should be sent to the suspension LAs to correspond to digging - is 255 all the way down?
+DIG_HEIGHT_CMD = 150 #what command should be sent to the suspension LAs to correspond to digging - is 255 all the way down?
 TRAVEL_HEIGHT_CMD = 0 # what command should be sent to the suspension LAs to correspond to travelling - is 0 all the way up?
 DIG_DURATION = 2 # number of circles to trace while digging - half a circle counts as 1 it's really the number of times the robot faces backwards
-SUSP_SLEEP_TIME = 2 # how much time (secs) to leave to allow the suspension linear actuators to actuate
+SUSP_SLEEP_TIME = 4 # how much time (secs) to leave to allow the suspension linear actuators to actuate
 
 #----arena dimensions
 ARENA_WIDTH = 3.88
@@ -40,14 +40,14 @@ ARENA_LENGTH = 7.38
 MINING_BOUNDARY_LOCATION = 4.44  # distance of boundary to lunabin
 
 #----hector speeds
-ROTATION_TIME_SECS = 30
+ROTATION_TIME_SECS = 50
 LOCALIZATION_ANG_SPEED = 0.15
 
 #----arduino rate
 VELOCITY_PUB_TIME_MSECS = 100 #how often to send cmd_vels
 
 #----goTo constants
-GOAL_DISTANCE_TOLERANCE = 0.05 #in m
+GOAL_DISTANCE_TOLERANCE = 0.20 #in m
 GOAL_ANGLE_TOLERANCE =  0.5 #in degrees 
 NAV_ANGULAR_ROTATION = 0.2
 
@@ -55,9 +55,9 @@ NAV_LINEAR_SPEED = 0.2
 NAV_LINEAR_SPEED_MINING = 0.0762
 NAV_LINEAR_SPEED_NON_MINING = 0.2
 
-Y_THRESH_FOR_REORIENTATION = 0.1
+Y_THRESH_FOR_REORIENTATION = 0.2
 Y_THRESH_FOR_REORIENTATION_MINING = 0.4
-Y_THRESH_FOR_REORIENTATION_NON_MINING = 0.1
+Y_THRESH_FOR_REORIENTATION_NON_MINING = 0.2
 
 INITIAL_DRIVE_TIME_MSECS = 5000
 
@@ -70,7 +70,7 @@ DIG_SPEED = 0.2 #m/s linear component of velocity - free to choose it to maximiz
 FINAL_LAP_TIME_START = 3*60 #If less than this many seconds remaining, keep digging
 FINAL_LAP_TIME_END = 60 #approx time remaining to get back and dump
 
-AUGER_MAX_SPEED = 150
+AUGER_MAX_SPEED = 50
 AUGER_MIN_SPEED = 0
 
 #dumping
@@ -83,7 +83,7 @@ BUCKET_UP_CMD = 0
 BUCKET_DOWN_CMD = 255
 DOOR_OPEN_CMD = 255
 DOOR_CLOSED_CMD = 0
-EMPTYING_TIME = 5
+EMPTYING_TIME = 20
 
 #--state vars
 #----corners
@@ -146,8 +146,8 @@ def manual_override_callback(data):
 
 def setAugerSpeed(desiredSpeed):
 	# smoothly changes auger speed from current to desired (0-255)
-	INCREMENT = 10
-	TIME_BETWEEN_AUGER_INCREMENTS = 0.01 #seconds
+	INCREMENT = 20
+	TIME_BETWEEN_AUGER_INCREMENTS = 0.1 #seconds
 	# auger_speed needs to be global
 	
 	global auger_speed
@@ -181,7 +181,7 @@ def spinToHectorAngle(nextGoalAngleHector):
 
 
 		# need to turn clockwise
-		while ((nextGoalAngleHector + 180) % 360) - ((currentAngle + 180) % 360)<0: 
+		while (( ((nextGoalAngleHector + 180) % 360) - ((currentAngle + 180) % 360)) %360>180): 
 			currentAngle = coord.quatToDegrees(slam_out_pose)
 			currentTime = int(time.time()*1000.0)
 			if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
@@ -190,7 +190,7 @@ def spinToHectorAngle(nextGoalAngleHector):
 		spinSpeed /= 2
 
 		 # need to turn counter clockwise
-		while ((nextGoalAngleHector + 180) % 360) - ((currentAngle + 180) % 360)>0: 
+		while (( ((nextGoalAngleHector + 180) % 360) - ((currentAngle + 180) % 360)) %360<180): 
 			currentAngle = coord.quatToDegrees(slam_out_pose)
 			currentTime = int(time.time()*1000.0)
 			if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
@@ -198,14 +198,17 @@ def spinToHectorAngle(nextGoalAngleHector):
 				pubTime = int(time.time()*1000.0)
 		spinSpeed /= 2
 		counter+=1
+	pub_vel.publish(Velocity(0.1, 0, 0), Velocity(0, 0, 0))
+	pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, 0))
 
 #called from the first mining area goal
 def excavateStraight():
 	goals = [(1.0, 6.0, 0), (2.7, 5.5, -90)]
 	for g in goals:
-		goTo(g[0], g[1], g[2], True)
+		goTo(g[0], g[1], g[2], True, False)
 
-def goTo(x,y,theta, mining):
+def goTo(x,y,theta, mining, useTheta):
+
 	# send a specified goal in a compact form
 	# All three parameters in Arena coordinates
 	print("*******In goTO with heading: " +str(coord.quatToDegrees(slam_out_pose)))
@@ -221,10 +224,14 @@ def goTo(x,y,theta, mining):
 		NAV_LINEAR_SPEED = NAV_LINEAR_SPEED_NON_MINING
 		Y_THRESH_FOR_REORIENTATION = Y_THRESH_FOR_REORIENTATION_NON_MINING	
 
+	#get X, Y mobile goal
 	nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
 	
 	print("Next goal is: " + str(nextGoal))
 	nextGoalDistance = math.sqrt(nextGoal[0]*nextGoal[0] + nextGoal[1]*nextGoal[1])
+	
+	correction = False #the first time we execute the while loop body, not a correction
+	#While not at goal
 	while nextGoalDistance > GOAL_DISTANCE_TOLERANCE:
 		#ROTATE TOWARDS GOAL
 		nextGoalAngleMobile = math.atan2(nextGoal[1], nextGoal[0]) * 180.0/math.pi
@@ -236,18 +243,16 @@ def goTo(x,y,theta, mining):
 		print("nextGoalAngleMobile = " +str(nextGoalAngleMobile) + "currentAngle = " +str(currentAngle) + 
 			"nextGoalAngleHector = " +str(nextGoalAngleHector))
 
-		#go high before turning
-		#turn auger OFF
-		if(mining):
-			susp_LA_pub.publish(TRAVEL_HEIGHT_CMD)	
-			time.sleep(SUSP_SLEEP_TIME)	#wait to actuate
-			setAugerSpeed(AUGER_MIN_SPEED)
+		susp_LA_pub.publish(TRAVEL_HEIGHT_CMD)	
+		time.sleep(SUSP_SLEEP_TIME)	#wait to actuate
+		setAugerSpeed(AUGER_MIN_SPEED)
 
 		spinToHectorAngle(nextGoalAngleHector)
 
 		#back to mining height if in mining mode. start AUGER
 		if(mining):
 			susp_LA_pub.publish(DIG_HEIGHT_CMD)
+			time.sleep(SUSP_SLEEP_TIME)	#wait to actuate
 			setAugerSpeed(AUGER_MAX_SPEED)
 
 		print "just turned, current angle is: " + str(coord.quatToDegrees(slam_out_pose))
@@ -277,17 +282,23 @@ def goTo(x,y,theta, mining):
 				nextGoalDistance = math.sqrt(nextGoal[0]*nextGoal[0] + nextGoal[1]*nextGoal[1])
 				break
 
-	#AT GOAL. NOW FACE REQUEST ARENA ANGLE
-	finalHectorAngle = coord.arenaAngle2hectorAngle(theta, LR_corner, RR_corner, RF_corner, LF_corner)
+		#future executions of while loop body are corrections
+		correction = True
 
-	#go high before turning
-	#turn auger OFF
+		#if we have overshot in the X, return
+		nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
+		if(nextGoal[0] < 0):
+			break
+
 	if(mining):
-		susp_LA_pub.publish(TRAVEL_HEIGHT_CMD)	
-		time.sleep(SUSP_SLEEP_TIME)	#wait to actuate
-		setAugerSpeed(AUGER_MIN_SPEED)
+			susp_LA_pub.publish(TRAVEL_HEIGHT_CMD)	
+			time.sleep(SUSP_SLEEP_TIME)	#wait to actuate
+			setAugerSpeed(AUGER_MIN_SPEED)
 
-	spinToHectorAngle(finalHectorAngle)
+	if(useTheta):
+		#AT GOAL. NOW FACE REQUEST ARENA ANGLE
+		finalHectorAngle = coord.arenaAngle2hectorAngle(theta, LR_corner, RR_corner, RF_corner, LF_corner)
+		spinToHectorAngle(finalHectorAngle)
 
 def dumpWithGoTo():
 	backup(0.6)
@@ -320,8 +331,13 @@ def dump():
 			pub_vel.publish(Velocity(-DUMP_BACKUP_SPEED, 0, 0), Velocity(0, 0, 0))
 			lastPubTime = int(time.time()*1000.0)
 
+	print("Stop")
+	pub_vel.publish(Velocity(0, 0, 0), Velocity(0, 0, 0))
+
 	print("open door")
-	dump_LA_pub.publish(DOOR_OPEN_CMD)
+	door_LA_pub.publish(DOOR_OPEN_CMD)
+	time.sleep(EMPTYING_TIME)
+	door_LA_pub.publish(DOOR_CLOSED_CMD)
 
 def backup(arenaY):
 	print("Backing up to: " +str(arenaY))
@@ -443,6 +459,13 @@ runStartTime = int(time.time())	# seconds
 
 print("STARTING COMMAND NODE")
 
+#sleep to make sure rosserial has started 
+time.sleep(5)
+
+#rosserial has started. go high
+susp_LA_pub.publish(TRAVEL_HEIGHT_CMD)	
+time.sleep(SUSP_SLEEP_TIME)	#wait to actuate
+
 #Perform rotation
 print("Started rotation.")
 rotationStartTime = int(time.time()*1000.0)
@@ -470,15 +493,18 @@ print("Returning: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
 		+ ", LF=" +str(LF_corner) + ", RF=" +str(RF_corner))
 
 #go to good startin pos in starting area
-goTo(2.7, 1.0, 90, False)	
+
+#ARGS=X   Y    Theta ,Mining, useTheta
+goTo(2.7, 1.0, 90, False, False)	
 
 #go first position in mining area
-goTo(2.7, 6.0, 90, False)
+goTo(2.7, 6.0, 90, False, False)
 
 excavateStraight()
 
 #come back
-goTo(ARENA_WIDTH/2.0, 1.0, 90, False)
+#useTheta must be true because going to dump after
+goTo(ARENA_WIDTH/2.0, 1.0, 90, False, True)
 
 dump()
 

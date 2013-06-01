@@ -89,7 +89,7 @@ while(not ranOnce):
 	# else:
 	# 	Rres = mapRes
 
-	Rres = mapRes*4
+	Rres = mapRes*5
 
 	mapWidth = latest_corners.width
 	mapHeight = latest_corners.height
