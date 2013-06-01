@@ -504,7 +504,7 @@ if(startedLeft == True):
 	goTo(3.2, 1.0, 90, False, False)	
 
 #go first position in mining area (crosses obstacle area)
-goTo(3.2, 5.5, 90, False, False)
+goTo(3.5, 5.5, 90, False, False)
 
 #excavateStraight()
 #send excavation goals
