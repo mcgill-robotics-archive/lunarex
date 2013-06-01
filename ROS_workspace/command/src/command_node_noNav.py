@@ -500,9 +500,8 @@ print("they are: LR=" +str(LR_corner) +", RR=" +str(RR_corner)
 
 #go to good startin pos in starting area
 #ARGS=X   Y    Theta ,Mining, useTheta
-#if(startedLeft == True):
-#for i in range(2):
-goTo(3.2, 1.0, 90, False, False)	
+if(startedLeft == True):
+	goTo(3.2, 1.0, 90, False, False)	
 
 	#go first position in mining area (crosses obstacle area)
 goTo(3.5, 5.5, 90, False, False)
