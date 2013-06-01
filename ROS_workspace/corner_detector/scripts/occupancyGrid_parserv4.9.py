@@ -18,8 +18,9 @@ from nav_msgs.srv import GetMap
 
 #CONSTANTS
 BIGNUMBER = 1000
-ARENA_WIDTH = 3.88
-ARENA_HEIGHT = 7.38
+ARENA_WIDTH = 4.58# = 3.88
+WALL_R_THRESH = 0.4
+ARENA_HEIGHT = 6.69#= 7.38
 SLEEP_TIME_SECS = 30
 NUMBER_OF_POTENTIAL_WALLS = 100
 
@@ -89,7 +90,7 @@ while(not ranOnce):
 	# else:
 	# 	Rres = mapRes
 
-	Rres = mapRes*5
+	Rres = mapRes*4
 
 	mapWidth = latest_corners.width
 	mapHeight = latest_corners.height
@@ -285,3 +286,5 @@ while(not ranOnce):
 	if(ranOnce):
 		time.sleep(SLEEP_TIME_SECS)
 	ranOnce = True	
+
+	time.sleep(10000)

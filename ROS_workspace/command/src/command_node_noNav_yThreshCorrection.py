@@ -78,7 +78,7 @@ AUGER_MIN_SPEED = 0
 DUMP_BACKUP_TIME = 4
 DUMP_BACKUP_SPEED = 0.1
 
-BUCKET_LIFT_TIME = 10
+BUCKET_LIFT_TIME = 5
 BUCKET_UP_CMD = 0
 BUCKET_DOWN_CMD = 255
 
@@ -260,7 +260,6 @@ def goTo(x,y,theta, mining, useTheta):
 		currentTime = int(time.time()*1000.0)
 		pubTime = currentTime
 
-		#forward motion
 		while(nextGoal[0] > GOAL_DISTANCE_TOLERANCE):
 			#add rate to avoid overloading rosserial
 			nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
@@ -273,19 +272,9 @@ def goTo(x,y,theta, mining, useTheta):
  				#("nextGoal during forward movement is: x=" +str(nextGoal[0]) +"and y=" +str(nextGoal[1]))
 
 			#if the y of goal is too big, turn to goal. should only have x component
-			# if(abs(nextGoal[1]) > Y_THRESH_FOR_REORIENTATION):
-			# 	print("breaking out: Y_THRESH exceeeded: y is " +str(abs(nextGoal[1])))
-			# 	nextGoalDistance = math.sqrt(nextGoal[0]*nextGoal[0] + nextGoal[1]*nextGoal[1])
-			# 	break
-			
-			#if our mobile angle is greater than a threshold, break out of here
-			nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
-			nextGoalAngleMobile = math.atan2(nextGoal[1], nextGoal[0]) * 180.0/math.pi
-			angleThreshForReorientation = math.atan(Y_THRESH_FOR_REORIENTATION/ nextGoal[0])
-			angleThreshForReorientation = abs(angleThreshForReorientation)
-			angleThreshForReorientation *= 180.0/math.pi
-			if(nextGoalAngleMobile > angleThreshForReorientation):
-				print("breaking out, nextGoalAngleMobile is greater than " +str(angleThreshForReorientation))
+			if(abs(nextGoal[1]) > Y_THRESH_FOR_REORIENTATION):
+				print("breaking out: Y_THRESH exceeeded: y is " +str(abs(nextGoal[1])))
+				nextGoalDistance = math.sqrt(nextGoal[0]*nextGoal[0] + nextGoal[1]*nextGoal[1])
 				break
 
 		#future executions of while loop body are corrections
@@ -520,4 +509,21 @@ dump()
 
 #6.69 by 4.58
 
-time.sleep(10000)
+time.sleep(10000)		pubTime = currentTime
+
+		while(nextGoal[0] > GOAL_DISTANCE_TOLERANCE):
+			#add rate to avoid overloading rosserial
+			nextGoal = coord.arena2mobile((x,y), slam_out_pose, LR_corner, RR_corner, RF_corner, LF_corner, mapRes, mapWidth)
+			
+ 			currentTime = int(time.time()*1000.0)
+		
+			if(currentTime - pubTime > VELOCITY_PUB_TIME_MSECS):
+				pubTime = int(time.time()*1000.0)
+				pub_vel.publish(Velocity(NAV_LINEAR_SPEED, 0, 0), Velocity(0, 0, 0))
+ 				#("nextGoal during forward movement is: x=" +str(nextGoal[0]) +"and y=" +str(nextGoal[1]))
+
+			#if the y of goal is too big, turn to goal. should only have x component
+			if(abs(nextGoal[1]) > Y_THRESH_FOR_REORIENTATION):
+				print("breaking out: Y_THRESH exceeeded: y is " +str(abs(nextGoal[1])))
+				nextGoalDistance = math.sqrt(nextGoal[0]*nextGoal[0] + nextGoal[1]*nextGoal[1])
+				break

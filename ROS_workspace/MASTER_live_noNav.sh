@@ -40,15 +40,12 @@ sleep 2
 echo "Starting command node"
 xterm -e rosrun command command_node_noNav.py &
 
-#echo "Starting move_base"
-#xterm -e roslaunch lunarex_2dnav/move_base.launch &
-
-#echo "recording ros bag"
-#xterm -e rosbag record corners tf &
-
 #must be the same as in command node! ROTATION_TIME_SECS
 sleep 60
 
-xterm -e rosrun corner_detector occupancyGrid_parserv4.7.py &
+xterm -e rosrun corner_detector occupancyGrid_parserv4.9.py &
 
 #rosrun rviz rviz -d lunarex_2dnav/costmaps.vcg
+
+
+#6.69 by 4.58
