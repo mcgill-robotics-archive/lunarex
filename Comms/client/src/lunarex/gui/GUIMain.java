@@ -28,10 +28,10 @@ import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import joystick.JFrameWindow;
-import joystick.JInputJoystick;
-import joystick.JInputJoystickTest;
-import joystick.JoystickTest;
+import lunarex.controller.joystick.JFrameWindow;
+import lunarex.controller.joystick.JInputJoystick;
+import lunarex.controller.joystick.JInputJoystickTest;
+import lunarex.controller.joystick.JoystickTest;
 import lunarex.input.KeyboardInput;
 import lunarex.network.Client;
 import net.java.games.input.Controller;
